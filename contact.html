@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Candid Aura Studio — Home</title>
-<meta name="description" content="Photography, technical support, and hosting by Candid Aura Studio in Malta.">
+<title>Contact — Candid Aura Studio</title>
+<meta name="description" content="Contact Candid Aura Studio in Sliema, Malta. Email, phone, Instagram.">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -30,37 +30,29 @@
 </header>
 
 
-<section class="hero">
-  <div class="container">
-    <h1 class="section-title">Candid Aura Studio</h1>
-    <p class="lead">A quiet space for images, systems, and hospitality — crafted with care in Malta.</p>
-    <div class="grid">
-      <img src="images/hero-banner.jpg" alt="Studio hero banner placeholder">
-    </div>
-    <div class="grid" style="margin-top:1rem">
-      <a href="photography.html" class="btn">Explore Photography</a>
-      <a href="support.html" class="btn ghost">Technical Support</a>
-      <a href="hosting.html" class="btn ghost">Our Guest Spaces</a>
-    </div>
-    <blockquote style="margin-top:1.5rem">“Creativity is the breath of the spirit. It’s how we witness truth in motion.”</blockquote>
-  </div>
-</section>
+<section class="container">
+  <h1 class="section-title">Contact</h1>
+  <p class="section-sub">Let’s connect. We respond to every message with care.</p>
 
-<section class="container grid grid-3">
-  <div class="card">
-    <h3>Photography</h3>
-    <p>Portraits, travel, and documentary stories with a Mediterranean touch.</p>
-    <a class="btn" href="photography.html">View work</a>
-  </div>
-  <div class="card">
-    <h3>Technical Support</h3>
-    <p>AV/ELV systems, cash machines, queue systems, and CCTV — maintained with precision.</p>
-    <a class="btn" href="support.html">Request support</a>
-  </div>
-  <div class="card">
-    <h3>Hosting</h3>
-    <p>Quiet, well-prepared guest spaces in Sliema. Design that feels like home.</p>
-    <a class="btn" href="hosting.html">See details</a>
+  <div class="grid grid-2">
+    <div class="card">
+      <h3>Reach Us</h3>
+      <ul class="list">
+        <li><strong>Email:</strong> <a href="mailto:mathihul@gmail.com">mathihul@gmail.com</a></li>
+        <li><strong>Phone:</strong> +356 9952 2951</li>
+        <li><strong>Instagram:</strong> <a href="https://instagram.com/candidaurastudio" target="_blank">@candidaurastudio</a></li>
+        <li><strong>Location:</strong> Sliema, Malta</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Send a Message</h3>
+      <form action="#" method="post">
+        <input name="name" placeholder="Your Name" required style="width:100%;padding:.8rem;border-radius:.4rem;border:1px solid var(--border);background:var(--surface);color:var(--text)">
+        <input name="email" type="email" placeholder="Your Email" required style="margin-top:.6rem;width:100%;padding:.8rem;border-radius:.4rem;border:1px solid var(--border);background:var(--surface);color:var(--text)">
+        <textarea name="message" placeholder="Your Message" rows="5" style="margin-top:.6rem;width:100%;padding:.8rem;border-radius:.4rem;border:1px solid var(--border);background:var(--surface);color:var(--text)"></textarea>
+        <button class="btn" type="submit" style="margin-top:.6rem">Send Message</button>
+      </form>
+    </div>
   </div>
 </section>
 
@@ -86,7 +78,7 @@
 
     <script>
       Array.from(document.querySelectorAll('nav a')).forEach(a=>{
-        if(a.textContent.trim()==='Home') a.classList.add('active');
+        if(a.textContent.trim()==='Contact') a.classList.add('active');
       });
     </script>
 </body>

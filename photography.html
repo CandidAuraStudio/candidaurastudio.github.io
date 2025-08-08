@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Candid Aura Studio — Home</title>
-<meta name="description" content="Photography, technical support, and hosting by Candid Aura Studio in Malta.">
+<title>Photography — Candid Aura Studio</title>
+<meta name="description" content="Portraits, travel, and documentary photography with a Mediterranean touch.">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -30,37 +30,31 @@
 </header>
 
 
-<section class="hero">
-  <div class="container">
-    <h1 class="section-title">Candid Aura Studio</h1>
-    <p class="lead">A quiet space for images, systems, and hospitality — crafted with care in Malta.</p>
-    <div class="grid">
-      <img src="images/hero-banner.jpg" alt="Studio hero banner placeholder">
-    </div>
-    <div class="grid" style="margin-top:1rem">
-      <a href="photography.html" class="btn">Explore Photography</a>
-      <a href="support.html" class="btn ghost">Technical Support</a>
-      <a href="hosting.html" class="btn ghost">Our Guest Spaces</a>
-    </div>
-    <blockquote style="margin-top:1.5rem">“Creativity is the breath of the spirit. It’s how we witness truth in motion.”</blockquote>
-  </div>
-</section>
+<section class="container">
+  <h1 class="section-title">Photography</h1>
+  <p class="section-sub">Portraits · Travel · Documentary</p>
+  <p>We capture what the eye often misses — honest light, quiet emotion, and presence. Each frame is an invitation to feel, remember, and return.</p>
 
-<section class="container grid grid-3">
-  <div class="card">
-    <h3>Photography</h3>
-    <p>Portraits, travel, and documentary stories with a Mediterranean touch.</p>
-    <a class="btn" href="photography.html">View work</a>
+  <div class="grid grid-3" style="margin-top:1.2rem">
+    <img src="images/portrait-set1.jpg" alt="Portrait set">
+    <img src="images/photo1.jpg" alt="Travel sample 1">
+    <img src="images/photo2.jpg" alt="Travel sample 2">
+    <img src="images/photo3.jpg" alt="Documentary sample">
+    <img src="images/photo1.jpg" alt="Travel sample 1 alt">
+    <img src="images/photo2.jpg" alt="Travel sample 2 alt">
   </div>
-  <div class="card">
-    <h3>Technical Support</h3>
-    <p>AV/ELV systems, cash machines, queue systems, and CCTV — maintained with precision.</p>
-    <a class="btn" href="support.html">Request support</a>
-  </div>
-  <div class="card">
-    <h3>Hosting</h3>
-    <p>Quiet, well-prepared guest spaces in Sliema. Design that feels like home.</p>
-    <a class="btn" href="hosting.html">See details</a>
+
+  <div class="card" style="margin-top:1.5rem">
+    <h3>Packages</h3>
+    <ul class="list">
+      <li><strong>Mini Portrait — €40</strong> · 30 mins · 5 edited photos</li>
+      <li><strong>Standard Session — €70</strong> · 1 hour · 10 edited photos · 1 location</li>
+      <li><strong>Brand/Airbnb — €100+</strong> · Property or product photography · tailored edits</li>
+    </ul>
+    <div style="margin-top:.8rem">
+      <a class="btn" href="contact.html">Request a booking</a>
+      <a class="btn ghost" href="https://instagram.com/candidaurastudio" target="_blank" rel="noopener">Instagram</a>
+    </div>
   </div>
 </section>
 
@@ -86,7 +80,7 @@
 
     <script>
       Array.from(document.querySelectorAll('nav a')).forEach(a=>{
-        if(a.textContent.trim()==='Home') a.classList.add('active');
+        if(a.textContent.trim()==='Photography') a.classList.add('active');
       });
     </script>
 </body>
