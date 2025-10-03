@@ -1,82 +1,55 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Contact — Candid Aura Studio</title>
-  <meta name="description" content="Contact Candid Aura Studio in Sliema, Malta by email, phone or Instagram.">
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
+<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Contact — Candid Aura Studio</title><meta name='description' content='Contact details and form.'><link rel='stylesheet' href='styles.css'></head><body>
+<header class="site"><div class="container"><nav class="wrap">
+  <a class="brand" href="index.html"><span>⟡</span><span>Candid <mark>Aura</mark> Studio</span></a>
+  <button class="menu-toggle" onclick="document.querySelector('nav ul').classList.toggle('show')">☰</button>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="photography.html">Photography</a></li>
+    <li><a href="support.html">Technical Support</a></li>
+    <li><a href="hosting.html">Hosting</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="pricing.html">Pricing</a></li>
+    <li><a href="faqs.html">FAQs</a></li>
+    <li><a href="testimonials.html">Testimonials</a></li>
+    <li><a href="philosophy.html">Philosophy</a></li>
+    <li><a href="trust.html">Shadows of Trust</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+</nav></div></header>
 
-  <header class="site">
-    <div class="container">
-      <nav class="wrap">
-        <a class="brand" href="index.html" aria-label="Candid Aura Studio">
-          <span>⟡</span><span>Candid <mark>Aura</mark> Studio</span>
-        </a>
-        <button class="menu-toggle" aria-label="Toggle menu" onclick="document.querySelector('nav ul').classList.toggle('show')">Menu</button>
-        <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="photography.html">Photography</a></li>
-          <li><a href="support.html">Technical Support</a></li>
-          <li><a href="hosting.html">Hosting</a></li>
-          <li><a href="philosophy.html">Philosophy</a></li>
-          <li><a href="trust.html">Shadows of Trust</a></li>
-          <li><a href="contact.html" class="active">Contact</a></li>
-        </ul>
-      </nav>
+<section class="container">
+  <h1 class="section-title">Contact</h1><p class="section-sub">Let’s connect. We respond within 24 hours.</p>
+  <div class="grid grid-2">
+    <div class="card"><h3>Reach Us</h3><ul class="list">
+      <li><strong>Email:</strong> <a href="mailto:mathihul@gmail.com">mathihul@gmail.com</a></li>
+      <li><strong>Phone:</strong> +356 9952 2951</li>
+      <li><strong>Instagram:</strong> <a href="https://instagram.com/candidaurastudio" target="_blank">@candidaurastudio</a></li>
+      <li><strong>Location:</strong> Sliema, Malta</li>
+    </ul></div>
+    <div class="card"><h3>Send a Message</h3>
+      <form action="https://formspree.io/f/your-form-id" method="POST">
+        <input name="name" placeholder="Your Name" required>
+        <input name="email" type="email" placeholder="Your Email" required style="margin-top:.6rem">
+        <textarea name="message" placeholder="Your Message" rows="5" style="margin-top:.6rem"></textarea>
+        <button class="btn" type="submit" style="margin-top:.6rem">Send Message</button>
+      </form>
+      <p class="section-sub">Replace <code>your-form-id</code> with your Formspree ID.</p>
     </div>
-  </header>
+  </div>
+</section>
 
-  <section class="container">
-    <h1 class="section-title">Contact</h1>
-    <p class="section-sub">Let’s connect. We respond to every message with care.</p>
-    <div class="grid grid-2">
-      <div class="card">
-        <h3>Reach Us</h3>
-        <ul class="list">
-          <li><strong>Email:</strong> <a href="mailto:mathihul@gmail.com">mathihul@gmail.com</a></li>
-          <li><strong>Phone:</strong> +356 9952 2951</li>
-          <li><strong>Instagram:</strong> <a href="https://instagram.com/candidaurastudio" target="_blank">@candidaurastudio</a></li>
-          <li><strong>Location:</strong> Sliema, Malta</li>
-        </ul>
-      </div>
-      <div class="card">
-        <h3>Send a Message</h3>
-        <!-- Use mailto to collect message via email -->
-        <form action="mailto:mathihul@gmail.com" method="post" enctype="text/plain">
-          <input name="Name" placeholder="Your Name" required style="width:100%;padding:.8rem;border-radius:.4rem;border:1px solid var(--border);background:var(--surface);color:var(--text)">
-          <input name="Email" type="email" placeholder="Your Email" required style="margin-top:.6rem;width:100%;padding:.8rem;border-radius:.4rem;border:1px solid var(--border);background:var(--surface);color:var(--text)">
-          <textarea name="Message" placeholder="Your Message" rows="5" style="margin-top:.6rem;width:100%;padding:.8rem;border-radius:.4rem;border:1px solid var(--border);background:var(--surface);color:var(--text)"></textarea>
-          <button class="btn" type="submit" style="margin-top:.6rem">Send Message</button>
-        </form>
-      </div>
-    </div>
-  </section>
-
-  <footer class="site">
-    <div class="container grid">
-      <div>
-        <strong>Candid Aura Studio</strong><br>
-        Sliema, Malta · <a href="mailto:mathihul@gmail.com">mathihul@gmail.com</a> · +356 9952 2951
-        <p class="small">Special thanks to Meryl, whose inspiration sparked all of this.</p>
-      </div>
-      <div>
-        <a class="btn ghost" href="https://instagram.com/candidaurastudio" target="_blank" rel="noopener">Instagram</a>
-        <a class="btn ghost" href="contact.html">Contact</a>
-      </div>
-    </div>
-    <div class="container" style="border-top:1px solid var(--border);margin-top:1rem;padding-top:1rem">
-      <div class="small">© 2025 Candid Aura Studio. All rights reserved. · Powered by Candid Aura Studio</div>
-    </div>
-  </footer>
-
-  <script>/* minimal */</script>
-  <script>
-    Array.from(document.querySelectorAll('nav a')).forEach(a=>{
-      if(a.textContent.trim()==='Contact') a.classList.add('active');
-    });
-  </script>
-</body>
-</html>
+<footer class="site"><div class="container grid">
+  <div><strong>Candid Aura Studio</strong><br>Sliema, Malta · <a href="mailto:mathihul@gmail.com">mathihul@gmail.com</a> · +356 9952 2951
+    <p class="small">Special thanks to Meryl, whose inspiration sparked all of this.</p>
+  </div>
+  <div>
+    <a class="btn ghost" href="https://instagram.com/candidaurastudio" target="_blank" rel="noopener">Instagram</a>
+    <a class="btn ghost" href="contact.html">Contact</a>
+    <a class="btn ghost" href="privacy.html">Privacy</a>
+  </div>
+</div>
+<div class="container" style="border-top:1px solid var(--border);margin-top:1rem;padding-top:1rem">
+  <div class="small">© 2025 Candid Aura Studio. All rights reserved. · Powered by Candid Aura Studio</div>
+</div></footer>
+<div class="sticky-cta"><a class="btn gold" href="contact.html">Book a Shoot</a><a class="btn" href="support.html">Request Support</a><a class="btn" href="https://wa.me/35699522951" target="_blank">WhatsApp</a></div>
+</body></html>
