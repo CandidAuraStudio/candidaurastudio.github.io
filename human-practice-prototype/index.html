@@ -26,7 +26,7 @@ h1,h2{letter-spacing:-.03em}h2{font-size:29px;margin:8px 0 10px}p{color:var(--mu
 <div class="top"><div class="progress" id="progress">1 / 6</div><div class="lang-mini" id="langMini">EN</div></div>
 
 <section class="screen active" data-screen="0">
-<div class="center"><div style="font-size:56px">◯</div><div class="quote" data-i18n="purpose">To be human on this earth.</div><p data-i18n="intro">Less information. More practice. Notice what is already here.</p></div>
+<div class="center"><div style="font-size:56px">◯</div><div class="quote" data-i18n="purpose">To be human on this earth.</div><p data-i18n="intro">Less information. More practice. Notice what is already here.</p><div class="foot">Prototype: one temporary English guide can be reused across every practice.</div></div>
 <button class="btn" onclick="next()" data-i18n="begin">Begin</button>
 <button class="btn secondary hidden" id="installBtn">Install on phone</button>
 </section>
@@ -72,11 +72,15 @@ h1,h2{letter-spacing:-.03em}h2{font-size:29px;margin:8px 0 10px}p{color:var(--mu
 <button class="btn" id="practiceBtn" onclick="togglePractice()">Start 60-second demo</button>
 
 <div style="margin-top:18px;padding:14px;border:1px solid var(--line);border-radius:16px;background:#0e151a">
-  <b>Private practice recording</b>
-  <p style="font-size:13px;margin:6px 0 12px">Choose an audio or video file already saved on this phone. It plays only here and is not uploaded.</p>
+  <b>Temporary English guide</b>
+  <p style="font-size:13px;margin:6px 0 12px">Choose one audio or video file once. The app keeps a private local copy on this phone and uses its audio for every practice.</p>
   <input id="privateMediaInput" type="file" accept="audio/*,video/*" style="width:100%;color:var(--muted)">
   <div id="privateMediaName" class="foot" style="text-align:left;margin-top:10px"></div>
-  <video id="privateMediaPlayer" controls playsinline style="display:none;width:100%;margin-top:12px;border-radius:12px;background:#000"></video>
+  <div style="display:flex;gap:8px;margin-top:10px">
+    <button class="btn secondary" style="margin-top:0;padding:12px" id="guidePlayBtn" onclick="toggleGuide()">Play guide</button>
+    <button class="btn secondary" style="margin-top:0;padding:12px" onclick="clearGuide()">Replace / clear</button>
+  </div>
+  <audio id="privateMediaPlayer" preload="metadata"></audio>
 </div>
 
 <button class="btn secondary" onclick="endPractice()">Finish / reflect</button>
@@ -104,24 +108,108 @@ function setNeed(n,el){need=n;document.querySelectorAll('#needGrid .card').forEa
 function preparePractice(){setMode(need==='Rest'?'sleep':'sit')}function setMode(m){mode=m;document.getElementById('sitMode').classList.toggle('active',m==='sit');document.getElementById('sleepMode').classList.toggle('active',m==='sleep');document.getElementById('practiceTitle').textContent=m==='sit'?'Sitting practice':'Sleep practice';document.getElementById('practiceLead').textContent=m==='sit'?'Sit in a supported position. Let the jaw and shoulders soften. Pain is not a goal; adjust when needed.':'Lie down safely. Put the phone aside. Let the guidance become quieter as you move toward sleep.';resetPractice()}
 function speak(t){if(!('speechSynthesis'in window))return;speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(t);u.rate=.78;u.pitch=1.02;u.volume=.8;u.lang=lang==='ta'?'ta-IN':'en-US';speechSynthesis.speak(u)}
 function phase(){let cue=document.getElementById('cue'),orb=document.getElementById('orb');if(inhale){cue.textContent=lang==='ta'?'உள்ளிழு':'Breathe in';orb.className='orb inhale';speak(cue.textContent);phaseTimer=setTimeout(()=>{inhale=false;phase()},4000)}else{cue.textContent=lang==='ta'?'வெளியேற்று':'Breathe out';orb.className='orb exhale';speak(cue.textContent);phaseTimer=setTimeout(()=>{inhale=true;phase()},6000)}}
-function togglePractice(){if(running){pausePractice();return}running=true;document.getElementById('practiceBtn').textContent='Pause';phase();countdownTimer=setInterval(()=>{remaining--;document.getElementById('timer').textContent='00:'+String(remaining).padStart(2,'0')+' demo';if(remaining<=0)endPractice()},1000)}
-function pausePractice(){running=false;clearTimeout(phaseTimer);clearInterval(countdownTimer);if('speechSynthesis'in window)speechSynthesis.cancel();document.getElementById('practiceBtn').textContent='Resume'}function resetPractice(){pausePractice();remaining=60;inhale=true;document.getElementById('timer').textContent='01:00 demo';document.getElementById('cue').textContent='Ready';document.getElementById('orb').className='orb';document.getElementById('practiceBtn').textContent='Start 60-second demo'}
+function togglePractice(){
+ if(running){pausePractice();return}
+ running=true;
+ document.getElementById('practiceBtn').textContent='Pause';
+ phase();
+ if(guideBlob && mediaPlayer.paused){ mediaPlayer.currentTime=0; mediaPlayer.play().catch(()=>{}); updateGuideButton(); }
+ countdownTimer=setInterval(()=>{remaining--;document.getElementById('timer').textContent='00:'+String(remaining).padStart(2,'0')+' demo';if(remaining<=0)endPractice()},1000)
+}
+function pausePractice(){running=false;clearTimeout(phaseTimer);clearInterval(countdownTimer);if('speechSynthesis'in window)speechSynthesis.cancel();if(mediaPlayer&&!mediaPlayer.paused)mediaPlayer.pause();updateGuideButton();document.getElementById('practiceBtn').textContent='Resume'}function resetPractice(){pausePractice();remaining=60;inhale=true;document.getElementById('timer').textContent='01:00 demo';document.getElementById('cue').textContent='Ready';document.getElementById('orb').className='orb';document.getElementById('practiceBtn').textContent='Start 60-second demo'}
 function endPractice(){pausePractice();screen=5;show()}function toggleTag(e){e.classList.toggle('selected')}function saveReflection(){let tags=[...document.querySelectorAll('.tag.selected')].map(x=>x.textContent);let a=JSON.parse(localStorage.getItem('practice_reflections')||'[]');a.push({time:new Date().toISOString(),lang,path,need,mode,tags,note:document.getElementById('note').value});localStorage.setItem('practice_reflections',JSON.stringify(a));document.getElementById('savedMsg').textContent='Saved locally. No account. No cloud.'}
 function restart(){resetPractice();screen=0;show()}
 
 const mediaInput=document.getElementById('privateMediaInput');
 const mediaPlayer=document.getElementById('privateMediaPlayer');
 const mediaName=document.getElementById('privateMediaName');
-let privateMediaUrl=null;
-mediaInput.addEventListener('change',()=>{
-  const file=mediaInput.files&&mediaInput.files[0];
-  if(!file)return;
-  if(privateMediaUrl)URL.revokeObjectURL(privateMediaUrl);
-  privateMediaUrl=URL.createObjectURL(file);
-  mediaPlayer.src=privateMediaUrl;
-  mediaPlayer.style.display='block';
-  mediaName.textContent=file.name+' · private local playback';
+const guidePlayBtn=document.getElementById('guidePlayBtn');
+let privateMediaUrl=null, guideBlob=null, guideFileName='';
+
+function openGuideDB(){
+ return new Promise((resolve,reject)=>{
+  const req=indexedDB.open('practiceGuideDB',1);
+  req.onupgradeneeded=()=>req.result.createObjectStore('guide');
+  req.onsuccess=()=>resolve(req.result);
+  req.onerror=()=>reject(req.error);
+ });
+}
+async function saveGuide(blob,name){
+ const db=await openGuideDB();
+ await new Promise((resolve,reject)=>{
+  const tx=db.transaction('guide','readwrite');
+  tx.objectStore('guide').put({blob,name,type:blob.type},'current');
+  tx.oncomplete=resolve; tx.onerror=()=>reject(tx.error);
+ });
+ db.close();
+}
+async function loadGuide(){
+ try{
+  const db=await openGuideDB();
+  const data=await new Promise((resolve,reject)=>{
+   const tx=db.transaction('guide','readonly');
+   const req=tx.objectStore('guide').get('current');
+   req.onsuccess=()=>resolve(req.result); req.onerror=()=>reject(req.error);
+  });
+  db.close();
+  if(data&&data.blob){ setGuideBlob(data.blob,data.name||'Saved guide'); }
+ }catch(e){}
+}
+async function deleteGuide(){
+ try{
+  const db=await openGuideDB();
+  await new Promise((resolve,reject)=>{
+   const tx=db.transaction('guide','readwrite');
+   tx.objectStore('guide').delete('current');
+   tx.oncomplete=resolve; tx.onerror=()=>reject(tx.error);
+  });
+  db.close();
+ }catch(e){}
+}
+function setGuideBlob(blob,name){
+ guideBlob=blob; guideFileName=name;
+ if(privateMediaUrl)URL.revokeObjectURL(privateMediaUrl);
+ privateMediaUrl=URL.createObjectURL(blob);
+ mediaPlayer.src=privateMediaUrl;
+ mediaName.textContent=name+' · saved privately on this phone · audio-only use';
+ updateGuideButton();
+}
+function updateGuideButton(){
+ if(!guideBlob){guidePlayBtn.textContent='Play guide';guidePlayBtn.disabled=true;return}
+ guidePlayBtn.disabled=false;
+ guidePlayBtn.textContent=mediaPlayer.paused?'Play guide':'Pause guide';
+}
+async function toggleGuide(){
+ if(!guideBlob)return;
+ if(mediaPlayer.paused){await mediaPlayer.play().catch(()=>{});}else{mediaPlayer.pause();}
+ updateGuideButton();
+}
+async function clearGuide(){
+ mediaPlayer.pause();
+ await deleteGuide();
+ guideBlob=null;guideFileName='';
+ if(privateMediaUrl)URL.revokeObjectURL(privateMediaUrl);
+ privateMediaUrl=null;mediaPlayer.removeAttribute('src');mediaPlayer.load();
+ mediaName.textContent='No guide saved. Choose a file above.';
+ mediaInput.value='';
+ updateGuideButton();
+}
+mediaInput.addEventListener('change',async()=>{
+ const file=mediaInput.files&&mediaInput.files[0];
+ if(!file)return;
+ mediaName.textContent='Saving locally…';
+ try{
+  await saveGuide(file,file.name);
+  setGuideBlob(file,file.name);
+ }catch(e){
+  setGuideBlob(file,file.name);
+  mediaName.textContent=file.name+' · session only (phone storage would not save this file)';
+ }
 });
+mediaPlayer.addEventListener('play',updateGuideButton);
+mediaPlayer.addEventListener('pause',updateGuideButton);
+mediaPlayer.addEventListener('ended',updateGuideButton);
+loadGuide();
 
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;document.getElementById('installBtn').classList.remove('hidden')});
 document.getElementById('installBtn').addEventListener('click',async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;document.getElementById('installBtn').classList.add('hidden')});
