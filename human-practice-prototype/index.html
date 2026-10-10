@@ -97,8 +97,10 @@ h1,h2{letter-spacing:-.03em}h2{font-size:29px;margin:8px 0 10px}p{color:var(--mu
   <button onclick="toggleAmbient()" id="ambientBtn">Soft ambient: OFF</button>
 </div>
 </details>
-<div class="foot" id="voiceStatus">Your recorded guide is the only spoken voice.</div>
+<div class="foot" id="voiceStatus" style="display:none">Your recorded guide is the only spoken voice.</div>
 
+<details id="visualPracticeDetails" style="margin-top:12px">
+<summary style="cursor:pointer;color:var(--muted)">Advanced visual/countdown practice</summary>
 <div class="prep" id="prepBox">
   <b>Before the practice</b><br>
   Sit or lie down safely. Let your belly move naturally. Keep the breath comfortable. The guide will give the instruction first, then leave space for you to breathe.
@@ -110,15 +112,17 @@ h1,h2{letter-spacing:-.03em}h2{font-size:29px;margin:8px 0 10px}p{color:var(--mu
 <div class="stage" id="stage">Preparation</div>
 <div class="count" id="count">—</div>
 <div class="timer" id="timer">10 gentle cycles</div>
-<button class="btn" id="practiceBtn" onclick="togglePractice()">Start practice</button>
+<button class="btn secondary" id="practiceBtn" onclick="togglePractice()">Start visual countdown</button>
+</details>
 
-<div style="margin-top:18px;padding:16px;border:1px solid var(--line);border-radius:18px;background:#0e151a">
-  <b>My guided recording</b>
-  <p id="guideHelp" style="font-size:13px;margin:6px 0 12px">First time only: choose the combined MP3 from your phone. After that, just press Play.</p>
+<div style="margin-top:18px;padding:18px;border:2px solid var(--accent);border-radius:20px;background:#0e151a">
+  <div style="font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--accent);margin-bottom:4px">Main audio</div>
+  <b style="font-size:22px">My guided recording</b>
+  <p id="guideHelp" style="font-size:13px;margin:6px 0 12px">First time only: choose the combined Part 1 + Part 2 MP3 from your phone. Then press the large PLAY MY ACTUAL AUDIO button below.</p>
   <input id="privateMediaInput" type="file" accept="audio/*,video/*" style="width:100%;color:var(--muted)">
   <div id="privateMediaName" class="foot" style="text-align:left;margin-top:10px"></div>
   <audio id="privateMediaPlayer" preload="metadata"></audio>
-  <button class="btn" id="recordedStartBtn" onclick="startRecordedSession()">▶ Play my guided recording</button>
+  <button class="btn" id="recordedStartBtn" onclick="startRecordedSession()" style="font-size:20px;padding:20px">▶ PLAY MY ACTUAL AUDIO</button>
   <button class="btn secondary" style="padding:12px" onclick="clearGuide()">Change recording</button>
 </div>
 
