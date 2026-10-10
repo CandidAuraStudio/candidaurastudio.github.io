@@ -1,4 +1,4 @@
-const CACHE='sufi-stage2-english-v28';
+const CACHE='sufi-stage2-dark-float-v29';
 self.addEventListener('install',e=>self.skipWaiting());
 self.addEventListener('activate',e=>e.waitUntil((async()=>{for(const k of await caches.keys())await caches.delete(k);await self.clients.claim()})()));
 self.addEventListener('fetch',e=>{
