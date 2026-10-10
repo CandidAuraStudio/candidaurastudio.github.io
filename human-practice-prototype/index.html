@@ -103,12 +103,12 @@ h1,h2{letter-spacing:-.03em}h2{font-size:29px;margin:8px 0 10px}p{color:var(--mu
 <button class="btn" id="practiceBtn" onclick="togglePractice()">Start practice</button>
 
 <div style="margin-top:18px;padding:14px;border:1px solid var(--line);border-radius:16px;background:#0e151a">
-  <b>Temporary English male guide</b>
-  <p style="font-size:13px;margin:6px 0 12px">Choose one guide recording once. The app uses that original audio as the voice. The breathing circle stays silent and follows a slower 5-second inhale / 7-second exhale rhythm.</p>
+  <b>Part 1 + Part 2 combined audio</b>
+  <p style="font-size:13px;margin:6px 0 12px">Choose the combined Part 1 + Part 2 MP3 once from your phone. After that, press the button below to hear the full recording.</p>
   <input id="privateMediaInput" type="file" accept="audio/*,video/*" style="width:100%;color:var(--muted)">
   <div id="privateMediaName" class="foot" style="text-align:left;margin-top:10px"></div>
   <div style="display:flex;gap:8px;margin-top:10px">
-    <button class="btn secondary" style="margin-top:0;padding:12px" id="guidePlayBtn" onclick="toggleGuide()">Play guide</button>
+    <button class="btn secondary" style="margin-top:0;padding:12px" id="guidePlayBtn" onclick="toggleGuide()">▶ Play Part 1 + Part 2</button>
     <button class="btn secondary" style="margin-top:0;padding:12px" onclick="clearGuide()">Replace / clear</button>
   </div>
   <audio id="privateMediaPlayer" preload="metadata"></audio>
