@@ -241,6 +241,67 @@ body:after{
   .sun,.practice-card,.orb,.player-orb,body:after{animation:none!important}
 }
 
+
+/* Refined mobile player */
+.player-card{padding:22px 18px 18px}
+.player-top{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;text-align:left}
+.player-heading{min-width:0}
+.player-heading .kicker{margin-bottom:6px}
+.player-heading h2{font-size:26px;line-height:1.1}
+.icon-btn{
+  width:42px;height:42px;border-radius:14px;border:1px solid var(--line);
+  background:rgba(6,20,30,.62);color:var(--ink);display:grid;place-items:center;
+  font:inherit;font-size:20px;padding:0;flex:0 0 auto;
+}
+.player-orb{cursor:pointer;margin-top:24px}
+.player-orb .play-core{
+  width:84px;height:84px;border-radius:50%;
+  display:grid;place-items:center;
+  background:linear-gradient(180deg,rgba(238,201,138,.98),rgba(190,137,76,.98));
+  color:#08131b;font-size:28px;font-weight:800;
+  box-shadow:0 12px 34px rgba(0,0,0,.26),0 0 30px rgba(209,163,88,.12);
+  transition:transform .18s ease;
+}
+.player-orb:active .play-core{transform:scale(.96)}
+.clock{font-size:44px;margin-top:3px}
+.progress-meta{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:13px;font-size:12px;color:#aabdc6;font-variant-numeric:tabular-nums}
+.progress-meta .remaining{color:#d6b77e}
+.seek{height:8px;margin-top:10px}
+.seek::-webkit-slider-thumb{width:24px;height:24px}
+.transport{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:17px}
+.transport button{
+  min-height:48px;border-radius:16px;border:1px solid var(--line);
+  background:rgba(6,20,30,.62);color:var(--ink);font:inherit;font-weight:750
+}
+.transport .primary{
+  background:linear-gradient(180deg,#e7c487,#be884b);color:#08131b;border:0
+}
+.resume-card{
+  display:none;margin-top:14px;padding:12px 13px;border-radius:16px;
+  border:1px solid rgba(214,181,122,.16);background:rgba(114,79,35,.10);
+  color:#d9c19a;font-size:12px;line-height:1.45;text-align:left
+}
+.resume-card.show{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.resume-card button{
+  border:1px solid rgba(214,181,122,.20);background:rgba(5,17,25,.56);
+  color:#e1c99f;border-radius:12px;padding:8px 10px;font:inherit;font-size:12px
+}
+.options-panel{
+  display:none;margin-top:12px;padding:14px;border-radius:18px;
+  border:1px solid var(--line);background:rgba(4,15,23,.72);text-align:left
+}
+.options-panel.open{display:block}
+.option-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:9px 0}
+.option-row + .option-row{border-top:1px solid rgba(255,255,255,.06)}
+.option-row label{font-size:13px;color:#c8d6dc}
+.option-row small{display:block;color:#8197a2;font-size:11px;margin-top:2px}
+.option-row input[type="range"]{width:135px;accent-color:#d4aa66}
+.option-select{
+  background:#0a1b28;color:#e8eef1;border:1px solid var(--line);
+  border-radius:12px;padding:8px 10px;font:inherit;font-size:12px
+}
+.player-status{min-height:18px;margin-top:11px;color:#8fa4ae;font-size:11px;text-align:center}
+
 </style>
 </head>
 <body>
@@ -332,30 +393,61 @@ body:after{
 
 <section class="screen" id="player">
   <div class="glass player-card">
-    <div class="center">
-      <div class="kicker" id="sessionKicker">Settle</div>
-      <h2 id="sessionTitle">10-minute practice</h2>
-      <div class="player-orb"><span id="orbText">Ready</span></div>
-      <div class="clock" id="clock">00:00</div>
-      <div class="time-row"><span id="elapsed">00:00</span><span id="total">10:00</span></div>
-      <input class="seek" id="seek" type="range" min="0" max="600" value="0" step="0.1">
-
-      <div class="controls">
-        <button class="control" onclick="jump(-10)">−10s</button>
-        <button class="control main" id="playBtn" onclick="togglePlay()">▶ Play</button>
-        <button class="control" onclick="jump(10)">+10s</button>
+    <div class="player-top">
+      <div class="player-heading">
+        <div class="kicker" id="sessionKicker">Settle</div>
+        <h2 id="sessionTitle">10-minute practice</h2>
       </div>
-
-      <div class="meta">
-        <button onclick="restart()">Restart</button>
-        <label><span style="font-size:12px">Volume</span><input class="volume" id="volume" type="range" min="0" max="1" step="0.05" value="0.85"></label>
-      </div>
-
-      <p class="note" id="playerNote">No autoplay. The session begins only when you press Play.</p>
-      <button class="btn secondary" onclick="finish()" id="finishBtn">Finish</button>
+      <button class="icon-btn" id="optionsBtn" onclick="toggleOptions()" aria-label="Player options">⋯</button>
     </div>
+
+    <div class="player-orb" onclick="togglePlay()" role="button" tabindex="0" aria-label="Play or pause">
+      <div class="play-core" id="playCore">▶</div>
+    </div>
+
+    <div class="clock" id="clock">00:00</div>
+    <div class="progress-meta">
+      <span id="elapsed">00:00</span>
+      <span class="remaining" id="remaining">−10:00</span>
+      <span id="total">10:00</span>
+    </div>
+    <input class="seek" id="seek" type="range" min="0" max="600" value="0" step="0.1" aria-label="Session position">
+
+    <div class="transport">
+      <button onclick="jump(-10)" aria-label="Back 10 seconds">−10s</button>
+      <button class="primary" id="playBtn" onclick="togglePlay()">Play</button>
+      <button onclick="jump(10)" aria-label="Forward 10 seconds">+10s</button>
+    </div>
+
+    <div class="resume-card" id="resumeCard">
+      <span id="resumeText">Continue where you left off?</span>
+      <button onclick="resumeSaved()">Resume</button>
+    </div>
+
+    <div class="options-panel" id="optionsPanel">
+      <div class="option-row">
+        <div><label for="volume">Volume</label><small>Remembered on this device</small></div>
+        <input class="volume" id="volume" type="range" min="0" max="1" step="0.05" value="0.85">
+      </div>
+      <div class="option-row">
+        <div><label for="sleepTimer">Stop after</label><small>Useful for longer or sleep sessions</small></div>
+        <select id="sleepTimer" class="option-select" onchange="setSleepTimer(this.value)">
+          <option value="0">End of session</option>
+          <option value="600">10 min</option>
+          <option value="1200">20 min</option>
+          <option value="1800">30 min</option>
+        </select>
+      </div>
+      <div class="option-row">
+        <div><label>Session</label><small>Start again from 00:00</small></div>
+        <button class="option-select" onclick="restart()">Restart</button>
+      </div>
+    </div>
+
+    <div class="player-status" id="playerNote">Press Play when you are ready.</div>
+    <button class="btn secondary" onclick="finish()" id="finishBtn">Finish</button>
   </div>
-  <div class="footer">Stage 2 · English · full-length audio · text instructions first</div>
+  <div class="footer">Clear Within · audio starts only when you press Play</div>
   <audio id="audio" preload="metadata"></audio>
 </section>
 
@@ -368,10 +460,16 @@ let chosenKicker='Practice 01';
 let chosenTitle='10-minute practice';
 let stepIndex=0;
 let scrubbing=false;
+let sleepStopAt=0;
+let savedResumeTime=0;
 
 const audio=document.getElementById('audio');
 const seek=document.getElementById('seek');
 const volume=document.getElementById('volume');
+const playCore=document.getElementById('playCore');
+const remainingEl=document.getElementById('remaining');
+const optionsPanel=document.getElementById('optionsPanel');
+const resumeCard=document.getElementById('resumeCard');
 
 function show(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
@@ -409,14 +507,69 @@ function preparePlayer(){
   audio.load();
   seek.max=chosenSeconds;
   seek.value=0;
+  sleepStopAt=0;
+  savedResumeTime=0;
+  document.getElementById('sleepTimer').value='0';
   document.getElementById('elapsed').textContent='00:00';
   document.getElementById('clock').textContent='00:00';
   document.getElementById('total').textContent=fmt(chosenSeconds);
-  document.getElementById('playBtn').textContent='▶ Play';
-  document.getElementById('orbText').textContent='Ready';
+  remainingEl.textContent='−'+fmt(chosenSeconds);
+  document.getElementById('playBtn').textContent='Play';
+  playCore.textContent='▶';
   document.getElementById('sessionKicker').textContent=chosenKicker;
   document.getElementById('sessionTitle').textContent=chosenTitle;
-  document.getElementById('playerNote').textContent='No autoplay. The session begins only when you press Play.';
+  document.getElementById('playerNote').textContent='Press Play when you are ready.';
+  optionsPanel.classList.remove('open');
+  loadResumePoint();
+  setMediaSession();
+}
+
+function loadResumePoint(){
+  try{
+    const key='clearWithinResume:'+chosenKicker;
+    const t=Number(localStorage.getItem(key)||0);
+    if(Number.isFinite(t) && t>20 && t<chosenSeconds-20){
+      savedResumeTime=t;
+      document.getElementById('resumeText').textContent='Continue from '+fmt(t)+'?';
+      resumeCard.classList.add('show');
+    }else{
+      resumeCard.classList.remove('show');
+    }
+  }catch(e){resumeCard.classList.remove('show')}
+}
+
+function resumeSaved(){
+  if(savedResumeTime>0){
+    audio.currentTime=savedResumeTime;
+    resumeCard.classList.remove('show');
+    audio.play().catch(()=>{});
+    sync();
+  }
+}
+
+function toggleOptions(){
+  optionsPanel.classList.toggle('open');
+}
+
+function setSleepTimer(value){
+  const sec=Number(value)||0;
+  sleepStopAt=sec>0 ? Math.min(chosenSeconds,(audio.currentTime||0)+sec) : 0;
+  document.getElementById('playerNote').textContent=sec>0 ? 'Will stop in '+fmt(sec)+'.' : 'Will stop at the end of the session.';
+}
+
+function setMediaSession(){
+  if(!('mediaSession' in navigator)) return;
+  try{
+    navigator.mediaSession.metadata=new MediaMetadata({
+      title:chosenTitle,
+      artist:'Clear Within',
+      album:chosenKicker
+    });
+    navigator.mediaSession.setActionHandler('play',()=>audio.play());
+    navigator.mediaSession.setActionHandler('pause',()=>audio.pause());
+    navigator.mediaSession.setActionHandler('seekbackward',()=>jump(-10));
+    navigator.mediaSession.setActionHandler('seekforward',()=>jump(10));
+  }catch(e){}
 }
 
 function fmt(sec){
@@ -432,16 +585,16 @@ async function togglePlay(){
   if(audio.paused){
     try{
       await audio.play();
-      document.getElementById('playBtn').textContent='❚❚ Pause';
-      document.getElementById('orbText').textContent='Practice';
+      resumeCard.classList.remove('show');
+      document.getElementById('playerNote').textContent='Playing';
     }catch(e){
       document.getElementById('playerNote').textContent='Audio did not start. Tap Play once more.';
     }
   }else{
     audio.pause();
-    document.getElementById('playBtn').textContent='▶ Resume';
-    document.getElementById('orbText').textContent='Paused';
+    document.getElementById('playerNote').textContent='Paused';
   }
+  sync();
 }
 
 function jump(delta){
@@ -450,8 +603,12 @@ function jump(delta){
 }
 
 function restart(){
+  audio.pause();
   audio.currentTime=0;
-  audio.play().catch(()=>{});
+  sleepStopAt=0;
+  document.getElementById('sleepTimer').value='0';
+  try{localStorage.removeItem('clearWithinResume:'+chosenKicker)}catch(e){}
+  document.getElementById('playerNote').textContent='Restarted. Press Play when ready.';
   sync();
 }
 
@@ -464,17 +621,43 @@ function finish(){
 
 function sync(){
   let t=Math.min(chosenSeconds,audio.currentTime||0);
+
+  if(sleepStopAt>0 && t>=sleepStopAt){
+    audio.pause();
+    sleepStopAt=0;
+    document.getElementById('sleepTimer').value='0';
+    document.getElementById('playerNote').textContent='Timer finished.';
+  }
+
   if(t>=chosenSeconds){
     audio.pause();
     t=chosenSeconds;
-    document.getElementById('playBtn').textContent='▶ Play again';
-    document.getElementById('orbText').textContent='Complete';
+    document.getElementById('playerNote').textContent='Session complete.';
+    try{localStorage.removeItem('clearWithinResume:'+chosenKicker)}catch(e){}
+  }else if(t>20){
+    try{localStorage.setItem('clearWithinResume:'+chosenKicker,String(t))}catch(e){}
   }
-  if(!scrubbing)seek.value=t;
+
+  if(!scrubbing) seek.value=t;
   document.getElementById('elapsed').textContent=fmt(t);
   document.getElementById('clock').textContent=fmt(t);
   document.getElementById('total').textContent=fmt(chosenSeconds);
-  if(!audio.paused && t<chosenSeconds) document.getElementById('playBtn').textContent='❚❚ Pause';
+  remainingEl.textContent='−'+fmt(Math.max(0,chosenSeconds-t));
+
+  const playing=!audio.paused && t<chosenSeconds;
+  document.getElementById('playBtn').textContent=playing?'Pause':(t>=chosenSeconds?'Play again':'Play');
+  playCore.textContent=playing?'❚❚':'▶';
+
+  if('mediaSession' in navigator && Number.isFinite(audio.duration) && audio.duration>0){
+    try{
+      navigator.mediaSession.playbackState=playing?'playing':'paused';
+      navigator.mediaSession.setPositionState({
+        duration:Math.max(1,Math.min(audio.duration,chosenSeconds)),
+        playbackRate:audio.playbackRate||1,
+        position:Math.min(t,Math.max(0,(audio.duration||chosenSeconds)-0.01))
+      });
+    }catch(e){}
+  }
 }
 
 audio.addEventListener('timeupdate',sync);
@@ -500,6 +683,15 @@ try{
   else audio.volume=.85;
 }catch(e){audio.volume=.85}
 setInterval(sync,500);
+document.querySelector('.player-orb').addEventListener('keydown',e=>{
+  if(e.key==='Enter'||e.key===' '){e.preventDefault();togglePlay()}
+});
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden && audio.currentTime>20){
+    try{localStorage.setItem('clearWithinResume:'+chosenKicker,String(audio.currentTime))}catch(e){}
+  }
+});
+
 
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
