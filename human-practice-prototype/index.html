@@ -82,6 +82,7 @@ h1,h2{letter-spacing:-.03em}h2{font-size:29px;margin:8px 0 10px}p{color:var(--mu
 </section>
 
 <section class="screen" data-screen="4">
+<button class="btn secondary" style="margin-top:0;margin-bottom:10px;padding:11px" onclick="screen=0;show();window.scrollTo(0,0)">← Back</button>
 <h2 id="practiceTitle">Sitting practice</h2>
 <p id="practiceLead">Sit in a supported position. Let the jaw and shoulders soften. Pain is not a goal; adjust when needed.</p>
 <div style="margin-top:18px;padding:18px;border:2px solid var(--accent);border-radius:20px;background:#0e151a">
@@ -91,7 +92,7 @@ h1,h2{letter-spacing:-.03em}h2{font-size:29px;margin:8px 0 10px}p{color:var(--mu
   <input id="privateMediaInput" type="file" accept="audio/*,video/*" style="width:100%;color:var(--muted)">
   <div id="privateMediaName" class="foot" style="text-align:left;margin-top:10px"></div>
   <audio id="privateMediaPlayer" preload="metadata"></audio>
-  <button class="btn" id="recordedStartBtn" onclick="startRecordedSession()" style="font-size:20px;padding:20px">▶ PLAY MY ACTUAL AUDIO</button>
+  <button class="btn" id="recordedStartBtn" onclick="startRecordedSession()" style="font-size:20px;padding:20px">▶ CHOOSE AUDIO FIRST</button>
   <button class="btn secondary" style="padding:12px" onclick="clearGuide()">Change recording</button>
 </div>
 
@@ -318,7 +319,7 @@ function restart(){resetPractice();screen=0;show()}
 const mediaInput=document.getElementById('privateMediaInput');
 const mediaPlayer=document.getElementById('privateMediaPlayer');
 const mediaName=document.getElementById('privateMediaName');
-const guidePlayBtn=document.getElementById('guidePlayBtn');
+const guidePlayBtn=null;
 let privateMediaUrl=null, guideBlob=null, guideFileName='';
 
 function openGuideDB(){
@@ -347,7 +348,7 @@ async function loadGuide(){
    req.onsuccess=()=>resolve(req.result); req.onerror=()=>reject(req.error);
   });
   db.close();
-  if(data&&data.blob){ setGuideBlob(data.blob,data.name||'Saved guide'); }
+  if(data&&data.blob){ setGuideBlob(data.blob,data.name||'Saved guide'); } else { updateGuideButton(); }
  }catch(e){}
 }
 async function deleteGuide(){
@@ -372,14 +373,24 @@ function setGuideBlob(blob,name){
  updateGuideButton();
 }
 function updateGuideButton(){
- if(!guideBlob){guidePlayBtn.textContent='Play guide';guidePlayBtn.disabled=true;return}
- guidePlayBtn.disabled=false;
- guidePlayBtn.textContent=mediaPlayer.paused?'Play guide':'Pause guide';
+ const mainBtn=document.getElementById('recordedStartBtn');
+ const pauseBtn=document.getElementById('guideSessionPauseBtn');
+ if(!guideBlob){
+   if(mainBtn){mainBtn.disabled=false;mainBtn.textContent='▶ CHOOSE AUDIO FIRST';}
+   if(pauseBtn)pauseBtn.textContent='Pause / Resume';
+   return;
+ }
+ if(mainBtn){
+   mainBtn.disabled=false;
+   mainBtn.textContent=mediaPlayer.paused?'▶ PLAY MY ACTUAL AUDIO':'❚❚ AUDIO PLAYING';
+ }
+ if(pauseBtn)pauseBtn.textContent=mediaPlayer.paused?'Resume':'Pause';
 }
 async function toggleGuide(){
  if(!guideBlob)return;
  if(mediaPlayer.paused){await mediaPlayer.play().catch(()=>{});}else{mediaPlayer.pause();}
  updateGuideButton();
+ updateRecordedSessionUI();
 }
 async function clearGuide(){
  mediaPlayer.pause();
@@ -440,13 +451,24 @@ function updateRecordedSessionUI(){
 }
 async function startRecordedSession(){
  if(!guideBlob){
-   document.getElementById('privateMediaName').textContent='Choose the combined MP3 first, then press Play.';
+   document.getElementById('privateMediaName').textContent='Choose the combined MP3 first. After selecting it, this same button will play it.';
+   mediaInput.style.display='block';
+   return;
+ }
+ if(!mediaPlayer.paused){
+   mediaPlayer.pause();
+   updateGuideButton();
    return;
  }
  pausePractice();
  document.getElementById('guideSession').classList.add('active');
- mediaPlayer.currentTime=0;
- await mediaPlayer.play().catch(()=>{});
+ if(mediaPlayer.ended || !mediaPlayer.currentTime) mediaPlayer.currentTime=0;
+ try{
+   await mediaPlayer.play();
+   document.getElementById('privateMediaName').textContent=guideFileName+' · playing';
+ }catch(e){
+   document.getElementById('privateMediaName').textContent='Audio could not start. Tap PLAY once more after selecting the file.';
+ }
  updateGuideButton();
  updateRecordedSessionUI();
 }
