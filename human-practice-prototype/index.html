@@ -25,6 +25,13 @@ h1,h2{letter-spacing:-.03em}h2{font-size:29px;margin:8px 0 10px}p{color:var(--mu
 .method-grid button.active{border-color:var(--accent);color:var(--text)}
 .audio-row{display:flex;gap:8px;align-items:center;margin-top:10px}
 .audio-row button{flex:1;border:1px solid var(--line);background:#10171d;color:var(--text);padding:11px;border-radius:13px}
+.guide-session{display:none;margin-top:18px;padding:20px;border:1px solid var(--line);border-radius:20px;background:linear-gradient(180deg,#101920,#0c1217)}
+.guide-session.active{display:block}
+.guide-stage{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.guide-title{font-size:28px;margin:8px 0 4px}
+.guide-time{font-size:22px;font-variant-numeric:tabular-nums;margin-top:14px}
+.guide-bar{height:7px;background:#18242d;border-radius:99px;overflow:hidden;margin-top:12px}
+.guide-fill{height:100%;width:0;background:var(--accent);transition:width .3s linear}
 .safety{background:#15191a;border:1px solid #3c3a30;color:#d8cba8;border-radius:14px;padding:12px 14px;font-size:12px;line-height:1.45;margin-top:16px}.tags{display:flex;flex-wrap:wrap;gap:9px;margin:14px 0}.tag{border:1px solid var(--line);border-radius:999px;padding:10px 13px;color:var(--muted)}.tag.selected{background:var(--soft);color:var(--text);border-color:var(--accent)}
 .note{width:100%;min-height:100px;border-radius:16px;border:1px solid var(--line);background:#0e151a;color:var(--text);padding:14px;font:inherit}.foot{font-size:12px;color:#7f9198;text-align:center;margin-top:12px}
 </style>
@@ -114,6 +121,20 @@ h1,h2{letter-spacing:-.03em}h2{font-size:29px;margin:8px 0 10px}p{color:var(--mu
     <button class="btn secondary" style="margin-top:0;padding:12px" onclick="clearGuide()">Replace / clear</button>
   </div>
   <audio id="privateMediaPlayer" preload="metadata"></audio>
+  <button class="btn" id="recordedStartBtn" onclick="startRecordedSession()">Start recorded session</button>
+</div>
+
+<div class="guide-session" id="guideSession">
+  <div class="guide-stage" id="guideStage">Recorded session</div>
+  <div class="guide-title" id="guideTitle">Part 1</div>
+  <p id="guideMessage">Follow the recording comfortably. You can pause or stop at any time.</p>
+  <div class="guide-time" id="guideTime">00:00 / 00:00</div>
+  <div class="guide-bar"><div class="guide-fill" id="guideFill"></div></div>
+  <div class="audio-row">
+    <button onclick="toggleGuide()" id="guideSessionPauseBtn">Pause / Resume</button>
+    <button onclick="stopRecordedSession()">Stop</button>
+  </div>
+  <div class="foot" style="text-align:left;margin-top:12px">Part 3 will become the recovery/relaxation ending. Until then, the app finishes with quiet natural breathing.</div>
 </div>
 
 <button class="btn secondary" onclick="endPractice()">Finish / reflect</button>
@@ -395,6 +416,61 @@ mediaInput.addEventListener('change',async()=>{
 mediaPlayer.addEventListener('play',updateGuideButton);
 mediaPlayer.addEventListener('pause',updateGuideButton);
 mediaPlayer.addEventListener('ended',updateGuideButton);
+
+function fmtTime(sec){
+ sec=Math.max(0,Math.floor(sec||0));
+ return String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0');
+}
+function updateRecordedSessionUI(){
+ const dur=mediaPlayer.duration||0, t=mediaPlayer.currentTime||0;
+ const stage=document.getElementById('guideStage');
+ const title=document.getElementById('guideTitle');
+ const msg=document.getElementById('guideMessage');
+ const time=document.getElementById('guideTime');
+ const fill=document.getElementById('guideFill');
+ if(guideFileName.includes('Part1_Part2') || guideFileName.includes('Part1') || guideFileName.includes('Part 1')){
+   if(t<368.7){
+     stage.textContent='Guided session';
+     title.textContent='Part 1';
+     msg.textContent='Stay comfortable and follow the recorded guidance at your own pace.';
+   }else{
+     stage.textContent='Guided session';
+     title.textContent='Part 2';
+     msg.textContent='Continue gently. Pause whenever you need.';
+   }
+ }else{
+   stage.textContent='Guided session';
+   title.textContent='Recorded practice';
+   msg.textContent='Follow the recording comfortably. You can pause or stop at any time.';
+ }
+ time.textContent=fmtTime(t)+' / '+fmtTime(dur);
+ fill.style.width=(dur?Math.min(100,(t/dur)*100):0)+'%';
+}
+async function startRecordedSession(){
+ if(!guideBlob){
+   document.getElementById('privateMediaName').textContent='Choose the combined guide file first.';
+   return;
+ }
+ pausePractice();
+ document.getElementById('guideSession').classList.add('active');
+ mediaPlayer.currentTime=0;
+ await mediaPlayer.play().catch(()=>{});
+ updateGuideButton();
+ updateRecordedSessionUI();
+}
+function stopRecordedSession(){
+ mediaPlayer.pause(); mediaPlayer.currentTime=0;
+ document.getElementById('guideSession').classList.remove('active');
+ updateGuideButton();
+}
+mediaPlayer.addEventListener('timeupdate',updateRecordedSessionUI);
+mediaPlayer.addEventListener('loadedmetadata',updateRecordedSessionUI);
+mediaPlayer.addEventListener('ended',()=>{
+ document.getElementById('guideStage').textContent='Recovery';
+ document.getElementById('guideTitle').textContent='Relax';
+ document.getElementById('guideMessage').textContent='The recording is complete. Stay comfortable, breathe naturally, and take your time before continuing.';
+ updateRecordedSessionUI();
+});
 loadGuide();
 
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;document.getElementById('installBtn').classList.remove('hidden')});
