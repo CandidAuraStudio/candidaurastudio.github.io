@@ -25,13 +25,6 @@ h1,h2{letter-spacing:-.03em}h2{font-size:29px;margin:8px 0 10px}p{color:var(--mu
 .method-grid button.active{border-color:var(--accent);color:var(--text)}
 .audio-row{display:flex;gap:8px;align-items:center;margin-top:10px}
 .audio-row button{flex:1;border:1px solid var(--line);background:#10171d;color:var(--text);padding:11px;border-radius:13px}
-.guide-session{display:none;margin-top:18px;padding:20px;border:1px solid var(--line);border-radius:20px;background:linear-gradient(180deg,#101920,#0c1217)}
-.guide-session.active{display:block}
-.guide-stage{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-.guide-title{font-size:28px;margin:8px 0 4px}
-.guide-time{font-size:22px;font-variant-numeric:tabular-nums;margin-top:14px}
-.guide-bar{height:7px;background:#18242d;border-radius:99px;overflow:hidden;margin-top:12px}
-.guide-fill{height:100%;width:0;background:var(--accent);transition:width .3s linear}
 .safety{background:#15191a;border:1px solid #3c3a30;color:#d8cba8;border-radius:14px;padding:12px 14px;font-size:12px;line-height:1.45;margin-top:16px}.tags{display:flex;flex-wrap:wrap;gap:9px;margin:14px 0}.tag{border:1px solid var(--line);border-radius:999px;padding:10px 13px;color:var(--muted)}.tag.selected{background:var(--soft);color:var(--text);border-color:var(--accent)}
 .note{width:100%;min-height:100px;border-radius:16px;border:1px solid var(--line);background:#0e151a;color:var(--text);padding:14px;font:inherit}.foot{font-size:12px;color:#7f9198;text-align:center;margin-top:12px}
 </style>
@@ -42,8 +35,7 @@ h1,h2{letter-spacing:-.03em}h2{font-size:29px;margin:8px 0 10px}p{color:var(--mu
 
 <section class="screen active" data-screen="0">
 <div class="center"><div style="font-size:56px">◯</div><div class="quote" data-i18n="purpose">To be human on this earth.</div><p data-i18n="intro">Less information. More practice. Notice what is already here.</p><div class="foot">Prototype: one temporary English guide can be reused across every practice.</div></div>
-<button class="btn" onclick="openBreathingDirect()">▶ TEST BREATHING AUDIO</button>
-<button class="btn secondary" onclick="next()" data-i18n="begin">Open full prototype</button>
+<button class="btn" onclick="next()" data-i18n="begin">Begin</button>
 <button class="btn secondary hidden" id="installBtn">Install on phone</button>
 </section>
 
@@ -68,8 +60,6 @@ h1,h2{letter-spacing:-.03em}h2{font-size:29px;margin:8px 0 10px}p{color:var(--mu
 
 <section class="screen" data-screen="3">
 <h2 data-i18n="needTitle">What do you need right now?</h2><p data-i18n="needSub">Choose one. No explanation needed.</p>
-<button class="choice" style="margin-top:14px;width:100%" onclick="openBreathing()"><b>Breathing exercises</b><small>Choose a breathing pattern, countdown and guide voice</small></button>
-<div class="foot" style="text-align:left;margin-top:8px">Breathing works under Natural, Manifest or Spiritual. It is not tied to one path.</div>
 <div class="grid" id="needGrid">
 <button class="card" onclick="setNeed('Calm',this)">Calm<small>Slow the inner noise</small></button>
 <button class="card" onclick="setNeed('Rest',this)">Rest<small>Prepare for sleep</small></button>
@@ -82,40 +72,23 @@ h1,h2{letter-spacing:-.03em}h2{font-size:29px;margin:8px 0 10px}p{color:var(--mu
 </section>
 
 <section class="screen" data-screen="4">
-<button class="btn secondary" style="margin-top:0;margin-bottom:10px;padding:11px" onclick="screen=0;show();window.scrollTo(0,0)">← Back</button>
 <h2 id="practiceTitle">Sitting practice</h2>
 <p id="practiceLead">Sit in a supported position. Let the jaw and shoulders soften. Pain is not a goal; adjust when needed.</p>
-<div style="margin-top:18px;padding:18px;border:2px solid var(--accent);border-radius:20px;background:#0e151a">
-  <div style="font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--accent);margin-bottom:4px">Main audio</div>
-  <b style="font-size:22px">My guided recording</b>
-  <p id="guideHelp" style="font-size:13px;margin:6px 0 12px">First time only: choose the combined Part 1 + Part 2 MP3 from your phone. Then press the large PLAY MY ACTUAL AUDIO button below.</p>
-  <input id="privateMediaInput" type="file" accept="audio/*,video/*" style="width:100%;color:var(--muted)">
-  <div id="privateMediaName" class="foot" style="text-align:left;margin-top:10px"></div>
-  <audio id="privateMediaPlayer" preload="metadata"></audio>
-  <button class="btn" id="recordedStartBtn" onclick="startRecordedSession()" style="font-size:20px;padding:20px">▶ CHOOSE AUDIO FIRST</button>
-  <button class="btn secondary" style="padding:12px" onclick="clearGuide()">Change recording</button>
-</div>
-
-
-
 <div class="modebar"><button id="sitMode" class="active" onclick="setMode('sit')">Sitting · 7 min</button><button id="sleepMode" onclick="setMode('sleep')">Sleep · 45 min</button></div>
 
-<details style="margin-top:12px">
-<summary style="cursor:pointer;color:var(--muted)">Advanced breathing settings</summary>
 <div class="method-grid">
   <button id="m446" onclick="setPattern('446')"><b>4 · 4 · 6</b><small>Inhale · gentle hold · exhale</small></button>
   <button id="m448" class="active" onclick="setPattern('448')"><b>4 · 4 · 8</b><small>Inhale · gentle hold · longer exhale</small></button>
   <button id="m406" onclick="setPattern('406')"><b>4 · 0 · 6</b><small>No hold · calm exhale</small></button>
   <button id="m404" onclick="setPattern('404')"><b>4 · 0 · 4</b><small>Equal, simple breathing</small></button>
 </div>
+
 <div class="audio-row">
+  <button onclick="toggleMaleVoice()" id="voiceBtn">Male guide: ON</button>
   <button onclick="toggleAmbient()" id="ambientBtn">Soft ambient: OFF</button>
 </div>
-</details>
-<div class="foot" id="voiceStatus" style="display:none">Your recorded guide is the only spoken voice.</div>
+<div class="foot" id="voiceStatus">Using the best available English male device voice.</div>
 
-<details id="visualPracticeDetails" style="margin-top:12px">
-<summary style="cursor:pointer;color:var(--muted)">Advanced visual/countdown practice</summary>
 <div class="prep" id="prepBox">
   <b>Before the practice</b><br>
   Sit or lie down safely. Let your belly move naturally. Keep the breath comfortable. The guide will give the instruction first, then leave space for you to breathe.
@@ -127,20 +100,18 @@ h1,h2{letter-spacing:-.03em}h2{font-size:29px;margin:8px 0 10px}p{color:var(--mu
 <div class="stage" id="stage">Preparation</div>
 <div class="count" id="count">—</div>
 <div class="timer" id="timer">10 gentle cycles</div>
-<button class="btn secondary" id="practiceBtn" onclick="togglePractice()">Start visual countdown</button>
-</details>
+<button class="btn" id="practiceBtn" onclick="togglePractice()">Start practice</button>
 
-<div class="guide-session" id="guideSession">
-  <div class="guide-stage" id="guideStage">Recorded session</div>
-  <div class="guide-title" id="guideTitle">Part 1</div>
-  <p id="guideMessage">Follow the recording comfortably. You can pause or stop at any time.</p>
-  <div class="guide-time" id="guideTime">00:00 / 00:00</div>
-  <div class="guide-bar"><div class="guide-fill" id="guideFill"></div></div>
-  <div class="audio-row">
-    <button onclick="toggleGuide()" id="guideSessionPauseBtn">Pause / Resume</button>
-    <button onclick="stopRecordedSession()">Stop</button>
+<div style="margin-top:18px;padding:14px;border:1px solid var(--line);border-radius:16px;background:#0e151a">
+  <b>Temporary English male guide</b>
+  <p style="font-size:13px;margin:6px 0 12px">Choose one guide recording once. The app uses that original audio as the voice. The breathing circle stays silent and follows a slower 5-second inhale / 7-second exhale rhythm.</p>
+  <input id="privateMediaInput" type="file" accept="audio/*,video/*" style="width:100%;color:var(--muted)">
+  <div id="privateMediaName" class="foot" style="text-align:left;margin-top:10px"></div>
+  <div style="display:flex;gap:8px;margin-top:10px">
+    <button class="btn secondary" style="margin-top:0;padding:12px" id="guidePlayBtn" onclick="toggleGuide()">Play guide</button>
+    <button class="btn secondary" style="margin-top:0;padding:12px" onclick="clearGuide()">Replace / clear</button>
   </div>
-  <div class="foot" style="text-align:left;margin-top:12px">Your recording is the spoken guide. Part 3 will become the recovery/relaxation ending. Until then, the app finishes with quiet natural breathing.</div>
+  <audio id="privateMediaPlayer" preload="metadata"></audio>
 </div>
 
 <button class="btn secondary" onclick="endPractice()">Finish / reflect</button>
@@ -160,7 +131,7 @@ h1,h2{letter-spacing:-.03em}h2{font-size:29px;margin:8px 0 10px}p{color:var(--mu
 
 <script>
 let screen=0,lang='en',path='',need='',mode='sit',running=false,remaining=60,phaseTimer,countdownTimer,inhale=true,deferredPrompt;
-let maleVoiceEnabled=false, ambientEnabled=false, selectedVoice=null, ambientCtx=null, ambientGain=null, ambientNodes=[];
+let maleVoiceEnabled=true, ambientEnabled=false, selectedVoice=null, ambientCtx=null, ambientGain=null, ambientNodes=[];
 let currentPattern='448';
 const PATTERNS={
   '446':{inhale:4,hold:4,exhale:6,label:'4 seconds in → 4 seconds gentle hold → 6 seconds out'},
@@ -173,16 +144,32 @@ function applyLang(){document.querySelectorAll('[data-i18n]').forEach(e=>{let k=
 function setLang(l){lang=l;applyLang()}function show(){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.querySelector('[data-screen="'+screen+'"]').classList.add('active');document.getElementById('progress').textContent=(screen+1)+' / 6'}
 function next(){if(screen<5){screen++;show()}}function selectPath(el,p){path=p;document.querySelectorAll('[data-path]').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');document.getElementById('pathNext').classList.remove('hidden')}
 function setNeed(n,el){need=n;document.querySelectorAll('#needGrid .card').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');document.getElementById('needNext').classList.remove('hidden')}
-function openBreathing(){need='Breathing';setMode('sit');screen=4;show()}
-function openBreathingDirect(){lang='en';applyLang();need='Breathing';setMode('sit');screen=4;show();window.scrollTo(0,0)}
 function preparePractice(){setMode(need==='Rest'?'sleep':'sit')}function setMode(m){mode=m;document.getElementById('sitMode').classList.toggle('active',m==='sit');document.getElementById('sleepMode').classList.toggle('active',m==='sleep');document.getElementById('practiceTitle').textContent=m==='sit'?'Sitting practice':'Sleep practice';document.getElementById('practiceLead').textContent=m==='sit'?'Sit in a supported position. Let the jaw and shoulders soften. Pain is not a goal; adjust when needed.':'Lie down safely. Put the phone aside. Let the guidance become quieter as you move toward sleep.';resetPractice()}
-function chooseMaleVoice(){ selectedVoice=null; }
-function speak(t){ /* Device text-to-speech intentionally disabled. */ }
+function chooseMaleVoice(){
+ const voices=speechSynthesis.getVoices().filter(v=>/^en/i.test(v.lang||''));
+ const maleWords=['male','david','mark','george','daniel','james','guy','ryan','andrew','thomas','aaron','matthew','oliver','alex'];
+ selectedVoice=voices.find(v=>maleWords.some(w=>(v.name||'').toLowerCase().includes(w)))||voices[0]||null;
+ const s=document.getElementById('voiceStatus');
+ if(s) s.textContent=selectedVoice?'Male guide target: '+selectedVoice.name:'No English device voice loaded yet. Uploaded guide audio still works.';
+}
+if('speechSynthesis' in window){
+ speechSynthesis.onvoiceschanged=chooseMaleVoice;
+ setTimeout(chooseMaleVoice,200);
+}
+function speak(t){
+ if(!maleVoiceEnabled || !('speechSynthesis' in window))return;
+ const u=new SpeechSynthesisUtterance(t);
+ if(selectedVoice)u.voice=selectedVoice;
+ u.lang='en-US';
+ u.rate=.68;
+ u.pitch=.78;
+ u.volume=.72;
+ speechSynthesis.speak(u);
+}
 function toggleMaleVoice(){
- maleVoiceEnabled=false;
- if('speechSynthesis' in window)speechSynthesis.cancel();
- document.getElementById('voiceBtn').textContent='Device voice: OFF';
- document.getElementById('voiceStatus').textContent='Your recorded guide is the voice. Device text-to-speech is disabled.';
+ maleVoiceEnabled=!maleVoiceEnabled;
+ if(!maleVoiceEnabled && 'speechSynthesis' in window)speechSynthesis.cancel();
+ document.getElementById('voiceBtn').textContent='Male guide: '+(maleVoiceEnabled?'ON':'OFF');
 }
 function setPattern(k){
  currentPattern=k;
@@ -319,7 +306,7 @@ function restart(){resetPractice();screen=0;show()}
 const mediaInput=document.getElementById('privateMediaInput');
 const mediaPlayer=document.getElementById('privateMediaPlayer');
 const mediaName=document.getElementById('privateMediaName');
-const guidePlayBtn=null;
+const guidePlayBtn=document.getElementById('guidePlayBtn');
 let privateMediaUrl=null, guideBlob=null, guideFileName='';
 
 function openGuideDB(){
@@ -348,7 +335,7 @@ async function loadGuide(){
    req.onsuccess=()=>resolve(req.result); req.onerror=()=>reject(req.error);
   });
   db.close();
-  if(data&&data.blob){ setGuideBlob(data.blob,data.name||'Saved guide'); } else { updateGuideButton(); }
+  if(data&&data.blob){ setGuideBlob(data.blob,data.name||'Saved guide'); }
  }catch(e){}
 }
 async function deleteGuide(){
@@ -367,30 +354,18 @@ function setGuideBlob(blob,name){
  if(privateMediaUrl)URL.revokeObjectURL(privateMediaUrl);
  privateMediaUrl=URL.createObjectURL(blob);
  mediaPlayer.src=privateMediaUrl;
- mediaName.textContent=name+' · ready';
- document.getElementById('privateMediaInput').style.display='none';
- const h=document.getElementById('guideHelp'); if(h)h.textContent='Ready. Press Play my guided recording.';
+ mediaName.textContent=name+' · saved privately on this phone · audio-only use';
  updateGuideButton();
 }
 function updateGuideButton(){
- const mainBtn=document.getElementById('recordedStartBtn');
- const pauseBtn=document.getElementById('guideSessionPauseBtn');
- if(!guideBlob){
-   if(mainBtn){mainBtn.disabled=false;mainBtn.textContent='▶ CHOOSE AUDIO FIRST';}
-   if(pauseBtn)pauseBtn.textContent='Pause / Resume';
-   return;
- }
- if(mainBtn){
-   mainBtn.disabled=false;
-   mainBtn.textContent=mediaPlayer.paused?'▶ PLAY MY ACTUAL AUDIO':'❚❚ AUDIO PLAYING';
- }
- if(pauseBtn)pauseBtn.textContent=mediaPlayer.paused?'Resume':'Pause';
+ if(!guideBlob){guidePlayBtn.textContent='Play guide';guidePlayBtn.disabled=true;return}
+ guidePlayBtn.disabled=false;
+ guidePlayBtn.textContent=mediaPlayer.paused?'Play guide':'Pause guide';
 }
 async function toggleGuide(){
  if(!guideBlob)return;
  if(mediaPlayer.paused){await mediaPlayer.play().catch(()=>{});}else{mediaPlayer.pause();}
  updateGuideButton();
- updateRecordedSessionUI();
 }
 async function clearGuide(){
  mediaPlayer.pause();
@@ -400,8 +375,6 @@ async function clearGuide(){
  privateMediaUrl=null;mediaPlayer.removeAttribute('src');mediaPlayer.load();
  mediaName.textContent='No guide saved. Choose a file above.';
  mediaInput.value='';
- mediaInput.style.display='block';
- const h=document.getElementById('guideHelp'); if(h)h.textContent='Choose the combined MP3 from your phone.';
  updateGuideButton();
 }
 mediaInput.addEventListener('change',async()=>{
@@ -419,80 +392,11 @@ mediaInput.addEventListener('change',async()=>{
 mediaPlayer.addEventListener('play',updateGuideButton);
 mediaPlayer.addEventListener('pause',updateGuideButton);
 mediaPlayer.addEventListener('ended',updateGuideButton);
-
-function fmtTime(sec){
- sec=Math.max(0,Math.floor(sec||0));
- return String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0');
-}
-function updateRecordedSessionUI(){
- const dur=mediaPlayer.duration||0, t=mediaPlayer.currentTime||0;
- const stage=document.getElementById('guideStage');
- const title=document.getElementById('guideTitle');
- const msg=document.getElementById('guideMessage');
- const time=document.getElementById('guideTime');
- const fill=document.getElementById('guideFill');
- if(guideFileName.includes('Part1_Part2') || guideFileName.includes('Part1') || guideFileName.includes('Part 1')){
-   if(t<368.7){
-     stage.textContent='Guided session';
-     title.textContent='Part 1';
-     msg.textContent='Stay comfortable and follow the recorded guidance at your own pace.';
-   }else{
-     stage.textContent='Guided session';
-     title.textContent='Part 2';
-     msg.textContent='Continue gently. Pause whenever you need.';
-   }
- }else{
-   stage.textContent='Guided session';
-   title.textContent='Recorded practice';
-   msg.textContent='Follow the recording comfortably. You can pause or stop at any time.';
- }
- time.textContent=fmtTime(t)+' / '+fmtTime(dur);
- fill.style.width=(dur?Math.min(100,(t/dur)*100):0)+'%';
-}
-async function startRecordedSession(){
- if(!guideBlob){
-   document.getElementById('privateMediaName').textContent='Choose the combined MP3 first. After selecting it, this same button will play it.';
-   mediaInput.style.display='block';
-   return;
- }
- if(!mediaPlayer.paused){
-   mediaPlayer.pause();
-   updateGuideButton();
-   return;
- }
- pausePractice();
- document.getElementById('guideSession').classList.add('active');
- if(mediaPlayer.ended || !mediaPlayer.currentTime) mediaPlayer.currentTime=0;
- try{
-   await mediaPlayer.play();
-   document.getElementById('privateMediaName').textContent=guideFileName+' · playing';
- }catch(e){
-   document.getElementById('privateMediaName').textContent='Audio could not start. Tap PLAY once more after selecting the file.';
- }
- updateGuideButton();
- updateRecordedSessionUI();
-}
-function stopRecordedSession(){
- mediaPlayer.pause(); mediaPlayer.currentTime=0;
- document.getElementById('guideSession').classList.remove('active');
- updateGuideButton();
-}
-mediaPlayer.addEventListener('timeupdate',updateRecordedSessionUI);
-mediaPlayer.addEventListener('loadedmetadata',updateRecordedSessionUI);
-mediaPlayer.addEventListener('ended',()=>{
- document.getElementById('guideStage').textContent='Recovery';
- document.getElementById('guideTitle').textContent='Relax';
- document.getElementById('guideMessage').textContent='The recording is complete. Stay comfortable, breathe naturally, and take your time before continuing.';
- updateRecordedSessionUI();
-});
 loadGuide();
 
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;document.getElementById('installBtn').classList.remove('hidden')});
 document.getElementById('installBtn').addEventListener('click',async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;document.getElementById('installBtn').classList.add('hidden')});
 if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));
-applyLang();
-const params=new URLSearchParams(location.search);
-if(params.get('breathing')==='1'){lang='en';applyLang();need='Breathing';setMode('sit');screen=4;}
-show();
+applyLang();show();
 </script>
 </body></html>
