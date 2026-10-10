@@ -190,17 +190,18 @@ iframe{
   <div class="glass player-card">
     <div class="player-title"><span class="player-dot"></span><strong>10-minute guided source</strong></div>
     <div class="frame-wrap">
-      <iframe
-        id="driveFrame"
-        src="https://drive.google.com/file/d/17te3Zv0HblXhmSBWuBknyf4Lp8DsjfKl/preview"
-        title="Sufi Breath source"
-        loading="eager"
-        allow="autoplay; fullscreen; encrypted-media"
-        allowfullscreen
-        referrerpolicy="strict-origin-when-cross-origin">
-      </iframe>
+      <video id="meditationVisual" playsinline preload="metadata"
+        src="https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/df63c4b4-c5cf-48ed-a0da-36adc931b4ce.mp4"
+        style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#0a1f2b"></video>
     </div>
-    <div class="note" id="playerNote">The shared Google Drive recording is preloaded when this page opens, so there is no upload step.</div>
+    <div class="minirow" style="margin-top:14px">
+      <button class="btn secondary" style="margin-top:0;flex:1" onclick="jumpVisual(-10)">−10s</button>
+      <button class="btn" id="visualPlayBtn" style="margin-top:0;flex:1.4" onclick="toggleVisual()">▶ Play</button>
+      <button class="btn secondary" style="margin-top:0;flex:1" onclick="jumpVisual(10)">+10s</button>
+    </div>
+    <input id="visualSeek" type="range" min="0" max="600" value="0" step="0.1"
+      style="width:100%;margin-top:14px;accent-color:#ffd89a">
+    <div class="note" id="playerNote">This Stage 2 visual is now our own 10-minute warm-blue sunlight meditation background. Audio is intentionally separate so we can replace it with your own/original guide cleanly.</div>
   </div>
 
   <button class="btn secondary" onclick="go(2)">Back</button>
@@ -243,6 +244,23 @@ function chooseLang(l){
 function openMeditation(){
   go(3);
 }
+const visual=document.getElementById('meditationVisual');
+const visualPlayBtn=document.getElementById('visualPlayBtn');
+const visualSeek=document.getElementById('visualSeek');
+function toggleVisual(){
+  if(visual.paused){
+    visual.play().then(()=>{visualPlayBtn.textContent='❚❚ Pause';}).catch(()=>{});
+  }else{
+    visual.pause();visualPlayBtn.textContent='▶ Resume';
+  }
+}
+function jumpVisual(sec){
+  visual.currentTime=Math.max(0,Math.min(visual.duration||600,visual.currentTime+sec));
+}
+visual.addEventListener('loadedmetadata',()=>{visualSeek.max=visual.duration||600});
+visual.addEventListener('timeupdate',()=>{visualSeek.value=visual.currentTime||0});
+visual.addEventListener('ended',()=>{visualPlayBtn.textContent='▶ Play again'});
+visualSeek.addEventListener('input',()=>{visual.currentTime=Number(visualSeek.value)||0});
 </script>
 </body>
 </html>
