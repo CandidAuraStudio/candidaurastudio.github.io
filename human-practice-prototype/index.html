@@ -85,18 +85,19 @@ h1,h2{letter-spacing:-.03em}h2{font-size:29px;margin:8px 0 10px}p{color:var(--mu
 <p id="practiceLead">Sit in a supported position. Let the jaw and shoulders soften. Pain is not a goal; adjust when needed.</p>
 <div class="modebar"><button id="sitMode" class="active" onclick="setMode('sit')">Sitting · 7 min</button><button id="sleepMode" onclick="setMode('sleep')">Sleep · 45 min</button></div>
 
+<details style="margin-top:12px">
+<summary style="cursor:pointer;color:var(--muted)">Advanced breathing settings</summary>
 <div class="method-grid">
   <button id="m446" onclick="setPattern('446')"><b>4 · 4 · 6</b><small>Inhale · gentle hold · exhale</small></button>
   <button id="m448" class="active" onclick="setPattern('448')"><b>4 · 4 · 8</b><small>Inhale · gentle hold · longer exhale</small></button>
   <button id="m406" onclick="setPattern('406')"><b>4 · 0 · 6</b><small>No hold · calm exhale</small></button>
   <button id="m404" onclick="setPattern('404')"><b>4 · 0 · 4</b><small>Equal, simple breathing</small></button>
 </div>
-
 <div class="audio-row">
-  <button onclick="toggleMaleVoice()" id="voiceBtn">Device voice: OFF</button>
   <button onclick="toggleAmbient()" id="ambientBtn">Soft ambient: OFF</button>
 </div>
-<div class="foot" id="voiceStatus">Your recorded guide is the voice. Device text-to-speech is disabled.</div>
+</details>
+<div class="foot" id="voiceStatus">Your recorded guide is the only spoken voice.</div>
 
 <div class="prep" id="prepBox">
   <b>Before the practice</b><br>
@@ -111,17 +112,14 @@ h1,h2{letter-spacing:-.03em}h2{font-size:29px;margin:8px 0 10px}p{color:var(--mu
 <div class="timer" id="timer">10 gentle cycles</div>
 <button class="btn" id="practiceBtn" onclick="togglePractice()">Start practice</button>
 
-<div style="margin-top:18px;padding:14px;border:1px solid var(--line);border-radius:16px;background:#0e151a">
-  <b>Your recorded guide</b>
-  <p style="font-size:13px;margin:6px 0 12px">Choose your recorded guide once. This becomes the only spoken voice in the prototype. Device text-to-speech is disabled.</p>
+<div style="margin-top:18px;padding:16px;border:1px solid var(--line);border-radius:18px;background:#0e151a">
+  <b>My guided recording</b>
+  <p id="guideHelp" style="font-size:13px;margin:6px 0 12px">First time only: choose the combined MP3 from your phone. After that, just press Play.</p>
   <input id="privateMediaInput" type="file" accept="audio/*,video/*" style="width:100%;color:var(--muted)">
   <div id="privateMediaName" class="foot" style="text-align:left;margin-top:10px"></div>
-  <div style="display:flex;gap:8px;margin-top:10px">
-    <button class="btn secondary" style="margin-top:0;padding:12px" id="guidePlayBtn" onclick="toggleGuide()">Play guide</button>
-    <button class="btn secondary" style="margin-top:0;padding:12px" onclick="clearGuide()">Replace / clear</button>
-  </div>
   <audio id="privateMediaPlayer" preload="metadata"></audio>
-  <button class="btn" id="recordedStartBtn" onclick="startRecordedSession()">Start recorded session</button>
+  <button class="btn" id="recordedStartBtn" onclick="startRecordedSession()">▶ Play my guided recording</button>
+  <button class="btn secondary" style="padding:12px" onclick="clearGuide()">Change recording</button>
 </div>
 
 <div class="guide-session" id="guideSession">
@@ -360,7 +358,9 @@ function setGuideBlob(blob,name){
  if(privateMediaUrl)URL.revokeObjectURL(privateMediaUrl);
  privateMediaUrl=URL.createObjectURL(blob);
  mediaPlayer.src=privateMediaUrl;
- mediaName.textContent=name+' · saved privately on this phone · audio-only use';
+ mediaName.textContent=name+' · ready';
+ document.getElementById('privateMediaInput').style.display='none';
+ const h=document.getElementById('guideHelp'); if(h)h.textContent='Ready. Press Play my guided recording.';
  updateGuideButton();
 }
 function updateGuideButton(){
@@ -381,6 +381,8 @@ async function clearGuide(){
  privateMediaUrl=null;mediaPlayer.removeAttribute('src');mediaPlayer.load();
  mediaName.textContent='No guide saved. Choose a file above.';
  mediaInput.value='';
+ mediaInput.style.display='block';
+ const h=document.getElementById('guideHelp'); if(h)h.textContent='Choose the combined MP3 from your phone.';
  updateGuideButton();
 }
 mediaInput.addEventListener('change',async()=>{
@@ -430,7 +432,7 @@ function updateRecordedSessionUI(){
 }
 async function startRecordedSession(){
  if(!guideBlob){
-   document.getElementById('privateMediaName').textContent='Choose the combined guide file first.';
+   document.getElementById('privateMediaName').textContent='Choose the combined MP3 first, then press Play.';
    return;
  }
  pausePractice();
