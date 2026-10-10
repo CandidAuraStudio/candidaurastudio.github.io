@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#315f7b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Sufi Breath">
+<link rel="manifest" href="./manifest.webmanifest">
 <title>Sufi Breath — Stage 2</title>
 <style>
 :root{
@@ -78,35 +82,25 @@ p{color:var(--muted);line-height:1.58;margin:12px 0}
     <h1>To be human<br>on this earth.</h1>
     <p>Less information. More practice. Begin gently.</p>
   </div>
-  <button class="btn" onclick="show('language')">Begin</button>
-</section>
-
-<section class="screen" id="language">
-  <div class="glass">
-    <div class="kicker">Language</div>
-    <h2>Choose language</h2>
-    <button class="choice" onclick="setLang('en')"><b>English</b><small>Simple guidance</small></button>
-    <button class="choice" onclick="setLang('ta')"><b>தமிழ்</b><small>எளிய வழிகாட்டல்</small></button>
-  </div>
+  <button class="btn" onclick="show('practices')">Begin</button>
 </section>
 
 <section class="screen" id="practices">
   <div class="kicker" id="practiceKicker">Practices</div>
   <h2 id="practiceHeading">Choose your time</h2>
 
-  <button class="choice practice-card" onclick="choosePractice(600,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/f4d262f6-56fe-40e3-84ea-930c11fe7c54.mp3')">
+  <button class="choice practice-card" onclick="choosePractice(600,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/f4d262f6-56fe-40e3-84ea-930c11fe7c54.mp3','Practice 01','10-minute practice')">
     <b id="p10title">Practice 01 · 10 minutes</b>
     <small id="p10sub">Original Drive sound bed · 10-minute cut</small>
     <span class="duration">10:00</span>
   </button>
 
-  <button class="choice practice-card" onclick="choosePractice(2400,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/b7f691a0-16a1-4449-b143-38e7b3be74df.mp3')">
+  <button class="choice practice-card" onclick="choosePractice(2400,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/b7f691a0-16a1-4449-b143-38e7b3be74df.mp3','Practice 02','40-minute practice')">
     <b id="p40title">Practice 02 · 40 minutes</b>
     <small id="p40sub">Original Drive sound bed · 40-minute cut</small>
     <span class="duration">40:00</span>
   </button>
-
-  <button class="btn secondary" onclick="show('language')" id="changeLangBtn">Change language</button>
+  <p class="note">iPhone: open this page in Safari, tap Share, then Add to Home Screen. Android: open in Chrome and choose Install app or Add to Home screen.</p>
 </section>
 
 <section class="screen" id="instructions">
@@ -172,16 +166,17 @@ p{color:var(--muted);line-height:1.58;margin:12px 0}
       <button class="btn secondary" onclick="finish()" id="finishBtn">Finish</button>
     </div>
   </div>
-  <div class="footer">Stage 2 · full-length audio · text instructions first</div>
+  <div class="footer">Stage 2 · English · full-length audio · text instructions first</div>
   <audio id="audio" preload="metadata"></audio>
 </section>
 
 </div>
 
 <script>
-let lang='en';
 let chosenSeconds=600;
 let chosenUrl='https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/f4d262f6-56fe-40e3-84ea-930c11fe7c54.mp3';
+let chosenKicker='Practice 01';
+let chosenTitle='10-minute practice';
 let stepIndex=0;
 let scrubbing=false;
 
@@ -195,66 +190,22 @@ function show(id){
   window.scrollTo(0,0);
 }
 
-function setLang(l){
-  lang=l;
-  applyLang();
-  show('practices');
-}
-
-function applyLang(){
-  if(lang==='ta'){
-    document.getElementById('practiceKicker').textContent='பயிற்சிகள்';
-    document.getElementById('practiceHeading').textContent='நேரத்தைத் தேர்ந்தெடுக்கவும்';
-    document.getElementById('p10title').textContent='பயிற்சி 01 · 10 நிமிடம்';
-    document.getElementById('p10sub').textContent='Google Drive மூல ஒலி · 10 நிமிடம்';
-    document.getElementById('p40title').textContent='பயிற்சி 02 · 40 நிமிடம்';
-    document.getElementById('p40sub').textContent='Google Drive மூல ஒலி · 40 நிமிடம்';
-    document.getElementById('changeLangBtn').textContent='மொழியை மாற்று';
-    const titles=['முதலில் அமைதியாகுங்கள்','மூச்சை எளிதாக வைத்துக்கொள்ளுங்கள்','கவனியுங்கள்','தயார்'];
-    const texts=['பாதுகாப்பான வசதியான இடத்தில் அமருங்கள் அல்லது படுத்துக்கொள்ளுங்கள். தோள்களையும் தாடையையும் தளர்த்துங்கள்.','இயல்பாக மூச்செடுங்கள். கட்டாயப்படுத்தவும் அவசரப்படவும் தேவையில்லை.','உடல், மூச்சு மற்றும் எண்ணங்களை மாற்ற வேண்டிய அவசியமின்றி கவனியுங்கள்.','Play அழுத்திய பிறகே ஒலி தொடங்கும். தேவையானபோது நிறுத்தலாம்.'];
-    for(let i=0;i<4;i++){
-      document.getElementById('step'+(i+1)+'no').textContent='படி '+(i+1)+' / 4';
-      document.getElementById('step'+(i+1)+'title').textContent=titles[i];
-      document.getElementById('step'+(i+1)+'text').textContent=texts[i];
-    }
-    document.getElementById('backBtn').textContent='பின்னால்';
-    document.getElementById('finishBtn').textContent='முடி';
-    document.getElementById('playerNote').textContent='தானாக தொடங்காது. Play அழுத்திய பிறகே பயிற்சி தொடங்கும்.';
-  }else{
-    document.getElementById('practiceKicker').textContent='Practices';
-    document.getElementById('practiceHeading').textContent='Choose your time';
-    document.getElementById('p10title').textContent='Practice 01 · 10 minutes';
-    document.getElementById('p10sub').textContent='Original Drive sound bed · 10-minute cut';
-    document.getElementById('p40title').textContent='Practice 02 · 40 minutes';
-    document.getElementById('p40sub').textContent='Original Drive sound bed · 40-minute cut';
-    document.getElementById('changeLangBtn').textContent='Change language';
-    const titles=['Settle first','Keep the breath easy','Notice','Ready'];
-    const texts=['Sit or lie somewhere comfortable and safe. Let your shoulders and jaw soften.','Breathe naturally. There is nothing to force, prove or rush.','Notice body, breath and thoughts without needing to change them.','The sound will begin only when you press Play. Stop whenever you need to.'];
-    for(let i=0;i<4;i++){
-      document.getElementById('step'+(i+1)+'no').textContent='Step '+(i+1)+' of 4';
-      document.getElementById('step'+(i+1)+'title').textContent=titles[i];
-      document.getElementById('step'+(i+1)+'text').textContent=texts[i];
-    }
-    document.getElementById('backBtn').textContent='Back';
-    document.getElementById('finishBtn').textContent='Finish';
-    document.getElementById('playerNote').textContent='No autoplay. The session begins only when you press Play.';
-  }
-}
-
-function choosePractice(seconds,url){
+function choosePractice(seconds,url,kicker,title){
   chosenSeconds=seconds;
   chosenUrl=url;
+  chosenKicker=kicker || 'Practice';
+  chosenTitle=title || 'Breathing practice';
   stepIndex=0;
   renderStep();
   preparePlayer();
+  try{localStorage.setItem('sufiLastPractice',chosenKicker)}catch(e){}
   show('instructions');
 }
 
 function renderStep(){
   document.querySelectorAll('.step').forEach((x,i)=>x.classList.toggle('active',i===stepIndex));
   document.querySelectorAll('.dot').forEach((x,i)=>x.classList.toggle('active',i===stepIndex));
-  document.getElementById('nextBtn').textContent=
-    stepIndex===3 ? (lang==='ta'?'பயிற்சிக்கு செல்லுங்கள்':'Go to practice') : (lang==='ta'?'அடுத்து':'Next');
+  document.getElementById('nextBtn').textContent=stepIndex===3 ? 'Go to practice' : 'Next';
 }
 
 function nextStep(){
@@ -273,20 +224,19 @@ function preparePlayer(){
   document.getElementById('clock').textContent='00:00';
   document.getElementById('total').textContent=fmt(chosenSeconds);
   document.getElementById('playBtn').textContent='▶ Play';
-  document.getElementById('orbText').textContent=lang==='ta'?'தயார்':'Ready';
-
-  if(chosenSeconds===2400){
-    document.getElementById('sessionKicker').textContent=lang==='ta'?'பயிற்சி 02':'Practice 02';
-    document.getElementById('sessionTitle').textContent=lang==='ta'?'40 நிமிடப் பயிற்சி':'40-minute practice';
-  }else{
-    document.getElementById('sessionKicker').textContent=lang==='ta'?'பயிற்சி 01':'Practice 01';
-    document.getElementById('sessionTitle').textContent=lang==='ta'?'10 நிமிடப் பயிற்சி':'10-minute practice';
-  }
+  document.getElementById('orbText').textContent='Ready';
+  document.getElementById('sessionKicker').textContent=chosenKicker;
+  document.getElementById('sessionTitle').textContent=chosenTitle;
+  document.getElementById('playerNote').textContent='No autoplay. The session begins only when you press Play.';
 }
 
 function fmt(sec){
   sec=Math.max(0,Math.floor(Number(sec)||0));
-  return String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0');
+  const h=Math.floor(sec/3600);
+  const m=Math.floor((sec%3600)/60);
+  const ss=sec%60;
+  if(h>0) return String(h)+':'+String(m).padStart(2,'0')+':'+String(ss).padStart(2,'0');
+  return String(m).padStart(2,'0')+':'+String(ss).padStart(2,'0');
 }
 
 async function togglePlay(){
@@ -294,14 +244,14 @@ async function togglePlay(){
     try{
       await audio.play();
       document.getElementById('playBtn').textContent='❚❚ Pause';
-      document.getElementById('orbText').textContent=lang==='ta'?'பயிற்சி':'Practice';
+      document.getElementById('orbText').textContent='Practice';
     }catch(e){
-      document.getElementById('playerNote').textContent=lang==='ta'?'ஒலி தொடங்கவில்லை. Play மீண்டும் அழுத்தவும்.':'Audio did not start. Tap Play once more.';
+      document.getElementById('playerNote').textContent='Audio did not start. Tap Play once more.';
     }
   }else{
     audio.pause();
     document.getElementById('playBtn').textContent='▶ Resume';
-    document.getElementById('orbText').textContent=lang==='ta'?'இடைநிறுத்தம்':'Paused';
+    document.getElementById('orbText').textContent='Paused';
   }
 }
 
@@ -329,15 +279,13 @@ function sync(){
     audio.pause();
     t=chosenSeconds;
     document.getElementById('playBtn').textContent='▶ Play again';
-    document.getElementById('orbText').textContent=lang==='ta'?'முடிந்தது':'Complete';
+    document.getElementById('orbText').textContent='Complete';
   }
   if(!scrubbing)seek.value=t;
   document.getElementById('elapsed').textContent=fmt(t);
   document.getElementById('clock').textContent=fmt(t);
   document.getElementById('total').textContent=fmt(chosenSeconds);
-  if(!audio.paused && t<chosenSeconds){
-    document.getElementById('playBtn').textContent='❚❚ Pause';
-  }
+  if(!audio.paused && t<chosenSeconds) document.getElementById('playBtn').textContent='❚❚ Pause';
 }
 
 audio.addEventListener('timeupdate',sync);
@@ -345,7 +293,7 @@ audio.addEventListener('play',sync);
 audio.addEventListener('pause',sync);
 audio.addEventListener('ended',sync);
 audio.addEventListener('error',()=>{
-  document.getElementById('playerNote').textContent=lang==='ta'?'ஒலி ஏற்றப்படவில்லை. இணைய இணைப்பைச் சரிபார்த்து மீண்டும் முயற்சிக்கவும்.':'Audio could not load. Check the connection and try again.';
+  document.getElementById('playerNote').textContent='Audio could not load. Check the connection and try again.';
 });
 seek.addEventListener('pointerdown',()=>scrubbing=true);
 seek.addEventListener('pointerup',()=>{scrubbing=false;audio.currentTime=Number(seek.value)||0;sync()});
@@ -353,9 +301,20 @@ seek.addEventListener('input',()=>{
   document.getElementById('elapsed').textContent=fmt(Number(seek.value)||0);
   document.getElementById('clock').textContent=fmt(Number(seek.value)||0);
 });
-volume.addEventListener('input',()=>audio.volume=Number(volume.value));
-audio.volume=.85;
+volume.addEventListener('input',()=>{
+  audio.volume=Number(volume.value);
+  try{localStorage.setItem('sufiVolume',String(audio.volume))}catch(e){}
+});
+try{
+  const saved=Number(localStorage.getItem('sufiVolume'));
+  if(Number.isFinite(saved) && saved>=0 && saved<=1){audio.volume=saved;volume.value=saved}
+  else audio.volume=.85;
+}catch(e){audio.volume=.85}
 setInterval(sync,500);
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+}
 </script>
 </body>
 </html>
