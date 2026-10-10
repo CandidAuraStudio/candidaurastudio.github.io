@@ -60,6 +60,8 @@ h1,h2{letter-spacing:-.03em}h2{font-size:29px;margin:8px 0 10px}p{color:var(--mu
 
 <section class="screen" data-screen="3">
 <h2 data-i18n="needTitle">What do you need right now?</h2><p data-i18n="needSub">Choose one. No explanation needed.</p>
+<button class="choice" style="margin-top:14px;width:100%" onclick="openBreathing()"><b>Breathing exercises</b><small>Choose a breathing pattern, countdown and guide voice</small></button>
+<div class="foot" style="text-align:left;margin-top:8px">Breathing works under Natural, Manifest or Spiritual. It is not tied to one path.</div>
 <div class="grid" id="needGrid">
 <button class="card" onclick="setNeed('Calm',this)">Calm<small>Slow the inner noise</small></button>
 <button class="card" onclick="setNeed('Rest',this)">Rest<small>Prepare for sleep</small></button>
@@ -104,7 +106,7 @@ h1,h2{letter-spacing:-.03em}h2{font-size:29px;margin:8px 0 10px}p{color:var(--mu
 
 <div style="margin-top:18px;padding:14px;border:1px solid var(--line);border-radius:16px;background:#0e151a">
   <b>Temporary English male guide</b>
-  <p style="font-size:13px;margin:6px 0 12px">Choose one guide recording once. The app uses that original audio as the voice. The breathing circle stays silent and follows a slower 5-second inhale / 7-second exhale rhythm.</p>
+  <p style="font-size:13px;margin:6px 0 12px">Choose one guide recording once. The app can reuse that original audio as the voice. The breathing timing follows whichever pattern button you select above.</p>
   <input id="privateMediaInput" type="file" accept="audio/*,video/*" style="width:100%;color:var(--muted)">
   <div id="privateMediaName" class="foot" style="text-align:left;margin-top:10px"></div>
   <div style="display:flex;gap:8px;margin-top:10px">
@@ -144,6 +146,7 @@ function applyLang(){document.querySelectorAll('[data-i18n]').forEach(e=>{let k=
 function setLang(l){lang=l;applyLang()}function show(){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.querySelector('[data-screen="'+screen+'"]').classList.add('active');document.getElementById('progress').textContent=(screen+1)+' / 6'}
 function next(){if(screen<5){screen++;show()}}function selectPath(el,p){path=p;document.querySelectorAll('[data-path]').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');document.getElementById('pathNext').classList.remove('hidden')}
 function setNeed(n,el){need=n;document.querySelectorAll('#needGrid .card').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');document.getElementById('needNext').classList.remove('hidden')}
+function openBreathing(){need='Breathing';setMode('sit');screen=4;show()}
 function preparePractice(){setMode(need==='Rest'?'sleep':'sit')}function setMode(m){mode=m;document.getElementById('sitMode').classList.toggle('active',m==='sit');document.getElementById('sleepMode').classList.toggle('active',m==='sleep');document.getElementById('practiceTitle').textContent=m==='sit'?'Sitting practice':'Sleep practice';document.getElementById('practiceLead').textContent=m==='sit'?'Sit in a supported position. Let the jaw and shoulders soften. Pain is not a goal; adjust when needed.':'Lie down safely. Put the phone aside. Let the guidance become quieter as you move toward sleep.';resetPractice()}
 function chooseMaleVoice(){
  const voices=speechSynthesis.getVoices().filter(v=>/^en/i.test(v.lang||''));
