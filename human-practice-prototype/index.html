@@ -70,6 +70,15 @@ h1,h2{letter-spacing:-.03em}h2{font-size:29px;margin:8px 0 10px}p{color:var(--mu
 <div class="orb-wrap"><div class="orb" id="orb"><span id="cue">Ready</span></div></div>
 <div class="timer" id="timer">01:00 demo</div>
 <button class="btn" id="practiceBtn" onclick="togglePractice()">Start 60-second demo</button>
+
+<div style="margin-top:18px;padding:14px;border:1px solid var(--line);border-radius:16px;background:#0e151a">
+  <b>Private practice recording</b>
+  <p style="font-size:13px;margin:6px 0 12px">Choose an audio or video file already saved on this phone. It plays only here and is not uploaded.</p>
+  <input id="privateMediaInput" type="file" accept="audio/*,video/*" style="width:100%;color:var(--muted)">
+  <div id="privateMediaName" class="foot" style="text-align:left;margin-top:10px"></div>
+  <video id="privateMediaPlayer" controls playsinline style="display:none;width:100%;margin-top:12px;border-radius:12px;background:#000"></video>
+</div>
+
 <button class="btn secondary" onclick="endPractice()">Finish / reflect</button>
 <div class="safety">Keep breathing comfortable. Do not force long holds or rapid breathing. Stop if you feel dizzy, faint, numb, panicked, or have unusual pain. Do not use while driving, in water, or where falling could hurt you.</div>
 </section>
@@ -99,6 +108,21 @@ function togglePractice(){if(running){pausePractice();return}running=true;docume
 function pausePractice(){running=false;clearTimeout(phaseTimer);clearInterval(countdownTimer);if('speechSynthesis'in window)speechSynthesis.cancel();document.getElementById('practiceBtn').textContent='Resume'}function resetPractice(){pausePractice();remaining=60;inhale=true;document.getElementById('timer').textContent='01:00 demo';document.getElementById('cue').textContent='Ready';document.getElementById('orb').className='orb';document.getElementById('practiceBtn').textContent='Start 60-second demo'}
 function endPractice(){pausePractice();screen=5;show()}function toggleTag(e){e.classList.toggle('selected')}function saveReflection(){let tags=[...document.querySelectorAll('.tag.selected')].map(x=>x.textContent);let a=JSON.parse(localStorage.getItem('practice_reflections')||'[]');a.push({time:new Date().toISOString(),lang,path,need,mode,tags,note:document.getElementById('note').value});localStorage.setItem('practice_reflections',JSON.stringify(a));document.getElementById('savedMsg').textContent='Saved locally. No account. No cloud.'}
 function restart(){resetPractice();screen=0;show()}
+
+const mediaInput=document.getElementById('privateMediaInput');
+const mediaPlayer=document.getElementById('privateMediaPlayer');
+const mediaName=document.getElementById('privateMediaName');
+let privateMediaUrl=null;
+mediaInput.addEventListener('change',()=>{
+  const file=mediaInput.files&&mediaInput.files[0];
+  if(!file)return;
+  if(privateMediaUrl)URL.revokeObjectURL(privateMediaUrl);
+  privateMediaUrl=URL.createObjectURL(file);
+  mediaPlayer.src=privateMediaUrl;
+  mediaPlayer.style.display='block';
+  mediaName.textContent=file.name+' · private local playback';
+});
+
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;document.getElementById('installBtn').classList.remove('hidden')});
 document.getElementById('installBtn').addEventListener('click',async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;document.getElementById('installBtn').classList.add('hidden')});
 if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));
