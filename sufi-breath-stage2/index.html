@@ -78,6 +78,22 @@ p{color:var(--muted);line-height:1.55;margin:12px 0}
 </section>
 
 <section class="screen" id="s2">
+  <div class="glass">
+    <div class="kicker" id="choosePracticeKicker">Practices</div>
+    <h2 id="choosePracticeTitle">Choose a practice</h2>
+    <button class="choice" onclick="selectPractice(600)">
+      <b id="p10title">Practice 01 · 10 minutes</b>
+      <small id="p10sub">Gentle breathing and observation</small>
+    </button>
+    <button class="choice" onclick="selectPractice(2400)">
+      <b id="p40title">Practice 02 · 40 minutes</b>
+      <small id="p40sub">Long quiet practice · gentle breathing only</small>
+    </button>
+    <button class="btn secondary" onclick="go(1)">Change language</button>
+  </div>
+</section>
+
+<section class="screen" id="s3">
   <div class="glass instruction-stage">
     <div class="instruction active" data-step="0">
       <div class="stepno" id="step1no">Step 1 of 3</div>
@@ -109,7 +125,7 @@ p{color:var(--muted);line-height:1.55;margin:12px 0}
   </div>
 </section>
 
-<section class="screen" id="s3">
+<section class="screen" id="s4">
   <div class="glass practice-min">
     <div class="kicker" id="practiceKicker">Sufi Breath · gentle practice</div>
     <h2 id="practiceTitle">Practice</h2>
@@ -129,6 +145,7 @@ p{color:var(--muted);line-height:1.55;margin:12px 0}
 <script>
 let lang='en';
 let instructionIndex=0;
+let selectedDuration=600;
 let remaining=600;
 let timerId=null;
 
@@ -146,8 +163,22 @@ function chooseLang(l){
   go(2);
 }
 
+function selectPractice(seconds){
+  selectedDuration=seconds;
+  instructionIndex=0;
+  showInstruction();
+  resetPractice(false);
+  go(3);
+}
+
 function applyLanguage(){
   if(lang==='ta'){
+    const cp=document.getElementById('choosePracticeTitle'); if(cp) cp.textContent='ஒரு பயிற்சியைத் தேர்ந்தெடுக்கவும்';
+    const ck=document.getElementById('choosePracticeKicker'); if(ck) ck.textContent='பயிற்சிகள்';
+    const p10t=document.getElementById('p10title'); if(p10t) p10t.textContent='பயிற்சி 01 · 10 நிமிடம்';
+    const p10s=document.getElementById('p10sub'); if(p10s) p10s.textContent='மென்மையான மூச்சு மற்றும் கவனிப்பு';
+    const p40t=document.getElementById('p40title'); if(p40t) p40t.textContent='பயிற்சி 02 · 40 நிமிடம்';
+    const p40s=document.getElementById('p40sub'); if(p40s) p40s.textContent='நீண்ட அமைதிப் பயிற்சி · மென்மையான மூச்சு மட்டும்';
     document.getElementById('step1no').textContent='படி 1 / 3';
     document.getElementById('step1title').textContent='முதலில் அமைதியாகுங்கள்';
     document.getElementById('step1text').textContent='பாதுகாப்பான, வசதியான இடத்தில் அமருங்கள் அல்லது படுத்துக்கொள்ளுங்கள். தோள்களை தளர்த்துங்கள். வலி இந்தப் பயிற்சிக்கு தேவையில்லை.';
@@ -162,6 +193,12 @@ function applyLanguage(){
     document.getElementById('practiceText').textContent='வீடியோ இல்லை. கூடுதல் வழிமுறைகள் இல்லை. வசதியாக இருந்து மூச்சை கவனியுங்கள்.';
     document.getElementById('timerBtn').textContent='பயிற்சியை தொடங்கு';
   }else{
+    const cp=document.getElementById('choosePracticeTitle'); if(cp) cp.textContent='Choose a practice';
+    const ck=document.getElementById('choosePracticeKicker'); if(ck) ck.textContent='Practices';
+    const p10t=document.getElementById('p10title'); if(p10t) p10t.textContent='Practice 01 · 10 minutes';
+    const p10s=document.getElementById('p10sub'); if(p10s) p10s.textContent='Gentle breathing and observation';
+    const p40t=document.getElementById('p40title'); if(p40t) p40t.textContent='Practice 02 · 40 minutes';
+    const p40s=document.getElementById('p40sub'); if(p40s) p40s.textContent='Long quiet practice · gentle breathing only';
     document.getElementById('step1no').textContent='Step 1 of 3';
     document.getElementById('step1title').textContent='Settle first';
     document.getElementById('step1text').textContent='Sit or lie somewhere comfortable and safe. Let your shoulders soften. Pain is not required for practice.';
@@ -192,7 +229,16 @@ function nextInstruction(){
     showInstruction();
   }else{
     resetPractice(false);
-    go(3);
+    const pk=document.getElementById('practiceKicker');
+    const pt=document.getElementById('practiceTitle');
+    if(lang==='ta'){
+      pk.textContent=selectedDuration===2400?'பயிற்சி 02 · 40 நிமிடம்':'பயிற்சி 01 · 10 நிமிடம்';
+      pt.textContent=selectedDuration===2400?'நீண்ட அமைதிப் பயிற்சி':'பயிற்சி';
+    }else{
+      pk.textContent=selectedDuration===2400?'Practice 02 · 40 min':'Practice 01 · 10 min';
+      pt.textContent=selectedDuration===2400?'Long quiet practice':'Practice';
+    }
+    go(4);
   }
 }
 
@@ -225,7 +271,7 @@ function toggleTimer(){
 
 function resetPractice(updateButton=true){
   if(timerId){clearInterval(timerId);timerId=null;}
-  remaining=600; renderTimer();
+  remaining=selectedDuration; renderTimer();
   if(updateButton) document.getElementById('timerBtn').textContent=lang==='ta'?'பயிற்சியை தொடங்கு':'Start practice';
 }
 
