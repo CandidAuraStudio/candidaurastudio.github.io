@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Breath Audio Test</title>
+<style>
+body{margin:0;background:#0b1014;color:#eef4f4;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+.wrap{max-width:480px;margin:auto;min-height:100vh;padding:28px 20px;display:flex;flex-direction:column;justify-content:center}
+h1{font-size:30px;margin:0 0 10px}p{color:#a9bac0;line-height:1.5}
+.box{border:2px solid #c7e6d4;border-radius:20px;padding:18px;background:#10171d;margin-top:18px}
+input{width:100%;margin:12px 0;color:#eef4f4}
+button{width:100%;padding:18px;border:0;border-radius:16px;font-size:18px;font-weight:700;background:#c7e6d4;color:#0b1511;margin-top:10px}
+button.secondary{background:transparent;color:#eef4f4;border:1px solid #2a3a44}
+audio{width:100%;margin-top:14px}
+.status{font-size:13px;color:#8fa1a8;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Breath Audio Test</h1>
+<p>This page only tests your combined Part 1 + Part 2 recording. No other settings.</p>
+<div class="box">
+<b>1. Choose the MP3</b>
+<input id="file" type="file" accept="audio/*">
+<div class="status" id="status">No file selected.</div>
+<audio id="player" controls preload="metadata"></audio>
+<button id="play">▶ PLAY MY AUDIO</button>
+<button class="secondary" id="restart">Restart from beginning</button>
+</div>
+</div>
+<script>
+const file=document.getElementById('file');
+const player=document.getElementById('player');
+const status=document.getElementById('status');
+const play=document.getElementById('play');
+const restart=document.getElementById('restart');
+let url=null;
+
+file.addEventListener('change',()=>{
+ const f=file.files&&file.files[0];
+ if(!f){status.textContent='No file selected.';return;}
+ if(url)URL.revokeObjectURL(url);
+ url=URL.createObjectURL(f);
+ player.src=url;
+ player.load();
+ status.textContent='Ready: '+f.name;
+ play.textContent='▶ PLAY MY AUDIO';
+});
+
+play.addEventListener('click',async()=>{
+ if(!player.src){status.textContent='Choose the MP3 first.';return;}
+ try{
+   if(player.paused){
+     await player.play();
+     play.textContent='❚❚ PAUSE';
+     status.textContent='Playing now.';
+   }else{
+     player.pause();
+     play.textContent='▶ RESUME';
+     status.textContent='Paused.';
+   }
+ }catch(e){
+   status.textContent='Could not start. Tap the built-in audio Play button once.';
+ }
+});
+
+restart.addEventListener('click',()=>{
+ if(!player.src)return;
+ player.pause();
+ player.currentTime=0;
+ play.textContent='▶ PLAY MY AUDIO';
+ status.textContent='Ready from the beginning.';
+});
+
+player.addEventListener('play',()=>{play.textContent='❚❚ PAUSE';status.textContent='Playing now.'});
+player.addEventListener('pause',()=>{if(!player.ended)play.textContent='▶ RESUME'});
+player.addEventListener('ended',()=>{play.textContent='▶ PLAY AGAIN';status.textContent='Finished.'});
+</script>
+</body>
+</html>
