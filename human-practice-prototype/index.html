@@ -16,6 +16,9 @@ h1,h2{letter-spacing:-.03em}h2{font-size:29px;margin:8px 0 10px}p{color:var(--mu
 .card,.choice{background:linear-gradient(180deg,#142029,#10171d);border:1px solid var(--line);color:var(--text);border-radius:18px;padding:18px;text-align:left;min-height:82px}.choice.selected,.card.selected{border-color:var(--accent)}
 .card small,.choice small{display:block;color:var(--muted);margin-top:6px;line-height:1.35}.btn{width:100%;border:0;border-radius:18px;padding:17px 18px;margin-top:18px;font-size:17px;font-weight:650;background:var(--accent);color:#0b1511}.btn.secondary{background:transparent;color:var(--text);border:1px solid var(--line)}
 .hidden{display:none!important}.orb-wrap{display:grid;place-items:center;margin:26px 0 18px}.orb{width:190px;height:190px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle,#bfe6d5 0,#5b8b7c 22%,#213e3b 52%,#0f1b1d 72%);transition:transform 4s ease-in-out}.orb.inhale{transform:scale(1.13)}.orb.exhale{transform:scale(.88)}.orb span{font-size:22px;font-weight:600}.timer{text-align:center;color:var(--muted);font-size:20px;font-variant-numeric:tabular-nums}
+.count{font-size:34px;text-align:center;margin-top:8px;font-variant-numeric:tabular-nums}
+.prep{background:#10171d;border:1px solid var(--line);border-radius:16px;padding:14px;margin-top:12px;line-height:1.5;color:var(--muted)}
+.stage{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);text-align:center;margin-top:6px}
 .modebar{display:flex;gap:8px;margin-top:12px}.modebar button{flex:1;border:1px solid var(--line);background:#10171d;color:var(--muted);padding:11px;border-radius:13px}.modebar button.active{border-color:var(--accent);color:var(--text)}
 .safety{background:#15191a;border:1px solid #3c3a30;color:#d8cba8;border-radius:14px;padding:12px 14px;font-size:12px;line-height:1.45;margin-top:16px}.tags{display:flex;flex-wrap:wrap;gap:9px;margin:14px 0}.tag{border:1px solid var(--line);border-radius:999px;padding:10px 13px;color:var(--muted)}.tag.selected{background:var(--soft);color:var(--text);border-color:var(--accent)}
 .note{width:100%;min-height:100px;border-radius:16px;border:1px solid var(--line);background:#0e151a;color:var(--text);padding:14px;font:inherit}.foot{font-size:12px;color:#7f9198;text-align:center;margin-top:12px}
@@ -67,9 +70,19 @@ h1,h2{letter-spacing:-.03em}h2{font-size:29px;margin:8px 0 10px}p{color:var(--mu
 <h2 id="practiceTitle">Sitting practice</h2>
 <p id="practiceLead">Sit in a supported position. Let the jaw and shoulders soften. Pain is not a goal; adjust when needed.</p>
 <div class="modebar"><button id="sitMode" class="active" onclick="setMode('sit')">Sitting · 7 min</button><button id="sleepMode" onclick="setMode('sleep')">Sleep · 45 min</button></div>
+
+<div class="prep" id="prepBox">
+  <b>Before the practice</b><br>
+  Sit or lie down safely. Let your belly move naturally. Keep the breath comfortable. The guide will give the instruction first, then leave space for you to breathe.
+  <br><br>
+  Prototype rhythm: <b>inhale 4 seconds → easy transition → exhale 6 seconds → short rest</b>.
+</div>
+
 <div class="orb-wrap"><div class="orb" id="orb"><span id="cue">Ready</span></div></div>
-<div class="timer" id="timer">01:00 demo</div>
-<button class="btn" id="practiceBtn" onclick="togglePractice()">Start 60-second demo</button>
+<div class="stage" id="stage">Preparation</div>
+<div class="count" id="count">—</div>
+<div class="timer" id="timer">10 gentle cycles</div>
+<button class="btn" id="practiceBtn" onclick="togglePractice()">Start practice</button>
 
 <div style="margin-top:18px;padding:14px;border:1px solid var(--line);border-radius:16px;background:#0e151a">
   <b>Temporary English guide</b>
@@ -84,7 +97,7 @@ h1,h2{letter-spacing:-.03em}h2{font-size:29px;margin:8px 0 10px}p{color:var(--mu
 </div>
 
 <button class="btn secondary" onclick="endPractice()">Finish / reflect</button>
-<div class="safety">Keep breathing comfortable. Do not force long holds or rapid breathing. Stop if you feel dizzy, faint, numb, panicked, or have unusual pain. Do not use while driving, in water, or where falling could hurt you.</div>
+<div class="safety">Keep breathing comfortable. This prototype does not use rapid breathing or long forced holds. Stop if you feel dizzy, faint, numb, panicked, short of breath, or have unusual pain. Do not use while driving, in water, or anywhere a fall could hurt you.</div>
 </section>
 
 <section class="screen" data-screen="5">
@@ -107,27 +120,81 @@ function next(){if(screen<5){screen++;show()}}function selectPath(el,p){path=p;d
 function setNeed(n,el){need=n;document.querySelectorAll('#needGrid .card').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');document.getElementById('needNext').classList.remove('hidden')}
 function preparePractice(){setMode(need==='Rest'?'sleep':'sit')}function setMode(m){mode=m;document.getElementById('sitMode').classList.toggle('active',m==='sit');document.getElementById('sleepMode').classList.toggle('active',m==='sleep');document.getElementById('practiceTitle').textContent=m==='sit'?'Sitting practice':'Sleep practice';document.getElementById('practiceLead').textContent=m==='sit'?'Sit in a supported position. Let the jaw and shoulders soften. Pain is not a goal; adjust when needed.':'Lie down safely. Put the phone aside. Let the guidance become quieter as you move toward sleep.';resetPractice()}
 function speak(t){ /* Prototype uses no synthetic voice. The selected local guide recording provides the voice. */ }
+function setBreathUI(label,stage,count,klass){
+ const cue=document.getElementById('cue');
+ const orb=document.getElementById('orb');
+ cue.textContent=label;
+ document.getElementById('stage').textContent=stage;
+ document.getElementById('count').textContent=count||'—';
+ orb.className='orb '+(klass||'');
+}
+function countPhase(total,label,stage,klass,onDone){
+ let n=1;
+ setBreathUI(label,stage,n,klass);
+ const tick=()=>{
+   phaseTimer=setTimeout(()=>{
+     n++;
+     if(n<=total){
+       document.getElementById('count').textContent=n;
+       tick();
+     }else{
+       onDone();
+     }
+   },1000);
+ };
+ tick();
+}
+let cyclesDone=0;
 function phase(){
- let cue=document.getElementById('cue'),orb=document.getElementById('orb');
- if(inhale){
-   cue.textContent=lang==='ta'?'உள்ளிழு':'Breathe in';
-   orb.className='orb inhale';
-   phaseTimer=setTimeout(()=>{inhale=false;phase()},5000);
- }else{
-   cue.textContent=lang==='ta'?'வெளியேற்று':'Breathe out';
-   orb.className='orb exhale';
-   phaseTimer=setTimeout(()=>{inhale=true;phase()},7000);
- }
+ if(!running)return;
+ if(cyclesDone>=10){finishGentlePractice();return;}
+ countPhase(4,'Breathe in','Inhale','inhale',()=>{
+   if(!running)return;
+   setBreathUI('Easy…','Transition','—','');
+   phaseTimer=setTimeout(()=>{
+     if(!running)return;
+     countPhase(6,'Breathe out','Exhale','exhale',()=>{
+       if(!running)return;
+       setBreathUI('Rest','Natural breath','—','');
+       phaseTimer=setTimeout(()=>{
+         cyclesDone++;
+         document.getElementById('timer').textContent=(10-cyclesDone)+' cycles remaining';
+         phase();
+       },2000);
+     });
+   },1200);
+ });
+}
+function finishGentlePractice(){
+ running=false; clearTimeout(phaseTimer); clearInterval(countdownTimer);
+ if(mediaPlayer&&!mediaPlayer.paused)mediaPlayer.pause();
+ updateGuideButton();
+ setBreathUI('Notice','Body awareness','—','');
+ document.getElementById('timer').textContent='Practice complete';
+ document.getElementById('practiceBtn').textContent='Practice complete';
+ document.getElementById('practiceBtn').disabled=true;
+ const box=document.getElementById('prepBox');
+ box.innerHTML='<b>Closing awareness</b><br>Stay still if comfortable. Feel your fingers, toes, hands, face, chest and belly without trying to change anything. Notice what supported you today. Offer a simple thank-you to your body. Adjust your position whenever you need.';
 }
 function togglePractice(){
  if(running){pausePractice();return}
+ if(cyclesDone>=10){resetPractice();return}
  running=true;
  document.getElementById('practiceBtn').textContent='Pause';
+ if(guideBlob && mediaPlayer.paused){mediaPlayer.currentTime=0;mediaPlayer.play().catch(()=>{});updateGuideButton();}
  phase();
- if(guideBlob && mediaPlayer.paused){ mediaPlayer.currentTime=0; mediaPlayer.play().catch(()=>{}); updateGuideButton(); }
- countdownTimer=setInterval(()=>{remaining--;document.getElementById('timer').textContent='00:'+String(remaining).padStart(2,'0')+' demo';if(remaining<=0)endPractice()},1000)
 }
-function pausePractice(){running=false;clearTimeout(phaseTimer);clearInterval(countdownTimer);if(mediaPlayer&&!mediaPlayer.paused)mediaPlayer.pause();updateGuideButton();document.getElementById('practiceBtn').textContent='Resume'}function resetPractice(){pausePractice();remaining=60;inhale=true;document.getElementById('timer').textContent='01:00 demo';document.getElementById('cue').textContent='Ready';document.getElementById('orb').className='orb';document.getElementById('practiceBtn').textContent='Start 60-second demo'}
+function pausePractice(){running=false;clearTimeout(phaseTimer);clearInterval(countdownTimer);if(mediaPlayer&&!mediaPlayer.paused)mediaPlayer.pause();updateGuideButton();document.getElementById('practiceBtn').textContent='Resume'}function resetPractice(){
+ pausePractice();cyclesDone=0;inhale=true;
+ document.getElementById('timer').textContent='10 gentle cycles';
+ document.getElementById('cue').textContent='Ready';
+ document.getElementById('stage').textContent='Preparation';
+ document.getElementById('count').textContent='—';
+ document.getElementById('orb').className='orb';
+ const pb=document.getElementById('practiceBtn');pb.textContent='Start practice';pb.disabled=false;
+ const box=document.getElementById('prepBox');
+ box.innerHTML='<b>Before the practice</b><br>Sit or lie down safely. Let your belly move naturally. Keep the breath comfortable. The guide will give the instruction first, then leave space for you to breathe.<br><br>Prototype rhythm: <b>inhale 4 seconds → easy transition → exhale 6 seconds → short rest</b>.';
+}
 function endPractice(){pausePractice();screen=5;show()}function toggleTag(e){e.classList.toggle('selected')}function saveReflection(){let tags=[...document.querySelectorAll('.tag.selected')].map(x=>x.textContent);let a=JSON.parse(localStorage.getItem('practice_reflections')||'[]');a.push({time:new Date().toISOString(),lang,path,need,mode,tags,note:document.getElementById('note').value});localStorage.setItem('practice_reflections',JSON.stringify(a));document.getElementById('savedMsg').textContent='Saved locally. No account. No cloud.'}
 function restart(){resetPractice();screen=0;show()}
 
