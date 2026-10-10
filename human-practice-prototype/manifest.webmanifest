@@ -1,11 +1,11 @@
 {
-  "name": "Practice Prototype",
-  "short_name": "Practice",
+  "name": "Sufi Breath — Stage 2",
+  "short_name": "Sufi Breath",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#0b1014",
-  "theme_color": "#0b1014",
+  "background_color": "#173548",
+  "theme_color": "#315f7b",
   "icons": [
     {
       "src": "./icon.svg",
