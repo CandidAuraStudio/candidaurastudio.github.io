@@ -48,8 +48,27 @@ p{color:var(--muted);line-height:1.58;margin:12px 0}
 .btn.secondary{background:rgba(12,39,53,.35);color:var(--ink);border:1px solid var(--line);box-shadow:none}
 .choice{width:100%;border:1px solid var(--line);color:var(--ink);border-radius:22px;padding:18px;text-align:left;margin-top:12px;font:inherit;background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(13,42,57,.34));backdrop-filter:blur(12px)}
 .choice b{font-size:18px}.choice small{display:block;color:var(--muted);margin-top:5px}
-.practice-card{position:relative;overflow:hidden}.practice-card:after{content:"";position:absolute;width:160px;height:160px;border-radius:50%;right:-74px;bottom:-84px;background:radial-gradient(circle,rgba(255,218,153,.24),transparent 67%)}
-.duration{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.15);color:#f9e7c4;background:rgba(13,41,55,.22);font-size:12px;margin-top:9px}
+.practice-library{justify-content:flex-start;padding-top:clamp(38px,8vh,76px)}
+.library-intro{position:relative;padding:20px 0 24px}
+.library-intro:after{content:"";position:absolute;width:220px;height:220px;right:-92px;top:-96px;border-radius:50%;background:radial-gradient(circle,rgba(255,223,165,.16),transparent 70%);pointer-events:none}
+.library-intro h2{max-width:340px;font-size:clamp(30px,8vw,38px);line-height:1.06}
+.library-intro p{max-width:350px;margin:12px 0 0}
+.library-label{display:flex;align-items:center;gap:8px;color:#f7e4c1;font-size:11px;letter-spacing:.13em;text-transform:uppercase;margin-bottom:11px}
+.library-label:before{content:"";width:7px;height:7px;border-radius:50%;background:#ffd995;box-shadow:0 0 12px rgba(255,217,149,.65)}
+.library-list{display:grid;gap:11px;margin-top:6px}
+.practice-card{position:relative;overflow:hidden;display:grid;grid-template-columns:42px minmax(0,1fr) auto;align-items:center;gap:13px;min-height:94px;padding:15px 16px;border-radius:22px;transition:transform .24s ease,border-color .24s ease,box-shadow .24s ease}
+.practice-card:after{content:"";position:absolute;width:160px;height:160px;border-radius:50%;right:-74px;bottom:-84px;background:radial-gradient(circle,rgba(255,218,153,.20),transparent 67%);pointer-events:none}
+.practice-card:focus-visible{outline:3px solid #ffe3ad;outline-offset:3px}
+.practice-card:active{transform:scale(.985)}
+.practice-index{position:relative;z-index:1;width:40px;height:40px;display:grid;place-items:center;border:1px solid rgba(255,226,177,.28);border-radius:14px;background:linear-gradient(145deg,rgba(255,227,173,.17),rgba(255,255,255,.04));color:#ffe2aa;font-size:12px;font-weight:750;letter-spacing:.04em}
+.practice-copy{position:relative;z-index:1;min-width:0}
+.practice-card b{display:block;font-size:16px;line-height:1.25}
+.practice-card small{display:block;color:#d4e2e8;margin-top:5px;line-height:1.35}
+.duration{position:relative;z-index:1;display:inline-flex;align-items:center;gap:6px;padding:8px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.16);color:#f9e7c4;background:rgba(13,41,55,.32);font-size:12px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.library-footnote{display:flex;align-items:flex-start;gap:10px;margin:17px 2px 0;padding:13px 14px;border:1px solid rgba(255,255,255,.12);border-radius:17px;background:rgba(13,41,55,.17);color:#d7e5eb;font-size:12px;line-height:1.5}
+.library-footnote span{color:#ffe2aa;font-size:15px;line-height:1.2}
+@media(hover:hover){.practice-card:hover{transform:translateY(-2px);border-color:rgba(255,222,169,.52);box-shadow:0 15px 34px rgba(4,20,31,.18)}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
 .instruction-wrap{min-height:470px;display:flex;flex-direction:column;justify-content:center;text-align:center}
 .orb{width:154px;height:154px;border-radius:50%;margin:26px auto 26px;border:2px solid rgba(235,248,242,.72);box-shadow:0 0 40px rgba(210,240,232,.17),inset 0 0 34px rgba(210,240,232,.08);animation:breathe 10s ease-in-out infinite}
 .step{display:none}.step.active{display:block}
@@ -85,33 +104,39 @@ p{color:var(--muted);line-height:1.58;margin:12px 0}
   <button class="btn" onclick="show('practices')">Begin</button>
 </section>
 
-<section class="screen" id="practices">
-  <div class="kicker" id="practiceKicker">Practices</div>
-  <h2 id="practiceHeading">Choose your time</h2>
+<section class="screen practice-library" id="practices">
+  <header class="library-intro">
+    <div class="library-label">Your practice library</div>
+    <h2 id="practiceHeading">Choose what feels right today</h2>
+    <p>Four guided sessions, with space to settle in before each one begins.</p>
+  </header>
 
-  <button class="choice practice-card" onclick="choosePractice(600,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/f4d262f6-56fe-40e3-84ea-930c11fe7c54.mp3','Practice 01','10-minute practice')">
-    <b id="p10title">Practice 01 · 10 minutes</b>
-    <small id="p10sub">Original Drive sound bed · 10-minute cut</small>
-    <span class="duration">10:00</span>
-  </button>
+  <div class="library-list" aria-label="Available guided practices">
+    <button class="choice practice-card" aria-label="Start Practice 01, 10-minute practice" onclick="choosePractice(600,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/f4d262f6-56fe-40e3-84ea-930c11fe7c54.mp3','Practice 01','10-minute practice')">
+      <span class="practice-index" aria-hidden="true">01</span>
+      <span class="practice-copy"><b>10-minute practice</b><small>Original Drive sound bed · 10-minute cut</small></span>
+      <span class="duration">10:00</span>
+    </button>
 
-  <button class="choice practice-card" onclick="choosePractice(2400,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/b7f691a0-16a1-4449-b143-38e7b3be74df.mp3','Practice 02','40-minute practice')">
-    <b id="p40title">Practice 02 · 40 minutes</b>
-    <small id="p40sub">Original Drive sound bed · 40-minute cut</small>
-    <span class="duration">40:00</span>
-  </button>
+    <button class="choice practice-card" aria-label="Start Practice 02, 40-minute practice" onclick="choosePractice(2400,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/b7f691a0-16a1-4449-b143-38e7b3be74df.mp3','Practice 02','40-minute practice')">
+      <span class="practice-index" aria-hidden="true">02</span>
+      <span class="practice-copy"><b>40-minute practice</b><small>Original Drive sound bed · 40-minute cut</small></span>
+      <span class="duration">40:00</span>
+    </button>
 
-  <button class="choice practice-card" onclick="choosePractice(3600,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/93c0e1fe-0e8b-4e7e-9277-47edf8dd0b63.mp3','Practice 03','60-minute practice')">
-    <b id="p60title">Practice 03 · 60 minutes</b>
-    <small id="p60sub">Original Drive sound bed · 60-minute cut</small>
-    <span class="duration">60:00</span>
-  </button>
+    <button class="choice practice-card" aria-label="Start Practice 03, 60-minute practice" onclick="choosePractice(3600,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/93c0e1fe-0e8b-4e7e-9277-47edf8dd0b63.mp3','Practice 03','60-minute practice')">
+      <span class="practice-index" aria-hidden="true">03</span>
+      <span class="practice-copy"><b>60-minute practice</b><small>Original Drive sound bed · 60-minute cut</small></span>
+      <span class="duration">60:00</span>
+    </button>
 
-  <button class="choice practice-card" onclick="choosePractice(3600,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/74f43c24-d734-4ace-b1d0-f1c3263cb299.mp3','Practice 04 · Deep Sleep','60-minute deep sleep')">
-    <b>Practice 04 · Deep Sleep</b>
-    <small>Original Drive sleep sound bed · 60-minute cut</small>
-    <span class="duration">60:00</span>
-  </button>
+    <button class="choice practice-card" aria-label="Start Practice 04, 60-minute deep sleep" onclick="choosePractice(3600,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/74f43c24-d734-4ace-b1d0-f1c3263cb299.mp3','Practice 04 · Deep Sleep','60-minute deep sleep')">
+      <span class="practice-index" aria-hidden="true">04</span>
+      <span class="practice-copy"><b>60-minute deep sleep</b><small>Original Drive sleep sound bed · 60-minute cut</small></span>
+      <span class="duration">60:00</span>
+    </button>
+  </div>
+  <p class="library-footnote"><span aria-hidden="true">✦</span><span>Choose a session to see a few gentle instructions first. The audio starts only when you press Play.</span></p>
   <p class="note">iPhone: open this page in Safari, tap Share, then Add to Home Screen. Android: open in Chrome and choose Install app or Add to Home screen.</p>
 </section>
 
