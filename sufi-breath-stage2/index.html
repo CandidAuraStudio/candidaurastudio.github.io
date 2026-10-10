@@ -331,6 +331,67 @@ body:after{
 }
 .intro-note{margin:14px 4px 0;text-align:center;font-size:12px;color:#8fa4ae}
 
+
+/* Local dashboard, history, completion */
+.home-dashboard{margin-top:18px;display:grid;gap:10px}
+.home-resume{
+  display:none;text-align:left;padding:15px 16px;border-radius:20px;
+  border:1px solid rgba(214,181,122,.16);
+  background:linear-gradient(145deg,rgba(25,49,59,.72),rgba(6,19,28,.82));
+  box-shadow:0 16px 38px rgba(0,0,0,.18)
+}
+.home-resume.show{display:block}
+.home-resume .eyebrow{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#d4b477}
+.home-resume strong{display:block;margin-top:5px;font-size:17px}
+.home-resume small{display:block;margin-top:4px;color:#9eb2bc}
+.home-resume button{
+  width:100%;margin-top:12px;border:0;border-radius:14px;padding:12px 14px;
+  background:linear-gradient(180deg,#dfbd80,#b98148);color:#07131b;
+  font:inherit;font-weight:750
+}
+.home-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat-tile{
+  padding:13px 14px;border-radius:18px;text-align:left;
+  border:1px solid rgba(197,224,235,.09);
+  background:rgba(5,18,27,.50)
+}
+.stat-tile b{display:block;font-size:20px;font-variant-numeric:tabular-nums}
+.stat-tile span{display:block;margin-top:3px;color:#8fa5af;font-size:11px}
+.home-links{display:flex;justify-content:center;margin-top:2px}
+.text-link{
+  border:0;background:transparent;color:#bda372;font:inherit;font-size:12px;
+  padding:8px 10px;text-decoration:underline;text-underline-offset:3px
+}
+.history-list{display:grid;gap:9px;margin-top:18px}
+.history-item{
+  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;
+  padding:13px 14px;border-radius:17px;border:1px solid rgba(197,224,235,.08);
+  background:rgba(5,18,27,.45)
+}
+.history-item b{font-size:14px}.history-item small{display:block;color:#849aa5;margin-top:3px}
+.history-time{font-size:12px;color:#d5b77c;font-variant-numeric:tabular-nums}
+.history-empty{padding:28px 8px;text-align:center;color:#849aa5;font-size:13px}
+.history-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:18px}
+.history-summary .stat-tile{text-align:center;padding:12px 8px}
+.completion-card{text-align:center;padding:26px 20px}
+.completion-mark{
+  width:96px;height:96px;border-radius:50%;margin:4px auto 20px;
+  border:1px solid rgba(207,231,236,.17);
+  background:radial-gradient(circle,rgba(88,151,170,.13),rgba(11,37,49,.05) 62%,transparent 72%);
+  box-shadow:0 0 48px rgba(49,112,135,.12);
+  animation:darkSunFloat 8s ease-in-out infinite
+}
+.completion-time{font-size:13px;color:#d3b77e;margin-top:9px}
+.reflection-label{margin-top:24px;color:#8fa4ae;font-size:12px}
+.reflections{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:11px}
+.reflection-chip{
+  border:1px solid rgba(199,225,235,.10);background:rgba(5,18,27,.54);
+  color:#cbd8de;border-radius:999px;padding:9px 12px;font:inherit;font-size:12px
+}
+.reflection-chip.selected{
+  border-color:rgba(218,181,116,.40);background:rgba(144,98,43,.20);color:#e4c892
+}
+
 </style>
 </head>
 <body>
@@ -339,11 +400,28 @@ body:after{
 <section class="screen active" id="home">
   <div class="center">
     <div class="sun"></div>
-    <div class="kicker">Stage 2</div>
+    <div class="kicker">Clear Within</div>
     <h1>Clear Within</h1>
     <p>Breathe. Release. Return.</p>
   </div>
-  <button class="btn" onclick="show('practices')">Begin</button>
+
+  <div class="home-dashboard">
+    <div class="home-resume" id="homeResumeCard">
+      <div class="eyebrow">Continue</div>
+      <strong id="homeResumeTitle">Settle</strong>
+      <small id="homeResumeMeta">Continue from 04:12</small>
+      <button onclick="continueLastSession()">Continue session</button>
+    </div>
+
+    <div class="home-stats">
+      <div class="stat-tile"><b id="homeWeekSessions">0</b><span>sessions · last 7 days</span></div>
+      <div class="stat-tile"><b id="homeWeekMinutes">0 min</b><span>practice · last 7 days</span></div>
+    </div>
+
+    <div class="home-links"><button class="text-link" onclick="openHistory()">View history</button></div>
+  </div>
+
+  <button class="btn" onclick="show('practices')">Choose a practice</button>
 </section>
 
 <section class="screen practice-library" id="practices">
@@ -436,6 +514,43 @@ body:after{
   </div>
 </section>
 
+<section class="screen" id="history">
+  <div class="glass">
+    <div class="kicker">On this device</div>
+    <h2>Your history</h2>
+    <p>Your practice history stays in this browser. No account is required.</p>
+    <div class="history-summary">
+      <div class="stat-tile"><b id="histWeekSessions">0</b><span>7-day sessions</span></div>
+      <div class="stat-tile"><b id="histWeekMinutes">0</b><span>7-day min</span></div>
+      <div class="stat-tile"><b id="histTotalSessions">0</b><span>all sessions</span></div>
+    </div>
+    <div class="history-list" id="historyList"></div>
+    <button class="btn secondary" onclick="show('home')">Back</button>
+  </div>
+</section>
+
+<section class="screen" id="completion">
+  <div class="glass completion-card">
+    <div class="completion-mark"></div>
+    <div class="kicker">Session complete</div>
+    <h2>Stay for a moment.</h2>
+    <p id="completionSummary">You practiced for 10 minutes.</p>
+    <div class="completion-time" id="completionPractice">Settle</div>
+
+    <div class="reflection-label">What do you notice now? <span style="color:#6f858f">Optional</span></div>
+    <div class="reflections" id="reflectionChips">
+      <button class="reflection-chip" onclick="saveReflection('Calm',this)">Calm</button>
+      <button class="reflection-chip" onclick="saveReflection('Clear',this)">Clear</button>
+      <button class="reflection-chip" onclick="saveReflection('Restless',this)">Restless</button>
+      <button class="reflection-chip" onclick="saveReflection('Tired',this)">Tired</button>
+      <button class="reflection-chip" onclick="saveReflection('Nothing',this)">Nothing</button>
+    </div>
+
+    <button class="btn" onclick="doneCompletion()">Done</button>
+    <button class="btn secondary" onclick="repeatPractice()">Practice again</button>
+  </div>
+</section>
+
 <section class="screen" id="player">
   <div class="glass player-card">
     <div class="player-top">
@@ -508,6 +623,9 @@ let stepIndex=0;
 let scrubbing=false;
 let sleepStopAt=0;
 let savedResumeTime=0;
+let sessionStartedAt=0;
+let sessionRecorded=false;
+let completionHistoryIndex=-1;
 
 const audio=document.getElementById('audio');
 const seek=document.getElementById('seek');
@@ -520,6 +638,8 @@ const resumeCard=document.getElementById('resumeCard');
 function show(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
+  if(id==='home') renderDashboard();
+  if(id==='history') renderHistory();
   window.scrollTo(0,0);
 }
 
@@ -576,6 +696,9 @@ function preparePlayer(){
   seek.value=0;
   sleepStopAt=0;
   savedResumeTime=0;
+  sessionStartedAt=0;
+  sessionRecorded=false;
+  completionHistoryIndex=-1;
   document.getElementById('sleepTimer').value='0';
   document.getElementById('elapsed').textContent='00:00';
   document.getElementById('clock').textContent='00:00';
@@ -639,6 +762,184 @@ function setMediaSession(){
   }catch(e){}
 }
 
+function getHistory(){
+  try{
+    const v=JSON.parse(localStorage.getItem('clearWithinHistory')||'[]');
+    return Array.isArray(v)?v:[];
+  }catch(e){return[]}
+}
+
+function saveHistory(items){
+  try{localStorage.setItem('clearWithinHistory',JSON.stringify(items.slice(-100)))}catch(e){}
+}
+
+function last7DayStats(){
+  const cutoff=Date.now()-(7*24*60*60*1000);
+  const items=getHistory().filter(x=>Number(x.endedAt)>=cutoff);
+  const seconds=items.reduce((sum,x)=>sum+(Number(x.listenedSeconds)||0),0);
+  return {sessions:items.length,minutes:Math.round(seconds/60)};
+}
+
+function renderDashboard(){
+  const stats=last7DayStats();
+  const s=document.getElementById('homeWeekSessions');
+  const m=document.getElementById('homeWeekMinutes');
+  if(s)s.textContent=stats.sessions;
+  if(m)m.textContent=stats.minutes+' min';
+
+  const card=document.getElementById('homeResumeCard');
+  if(!card)return;
+  try{
+    const last=JSON.parse(localStorage.getItem('clearWithinLastSession')||'null');
+    if(last && Number(last.time)>20 && Number(last.time)<Number(last.seconds)-20){
+      card.classList.add('show');
+      document.getElementById('homeResumeTitle').textContent=last.kicker||'Practice';
+      document.getElementById('homeResumeMeta').textContent='Continue from '+fmt(last.time)+' · '+fmt(last.seconds);
+    }else{
+      card.classList.remove('show');
+    }
+  }catch(e){card.classList.remove('show')}
+}
+
+function continueLastSession(){
+  let last=null;
+  try{last=JSON.parse(localStorage.getItem('clearWithinLastSession')||'null')}catch(e){}
+  if(!last || !last.url){show('practices');return}
+  chosenSeconds=Number(last.seconds)||600;
+  chosenUrl=last.url;
+  chosenIntroUrl=last.introUrl||'';
+  chosenKicker=last.kicker||'Practice';
+  chosenTitle=last.title||'Practice';
+  preparePlayer();
+  show('player');
+  const target=Math.max(0,Math.min(chosenSeconds-1,Number(last.time)||0));
+  const apply=()=>{try{audio.currentTime=target;sync()}catch(e){}};
+  if(audio.readyState>=1) apply();
+  else audio.addEventListener('loadedmetadata',apply,{once:true});
+}
+
+function openHistory(){
+  renderHistory();
+  show('history');
+}
+
+function renderHistory(){
+  const items=getHistory().slice().reverse();
+  const stats=last7DayStats();
+  const a=document.getElementById('histWeekSessions');
+  const b=document.getElementById('histWeekMinutes');
+  const d=document.getElementById('histTotalSessions');
+  if(a)a.textContent=stats.sessions;
+  if(b)b.textContent=stats.minutes;
+  if(d)d.textContent=items.length;
+
+  const list=document.getElementById('historyList');
+  if(!list)return;
+  if(!items.length){
+    list.innerHTML='<div class="history-empty">Your completed or ended sessions will appear here.</div>';
+    return;
+  }
+  list.innerHTML=items.slice(0,20).map(x=>{
+    const date=new Date(Number(x.endedAt)||Date.now());
+    const when=date.toLocaleDateString(undefined,{month:'short',day:'numeric'})+' · '+date.toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'});
+    const note=x.reflection?' · '+escapeHtml(x.reflection):'';
+    return '<div class="history-item"><div><b>'+escapeHtml(x.practice||'Practice')+'</b><small>'+when+note+'</small></div><div class="history-time">'+fmt(Number(x.listenedSeconds)||0)+'</div></div>';
+  }).join('');
+}
+
+function escapeHtml(v){
+  return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+function rememberLastSession(t){
+  if(!(t>20 && t<chosenSeconds-20))return;
+  try{
+    localStorage.setItem('clearWithinLastSession',JSON.stringify({
+      seconds:chosenSeconds,
+      url:chosenUrl,
+      introUrl:chosenIntroUrl,
+      kicker:chosenKicker,
+      title:chosenTitle,
+      time:t,
+      savedAt:Date.now()
+    }));
+  }catch(e){}
+}
+
+function clearLastSession(){
+  try{localStorage.removeItem('clearWithinLastSession')}catch(e){}
+  try{localStorage.removeItem('clearWithinResume:'+chosenKicker)}catch(e){}
+}
+
+function recordSession(completed){
+  if(sessionRecorded)return completionHistoryIndex;
+  const t=completed?chosenSeconds:Math.max(0,Math.min(chosenSeconds,audio.currentTime||0));
+  if(t<20)return -1;
+  const items=getHistory();
+  const entry={
+    practice:chosenKicker,
+    title:chosenTitle,
+    listenedSeconds:Math.round(t),
+    targetSeconds:chosenSeconds,
+    completed:!!completed,
+    endedAt:Date.now(),
+    reflection:''
+  };
+  items.push(entry);
+  saveHistory(items);
+  sessionRecorded=true;
+  completionHistoryIndex=items.length-1;
+  return completionHistoryIndex;
+}
+
+function completeSession(completed=false){
+  if(document.getElementById('completion').classList.contains('active'))return;
+  const t=completed?chosenSeconds:Math.max(0,Math.min(chosenSeconds,audio.currentTime||0));
+  audio.pause();
+  recordSession(completed);
+  clearLastSession();
+
+  document.getElementById('completionSummary').textContent='You practiced for '+friendlyDuration(t)+'.';
+  document.getElementById('completionPractice').textContent=chosenKicker;
+  document.querySelectorAll('.reflection-chip').forEach(x=>x.classList.remove('selected'));
+  show('completion');
+  renderDashboard();
+}
+
+function friendlyDuration(sec){
+  sec=Math.max(0,Math.round(sec));
+  if(sec<60)return sec+' seconds';
+  const m=Math.floor(sec/60);
+  const s=sec%60;
+  if(s===0)return m+' minute'+(m===1?'':'s');
+  return m+' min '+s+' sec';
+}
+
+function saveReflection(value,el){
+  document.querySelectorAll('.reflection-chip').forEach(x=>x.classList.remove('selected'));
+  if(el)el.classList.add('selected');
+  const items=getHistory();
+  if(completionHistoryIndex>=0 && items[completionHistoryIndex]){
+    items[completionHistoryIndex].reflection=value;
+    saveHistory(items);
+  }
+}
+
+function doneCompletion(){
+  audio.currentTime=0;
+  sync();
+  show('home');
+}
+
+function repeatPractice(){
+  audio.currentTime=0;
+  sessionStartedAt=0;
+  sessionRecorded=false;
+  completionHistoryIndex=-1;
+  preparePlayer();
+  show('player');
+}
+
 function fmt(sec){
   sec=Math.max(0,Math.floor(Number(sec)||0));
   const h=Math.floor(sec/3600);
@@ -652,6 +953,7 @@ async function togglePlay(){
   if(audio.paused){
     try{
       await audio.play();
+      if(!sessionStartedAt) sessionStartedAt=Date.now();
       resumeCard.classList.remove('show');
       document.getElementById('playerNote').textContent='Playing';
     }catch(e){
@@ -680,10 +982,7 @@ function restart(){
 }
 
 function finish(){
-  audio.pause();
-  audio.currentTime=0;
-  sync();
-  show('practices');
+  completeSession(false);
 }
 
 function sync(){
@@ -700,9 +999,9 @@ function sync(){
     audio.pause();
     t=chosenSeconds;
     document.getElementById('playerNote').textContent='Session complete.';
-    try{localStorage.removeItem('clearWithinResume:'+chosenKicker)}catch(e){}
   }else if(t>20){
     try{localStorage.setItem('clearWithinResume:'+chosenKicker,String(t))}catch(e){}
+    rememberLastSession(t);
   }
 
   if(!scrubbing) seek.value=t;
@@ -730,7 +1029,7 @@ function sync(){
 audio.addEventListener('timeupdate',sync);
 audio.addEventListener('play',sync);
 audio.addEventListener('pause',sync);
-audio.addEventListener('ended',sync);
+audio.addEventListener('ended',()=>{sync();completeSession(true)});
 audio.addEventListener('error',()=>{
   document.getElementById('playerNote').textContent='Audio could not load. Check the connection and try again.';
 });
@@ -763,9 +1062,12 @@ document.querySelector('.player-orb').addEventListener('keydown',e=>{
 document.addEventListener('visibilitychange',()=>{
   if(document.hidden && audio.currentTime>20){
     try{localStorage.setItem('clearWithinResume:'+chosenKicker,String(audio.currentTime))}catch(e){}
+    rememberLastSession(audio.currentTime);
   }
 });
 
+
+renderDashboard();
 
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
