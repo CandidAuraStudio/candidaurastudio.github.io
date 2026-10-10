@@ -92,7 +92,13 @@ h1,h2{letter-spacing:-.03em}h2{font-size:29px;margin:8px 0 10px}p{color:var(--mu
 <button class="btn" id="practiceBtn" onclick="togglePractice()">Start practice</button>
 
 
-<button class="btn secondary" onclick="endPractice()">Finish / reflect</button>
+<div style="display:none">
+      <input id="privateMediaInput" type="file" accept="audio/*,video/*">
+      <div id="privateMediaName"></div>
+      <button id="guidePlayBtn" type="button"></button>
+      <audio id="privateMediaPlayer" preload="metadata"></audio>
+    </div>
+    <button class="btn secondary" onclick="endPractice()">Finish / reflect</button>
 <div class="safety">Keep breathing comfortable. This prototype uses only slow breathing and short, gentle holds. Rapid one-second breathing is not included. Stop if you feel dizzy, faint, numb, panicked, short of breath, or have unusual pain. Do not use while driving, in water, or anywhere a fall could hurt you.</div>
 </section>
 
