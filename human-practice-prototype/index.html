@@ -594,6 +594,89 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
   animation:none!important;transition-duration:.01ms!important
 }
 
+
+/* Library and Sacred Sound v36 */
+.library-hub,.sacred-hub{padding-bottom:10px}
+.hub-hero{
+  position:relative;overflow:hidden;padding:22px 18px;border-radius:26px;
+  border:1px solid rgba(198,225,236,.09);
+  background:
+    radial-gradient(circle at 85% 8%,rgba(218,177,103,.14),transparent 27%),
+    linear-gradient(145deg,rgba(18,44,58,.82),rgba(5,17,27,.92));
+  box-shadow:0 24px 65px rgba(0,0,0,.24)
+}
+.hub-hero h2{font-size:28px;margin-top:4px}
+.hub-hero p{margin-bottom:0;max-width:340px}
+.hub-grid{display:grid;gap:12px;margin-top:16px}
+.hub-card{
+  position:relative;overflow:hidden;width:100%;border:1px solid rgba(198,225,236,.09);
+  background:linear-gradient(145deg,rgba(16,38,51,.82),rgba(5,17,27,.88));
+  color:var(--ink);border-radius:22px;padding:17px;text-align:left;font:inherit;
+  display:grid;grid-template-columns:52px minmax(0,1fr) auto;align-items:center;gap:13px;
+  box-shadow:0 18px 42px rgba(0,0,0,.18)
+}
+.hub-card:after{
+  content:"";position:absolute;width:110px;height:110px;border-radius:50%;
+  right:-54px;top:-52px;background:radial-gradient(circle,rgba(213,169,91,.10),transparent 68%)
+}
+.hub-icon{
+  width:50px;height:58px;border-radius:16px;display:grid;place-items:center;
+  border:1px solid rgba(211,231,237,.10);
+  background:linear-gradient(160deg,#173a4c,#081722);
+  color:#d6b477;font-size:21px;letter-spacing:-.04em
+}
+.hub-card b{display:block;font-size:15px}
+.hub-card small{display:block;color:#8298a3;font-size:11px;margin-top:4px;line-height:1.45}
+.hub-arrow{position:relative;z-index:1;color:#806f52;font-size:20px}
+.hub-note{
+  margin-top:13px;padding:12px 14px;border-radius:16px;
+  background:rgba(5,17,26,.42);border:1px solid rgba(198,225,236,.06);
+  color:#7f949f;font-size:11px;line-height:1.5
+}
+.collection-head{margin-bottom:16px}
+.collection-back{
+  border:0;background:transparent;color:#b59a69;font:inherit;font-size:12px;padding:0 0 12px
+}
+.collection-list{display:grid;gap:10px}
+.empty-shelf{
+  padding:28px 18px;border-radius:20px;text-align:center;
+  border:1px dashed rgba(198,225,236,.12);background:rgba(5,17,26,.35)
+}
+.empty-shelf .empty-icon{font-size:27px;color:#987c4f;margin-bottom:8px}
+.empty-shelf strong{display:block;font-size:14px}
+.empty-shelf p{font-size:11px;margin:7px auto 0;max-width:310px;color:#7d929d}
+.rights-pill{
+  display:inline-flex;margin-top:13px;padding:7px 10px;border-radius:999px;
+  border:1px solid rgba(212,178,115,.15);background:rgba(120,81,38,.10);
+  color:#b99c69;font-size:10px
+}
+.sacred-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:16px}
+.sacred-card{
+  min-height:150px;border:1px solid rgba(198,225,236,.09);border-radius:22px;
+  padding:16px;text-align:left;color:var(--ink);font:inherit;position:relative;overflow:hidden;
+  background:linear-gradient(155deg,rgba(16,39,52,.84),rgba(5,17,26,.90));
+  box-shadow:0 18px 40px rgba(0,0,0,.17)
+}
+.sacred-card:after{
+  content:"";position:absolute;width:100px;height:100px;border-radius:50%;
+  right:-48px;bottom:-45px;background:radial-gradient(circle,rgba(213,169,91,.10),transparent 68%)
+}
+.sacred-symbol{
+  width:42px;height:42px;border-radius:14px;display:grid;place-items:center;
+  border:1px solid rgba(211,231,237,.10);background:rgba(7,22,32,.65);
+  color:#d4b274;font-size:18px;margin-bottom:18px
+}
+.sacred-card b{display:block;font-size:15px}
+.sacred-card small{display:block;color:#8298a3;font-size:10px;line-height:1.45;margin-top:4px}
+.sacred-detail-principles{display:grid;gap:9px;margin-top:16px}
+.principle-row{
+  padding:13px 14px;border-radius:16px;border:1px solid rgba(198,225,236,.07);
+  background:rgba(5,17,26,.40)
+}
+.principle-row b{display:block;font-size:12px}
+.principle-row span{display:block;color:#7f949f;font-size:11px;margin-top:4px;line-height:1.45}
+@media(max-width:360px){.sacred-grid{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -742,6 +825,114 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
   </div>
 </section>
 
+<section class="screen library-hub" id="library">
+  <div class="hub-hero">
+    <div class="kicker">Read · Listen · Learn</div>
+    <h2>Library</h2>
+    <p>A quiet place for audiobooks and books that you own or are allowed to share.</p>
+  </div>
+
+  <div class="hub-grid">
+    <button class="hub-card" onclick="openCollection('english')">
+      <span class="hub-icon">EN</span>
+      <span><b>English Audiobooks</b><small>Long-form listening, reflection and learning.</small></span>
+      <span class="hub-arrow">›</span>
+    </button>
+
+    <button class="hub-card" onclick="openCollection('tamil')">
+      <span class="hub-icon">த</span>
+      <span><b>Tamil Audiobooks</b><small>Tamil listening library for your own and licensed recordings.</small></span>
+      <span class="hub-arrow">›</span>
+    </button>
+
+    <button class="hub-card" onclick="openCollection('books')">
+      <span class="hub-icon">Aa</span>
+      <span><b>Free Books</b><small>Only public-domain or properly open-licensed books.</small></span>
+      <span class="hub-arrow">›</span>
+    </button>
+  </div>
+
+  <div class="hub-note">“Free online” does not automatically mean free to redistribute. This library will only publish material you own, have permission to use, or that has a suitable public/open licence.</div>
+</section>
+
+<section class="screen" id="collection">
+  <div class="glass">
+    <button class="collection-back" onclick="show('library')">‹ Library</button>
+    <div class="collection-head">
+      <div class="kicker" id="collectionKicker">Audiobooks</div>
+      <h2 id="collectionTitle">English Audiobooks</h2>
+      <p id="collectionDescription">Your English listening library.</p>
+    </div>
+    <div class="collection-list" id="collectionList">
+      <div class="empty-shelf">
+        <div class="empty-icon">◌</div>
+        <strong>Ready for your first title</strong>
+        <p>Add your own recording or a title with clear permission/licensing.</p>
+        <span class="rights-pill">Rights-cleared content only</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="screen sacred-hub" id="sacred">
+  <div class="hub-hero">
+    <div class="kicker">Breath · Voice · Stillness</div>
+    <h2>Sacred Sound</h2>
+    <p>Explore prayer, mantra and contemplative sound through clearly separated traditions.</p>
+  </div>
+
+  <div class="sacred-grid">
+    <button class="sacred-card" onclick="openSacred('islamic')">
+      <span class="sacred-symbol">☾</span>
+      <b>Islamic</b>
+      <small>Dua · Dhikr · Quranic contemplation</small>
+    </button>
+
+    <button class="sacred-card" onclick="openSacred('hindu')">
+      <span class="sacred-symbol">ॐ</span>
+      <b>Hindu</b>
+      <small>Mantra · repetition · contemplative listening</small>
+    </button>
+
+    <button class="sacred-card" onclick="openSacred('buddhist')">
+      <span class="sacred-symbol">◉</span>
+      <b>Buddhist</b>
+      <small>Chant · mindful sound · quiet attention</small>
+    </button>
+
+    <button class="sacred-card" onclick="openSacred('open')">
+      <span class="sacred-symbol">○</span>
+      <b>Open Sound</b>
+      <small>Breath · humming · simple sound · silence</small>
+    </button>
+  </div>
+
+  <div class="hub-note">Traditions stay separate and are not presented as doctrinally identical. Sound sessions use gentle, comfortable breathing rather than rapid breathing or long breath holds.</div>
+</section>
+
+<section class="screen" id="sacredDetail">
+  <div class="glass">
+    <button class="collection-back" onclick="show('sacred')">‹ Sacred Sound</button>
+    <div class="kicker" id="sacredKicker">Tradition</div>
+    <h2 id="sacredTitle">Islamic</h2>
+    <p id="sacredDescription">Dua, dhikr and contemplative listening.</p>
+
+    <div class="sacred-detail-principles">
+      <div class="principle-row"><b>1 · Meaning first</b><span id="sacredMeaning">Understand what is being recited or repeated before the sound practice begins.</span></div>
+      <div class="principle-row"><b>2 · Listen</b><span>Use an original, licensed or permissioned recording.</span></div>
+      <div class="principle-row"><b>3 · Breathe naturally</b><span>Keep the breath comfortable. No forcing, racing or long retention.</span></div>
+      <div class="principle-row"><b>4 · Sound, then silence</b><span>Repeat only if appropriate to the tradition, then leave a short quiet space.</span></div>
+    </div>
+
+    <div class="empty-shelf" style="margin-top:14px">
+      <div class="empty-icon">♪</div>
+      <strong id="sacredEmptyTitle">Sound sessions are ready to be added</strong>
+      <p id="sacredEmptyText">We will add rights-cleared recordings and accurate text/meaning here.</p>
+      <span class="rights-pill">Original / permissioned / licensed audio</span>
+    </div>
+  </div>
+</section>
+
 <section class="screen" id="settings">
   <div class="glass">
     <div class="kicker">Clear Within</div>
@@ -762,7 +953,7 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">Clear Within · prototype v35</div>
+    <div class="app-version">Clear Within · prototype v36</div>
   </div>
 </section>
 
@@ -870,14 +1061,14 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
   <button class="nav-item active" data-nav="home" onclick="navTo('home',this)" aria-label="Home">
     <svg viewBox="0 0 24 24"><path d="M3.5 10.4 12 3.7l8.5 6.7v9.1h-6v-5.7h-5v5.7h-6Z"/></svg><span>Home</span>
   </button>
-  <button class="nav-item" data-nav="practices" onclick="navTo('practices',this)" aria-label="Practices">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v9M7.5 12h9"/></svg><span>Practices</span>
+  <button class="nav-item" data-nav="practices" onclick="navTo('practices',this)" aria-label="Practice">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v9M7.5 12h9"/></svg><span>Practice</span>
   </button>
-  <button class="nav-item" data-nav="history" onclick="navTo('history',this)" aria-label="History">
-    <svg viewBox="0 0 24 24"><path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3L4.5 8.9"/><path d="M4.5 4.8v4.1h4.1M12 8v4.4l3 1.7"/></svg><span>History</span>
+  <button class="nav-item" data-nav="library" onclick="navTo('library',this)" aria-label="Library">
+    <svg viewBox="0 0 24 24"><path d="M5 4.5h5.5c1.2 0 1.5.5 1.5 1.6v13c0-1.3-.8-2.1-2-2.1H5Z"/><path d="M19 4.5h-5.5c-1.2 0-1.5.5-1.5 1.6v13c0-1.3.8-2.1 2-2.1H19Z"/></svg><span>Library</span>
   </button>
-  <button class="nav-item" data-nav="settings" onclick="navTo('settings',this)" aria-label="Settings">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.8"/><path d="M19.2 13.3v-2.6l-2-.7a7.7 7.7 0 0 0-.8-1.8l.9-1.9-1.8-1.8-1.9.9a7.7 7.7 0 0 0-1.8-.8l-.7-2H8.5l-.7 2a7.7 7.7 0 0 0-1.8.8l-1.9-.9-1.8 1.8.9 1.9a7.7 7.7 0 0 0-.8 1.8l-2 .7v2.6l2 .7c.2.6.5 1.2.8 1.8l-.9 1.9 1.8 1.8 1.9-.9c.6.3 1.2.6 1.8.8l.7 2h2.6l.7-2c.6-.2 1.2-.5 1.8-.8l1.9.9 1.8-1.8-.9-1.9c.3-.6.6-1.2.8-1.8Z"/></svg><span>Settings</span>
+  <button class="nav-item" data-nav="sacred" onclick="navTo('sacred',this)" aria-label="Sacred Sound">
+    <svg viewBox="0 0 24 24"><path d="M12 4v16M8.5 7.5c0-1.7 1.6-3 3.5-3s3.5 1.3 3.5 3-1.3 2.5-3.5 3-3.5 1.4-3.5 3.1 1.6 3 3.5 3 3.5-1.3 3.5-3"/></svg><span>Sacred</span>
   </button>
 </nav>
 
@@ -916,10 +1107,10 @@ function show(id){
   document.getElementById('bottomNav').classList.toggle('hidden',immersive);
   document.getElementById('appTopBar').classList.toggle('hidden',immersive);
 
-  const context={home:'Home',practices:'Practices',history:'History',settings:'Settings'}[id]||'';
+  const context={home:'Home',practices:'Practice',library:'Library',collection:'Library',sacred:'Sacred Sound',sacredDetail:'Sacred Sound',history:'History',settings:'Settings'}[id]||'';
   const ctx=document.getElementById('topContext'); if(ctx)ctx.textContent=context;
 
-  if(['home','practices','history','settings'].includes(id)){
+  if(['home','practices','library','sacred'].includes(id)){
     document.querySelectorAll('.nav-item').forEach(btn=>btn.classList.toggle('active',btn.dataset.nav===id));
   }
 
@@ -941,6 +1132,68 @@ function startSettleQuick(){
     '10-minute practice',
     'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/7fd8e8ee-cc5a-49c3-940b-6b4330a42c5e.mp4'
   );
+}
+
+function openCollection(kind){
+  const data={
+    english:{
+      kicker:'Audiobooks',
+      title:'English Audiobooks',
+      description:'Long-form English listening for reflection, learning and quiet time.',
+      empty:'Add your first English audiobook here.'
+    },
+    tamil:{
+      kicker:'தமிழ் · Audiobooks',
+      title:'Tamil Audiobooks',
+      description:'A dedicated Tamil listening shelf for your own or properly licensed recordings.',
+      empty:'Add your first Tamil audiobook here.'
+    },
+    books:{
+      kicker:'Reading',
+      title:'Free Books',
+      description:'Public-domain and properly open-licensed reading only.',
+      empty:'Add your first rights-cleared free book here.'
+    }
+  }[kind]||{};
+  document.getElementById('collectionKicker').textContent=data.kicker||'Library';
+  document.getElementById('collectionTitle').textContent=data.title||'Library';
+  document.getElementById('collectionDescription').textContent=data.description||'';
+  document.querySelector('#collectionList .empty-shelf strong').textContent=data.empty||'Ready for content';
+  show('collection');
+}
+
+function openSacred(kind){
+  const data={
+    islamic:{
+      kicker:'Islamic',
+      title:'Dua · Dhikr · Quranic Sound',
+      description:'Prayer, remembrance and Quranic contemplation presented with meaning and respectful context.',
+      meaning:'Show the Arabic text only when accurately sourced, together with meaning/transliteration where appropriate.'
+    },
+    hindu:{
+      kicker:'Hindu',
+      title:'Mantra & Sacred Sound',
+      description:'Mantra and contemplative repetition presented with its own tradition and meaning.',
+      meaning:'Give the mantra, its meaning/context and accurate pronunciation before a listening or repetition practice.'
+    },
+    buddhist:{
+      kicker:'Buddhist',
+      title:'Chant & Mindful Sound',
+      description:'Chanting and contemplative listening with clear tradition-specific context.',
+      meaning:'Explain the chant or contemplative phrase briefly before listening, repetition or silence.'
+    },
+    open:{
+      kicker:'Open',
+      title:'Breath · Humming · Silence',
+      description:'A non-religious sound path using gentle breath, voice and silence.',
+      meaning:'Use simple original sound practices without religious attribution or medical claims.'
+    }
+  }[kind]||{};
+  document.getElementById('sacredKicker').textContent=data.kicker||'Sacred Sound';
+  document.getElementById('sacredTitle').textContent=data.title||'Sacred Sound';
+  document.getElementById('sacredDescription').textContent=data.description||'';
+  document.getElementById('sacredMeaning').textContent=data.meaning||'Understand the meaning before listening.';
+  show('sacredDetail');
 }
 
 function filterPractices(kind,btn){
