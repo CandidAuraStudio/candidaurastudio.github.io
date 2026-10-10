@@ -7,278 +7,355 @@
 <title>Sufi Breath — Stage 2</title>
 <style>
 :root{
-  --sky1:#78a9c6;--sky2:#4c7894;--sky3:#244e67;--deep:#173446;
-  --text:#f7fbfd;--muted:#d4e3ea;--gold:#ffd99a;--gold2:#efb86a;
-  --glass:rgba(22,55,72,.42);--line:rgba(255,255,255,.17);
+  --sky1:#8eb8cf;--sky2:#5f8ba4;--sky3:#335f78;--deep:#173548;
+  --ink:#f8fbfc;--muted:#d7e5eb;--gold:#ffd99a;--gold2:#efb86a;
+  --glass:rgba(18,50,66,.38);--glass2:rgba(12,38,52,.62);--line:rgba(255,255,255,.17);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;min-height:100%;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--text);background:var(--deep)}
+html,body{margin:0;min-height:100%;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--ink);background:var(--deep)}
 body{
-  background:
-    radial-gradient(circle at 82% 8%,rgba(255,227,169,.40),transparent 23%),
-    linear-gradient(180deg,var(--sky1),var(--sky2) 34%,var(--sky3) 69%,var(--deep));
   overflow-x:hidden;
+  background:
+    radial-gradient(circle at 83% 7%,rgba(255,230,176,.42),transparent 23%),
+    linear-gradient(180deg,var(--sky1) 0%,var(--sky2) 34%,var(--sky3) 67%,var(--deep) 100%);
 }
 body:before{
-  content:"";position:fixed;right:-88px;top:-88px;width:290px;height:290px;border-radius:50%;
-  background:radial-gradient(circle,#fff2c7 0 9%,#ffd99a 18%,rgba(255,209,132,.26) 39%,transparent 66%);
+  content:"";position:fixed;right:-82px;top:-86px;width:290px;height:290px;border-radius:50%;
+  background:radial-gradient(circle,#fff7db 0 9%,#ffe0a3 20%,rgba(255,208,130,.28) 40%,transparent 68%);
   pointer-events:none;z-index:0;
 }
 body:after{
-  content:"";position:fixed;right:-165px;top:-168px;width:480px;height:480px;border-radius:50%;
-  background:repeating-conic-gradient(from 10deg,rgba(255,227,177,.10) 0 8deg,transparent 8deg 20deg);
-  animation:turn 60s linear infinite;pointer-events:none;z-index:0;
+  content:"";position:fixed;right:-180px;top:-180px;width:510px;height:510px;border-radius:50%;
+  background:repeating-conic-gradient(from 12deg,rgba(255,229,181,.09) 0 8deg,transparent 8deg 20deg);
+  animation:turn 68s linear infinite;pointer-events:none;z-index:0;
 }
 @keyframes turn{to{transform:rotate(360deg)}}
-.app{position:relative;z-index:1;max-width:470px;min-height:100vh;margin:auto;padding:calc(20px + env(safe-area-inset-top)) 18px calc(26px + env(safe-area-inset-bottom));display:flex;flex-direction:column}
+@keyframes breathe{0%,100%{transform:scale(.90);opacity:.72}45%{transform:scale(1.08);opacity:1}}
+@keyframes drift{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.app{position:relative;z-index:1;max-width:480px;min-height:100vh;margin:auto;padding:calc(20px + env(safe-area-inset-top)) 18px calc(28px + env(safe-area-inset-bottom));display:flex;flex-direction:column}
 .screen{display:none;flex:1;flex-direction:column;justify-content:center}.screen.active{display:flex}
-.center{text-align:center}.kicker{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:#ffe6ba;margin-bottom:9px}
-h1,h2{margin:0;letter-spacing:-.035em}h1{font-size:33px;line-height:1.08}h2{font-size:30px;line-height:1.12}
-p{color:var(--muted);line-height:1.55;margin:12px 0}
-.sun{width:108px;height:108px;margin:0 auto 22px;border-radius:50%;background:radial-gradient(circle,#fff5d5 0 10%,#ffdda0 23%,#eba962 47%,rgba(235,169,98,.10) 70%,transparent 72%);box-shadow:0 0 45px rgba(255,215,149,.24)}
-.btn{width:100%;border:0;border-radius:18px;padding:17px 18px;margin-top:14px;font:inherit;font-size:17px;font-weight:750;background:linear-gradient(180deg,#ffe3ae,#f2bd73);color:#173140;box-shadow:0 9px 28px rgba(236,174,92,.2)}
-.btn.secondary{background:rgba(16,46,62,.35);color:var(--text);border:1px solid var(--line);box-shadow:none}
-.choice{width:100%;border:1px solid var(--line);color:var(--text);border-radius:20px;padding:18px;text-align:left;margin-top:12px;font:inherit;background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(15,43,58,.34));backdrop-filter:blur(12px)}
+.center{text-align:center}
+.kicker{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#ffe5b5;margin-bottom:9px}
+h1,h2,h3{margin:0;letter-spacing:-.038em}h1{font-size:34px;line-height:1.07}h2{font-size:30px}h3{font-size:22px}
+p{color:var(--muted);line-height:1.58;margin:12px 0}
+.sun{width:112px;height:112px;margin:0 auto 24px;border-radius:50%;background:radial-gradient(circle,#fff7dc 0 10%,#ffdfa0 24%,#eaae64 48%,rgba(234,174,100,.10) 71%,transparent 73%);box-shadow:0 0 46px rgba(255,216,151,.24);animation:drift 7s ease-in-out infinite}
+.glass{background:linear-gradient(180deg,rgba(255,255,255,.11),rgba(13,42,57,.30));border:1px solid var(--line);box-shadow:0 22px 70px rgba(4,20,31,.23);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:28px;padding:20px}
+.btn{width:100%;border:0;border-radius:18px;padding:17px 18px;margin-top:14px;font:inherit;font-size:17px;font-weight:750;background:linear-gradient(180deg,#ffe4b0,#f1bd74);color:#163141;box-shadow:0 9px 28px rgba(236,174,92,.20)}
+.btn.secondary{background:rgba(12,39,53,.35);color:var(--ink);border:1px solid var(--line);box-shadow:none}
+.choice{width:100%;border:1px solid var(--line);color:var(--ink);border-radius:22px;padding:18px;text-align:left;margin-top:12px;font:inherit;background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(13,42,57,.34));backdrop-filter:blur(12px)}
 .choice b{font-size:18px}.choice small{display:block;color:var(--muted);margin-top:5px}
-.glass{background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(14,42,57,.30));border:1px solid var(--line);box-shadow:0 20px 65px rgba(4,21,31,.22);backdrop-filter:blur(15px);border-radius:26px;padding:20px}
-.instruction-stage{position:relative;min-height:420px;overflow:hidden}
-.horizon{position:absolute;left:-40px;right:-40px;bottom:-70px;height:210px;border-radius:50%;background:rgba(12,55,73,.56);border-top:1px solid rgba(255,236,198,.26)}
-.breath-orb{width:152px;height:152px;border-radius:50%;margin:24px auto 28px;border:2px solid rgba(237,249,244,.65);box-shadow:0 0 35px rgba(206,239,229,.14),inset 0 0 30px rgba(206,239,229,.08);animation:breathe 8s ease-in-out infinite}
-@keyframes breathe{0%,100%{transform:scale(.88);opacity:.72}45%{transform:scale(1.08);opacity:1}}
-.instruction{display:none;text-align:center;position:relative;z-index:2}.instruction.active{display:block}
-.stepno{font-size:12px;color:#ffe0aa;letter-spacing:.12em;text-transform:uppercase}
-.step-title{font-size:27px;font-weight:750;margin-top:8px}.step-text{max-width:330px;margin:10px auto 0}
-.dots{display:flex;justify-content:center;gap:8px;margin:18px 0 2px}.dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.25)}.dot.active{background:#ffd997}
-.practice-min{min-height:520px;display:flex;flex-direction:column;justify-content:center;text-align:center}
-.timer{font-size:52px;font-weight:300;letter-spacing:-.05em;margin:18px 0 4px;font-variant-numeric:tabular-nums}
-.small{font-size:13px;color:var(--muted)}
-.footer{text-align:center;color:#b6c8d1;font-size:11px;margin-top:15px}
+.practice-card{position:relative;overflow:hidden}.practice-card:after{content:"";position:absolute;width:160px;height:160px;border-radius:50%;right:-74px;bottom:-84px;background:radial-gradient(circle,rgba(255,218,153,.24),transparent 67%)}
+.duration{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.15);color:#f9e7c4;background:rgba(13,41,55,.22);font-size:12px;margin-top:9px}
+.instruction-wrap{min-height:470px;display:flex;flex-direction:column;justify-content:center;text-align:center}
+.orb{width:154px;height:154px;border-radius:50%;margin:26px auto 26px;border:2px solid rgba(235,248,242,.72);box-shadow:0 0 40px rgba(210,240,232,.17),inset 0 0 34px rgba(210,240,232,.08);animation:breathe 10s ease-in-out infinite}
+.step{display:none}.step.active{display:block}
+.stepno{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:#ffe2aa}
+.dots{display:flex;justify-content:center;gap:8px;margin:18px 0 0}.dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.25)}.dot.active{background:#ffd995}
+.player-card{padding:24px 20px}
+.player-orb{width:178px;height:178px;border-radius:50%;margin:18px auto 22px;background:radial-gradient(circle at 42% 35%,rgba(229,247,240,.25),rgba(131,184,168,.10) 42%,rgba(25,67,72,.05) 70%);border:1px solid rgba(236,248,244,.46);box-shadow:0 0 54px rgba(199,238,226,.13);animation:breathe 12s ease-in-out infinite;display:grid;place-items:center}
+.player-orb span{font-size:13px;color:#e8f2ef;letter-spacing:.08em;text-transform:uppercase}
+.clock{font-size:52px;font-weight:300;letter-spacing:-.055em;font-variant-numeric:tabular-nums;text-align:center;margin-top:8px}
+.time-row{display:flex;justify-content:space-between;color:#dbe7ec;font-size:13px;font-variant-numeric:tabular-nums;margin-top:12px}
+.seek{appearance:none;width:100%;height:7px;border-radius:999px;background:rgba(9,33,45,.45);outline:none;margin-top:9px}
+.seek::-webkit-slider-thumb{appearance:none;width:22px;height:22px;border-radius:50%;background:#ffda98;border:3px solid #315b70}
+.controls{display:grid;grid-template-columns:1fr 1.4fr 1fr;gap:10px;margin-top:16px}
+.control{border:1px solid var(--line);background:rgba(12,39,53,.35);color:var(--ink);border-radius:17px;padding:14px 8px;font:inherit;font-weight:700}
+.control.main{background:linear-gradient(180deg,#ffe3ad,#f0ba71);color:#163141;border:0}
+.meta{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.meta label,.meta button{border:1px solid var(--line);background:rgba(12,39,53,.30);color:var(--ink);border-radius:16px;padding:11px;font:inherit}
+.volume{width:100%;accent-color:#ffd89a}
+.note{font-size:12px;color:#c8d9e0;line-height:1.5;margin-top:13px;text-align:center}
+.footer{text-align:center;color:#b3c6cf;font-size:11px;margin-top:15px}
 </style>
 </head>
 <body>
 <div class="app">
 
-<section class="screen active" id="s0">
+<section class="screen active" id="home">
   <div class="center">
     <div class="sun"></div>
     <div class="kicker">Stage 2</div>
     <h1>To be human<br>on this earth.</h1>
     <p>Less information. More practice. Begin gently.</p>
   </div>
-  <button class="btn" onclick="go(1)">Begin</button>
+  <button class="btn" onclick="show('language')">Begin</button>
 </section>
 
-<section class="screen" id="s1">
+<section class="screen" id="language">
   <div class="glass">
     <div class="kicker">Language</div>
     <h2>Choose language</h2>
-    <button class="choice" onclick="chooseLang('en')"><b>English</b><small>Simple guidance</small></button>
-    <button class="choice" onclick="chooseLang('ta')"><b>தமிழ்</b><small>எளிய வழிகாட்டல்</small></button>
+    <button class="choice" onclick="setLang('en')"><b>English</b><small>Simple guidance</small></button>
+    <button class="choice" onclick="setLang('ta')"><b>தமிழ்</b><small>எளிய வழிகாட்டல்</small></button>
   </div>
 </section>
 
-<section class="screen" id="s2">
-  <div class="glass">
-    <div class="kicker" id="choosePracticeKicker">Practices</div>
-    <h2 id="choosePracticeTitle">Choose a practice</h2>
-    <button class="choice" onclick="selectPractice(600)">
-      <b id="p10title">Practice 01 · 10 minutes</b>
-      <small id="p10sub">Gentle breathing and observation</small>
-    </button>
-    <button class="choice" onclick="selectPractice(2400)">
-      <b id="p40title">Practice 02 · 40 minutes</b>
-      <small id="p40sub">Long quiet practice · gentle breathing only</small>
-    </button>
-    <button class="btn secondary" onclick="go(1)">Change language</button>
-  </div>
+<section class="screen" id="practices">
+  <div class="kicker" id="practiceKicker">Practices</div>
+  <h2 id="practiceHeading">Choose your time</h2>
+
+  <button class="choice practice-card" onclick="choosePractice(600,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/fd5c9714-f705-4b44-918b-63c1b3de1212.mp3')">
+    <b id="p10title">Practice 01 · 10 minutes</b>
+    <small id="p10sub">Short calm session with warm ambient sound</small>
+    <span class="duration">10:00</span>
+  </button>
+
+  <button class="choice practice-card" onclick="choosePractice(2400,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/b5cb7c17-9ff0-4e0b-9074-49ab7b7925e8.mp3')">
+    <b id="p40title">Practice 02 · 40 minutes</b>
+    <small id="p40sub">Long quiet session with the same calm sound</small>
+    <span class="duration">40:00</span>
+  </button>
+
+  <button class="btn secondary" onclick="show('language')" id="changeLangBtn">Change language</button>
 </section>
 
-<section class="screen" id="s3">
-  <div class="glass instruction-stage">
-    <div class="instruction active" data-step="0">
-      <div class="stepno" id="step1no">Step 1 of 3</div>
-      <div class="breath-orb"></div>
-      <div class="step-title" id="step1title">Settle first</div>
-      <p class="step-text" id="step1text">Sit or lie somewhere comfortable and safe. Let your shoulders soften. Pain is not required for practice.</p>
+<section class="screen" id="instructions">
+  <div class="glass instruction-wrap">
+    <div class="step active" data-step="0">
+      <div class="stepno" id="step1no">Step 1 of 4</div>
+      <div class="orb"></div>
+      <h3 id="step1title">Settle first</h3>
+      <p id="step1text">Sit or lie somewhere comfortable and safe. Let your shoulders and jaw soften.</p>
     </div>
 
-    <div class="instruction" data-step="1">
-      <div class="stepno" id="step2no">Step 2 of 3</div>
-      <div class="breath-orb"></div>
-      <div class="step-title" id="step2title">Keep it easy</div>
-      <p class="step-text" id="step2text">Breathe naturally through the nose. Do not force the breath, race it, or try to prove anything.</p>
+    <div class="step" data-step="1">
+      <div class="stepno" id="step2no">Step 2 of 4</div>
+      <div class="orb"></div>
+      <h3 id="step2title">Keep the breath easy</h3>
+      <p id="step2text">Breathe naturally. There is nothing to force, prove or rush.</p>
     </div>
 
-    <div class="instruction" data-step="2">
-      <div class="stepno" id="step3no">Step 3 of 3</div>
-      <div class="breath-orb"></div>
-      <div class="step-title" id="step3title">Notice</div>
-      <p class="step-text" id="step3text">Notice the body, breath and thoughts without needing to change them. Stop if you feel unwell.</p>
+    <div class="step" data-step="2">
+      <div class="stepno" id="step3no">Step 3 of 4</div>
+      <div class="orb"></div>
+      <h3 id="step3title">Notice</h3>
+      <p id="step3text">Notice body, breath and thoughts without needing to change them.</p>
+    </div>
+
+    <div class="step" data-step="3">
+      <div class="stepno" id="step4no">Step 4 of 4</div>
+      <div class="orb"></div>
+      <h3 id="step4title">Ready</h3>
+      <p id="step4text">The sound will begin only when you press Play. Stop whenever you need to.</p>
     </div>
 
     <div class="dots">
-      <span class="dot active"></span><span class="dot"></span><span class="dot"></span>
+      <span class="dot active"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
     </div>
-    <button class="btn" id="nextStepBtn" onclick="nextInstruction()">Next</button>
-    <button class="btn secondary" onclick="go(1)">Back</button>
-    <div class="horizon"></div>
+    <button class="btn" id="nextBtn" onclick="nextStep()">Next</button>
+    <button class="btn secondary" onclick="show('practices')" id="backBtn">Back</button>
   </div>
 </section>
 
-<section class="screen" id="s4">
-  <div class="glass practice-min">
-    <div class="kicker" id="practiceKicker">Sufi Breath · gentle practice</div>
-    <h2 id="practiceTitle">Practice</h2>
-    <div class="breath-orb" style="margin-top:32px"></div>
-    <div class="timer" id="timer">10:00</div>
-    <div class="small" id="practiceText">No video. No extra instructions. Just stay comfortable and notice the breath.</div>
+<section class="screen" id="player">
+  <div class="glass player-card">
+    <div class="center">
+      <div class="kicker" id="sessionKicker">Practice 01</div>
+      <h2 id="sessionTitle">10-minute practice</h2>
+      <div class="player-orb"><span id="orbText">Ready</span></div>
+      <div class="clock" id="clock">00:00</div>
+      <div class="time-row"><span id="elapsed">00:00</span><span id="total">10:00</span></div>
+      <input class="seek" id="seek" type="range" min="0" max="600" value="0" step="0.1">
 
-    <button class="btn" id="timerBtn" onclick="toggleTimer()">Start practice</button>
-    <button class="btn secondary" onclick="resetPractice()">Restart</button>
-    <button class="btn secondary" onclick="finishPractice()">Finish</button>
+      <div class="controls">
+        <button class="control" onclick="jump(-10)">−10s</button>
+        <button class="control main" id="playBtn" onclick="togglePlay()">▶ Play</button>
+        <button class="control" onclick="jump(10)">+10s</button>
+      </div>
+
+      <div class="meta">
+        <button onclick="restart()">Restart</button>
+        <label><span style="font-size:12px">Volume</span><input class="volume" id="volume" type="range" min="0" max="1" step="0.05" value="0.85"></label>
+      </div>
+
+      <p class="note" id="playerNote">No autoplay. The session begins only when you press Play.</p>
+      <button class="btn secondary" onclick="finish()" id="finishBtn">Finish</button>
+    </div>
   </div>
-  <div class="footer">Prototype · visual instructions first · minimal practice screen</div>
+  <div class="footer">Stage 2 · full-length audio · text instructions first</div>
+  <audio id="audio" preload="metadata"></audio>
 </section>
 
 </div>
 
 <script>
 let lang='en';
-let instructionIndex=0;
-let selectedDuration=600;
-let remaining=600;
-let timerId=null;
+let chosenSeconds=600;
+let chosenUrl='https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/fd5c9714-f705-4b44-918b-63c1b3de1212.mp3';
+let stepIndex=0;
+let scrubbing=false;
 
-function go(n){
+const audio=document.getElementById('audio');
+const seek=document.getElementById('seek');
+const volume=document.getElementById('volume');
+
+function show(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById('s'+n).classList.add('active');
+  document.getElementById(id).classList.add('active');
   window.scrollTo(0,0);
 }
 
-function chooseLang(l){
+function setLang(l){
   lang=l;
-  applyLanguage();
-  instructionIndex=0;
-  showInstruction();
-  go(2);
+  applyLang();
+  show('practices');
 }
 
-function selectPractice(seconds){
-  selectedDuration=seconds;
-  instructionIndex=0;
-  showInstruction();
-  resetPractice(false);
-  go(3);
-}
-
-function applyLanguage(){
+function applyLang(){
   if(lang==='ta'){
-    const cp=document.getElementById('choosePracticeTitle'); if(cp) cp.textContent='ஒரு பயிற்சியைத் தேர்ந்தெடுக்கவும்';
-    const ck=document.getElementById('choosePracticeKicker'); if(ck) ck.textContent='பயிற்சிகள்';
-    const p10t=document.getElementById('p10title'); if(p10t) p10t.textContent='பயிற்சி 01 · 10 நிமிடம்';
-    const p10s=document.getElementById('p10sub'); if(p10s) p10s.textContent='மென்மையான மூச்சு மற்றும் கவனிப்பு';
-    const p40t=document.getElementById('p40title'); if(p40t) p40t.textContent='பயிற்சி 02 · 40 நிமிடம்';
-    const p40s=document.getElementById('p40sub'); if(p40s) p40s.textContent='நீண்ட அமைதிப் பயிற்சி · மென்மையான மூச்சு மட்டும்';
-    document.getElementById('step1no').textContent='படி 1 / 3';
-    document.getElementById('step1title').textContent='முதலில் அமைதியாகுங்கள்';
-    document.getElementById('step1text').textContent='பாதுகாப்பான, வசதியான இடத்தில் அமருங்கள் அல்லது படுத்துக்கொள்ளுங்கள். தோள்களை தளர்த்துங்கள். வலி இந்தப் பயிற்சிக்கு தேவையில்லை.';
-    document.getElementById('step2no').textContent='படி 2 / 3';
-    document.getElementById('step2title').textContent='எளிதாக வைத்துக்கொள்ளுங்கள்';
-    document.getElementById('step2text').textContent='மூக்கின் வழியாக இயல்பாக மூச்செடுங்கள். மூச்சை கட்டாயப்படுத்த வேண்டாம் அல்லது வேகமாக்க வேண்டாம்.';
-    document.getElementById('step3no').textContent='படி 3 / 3';
-    document.getElementById('step3title').textContent='கவனியுங்கள்';
-    document.getElementById('step3text').textContent='உடல், மூச்சு மற்றும் எண்ணங்களை மாற்ற வேண்டிய அவசியமின்றி கவனியுங்கள். உடல்நிலை சரியில்லையெனில் நிறுத்துங்கள்.';
-    document.getElementById('practiceKicker').textContent='சூஃபி மூச்சு · மென்மையான பயிற்சி';
-    document.getElementById('practiceTitle').textContent='பயிற்சி';
-    document.getElementById('practiceText').textContent='வீடியோ இல்லை. கூடுதல் வழிமுறைகள் இல்லை. வசதியாக இருந்து மூச்சை கவனியுங்கள்.';
-    document.getElementById('timerBtn').textContent='பயிற்சியை தொடங்கு';
+    document.getElementById('practiceKicker').textContent='பயிற்சிகள்';
+    document.getElementById('practiceHeading').textContent='நேரத்தைத் தேர்ந்தெடுக்கவும்';
+    document.getElementById('p10title').textContent='பயிற்சி 01 · 10 நிமிடம்';
+    document.getElementById('p10sub').textContent='அமைதியான ஒலியுடன் குறுகிய பயிற்சி';
+    document.getElementById('p40title').textContent='பயிற்சி 02 · 40 நிமிடம்';
+    document.getElementById('p40sub').textContent='அதே அமைதியான ஒலியுடன் நீண்ட பயிற்சி';
+    document.getElementById('changeLangBtn').textContent='மொழியை மாற்று';
+    const titles=['முதலில் அமைதியாகுங்கள்','மூச்சை எளிதாக வைத்துக்கொள்ளுங்கள்','கவனியுங்கள்','தயார்'];
+    const texts=['பாதுகாப்பான வசதியான இடத்தில் அமருங்கள் அல்லது படுத்துக்கொள்ளுங்கள். தோள்களையும் தாடையையும் தளர்த்துங்கள்.','இயல்பாக மூச்செடுங்கள். கட்டாயப்படுத்தவும் அவசரப்படவும் தேவையில்லை.','உடல், மூச்சு மற்றும் எண்ணங்களை மாற்ற வேண்டிய அவசியமின்றி கவனியுங்கள்.','Play அழுத்திய பிறகே ஒலி தொடங்கும். தேவையானபோது நிறுத்தலாம்.'];
+    for(let i=0;i<4;i++){
+      document.getElementById('step'+(i+1)+'no').textContent='படி '+(i+1)+' / 4';
+      document.getElementById('step'+(i+1)+'title').textContent=titles[i];
+      document.getElementById('step'+(i+1)+'text').textContent=texts[i];
+    }
+    document.getElementById('backBtn').textContent='பின்னால்';
+    document.getElementById('finishBtn').textContent='முடி';
+    document.getElementById('playerNote').textContent='தானாக தொடங்காது. Play அழுத்திய பிறகே பயிற்சி தொடங்கும்.';
   }else{
-    const cp=document.getElementById('choosePracticeTitle'); if(cp) cp.textContent='Choose a practice';
-    const ck=document.getElementById('choosePracticeKicker'); if(ck) ck.textContent='Practices';
-    const p10t=document.getElementById('p10title'); if(p10t) p10t.textContent='Practice 01 · 10 minutes';
-    const p10s=document.getElementById('p10sub'); if(p10s) p10s.textContent='Gentle breathing and observation';
-    const p40t=document.getElementById('p40title'); if(p40t) p40t.textContent='Practice 02 · 40 minutes';
-    const p40s=document.getElementById('p40sub'); if(p40s) p40s.textContent='Long quiet practice · gentle breathing only';
-    document.getElementById('step1no').textContent='Step 1 of 3';
-    document.getElementById('step1title').textContent='Settle first';
-    document.getElementById('step1text').textContent='Sit or lie somewhere comfortable and safe. Let your shoulders soften. Pain is not required for practice.';
-    document.getElementById('step2no').textContent='Step 2 of 3';
-    document.getElementById('step2title').textContent='Keep it easy';
-    document.getElementById('step2text').textContent='Breathe naturally through the nose. Do not force the breath, race it, or try to prove anything.';
-    document.getElementById('step3no').textContent='Step 3 of 3';
-    document.getElementById('step3title').textContent='Notice';
-    document.getElementById('step3text').textContent='Notice the body, breath and thoughts without needing to change them. Stop if you feel unwell.';
-    document.getElementById('practiceKicker').textContent='Sufi Breath · gentle practice';
-    document.getElementById('practiceTitle').textContent='Practice';
-    document.getElementById('practiceText').textContent='No video. No extra instructions. Just stay comfortable and notice the breath.';
-    document.getElementById('timerBtn').textContent='Start practice';
+    document.getElementById('practiceKicker').textContent='Practices';
+    document.getElementById('practiceHeading').textContent='Choose your time';
+    document.getElementById('p10title').textContent='Practice 01 · 10 minutes';
+    document.getElementById('p10sub').textContent='Short calm session with warm ambient sound';
+    document.getElementById('p40title').textContent='Practice 02 · 40 minutes';
+    document.getElementById('p40sub').textContent='Long quiet session with the same calm sound';
+    document.getElementById('changeLangBtn').textContent='Change language';
+    const titles=['Settle first','Keep the breath easy','Notice','Ready'];
+    const texts=['Sit or lie somewhere comfortable and safe. Let your shoulders and jaw soften.','Breathe naturally. There is nothing to force, prove or rush.','Notice body, breath and thoughts without needing to change them.','The sound will begin only when you press Play. Stop whenever you need to.'];
+    for(let i=0;i<4;i++){
+      document.getElementById('step'+(i+1)+'no').textContent='Step '+(i+1)+' of 4';
+      document.getElementById('step'+(i+1)+'title').textContent=titles[i];
+      document.getElementById('step'+(i+1)+'text').textContent=texts[i];
+    }
+    document.getElementById('backBtn').textContent='Back';
+    document.getElementById('finishBtn').textContent='Finish';
+    document.getElementById('playerNote').textContent='No autoplay. The session begins only when you press Play.';
   }
 }
 
-function showInstruction(){
-  document.querySelectorAll('.instruction').forEach((x,i)=>x.classList.toggle('active',i===instructionIndex));
-  document.querySelectorAll('.dot').forEach((x,i)=>x.classList.toggle('active',i===instructionIndex));
-  document.getElementById('nextStepBtn').textContent = instructionIndex===2
-    ? (lang==='ta'?'பயிற்சிக்கு செல்லுங்கள்':'Start practice')
-    : (lang==='ta'?'அடுத்து':'Next');
+function choosePractice(seconds,url){
+  chosenSeconds=seconds;
+  chosenUrl=url;
+  stepIndex=0;
+  renderStep();
+  preparePlayer();
+  show('instructions');
 }
 
-function nextInstruction(){
-  if(instructionIndex<2){
-    instructionIndex++;
-    showInstruction();
+function renderStep(){
+  document.querySelectorAll('.step').forEach((x,i)=>x.classList.toggle('active',i===stepIndex));
+  document.querySelectorAll('.dot').forEach((x,i)=>x.classList.toggle('active',i===stepIndex));
+  document.getElementById('nextBtn').textContent=
+    stepIndex===3 ? (lang==='ta'?'பயிற்சிக்கு செல்லுங்கள்':'Go to practice') : (lang==='ta'?'அடுத்து':'Next');
+}
+
+function nextStep(){
+  if(stepIndex<3){stepIndex++;renderStep();return;}
+  show('player');
+}
+
+function preparePlayer(){
+  audio.pause();
+  audio.src=chosenUrl;
+  audio.currentTime=0;
+  audio.load();
+  seek.max=chosenSeconds;
+  seek.value=0;
+  document.getElementById('elapsed').textContent='00:00';
+  document.getElementById('clock').textContent='00:00';
+  document.getElementById('total').textContent=fmt(chosenSeconds);
+  document.getElementById('playBtn').textContent='▶ Play';
+  document.getElementById('orbText').textContent=lang==='ta'?'தயார்':'Ready';
+
+  if(chosenSeconds===2400){
+    document.getElementById('sessionKicker').textContent=lang==='ta'?'பயிற்சி 02':'Practice 02';
+    document.getElementById('sessionTitle').textContent=lang==='ta'?'40 நிமிடப் பயிற்சி':'40-minute practice';
   }else{
-    resetPractice(false);
-    const pk=document.getElementById('practiceKicker');
-    const pt=document.getElementById('practiceTitle');
-    if(lang==='ta'){
-      pk.textContent=selectedDuration===2400?'பயிற்சி 02 · 40 நிமிடம்':'பயிற்சி 01 · 10 நிமிடம்';
-      pt.textContent=selectedDuration===2400?'நீண்ட அமைதிப் பயிற்சி':'பயிற்சி';
-    }else{
-      pk.textContent=selectedDuration===2400?'Practice 02 · 40 min':'Practice 01 · 10 min';
-      pt.textContent=selectedDuration===2400?'Long quiet practice':'Practice';
-    }
-    go(4);
+    document.getElementById('sessionKicker').textContent=lang==='ta'?'பயிற்சி 01':'Practice 01';
+    document.getElementById('sessionTitle').textContent=lang==='ta'?'10 நிமிடப் பயிற்சி':'10-minute practice';
   }
 }
 
 function fmt(sec){
-  sec=Math.max(0,Math.floor(sec));
+  sec=Math.max(0,Math.floor(Number(sec)||0));
   return String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0');
 }
 
-function renderTimer(){
-  document.getElementById('timer').textContent=fmt(remaining);
-}
-
-function toggleTimer(){
-  const btn=document.getElementById('timerBtn');
-  if(timerId){
-    clearInterval(timerId); timerId=null;
-    btn.textContent=lang==='ta'?'தொடரவும்':'Resume';
-    return;
-  }
-  btn.textContent=lang==='ta'?'இடைநிறுத்து':'Pause';
-  timerId=setInterval(()=>{
-    remaining--;
-    renderTimer();
-    if(remaining<=0){
-      clearInterval(timerId); timerId=null;
-      btn.textContent=lang==='ta'?'மீண்டும் தொடங்கு':'Start again';
+async function togglePlay(){
+  if(audio.paused){
+    try{
+      await audio.play();
+      document.getElementById('playBtn').textContent='❚❚ Pause';
+      document.getElementById('orbText').textContent=lang==='ta'?'பயிற்சி':'Practice';
+    }catch(e){
+      document.getElementById('playerNote').textContent=lang==='ta'?'ஒலி தொடங்கவில்லை. Play மீண்டும் அழுத்தவும்.':'Audio did not start. Tap Play once more.';
     }
-  },1000);
+  }else{
+    audio.pause();
+    document.getElementById('playBtn').textContent='▶ Resume';
+    document.getElementById('orbText').textContent=lang==='ta'?'இடைநிறுத்தம்':'Paused';
+  }
 }
 
-function resetPractice(updateButton=true){
-  if(timerId){clearInterval(timerId);timerId=null;}
-  remaining=selectedDuration; renderTimer();
-  if(updateButton) document.getElementById('timerBtn').textContent=lang==='ta'?'பயிற்சியை தொடங்கு':'Start practice';
+function jump(delta){
+  audio.currentTime=Math.max(0,Math.min(chosenSeconds,(audio.currentTime||0)+delta));
+  sync();
 }
 
-function finishPractice(){
-  resetPractice();
-  go(2);
+function restart(){
+  audio.currentTime=0;
+  audio.play().catch(()=>{});
+  sync();
 }
+
+function finish(){
+  audio.pause();
+  audio.currentTime=0;
+  sync();
+  show('practices');
+}
+
+function sync(){
+  let t=Math.min(chosenSeconds,audio.currentTime||0);
+  if(t>=chosenSeconds){
+    audio.pause();
+    t=chosenSeconds;
+    document.getElementById('playBtn').textContent='▶ Play again';
+    document.getElementById('orbText').textContent=lang==='ta'?'முடிந்தது':'Complete';
+  }
+  if(!scrubbing)seek.value=t;
+  document.getElementById('elapsed').textContent=fmt(t);
+  document.getElementById('clock').textContent=fmt(t);
+  document.getElementById('total').textContent=fmt(chosenSeconds);
+  if(!audio.paused && t<chosenSeconds){
+    document.getElementById('playBtn').textContent='❚❚ Pause';
+  }
+}
+
+audio.addEventListener('timeupdate',sync);
+audio.addEventListener('play',sync);
+audio.addEventListener('pause',sync);
+audio.addEventListener('ended',sync);
+audio.addEventListener('error',()=>{
+  document.getElementById('playerNote').textContent=lang==='ta'?'ஒலி ஏற்றப்படவில்லை. இணைய இணைப்பைச் சரிபார்த்து மீண்டும் முயற்சிக்கவும்.':'Audio could not load. Check the connection and try again.';
+});
+seek.addEventListener('pointerdown',()=>scrubbing=true);
+seek.addEventListener('pointerup',()=>{scrubbing=false;audio.currentTime=Number(seek.value)||0;sync()});
+seek.addEventListener('input',()=>{
+  document.getElementById('elapsed').textContent=fmt(Number(seek.value)||0);
+  document.getElementById('clock').textContent=fmt(Number(seek.value)||0);
+});
+volume.addEventListener('input',()=>audio.volume=Number(volume.value));
+audio.volume=.85;
+setInterval(sync,500);
 </script>
 </body>
 </html>
