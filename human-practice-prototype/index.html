@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1014">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icon.svg">
+<title>Practice Prototype</title>
+<style>
+:root{--bg:#0b1014;--panel:#111920;--soft:#18242d;--text:#eef4f4;--muted:#9fb0b7;--accent:#c7e6d4;--line:#26333b}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 50% 0%,#22333c 0,#0b1014 42%,#070b0e 100%);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+.app{max-width:470px;min-height:100vh;margin:auto;display:flex;flex-direction:column;padding:20px 18px 24px}.top{display:flex;justify-content:space-between;align-items:center;min-height:36px}.progress,.lang-mini{font-size:12px;color:var(--muted)}.lang-mini{border:1px solid var(--line);border-radius:999px;padding:6px 10px}.screen{display:none;flex:1;flex-direction:column;justify-content:center}.screen.active{display:flex}
+h1,h2{letter-spacing:-.03em}h2{font-size:29px;margin:8px 0 10px}p{color:var(--muted);line-height:1.55}.center{text-align:center}.quote{font-size:22px;line-height:1.5;margin:24px auto;max-width:340px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}.stack{display:grid;gap:12px;margin-top:14px}
+.card,.choice{background:linear-gradient(180deg,#142029,#10171d);border:1px solid var(--line);color:var(--text);border-radius:18px;padding:18px;text-align:left;min-height:82px}.choice.selected,.card.selected{border-color:var(--accent)}
+.card small,.choice small{display:block;color:var(--muted);margin-top:6px;line-height:1.35}.btn{width:100%;border:0;border-radius:18px;padding:17px 18px;margin-top:18px;font-size:17px;font-weight:650;background:var(--accent);color:#0b1511}.btn.secondary{background:transparent;color:var(--text);border:1px solid var(--line)}
+.hidden{display:none!important}.orb-wrap{display:grid;place-items:center;margin:26px 0 18px}.orb{width:190px;height:190px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle,#bfe6d5 0,#5b8b7c 22%,#213e3b 52%,#0f1b1d 72%);transition:transform 4s ease-in-out}.orb.inhale{transform:scale(1.13)}.orb.exhale{transform:scale(.88)}.orb span{font-size:22px;font-weight:600}.timer{text-align:center;color:var(--muted);font-size:20px;font-variant-numeric:tabular-nums}
+.modebar{display:flex;gap:8px;margin-top:12px}.modebar button{flex:1;border:1px solid var(--line);background:#10171d;color:var(--muted);padding:11px;border-radius:13px}.modebar button.active{border-color:var(--accent);color:var(--text)}
+.safety{background:#15191a;border:1px solid #3c3a30;color:#d8cba8;border-radius:14px;padding:12px 14px;font-size:12px;line-height:1.45;margin-top:16px}.tags{display:flex;flex-wrap:wrap;gap:9px;margin:14px 0}.tag{border:1px solid var(--line);border-radius:999px;padding:10px 13px;color:var(--muted)}.tag.selected{background:var(--soft);color:var(--text);border-color:var(--accent)}
+.note{width:100%;min-height:100px;border-radius:16px;border:1px solid var(--line);background:#0e151a;color:var(--text);padding:14px;font:inherit}.foot{font-size:12px;color:#7f9198;text-align:center;margin-top:12px}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="top"><div class="progress" id="progress">1 / 6</div><div class="lang-mini" id="langMini">EN</div></div>
+
+<section class="screen active" data-screen="0">
+<div class="center"><div style="font-size:56px">◯</div><div class="quote" data-i18n="purpose">To be human on this earth.</div><p data-i18n="intro">Less information. More practice. Notice what is already here.</p></div>
+<button class="btn" onclick="next()" data-i18n="begin">Begin</button>
+<button class="btn secondary hidden" id="installBtn">Install on phone</button>
+</section>
+
+<section class="screen" data-screen="1">
+<h2>Language</h2><p>Choose how the app speaks to you.</p>
+<div class="stack">
+<button class="choice" onclick="setLang('en');next()"><b>English</b><small>Simple, quiet guidance</small></button>
+<button class="choice" onclick="setLang('ta');next()"><b>தமிழ்</b><small>எளிய, அமைதியான வழிகாட்டல்</small></button>
+</div>
+</section>
+
+<section class="screen" data-screen="2">
+<h2 data-i18n="pathTitle">Choose a path for today</h2><p data-i18n="pathSub">This is not an identity. It only changes the tone of the practice.</p>
+<div class="stack">
+<button class="choice" data-path="natural" onclick="selectPath(this,'natural')"><b data-i18n="natural">Natural</b><small data-i18n="naturalSub">Breath, body, light, silence, earth.</small></button>
+<button class="choice" data-path="manifest" onclick="selectPath(this,'manifest')"><b data-i18n="manifest">Manifest</b><small data-i18n="manifestSub">Intention, attention, gratitude, action.</small></button>
+<button class="choice" data-path="spiritual" onclick="selectPath(this,'spiritual')"><b data-i18n="spiritual">Spiritual</b><small data-i18n="spiritualSub">Stillness, meaning, surrender, wonder.</small></button>
+</div>
+<button class="btn hidden" id="pathNext" onclick="next()" data-i18n="continue">Continue</button>
+<div class="foot">Other paths can come later.</div>
+</section>
+
+<section class="screen" data-screen="3">
+<h2 data-i18n="needTitle">What do you need right now?</h2><p data-i18n="needSub">Choose one. No explanation needed.</p>
+<div class="grid" id="needGrid">
+<button class="card" onclick="setNeed('Calm',this)">Calm<small>Slow the inner noise</small></button>
+<button class="card" onclick="setNeed('Rest',this)">Rest<small>Prepare for sleep</small></button>
+<button class="card" onclick="setNeed('Observe',this)">Observe<small>See without fixing</small></button>
+<button class="card" onclick="setNeed('Clarity',this)">Clarity<small>One thing at a time</small></button>
+<button class="card" onclick="setNeed('Release',this)">Release<small>Let the body soften</small></button>
+<button class="card" onclick="setNeed('Presence',this)">Presence<small>Return to here</small></button>
+</div>
+<button class="btn hidden" id="needNext" onclick="preparePractice();next()" data-i18n="startPractice">Start practice</button>
+</section>
+
+<section class="screen" data-screen="4">
+<h2 id="practiceTitle">Sitting practice</h2>
+<p id="practiceLead">Sit in a supported position. Let the jaw and shoulders soften. Pain is not a goal; adjust when needed.</p>
+<div class="modebar"><button id="sitMode" class="active" onclick="setMode('sit')">Sitting · 7 min</button><button id="sleepMode" onclick="setMode('sleep')">Sleep · 45 min</button></div>
+<div class="orb-wrap"><div class="orb" id="orb"><span id="cue">Ready</span></div></div>
+<div class="timer" id="timer">01:00 demo</div>
+<button class="btn" id="practiceBtn" onclick="togglePractice()">Start 60-second demo</button>
+<button class="btn secondary" onclick="endPractice()">Finish / reflect</button>
+<div class="safety">Keep breathing comfortable. Do not force long holds or rapid breathing. Stop if you feel dizzy, faint, numb, panicked, or have unusual pain. Do not use while driving, in water, or where falling could hurt you.</div>
+</section>
+
+<section class="screen" data-screen="5">
+<h2 data-i18n="noticeTitle">What did you notice?</h2><p data-i18n="noticeSub">No need to explain it perfectly.</p>
+<div class="tags"><span class="tag" onclick="toggleTag(this)">Body</span><span class="tag" onclick="toggleTag(this)">Breath</span><span class="tag" onclick="toggleTag(this)">Thought</span><span class="tag" onclick="toggleTag(this)">Emotion</span><span class="tag" onclick="toggleTag(this)">Nothing</span></div>
+<textarea class="note" id="note" placeholder="One sentence, if you want."></textarea>
+<div style="border-left:2px solid var(--accent);padding-left:14px;margin:18px 0;color:var(--muted)"><b>Tomorrow</b><br>Go outside somewhere safe. Sit or stand still for 10 minutes. Observe changing light without photographing it.</div>
+<button class="btn" onclick="saveReflection()">Save privately on this phone</button>
+<button class="btn secondary" onclick="restart()">Return to beginning</button>
+<div class="foot" id="savedMsg"></div>
+</section>
+</div>
+
+<script>
+let screen=0,lang='en',path='',need='',mode='sit',running=false,remaining=60,phaseTimer,countdownTimer,inhale=true,deferredPrompt;
+const T={en:{purpose:"To be human on this earth.",intro:"Less information. More practice. Notice what is already here.",begin:"Begin",pathTitle:"Choose a path for today",pathSub:"This is not an identity. It only changes the tone of the practice.",natural:"Natural",naturalSub:"Breath, body, light, silence, earth.",manifest:"Manifest",manifestSub:"Intention, attention, gratitude, action.",spiritual:"Spiritual",spiritualSub:"Stillness, meaning, surrender, wonder.",continue:"Continue",needTitle:"What do you need right now?",needSub:"Choose one. No explanation needed.",startPractice:"Start practice",noticeTitle:"What did you notice?",noticeSub:"No need to explain it perfectly."},ta:{purpose:"இந்த பூமியில் மனிதராக இருப்பதற்கு.",intro:"குறைந்த தகவல். அதிக பயிற்சி. ஏற்கனவே இருப்பதை கவனியுங்கள்.",begin:"தொடங்கு",pathTitle:"இன்றைக்கு ஒரு பாதையைத் தேர்வு செய்யுங்கள்",pathSub:"இது உங்கள் அடையாளம் அல்ல. பயிற்சியின் உணர்வை மட்டும் மாற்றும்.",natural:"இயற்கை",naturalSub:"மூச்சு, உடல், ஒளி, அமைதி, பூமி.",manifest:"நோக்கம்",manifestSub:"நோக்கம், கவனம், நன்றி, செயல்.",spiritual:"ஆன்மீகம்",spiritualSub:"உள் அமைதி, அர்த்தம், ஒப்படைப்பு, வியப்பு.",continue:"தொடரவும்",needTitle:"இப்போது உங்களுக்கு என்ன தேவை?",needSub:"ஒன்றைத் தேர்ந்தெடுக்கவும். விளக்கம் தேவையில்லை.",startPractice:"பயிற்சியைத் தொடங்கு",noticeTitle:"நீங்கள் என்ன கவனித்தீர்கள்?",noticeSub:"அனுபவத்தை சரியாக விளக்க வேண்டியதில்லை."}};
+function applyLang(){document.querySelectorAll('[data-i18n]').forEach(e=>{let k=e.dataset.i18n;if(T[lang][k])e.textContent=T[lang][k]});document.getElementById('langMini').textContent=lang==='en'?'EN':'தமிழ்'}
+function setLang(l){lang=l;applyLang()}function show(){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.querySelector('[data-screen="'+screen+'"]').classList.add('active');document.getElementById('progress').textContent=(screen+1)+' / 6'}
+function next(){if(screen<5){screen++;show()}}function selectPath(el,p){path=p;document.querySelectorAll('[data-path]').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');document.getElementById('pathNext').classList.remove('hidden')}
+function setNeed(n,el){need=n;document.querySelectorAll('#needGrid .card').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');document.getElementById('needNext').classList.remove('hidden')}
+function preparePractice(){setMode(need==='Rest'?'sleep':'sit')}function setMode(m){mode=m;document.getElementById('sitMode').classList.toggle('active',m==='sit');document.getElementById('sleepMode').classList.toggle('active',m==='sleep');document.getElementById('practiceTitle').textContent=m==='sit'?'Sitting practice':'Sleep practice';document.getElementById('practiceLead').textContent=m==='sit'?'Sit in a supported position. Let the jaw and shoulders soften. Pain is not a goal; adjust when needed.':'Lie down safely. Put the phone aside. Let the guidance become quieter as you move toward sleep.';resetPractice()}
+function speak(t){if(!('speechSynthesis'in window))return;speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(t);u.rate=.78;u.pitch=1.02;u.volume=.8;u.lang=lang==='ta'?'ta-IN':'en-US';speechSynthesis.speak(u)}
+function phase(){let cue=document.getElementById('cue'),orb=document.getElementById('orb');if(inhale){cue.textContent=lang==='ta'?'உள்ளிழு':'Breathe in';orb.className='orb inhale';speak(cue.textContent);phaseTimer=setTimeout(()=>{inhale=false;phase()},4000)}else{cue.textContent=lang==='ta'?'வெளியேற்று':'Breathe out';orb.className='orb exhale';speak(cue.textContent);phaseTimer=setTimeout(()=>{inhale=true;phase()},6000)}}
+function togglePractice(){if(running){pausePractice();return}running=true;document.getElementById('practiceBtn').textContent='Pause';phase();countdownTimer=setInterval(()=>{remaining--;document.getElementById('timer').textContent='00:'+String(remaining).padStart(2,'0')+' demo';if(remaining<=0)endPractice()},1000)}
+function pausePractice(){running=false;clearTimeout(phaseTimer);clearInterval(countdownTimer);if('speechSynthesis'in window)speechSynthesis.cancel();document.getElementById('practiceBtn').textContent='Resume'}function resetPractice(){pausePractice();remaining=60;inhale=true;document.getElementById('timer').textContent='01:00 demo';document.getElementById('cue').textContent='Ready';document.getElementById('orb').className='orb';document.getElementById('practiceBtn').textContent='Start 60-second demo'}
+function endPractice(){pausePractice();screen=5;show()}function toggleTag(e){e.classList.toggle('selected')}function saveReflection(){let tags=[...document.querySelectorAll('.tag.selected')].map(x=>x.textContent);let a=JSON.parse(localStorage.getItem('practice_reflections')||'[]');a.push({time:new Date().toISOString(),lang,path,need,mode,tags,note:document.getElementById('note').value});localStorage.setItem('practice_reflections',JSON.stringify(a));document.getElementById('savedMsg').textContent='Saved locally. No account. No cloud.'}
+function restart(){resetPractice();screen=0;show()}
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;document.getElementById('installBtn').classList.remove('hidden')});
+document.getElementById('installBtn').addEventListener('click',async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;document.getElementById('installBtn').classList.add('hidden')});
+if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));
+applyLang();show();
+</script>
+</body></html>
