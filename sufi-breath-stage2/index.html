@@ -3,94 +3,219 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0a1115">
+<meta name="theme-color" content="#214a62">
 <title>Sufi Breath — Stage 2</title>
 <style>
-:root{--bg:#081014;--panel:#0f181d;--text:#f3f6f5;--muted:#9aa9af;--accent:#c8e6d5;--line:#26343b}
+:root{
+  --sky:#4f7891;
+  --sky2:#2e5b74;
+  --deep:#163447;
+  --deep2:#0d2432;
+  --text:#f7fafb;
+  --muted:#d2e0e7;
+  --gold:#ffd89a;
+  --gold2:#f3b969;
+  --glass:rgba(16,43,57,.46);
+  --glass2:rgba(15,38,51,.68);
+  --line:rgba(255,255,255,.16);
+}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;min-height:100%;background:#081014;color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-body{background:radial-gradient(circle at 50% -8%,#223840 0,#0c171c 35%,#081014 75%)}
-.app{max-width:470px;min-height:100vh;margin:auto;padding:calc(20px + env(safe-area-inset-top)) 18px calc(24px + env(safe-area-inset-bottom));display:flex;flex-direction:column}
-.screen{display:none;flex:1;flex-direction:column;justify-content:center}.screen.active{display:flex}
-.center{text-align:center}.symbol{font-size:60px;line-height:1;margin-bottom:18px}
-h1,h2{margin:0;letter-spacing:-.035em}h1{font-size:31px}h2{font-size:29px}
-p{color:var(--muted);line-height:1.55;margin:12px 0}
-.kicker{font-size:12px;letter-spacing:.11em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
-.btn{width:100%;border:0;border-radius:18px;padding:17px 18px;margin-top:14px;font:inherit;font-size:17px;font-weight:700;background:var(--accent);color:#0a1511}
-.btn.secondary{background:transparent;color:var(--text);border:1px solid var(--line)}
-.choice{width:100%;background:linear-gradient(180deg,#132129,#0f181d);border:1px solid var(--line);color:var(--text);border-radius:18px;padding:18px;text-align:left;margin-top:12px;font:inherit}
+html,body{margin:0;min-height:100%;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--text);background:var(--deep2)}
+body{
+  min-height:100vh;
+  overflow-x:hidden;
+  background:
+    radial-gradient(circle at 83% 8%,rgba(255,221,157,.38) 0 5%,rgba(255,212,137,.15) 12%,transparent 28%),
+    linear-gradient(180deg,var(--sky) 0%,var(--sky2) 35%,var(--deep) 66%,var(--deep2) 100%);
+}
+body:before{
+  content:"";
+  position:fixed;
+  width:320px;height:320px;
+  top:-105px;right:-105px;
+  border-radius:50%;
+  background:
+    radial-gradient(circle,rgba(255,240,194,.95) 0 9%,rgba(255,214,141,.55) 18%,rgba(255,200,108,.18) 37%,transparent 63%);
+  filter:blur(.2px);
+  pointer-events:none;
+  z-index:0;
+}
+body:after{
+  content:"";
+  position:fixed;
+  width:520px;height:520px;
+  top:-205px;right:-195px;
+  background:repeating-conic-gradient(from 14deg,rgba(255,224,167,.09) 0 7deg,transparent 7deg 19deg);
+  border-radius:50%;
+  animation:rays 48s linear infinite;
+  pointer-events:none;
+  z-index:0;
+}
+@keyframes rays{to{transform:rotate(360deg)}}
+.app{
+  position:relative;z-index:1;
+  max-width:480px;min-height:100vh;margin:auto;
+  padding:calc(20px + env(safe-area-inset-top)) 18px calc(26px + env(safe-area-inset-bottom));
+  display:flex;flex-direction:column;
+}
+.screen{display:none;flex:1;flex-direction:column;justify-content:center}
+.screen.active{display:flex}
+.center{text-align:center}
+.sunmark{
+  width:112px;height:112px;margin:0 auto 22px;border-radius:50%;
+  position:relative;display:grid;place-items:center;
+  background:radial-gradient(circle at 42% 35%,#fff6da 0 8%,#ffdf9d 20%,#eeb36a 45%,rgba(238,179,106,.16) 68%,transparent 70%);
+  box-shadow:0 0 45px rgba(255,211,138,.24);
+}
+.sunmark:after{
+  content:"";
+  width:46px;height:46px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.62);
+  box-shadow:inset 0 0 20px rgba(255,255,255,.12);
+}
+.kicker{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#ffe4b6;margin-bottom:9px}
+h1,h2{margin:0;letter-spacing:-.038em;text-shadow:0 1px 18px rgba(0,0,0,.16)}
+h1{font-size:33px;line-height:1.08}
+h2{font-size:30px;line-height:1.1}
+p{color:var(--muted);line-height:1.58;margin:13px 0}
+.tagline{max-width:340px;margin:14px auto 0}
+.glass{
+  background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(11,32,44,.26));
+  border:1px solid var(--line);
+  box-shadow:0 22px 70px rgba(3,18,28,.23);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  border-radius:26px;
+  padding:18px;
+}
+.btn{
+  width:100%;border:0;border-radius:18px;padding:17px 18px;margin-top:14px;
+  font:inherit;font-size:17px;font-weight:750;
+  background:linear-gradient(180deg,#ffe2ac,#f4be72);
+  color:#17303e;
+  box-shadow:0 9px 28px rgba(236,174,92,.22);
+}
+.btn:active{transform:translateY(1px)}
+.btn.secondary{
+  background:rgba(10,34,47,.34);color:var(--text);
+  border:1px solid var(--line);box-shadow:none
+}
+.choice{
+  width:100%;border:1px solid var(--line);color:var(--text);
+  border-radius:20px;padding:18px;text-align:left;margin-top:12px;font:inherit;
+  background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(9,32,45,.34));
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+}
 .choice b{font-size:18px}.choice small{display:block;color:var(--muted);margin-top:5px}
-.player-card{margin-top:18px;background:#0e171c;border:1px solid var(--line);border-radius:24px;padding:14px;overflow:hidden}
-.frame-wrap{position:relative;width:100%;aspect-ratio:16/9;border-radius:18px;overflow:hidden;background:#05090b}
-iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#05090b}
+.practice-card{padding:24px 20px}
+.horizon{
+  height:76px;margin:4px -18px -18px;border-radius:0 0 26px 26px;
+  position:relative;overflow:hidden;
+  background:linear-gradient(180deg,rgba(255,214,139,.08),rgba(15,45,61,.28));
+}
+.horizon:before{
+  content:"";position:absolute;left:-8%;right:-8%;top:29px;height:64px;border-radius:50%;
+  border-top:1px solid rgba(255,231,188,.33);
+  background:radial-gradient(ellipse at center top,rgba(255,221,158,.12),transparent 58%);
+}
+.player-card{margin-top:18px;padding:14px}
+.frame-wrap{
+  position:relative;width:100%;aspect-ratio:16/9;border-radius:19px;overflow:hidden;
+  background:linear-gradient(145deg,#0c2736,#173d50);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.07),0 16px 38px rgba(4,18,27,.23)
+}
+iframe{
+  position:absolute;inset:0;width:100%;height:100%;border:0;background:#0a1f2b
+}
+.player-title{display:flex;align-items:center;gap:10px;margin:4px 2px 14px}
+.player-dot{
+  width:10px;height:10px;border-radius:50%;
+  background:#ffd58c;box-shadow:0 0 16px rgba(255,213,140,.66)
+}
 .note{font-size:13px;color:var(--muted);line-height:1.5;margin:14px 4px 2px}
-.footer{text-align:center;color:#73858c;font-size:11px;margin-top:14px}
+.footer{text-align:center;color:#adc0ca;font-size:11px;margin-top:15px}
+.minirow{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:14px}
+.pill{font-size:11px;color:#dbe8ed;border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:7px 10px;background:rgba(12,36,49,.24)}
 </style>
 </head>
 <body>
 <div class="app">
+
 <section class="screen active" id="s0">
   <div class="center">
-    <div class="symbol">◯</div>
+    <div class="sunmark"></div>
     <div class="kicker">Stage 2 prototype</div>
-    <h1>To be human on this earth.</h1>
-    <p>Less information. More practice. Begin with the breath.</p>
+    <h1>To be human<br>on this earth.</h1>
+    <p class="tagline">Less information. More practice. Begin with the breath.</p>
   </div>
   <button class="btn" onclick="go(1)">Begin</button>
 </section>
 
 <section class="screen" id="s1">
-  <div class="kicker">Language</div>
-  <h2>Choose language</h2>
-  <button class="choice" onclick="chooseLang('en')"><b>English</b><small>Simple, quiet guidance</small></button>
-  <button class="choice" onclick="chooseLang('ta')"><b>தமிழ்</b><small>எளிய, அமைதியான வழிகாட்டல்</small></button>
+  <div class="glass">
+    <div class="kicker">Language</div>
+    <h2>Choose language</h2>
+    <p>Only the language changes. The practice remains simple.</p>
+    <button class="choice" onclick="chooseLang('en')"><b>English</b><small>Simple, quiet guidance</small></button>
+    <button class="choice" onclick="chooseLang('ta')"><b>தமிழ்</b><small>எளிய, அமைதியான வழிகாட்டல்</small></button>
+  </div>
 </section>
 
 <section class="screen" id="s2">
-  <div class="center">
-    <div class="symbol">◯</div>
-    <div class="kicker">Practice 01</div>
-    <h2 id="practiceTitle">Sufi Breath</h2>
-    <p id="practiceIntro">Sit or lie somewhere comfortable. No rush. No forcing. When you are ready, begin.</p>
+  <div class="glass practice-card">
+    <div class="center">
+      <div class="sunmark" style="width:94px;height:94px;margin-bottom:18px"></div>
+      <div class="kicker">Practice 01</div>
+      <h2 id="practiceTitle">Sufi Breath</h2>
+      <p id="practiceIntro">Sit or lie somewhere comfortable. No rush. No forcing. When you are ready, begin.</p>
+      <div class="minirow">
+        <span class="pill">10 min</span>
+        <span class="pill">English source</span>
+        <span class="pill">Google Drive</span>
+      </div>
+    </div>
+    <button class="btn" id="meditateBtn" onclick="openMeditation()">Meditate now</button>
+    <button class="btn secondary" onclick="go(1)">Change language</button>
+    <div class="horizon"></div>
   </div>
-  <button class="btn" id="meditateBtn" onclick="openMeditation()">Meditate now</button>
-  <button class="btn secondary" onclick="go(1)">Change language</button>
 </section>
 
 <section class="screen" id="s3">
   <div class="center">
     <div class="kicker" id="playerKicker">Sufi Breath · English</div>
     <h2 id="playerTitle">Meditate now</h2>
-    <p id="playerIntro">Use the player below. Keep your breathing comfortable and natural.</p>
+    <p id="playerIntro">Let the recording play. Keep your breathing comfortable and natural.</p>
   </div>
 
-  <div class="player-card">
+  <div class="glass player-card">
+    <div class="player-title"><span class="player-dot"></span><strong>10-minute guided source</strong></div>
     <div class="frame-wrap">
       <iframe
         id="driveFrame"
+        src="https://drive.google.com/file/d/17te3Zv0HblXhmSBWuBknyf4Lp8DsjfKl/preview"
         title="Sufi Breath source"
-        allow="autoplay; fullscreen"
+        loading="eager"
+        allow="autoplay; fullscreen; encrypted-media"
         allowfullscreen
-        sandbox="allow-scripts allow-same-origin allow-popups"
         referrerpolicy="strict-origin-when-cross-origin">
       </iframe>
     </div>
-    <div class="note" id="playerNote">This prototype uses the shared Google Drive recording directly. Nothing is uploaded from your phone.</div>
+    <div class="note" id="playerNote">The shared Google Drive recording is preloaded when this page opens, so there is no upload step.</div>
   </div>
 
   <button class="btn secondary" onclick="go(2)">Back</button>
   <div class="footer">Prototype only · no login · no upload · no device voice</div>
 </section>
+
 </div>
 
 <script>
-const FILE_ID='17te3Zv0HblXhmSBWuBknyf4Lp8DsjfKl';
-let lang='en', loaded=false;
+let lang='en';
 
 function go(n){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById('s'+n).classList.add('active');
-  window.scrollTo(0,0);
+  window.scrollTo({top:0,behavior:'instant'});
 }
 
 function chooseLang(l){
@@ -101,25 +226,21 @@ function chooseLang(l){
     document.getElementById('meditateBtn').textContent='இப்போது தியானியுங்கள்';
     document.getElementById('playerKicker').textContent='சூஃபி மூச்சு · தமிழ்';
     document.getElementById('playerTitle').textContent='இப்போது தியானியுங்கள்';
-    document.getElementById('playerIntro').textContent='கீழே உள்ள பிளேயரைப் பயன்படுத்துங்கள். மூச்சை இயல்பாகவும் வசதியாகவும் வைத்திருங்கள்.';
-    document.getElementById('playerNote').textContent='இந்த மாதிரி Google Drive-இல் பகிரப்பட்ட பதிவை நேரடியாக பயன்படுத்துகிறது. உங்கள் தொலைபேசியில் இருந்து எதுவும் பதிவேற்றப்படாது.';
+    document.getElementById('playerIntro').textContent='பதிவு ஒலிக்கட்டும். மூச்சை இயல்பாகவும் வசதியாகவும் வைத்திருங்கள்.';
+    document.getElementById('playerNote').textContent='பகிரப்பட்ட Google Drive பதிவு இந்தப் பக்கம் திறக்கும் போதே முன்கூட்டியே ஏற்றப்படுகிறது. எந்த கோப்பையும் பதிவேற்ற வேண்டியதில்லை.';
   }else{
     document.getElementById('practiceTitle').textContent='Sufi Breath';
     document.getElementById('practiceIntro').textContent='Sit or lie somewhere comfortable. No rush. No forcing. When you are ready, begin.';
     document.getElementById('meditateBtn').textContent='Meditate now';
     document.getElementById('playerKicker').textContent='Sufi Breath · English';
     document.getElementById('playerTitle').textContent='Meditate now';
-    document.getElementById('playerIntro').textContent='Use the player below. Keep your breathing comfortable and natural.';
-    document.getElementById('playerNote').textContent='This prototype uses the shared Google Drive recording directly. Nothing is uploaded from your phone.';
+    document.getElementById('playerIntro').textContent='Let the recording play. Keep your breathing comfortable and natural.';
+    document.getElementById('playerNote').textContent='The shared Google Drive recording is preloaded when this page opens, so there is no upload step.';
   }
   go(2);
 }
 
 function openMeditation(){
-  if(!loaded){
-    document.getElementById('driveFrame').src='https://drive.google.com/file/d/'+FILE_ID+'/preview';
-    loaded=true;
-  }
   go(3);
 }
 </script>
