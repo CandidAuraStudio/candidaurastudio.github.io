@@ -1,4 +1,4 @@
-const CACHE='sufi-stage2-drive-bed-v25';
+const CACHE='sufi-stage2-english-v26';
 self.addEventListener('install',e=>self.skipWaiting());
 self.addEventListener('activate',e=>e.waitUntil((async()=>{for(const k of await caches.keys())await caches.delete(k);await self.clients.claim()})()));
 self.addEventListener('fetch',e=>{
