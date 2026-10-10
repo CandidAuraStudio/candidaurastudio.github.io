@@ -169,7 +169,7 @@ iframe{
       <h2 id="practiceTitle">Sufi Breath</h2>
       <p id="practiceIntro">Sit or lie somewhere comfortable. No rush. No forcing. When you are ready, begin.</p>
       <div class="minirow">
-        <span class="pill">10 min</span>
+        <span class="pill">Drive source</span>
         <span class="pill">English source</span>
         <span class="pill">Google Drive</span>
       </div>
@@ -188,20 +188,40 @@ iframe{
   </div>
 
   <div class="glass player-card">
-    <div class="player-title"><span class="player-dot"></span><strong>10-minute guided source</strong></div>
-    <div class="frame-wrap">
-      <video id="meditationVisual" playsinline preload="metadata"
-        src="https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/16c09e13-37e1-4e37-87e9-4400155c9942.mp4"
-        style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#0a1f2b"></video>
+    <div class="player-title"><span class="player-dot"></span><strong>Drive calm guide · native player</strong></div>
+
+    <video
+      id="meditationPlayer"
+      controls
+      playsinline
+      preload="metadata"
+      src="https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/20ba5337-e730-493d-ba73-d1de8874d6f0.mp4"
+      style="width:100%;aspect-ratio:9/16;max-height:58vh;object-fit:cover;border-radius:18px;background:#163447;display:block">
+    </video>
+
+    <div style="display:flex;justify-content:space-between;margin-top:12px;font-variant-numeric:tabular-nums;color:#e8f1f4">
+      <span id="timeNow">00:00</span>
+      <span id="timeTotal">00:00</span>
     </div>
-    <div class="minirow" style="margin-top:14px">
-      <button class="btn secondary" style="margin-top:0;flex:1" onclick="jumpVisual(-10)">−10s</button>
-      <button class="btn" id="visualPlayBtn" style="margin-top:0;flex:1.4" onclick="toggleVisual()">▶ Play</button>
-      <button class="btn secondary" style="margin-top:0;flex:1" onclick="jumpVisual(10)">+10s</button>
+
+    <input id="seekBar" type="range" min="0" max="100" value="0" step="0.1"
+      style="width:100%;margin-top:8px;accent-color:#ffd89a">
+
+    <div style="display:grid;grid-template-columns:1fr 1.4fr 1fr;gap:10px;margin-top:12px">
+      <button class="btn secondary" style="margin-top:0;padding:13px 8px" onclick="jumpPlayer(-10)">−10s</button>
+      <button class="btn" id="bigPlayBtn" style="margin-top:0;padding:13px 8px" onclick="togglePlayer()">▶ Play</button>
+      <button class="btn secondary" style="margin-top:0;padding:13px 8px" onclick="jumpPlayer(10)">+10s</button>
     </div>
-    <input id="visualSeek" type="range" min="0" max="600" value="0" step="0.1"
-      style="width:100%;margin-top:14px;accent-color:#ffd89a">
-    <div class="note" id="playerNote">This Stage 2 player now uses the rebuilt animation and audio together in one verified MP4.</div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px">
+      <button class="btn secondary" style="margin-top:0;padding:12px 8px" onclick="restartPlayer()">Restart</button>
+      <label class="btn secondary" style="margin-top:0;padding:9px 10px;display:flex;align-items:center;gap:8px">
+        <span style="font-size:13px">Volume</span>
+        <input id="volumeBar" type="range" min="0" max="1" step="0.05" value="1" style="width:100%;accent-color:#ffd89a">
+      </label>
+    </div>
+
+    <div class="note" id="playerNote">This is the calm ending taken from the Google Drive recording you shared. The full file contains stronger breathwork, so it is not used as the default guided practice.</div>
   </div>
 
   <button class="btn secondary" onclick="go(2)">Back</button>
@@ -244,23 +264,62 @@ function chooseLang(l){
 function openMeditation(){
   go(3);
 }
-const visual=document.getElementById('meditationVisual');
-const visualPlayBtn=document.getElementById('visualPlayBtn');
-const visualSeek=document.getElementById('visualSeek');
-function toggleVisual(){
-  if(visual.paused){
-    visual.play().then(()=>{visualPlayBtn.textContent='❚❚ Pause';}).catch(()=>{});
+
+
+const meditationPlayer=document.getElementById('meditationPlayer');
+const seekBar=document.getElementById('seekBar');
+const timeNow=document.getElementById('timeNow');
+const timeTotal=document.getElementById('timeTotal');
+const bigPlayBtn=document.getElementById('bigPlayBtn');
+const volumeBar=document.getElementById('volumeBar');
+
+function fmtTime(sec){
+  if(!Number.isFinite(sec)) sec=0;
+  sec=Math.max(0,Math.floor(sec));
+  const m=Math.floor(sec/60);
+  const s=sec%60;
+  return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+}
+function syncPlayer(){
+  const d=Number.isFinite(meditationPlayer.duration)?meditationPlayer.duration:0;
+  const t=meditationPlayer.currentTime||0;
+  timeNow.textContent=fmtTime(t);
+  timeTotal.textContent=fmtTime(d);
+  seekBar.max=d||1;
+  if(document.activeElement!==seekBar) seekBar.value=t;
+  bigPlayBtn.textContent=meditationPlayer.paused?'▶ Play':'❚❚ Pause';
+}
+function togglePlayer(){
+  if(meditationPlayer.paused){
+    meditationPlayer.play().catch(()=>{});
   }else{
-    visual.pause();visualPlayBtn.textContent='▶ Resume';
+    meditationPlayer.pause();
   }
 }
-function jumpVisual(sec){
-  visual.currentTime=Math.max(0,Math.min(visual.duration||600,visual.currentTime+sec));
+function jumpPlayer(sec){
+  const d=Number.isFinite(meditationPlayer.duration)?meditationPlayer.duration:0;
+  meditationPlayer.currentTime=Math.max(0,Math.min(d||9999,(meditationPlayer.currentTime||0)+sec));
+  syncPlayer();
 }
-visual.addEventListener('loadedmetadata',()=>{visualSeek.max=visual.duration||600});
-visual.addEventListener('timeupdate',()=>{visualSeek.value=visual.currentTime||0});
-visual.addEventListener('ended',()=>{visualPlayBtn.textContent='▶ Play again'});
-visualSeek.addEventListener('input',()=>{visual.currentTime=Number(visualSeek.value)||0});
+function restartPlayer(){
+  meditationPlayer.currentTime=0;
+  meditationPlayer.play().catch(()=>{});
+}
+meditationPlayer.addEventListener('loadedmetadata',syncPlayer);
+meditationPlayer.addEventListener('durationchange',syncPlayer);
+meditationPlayer.addEventListener('timeupdate',syncPlayer);
+meditationPlayer.addEventListener('play',syncPlayer);
+meditationPlayer.addEventListener('pause',syncPlayer);
+meditationPlayer.addEventListener('ended',syncPlayer);
+meditationPlayer.addEventListener('seeking',syncPlayer);
+meditationPlayer.addEventListener('seeked',syncPlayer);
+seekBar.addEventListener('input',()=>{
+  meditationPlayer.currentTime=Number(seekBar.value)||0;
+  syncPlayer();
+});
+volumeBar.addEventListener('input',()=>{meditationPlayer.volume=Number(volumeBar.value)});
+setInterval(syncPlayer,500);
+
 </script>
 </body>
 </html>
