@@ -34,7 +34,7 @@ h1,h2{letter-spacing:-.03em}h2{font-size:29px;margin:8px 0 10px}p{color:var(--mu
 <div class="top"><div class="progress" id="progress">1 / 6</div><div class="lang-mini" id="langMini">EN</div></div>
 
 <section class="screen active" data-screen="0">
-<div class="center"><div style="font-size:56px">◯</div><div class="quote" data-i18n="purpose">To be human on this earth.</div><p data-i18n="intro">Less information. More practice. Notice what is already here.</p><div class="foot">Prototype: one temporary English guide can be reused across every practice.</div></div>
+<div class="center"><div style="font-size:56px">◯</div><div class="quote" data-i18n="purpose">To be human on this earth.</div><p data-i18n="intro">Less information. More practice. Begin with the breath.</p></div>
 <button class="btn" onclick="next()" data-i18n="begin">Begin</button>
 <button class="btn secondary hidden" id="installBtn">Install on phone</button>
 </section>
@@ -42,20 +42,20 @@ h1,h2{letter-spacing:-.03em}h2{font-size:29px;margin:8px 0 10px}p{color:var(--mu
 <section class="screen" data-screen="1">
 <h2>Language</h2><p>Choose how the app speaks to you.</p>
 <div class="stack">
-<button class="choice" onclick="setLang('en');next()"><b>English</b><small>Simple, quiet guidance</small></button>
-<button class="choice" onclick="setLang('ta');next()"><b>தமிழ்</b><small>எளிய, அமைதியான வழிகாட்டல்</small></button>
+<button class="choice" onclick="setLang('en');openSufi()"><b>English</b><small>Simple, quiet guidance</small></button>
+<button class="choice" onclick="setLang('ta');openSufi()"><b>தமிழ்</b><small>எளிய, அமைதியான வழிகாட்டல்</small></button>
 </div>
 </section>
 
 <section class="screen" data-screen="2">
-<h2 data-i18n="pathTitle">Choose a path for today</h2><p data-i18n="pathSub">This is not an identity. It only changes the tone of the practice.</p>
-<div class="stack">
-<button class="choice" data-path="natural" onclick="selectPath(this,'natural')"><b data-i18n="natural">Natural</b><small data-i18n="naturalSub">Breath, body, light, silence, earth.</small></button>
-<button class="choice" data-path="manifest" onclick="selectPath(this,'manifest')"><b data-i18n="manifest">Manifest</b><small data-i18n="manifestSub">Intention, attention, gratitude, action.</small></button>
-<button class="choice" data-path="spiritual" onclick="selectPath(this,'spiritual')"><b data-i18n="spiritual">Spiritual</b><small data-i18n="spiritualSub">Stillness, meaning, surrender, wonder.</small></button>
+<div class="center">
+  <div style="font-size:44px">◯</div>
+  <h2 id="sufiTitle">Sufi Breath</h2>
+  <p id="sufiIntro">Breathe gently. Return to the present moment. Let gratitude settle in the body. Nothing to force. Nothing to rush.</p>
 </div>
-<button class="btn hidden" id="pathNext" onclick="next()" data-i18n="continue">Continue</button>
-<div class="foot">Other paths can come later.</div>
+<button class="btn" onclick="openSufiPractice()" id="sufiBegin">Begin breathing</button>
+<button class="btn secondary" onclick="screen=1;show()">Change language</button>
+<div class="foot">Gentle prototype only. No rapid breathing or long breath holds.</div>
 </section>
 
 <section class="screen" data-screen="3">
@@ -74,45 +74,23 @@ h1,h2{letter-spacing:-.03em}h2{font-size:29px;margin:8px 0 10px}p{color:var(--mu
 <section class="screen" data-screen="4">
 <h2 id="practiceTitle">Sitting practice</h2>
 <p id="practiceLead">Sit in a supported position. Let the jaw and shoulders soften. Pain is not a goal; adjust when needed.</p>
-<div class="modebar"><button id="sitMode" class="active" onclick="setMode('sit')">Sitting · 7 min</button><button id="sleepMode" onclick="setMode('sleep')">Sleep · 45 min</button></div>
+<div class="modebar"><button id="sitMode" class="active" onclick="setMode('sit')">Sitting</button><button id="sleepMode" onclick="setMode('sleep')">Lying down</button></div>
 
-<div class="method-grid">
-  <button id="m446" onclick="setPattern('446')"><b>4 · 4 · 6</b><small>Inhale · gentle hold · exhale</small></button>
-  <button id="m448" class="active" onclick="setPattern('448')"><b>4 · 4 · 8</b><small>Inhale · gentle hold · longer exhale</small></button>
-  <button id="m406" onclick="setPattern('406')"><b>4 · 0 · 6</b><small>No hold · calm exhale</small></button>
-  <button id="m404" onclick="setPattern('404')"><b>4 · 0 · 4</b><small>Equal, simple breathing</small></button>
-</div>
-
-<div class="audio-row">
-  <button onclick="toggleMaleVoice()" id="voiceBtn">Male guide: ON</button>
-  <button onclick="toggleAmbient()" id="ambientBtn">Soft ambient: OFF</button>
-</div>
-<div class="foot" id="voiceStatus">Using the best available English male device voice.</div>
+<div class="foot" id="voiceStatus">Prototype voice: silent for now. Your own calm recording can replace this later.</div>
 
 <div class="prep" id="prepBox">
   <b>Before the practice</b><br>
   Sit or lie down safely. Let your belly move naturally. Keep the breath comfortable. The guide will give the instruction first, then leave space for you to breathe.
   <br><br>
-  Prototype rhythm: <b id="patternText">4 seconds in → 4 seconds gentle hold → 8 seconds out</b>. The spoken cue comes first, then a 1.5-second settling gap before the count begins.
+  Prototype rhythm: <b id="patternText">4 seconds in → 6 seconds out</b>. Keep the breath easy and comfortable.
 </div>
 
 <div class="orb-wrap"><div class="orb" id="orb"><span id="cue">Ready</span></div></div>
 <div class="stage" id="stage">Preparation</div>
 <div class="count" id="count">—</div>
-<div class="timer" id="timer">10 gentle cycles</div>
+<div class="timer" id="timer">6 gentle cycles</div>
 <button class="btn" id="practiceBtn" onclick="togglePractice()">Start practice</button>
 
-<div style="margin-top:18px;padding:14px;border:1px solid var(--line);border-radius:16px;background:#0e151a">
-  <b>Part 1 + Part 2 combined audio</b>
-  <p style="font-size:13px;margin:6px 0 12px">Choose the combined Part 1 + Part 2 MP3 once from your phone. After that, press the button below to hear the full recording.</p>
-  <input id="privateMediaInput" type="file" accept="audio/*,video/*" style="width:100%;color:var(--muted)">
-  <div id="privateMediaName" class="foot" style="text-align:left;margin-top:10px"></div>
-  <div style="display:flex;gap:8px;margin-top:10px">
-    <button class="btn secondary" style="margin-top:0;padding:12px" id="guidePlayBtn" onclick="toggleGuide()">▶ Play Part 1 + Part 2</button>
-    <button class="btn secondary" style="margin-top:0;padding:12px" onclick="clearGuide()">Replace / clear</button>
-  </div>
-  <audio id="privateMediaPlayer" preload="metadata"></audio>
-</div>
 
 <button class="btn secondary" onclick="endPractice()">Finish / reflect</button>
 <div class="safety">Keep breathing comfortable. This prototype uses only slow breathing and short, gentle holds. Rapid one-second breathing is not included. Stop if you feel dizzy, faint, numb, panicked, short of breath, or have unusual pain. Do not use while driving, in water, or anywhere a fall could hurt you.</div>
@@ -131,8 +109,8 @@ h1,h2{letter-spacing:-.03em}h2{font-size:29px;margin:8px 0 10px}p{color:var(--mu
 
 <script>
 let screen=0,lang='en',path='',need='',mode='sit',running=false,remaining=60,phaseTimer,countdownTimer,inhale=true,deferredPrompt;
-let maleVoiceEnabled=true, ambientEnabled=false, selectedVoice=null, ambientCtx=null, ambientGain=null, ambientNodes=[];
-let currentPattern='448';
+let maleVoiceEnabled=false, ambientEnabled=false, selectedVoice=null, ambientCtx=null, ambientGain=null, ambientNodes=[];
+let currentPattern='406';
 const PATTERNS={
   '446':{inhale:4,hold:4,exhale:6,label:'4 seconds in → 4 seconds gentle hold → 6 seconds out'},
   '448':{inhale:4,hold:4,exhale:8,label:'4 seconds in → 4 seconds gentle hold → 8 seconds out'},
@@ -141,41 +119,34 @@ const PATTERNS={
 };
 const T={en:{purpose:"To be human on this earth.",intro:"Less information. More practice. Notice what is already here.",begin:"Begin",pathTitle:"Choose a path for today",pathSub:"This is not an identity. It only changes the tone of the practice.",natural:"Natural",naturalSub:"Breath, body, light, silence, earth.",manifest:"Manifest",manifestSub:"Intention, attention, gratitude, action.",spiritual:"Spiritual",spiritualSub:"Stillness, meaning, surrender, wonder.",continue:"Continue",needTitle:"What do you need right now?",needSub:"Choose one. No explanation needed.",startPractice:"Start practice",noticeTitle:"What did you notice?",noticeSub:"No need to explain it perfectly."},ta:{purpose:"இந்த பூமியில் மனிதராக இருப்பதற்கு.",intro:"குறைந்த தகவல். அதிக பயிற்சி. ஏற்கனவே இருப்பதை கவனியுங்கள்.",begin:"தொடங்கு",pathTitle:"இன்றைக்கு ஒரு பாதையைத் தேர்வு செய்யுங்கள்",pathSub:"இது உங்கள் அடையாளம் அல்ல. பயிற்சியின் உணர்வை மட்டும் மாற்றும்.",natural:"இயற்கை",naturalSub:"மூச்சு, உடல், ஒளி, அமைதி, பூமி.",manifest:"நோக்கம்",manifestSub:"நோக்கம், கவனம், நன்றி, செயல்.",spiritual:"ஆன்மீகம்",spiritualSub:"உள் அமைதி, அர்த்தம், ஒப்படைப்பு, வியப்பு.",continue:"தொடரவும்",needTitle:"இப்போது உங்களுக்கு என்ன தேவை?",needSub:"ஒன்றைத் தேர்ந்தெடுக்கவும். விளக்கம் தேவையில்லை.",startPractice:"பயிற்சியைத் தொடங்கு",noticeTitle:"நீங்கள் என்ன கவனித்தீர்கள்?",noticeSub:"அனுபவத்தை சரியாக விளக்க வேண்டியதில்லை."}};
 function applyLang(){document.querySelectorAll('[data-i18n]').forEach(e=>{let k=e.dataset.i18n;if(T[lang][k])e.textContent=T[lang][k]});document.getElementById('langMini').textContent=lang==='en'?'EN':'தமிழ்'}
-function setLang(l){lang=l;applyLang()}function show(){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.querySelector('[data-screen="'+screen+'"]').classList.add('active');document.getElementById('progress').textContent=(screen+1)+' / 6'}
+function setLang(l){lang=l;applyLang();applySufiLang()}
+function applySufiLang(){
+ const title=document.getElementById('sufiTitle');
+ const intro=document.getElementById('sufiIntro');
+ const begin=document.getElementById('sufiBegin');
+ if(!title||!intro||!begin)return;
+ if(lang==='ta'){
+   title.textContent='சூஃபி மூச்சுப் பயிற்சி';
+   intro.textContent='மெதுவாக மூச்செடுங்கள். இப்போதைய தருணத்திற்குத் திரும்புங்கள். உடலில் நன்றியுணர்வு அமைதியாக இருக்கட்டும். எதையும் கட்டாயப்படுத்த வேண்டாம். அவசரம் வேண்டாம்.';
+   begin.textContent='மூச்சுப் பயிற்சியை தொடங்கு';
+ }else{
+   title.textContent='Sufi Breath';
+   intro.textContent='Breathe gently. Return to the present moment. Let gratitude settle in the body. Nothing to force. Nothing to rush.';
+   begin.textContent='Begin breathing';
+ }
+}
+function openSufi(){screen=2;applySufiLang();show()}
+function openSufiPractice(){need='Breathing';currentPattern='406';setMode('sit');screen=4;show();window.scrollTo(0,0)}
+function show(){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.querySelector('[data-screen="'+screen+'"]').classList.add('active');document.getElementById('progress').textContent=(screen+1)+' / 6'}
 function next(){if(screen<5){screen++;show()}}function selectPath(el,p){path=p;document.querySelectorAll('[data-path]').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');document.getElementById('pathNext').classList.remove('hidden')}
 function setNeed(n,el){need=n;document.querySelectorAll('#needGrid .card').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');document.getElementById('needNext').classList.remove('hidden')}
-function preparePractice(){setMode(need==='Rest'?'sleep':'sit')}function setMode(m){mode=m;document.getElementById('sitMode').classList.toggle('active',m==='sit');document.getElementById('sleepMode').classList.toggle('active',m==='sleep');document.getElementById('practiceTitle').textContent=m==='sit'?'Sitting practice':'Sleep practice';document.getElementById('practiceLead').textContent=m==='sit'?'Sit in a supported position. Let the jaw and shoulders soften. Pain is not a goal; adjust when needed.':'Lie down safely. Put the phone aside. Let the guidance become quieter as you move toward sleep.';resetPractice()}
-function chooseMaleVoice(){
- const voices=speechSynthesis.getVoices().filter(v=>/^en/i.test(v.lang||''));
- const maleWords=['male','david','mark','george','daniel','james','guy','ryan','andrew','thomas','aaron','matthew','oliver','alex'];
- selectedVoice=voices.find(v=>maleWords.some(w=>(v.name||'').toLowerCase().includes(w)))||voices[0]||null;
- const s=document.getElementById('voiceStatus');
- if(s) s.textContent=selectedVoice?'Male guide target: '+selectedVoice.name:'No English device voice loaded yet. Uploaded guide audio still works.';
-}
-if('speechSynthesis' in window){
- speechSynthesis.onvoiceschanged=chooseMaleVoice;
- setTimeout(chooseMaleVoice,200);
-}
-function speak(t){
- if(!maleVoiceEnabled || !('speechSynthesis' in window))return;
- const u=new SpeechSynthesisUtterance(t);
- if(selectedVoice)u.voice=selectedVoice;
- u.lang='en-US';
- u.rate=.68;
- u.pitch=.78;
- u.volume=.72;
- speechSynthesis.speak(u);
-}
-function toggleMaleVoice(){
- maleVoiceEnabled=!maleVoiceEnabled;
- if(!maleVoiceEnabled && 'speechSynthesis' in window)speechSynthesis.cancel();
- document.getElementById('voiceBtn').textContent='Male guide: '+(maleVoiceEnabled?'ON':'OFF');
-}
+function preparePractice(){setMode(need==='Rest'?'sleep':'sit')}function setMode(m){mode=m;document.getElementById('sitMode').classList.toggle('active',m==='sit');document.getElementById('sleepMode').classList.toggle('active',m==='sleep');document.getElementById('practiceTitle').textContent=lang==='ta'?(m==='sit'?'சூஃபி மூச்சுப் பயிற்சி':'படுக்கை மூச்சுப் பயிற்சி'):(m==='sit'?'Sufi Breath':'Lying-down breath');document.getElementById('practiceLead').textContent=m==='sit'?'Sit in a supported position. Let the jaw and shoulders soften. Pain is not a goal; adjust when needed.':'Lie down safely. Put the phone aside. Let the guidance become quieter as you move toward sleep.';resetPractice()}
+function chooseMaleVoice(){selectedVoice=null;}
+function speak(t){/* no device TTS in this prototype */}
+function toggleMaleVoice(){maleVoiceEnabled=false;}
 function setPattern(k){
- currentPattern=k;
- document.querySelectorAll('.method-grid button').forEach(b=>b.classList.remove('active'));
- document.getElementById('m'+k).classList.add('active');
- document.getElementById('patternText').textContent=PATTERNS[k].label;
+ currentPattern='406';
+ const p=document.getElementById('patternText'); if(p)p.textContent='4 seconds in → 6 seconds out';
  resetPractice();
 }
 function ensureAmbient(){
@@ -260,8 +231,8 @@ function exhaleSequence(){
      setBreathUI('Rest','Natural breath','—','');
      phaseTimer=setTimeout(()=>{
        cyclesDone++;
-       document.getElementById('timer').textContent=(10-cyclesDone)+' cycles remaining';
-       if(cyclesDone>=10){finishGentlePractice();return;}
+       document.getElementById('timer').textContent=(6-cyclesDone)+' cycles remaining';
+       if(cyclesDone>=6){finishGentlePractice();return;}
        inhaleSequence();
      },2000);
    });
@@ -282,7 +253,7 @@ function finishGentlePractice(){
 }
 function togglePractice(){
  if(running){pausePractice();return}
- if(cyclesDone>=10){resetPractice();return}
+ if(cyclesDone>=6){resetPractice();return}
  running=true;
  document.getElementById('practiceBtn').textContent='Pause';
  if(ambientEnabled){ensureAmbient();if(ambientCtx.state==='suspended')ambientCtx.resume();ambientGain.gain.setTargetAtTime(.018,ambientCtx.currentTime,.8);}
@@ -291,14 +262,14 @@ function togglePractice(){
 }
 function pausePractice(){running=false;clearTimeout(phaseTimer);clearInterval(countdownTimer);if('speechSynthesis'in window)speechSynthesis.cancel();if(mediaPlayer&&!mediaPlayer.paused)mediaPlayer.pause();if(ambientCtx&&ambientGain)ambientGain.gain.setTargetAtTime(0,ambientCtx.currentTime,.4);updateGuideButton();document.getElementById('practiceBtn').textContent='Resume'}function resetPractice(){
  pausePractice();cyclesDone=0;inhale=true;
- document.getElementById('timer').textContent='10 gentle cycles';
+ document.getElementById('timer').textContent='6 gentle cycles';
  document.getElementById('cue').textContent='Ready';
  document.getElementById('stage').textContent='Preparation';
  document.getElementById('count').textContent='—';
  document.getElementById('orb').className='orb';
  const pb=document.getElementById('practiceBtn');pb.textContent='Start practice';pb.disabled=false;
  const box=document.getElementById('prepBox');
- box.innerHTML='<b>Before the practice</b><br>Sit or lie down safely. Let your belly move naturally. Keep the breath comfortable. The guide will give the instruction first, then leave space for you to breathe.<br><br>Prototype rhythm: <b id="patternText">'+PATTERNS[currentPattern].label+'</b>. The spoken cue comes first, then a 1.5-second settling gap before the count begins.';
+ box.innerHTML='<b>Before the practice</b><br>Sit or lie down safely. Let your belly move naturally. Keep the breath comfortable. Nothing to force and nothing to rush.<br><br>Prototype rhythm: <b id="patternText">4 seconds in → 6 seconds out</b>.';
 }
 function endPractice(){pausePractice();screen=5;show()}function toggleTag(e){e.classList.toggle('selected')}function saveReflection(){let tags=[...document.querySelectorAll('.tag.selected')].map(x=>x.textContent);let a=JSON.parse(localStorage.getItem('practice_reflections')||'[]');a.push({time:new Date().toISOString(),lang,path,need,mode,tags,note:document.getElementById('note').value});localStorage.setItem('practice_reflections',JSON.stringify(a));document.getElementById('savedMsg').textContent='Saved locally. No account. No cloud.'}
 function restart(){resetPractice();screen=0;show()}
