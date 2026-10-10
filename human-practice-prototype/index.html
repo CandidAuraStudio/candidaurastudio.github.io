@@ -93,10 +93,10 @@ h1,h2{letter-spacing:-.03em}h2{font-size:29px;margin:8px 0 10px}p{color:var(--mu
 </div>
 
 <div class="audio-row">
-  <button onclick="toggleMaleVoice()" id="voiceBtn">Male guide: ON</button>
+  <button onclick="toggleMaleVoice()" id="voiceBtn">Device voice: OFF</button>
   <button onclick="toggleAmbient()" id="ambientBtn">Soft ambient: OFF</button>
 </div>
-<div class="foot" id="voiceStatus">Using the best available English male device voice.</div>
+<div class="foot" id="voiceStatus">Your recorded guide is the voice. Device text-to-speech is disabled.</div>
 
 <div class="prep" id="prepBox">
   <b>Before the practice</b><br>
@@ -112,8 +112,8 @@ h1,h2{letter-spacing:-.03em}h2{font-size:29px;margin:8px 0 10px}p{color:var(--mu
 <button class="btn" id="practiceBtn" onclick="togglePractice()">Start practice</button>
 
 <div style="margin-top:18px;padding:14px;border:1px solid var(--line);border-radius:16px;background:#0e151a">
-  <b>Temporary English male guide</b>
-  <p style="font-size:13px;margin:6px 0 12px">Choose one guide recording once. The app can reuse that original audio as the voice. The breathing timing follows whichever pattern button you select above.</p>
+  <b>Your recorded guide</b>
+  <p style="font-size:13px;margin:6px 0 12px">Choose your recorded guide once. This becomes the only spoken voice in the prototype. Device text-to-speech is disabled.</p>
   <input id="privateMediaInput" type="file" accept="audio/*,video/*" style="width:100%;color:var(--muted)">
   <div id="privateMediaName" class="foot" style="text-align:left;margin-top:10px"></div>
   <div style="display:flex;gap:8px;margin-top:10px">
@@ -134,7 +134,7 @@ h1,h2{letter-spacing:-.03em}h2{font-size:29px;margin:8px 0 10px}p{color:var(--mu
     <button onclick="toggleGuide()" id="guideSessionPauseBtn">Pause / Resume</button>
     <button onclick="stopRecordedSession()">Stop</button>
   </div>
-  <div class="foot" style="text-align:left;margin-top:12px">Part 3 will become the recovery/relaxation ending. Until then, the app finishes with quiet natural breathing.</div>
+  <div class="foot" style="text-align:left;margin-top:12px">Your recording is the spoken guide. Part 3 will become the recovery/relaxation ending. Until then, the app finishes with quiet natural breathing.</div>
 </div>
 
 <button class="btn secondary" onclick="endPractice()">Finish / reflect</button>
@@ -154,7 +154,7 @@ h1,h2{letter-spacing:-.03em}h2{font-size:29px;margin:8px 0 10px}p{color:var(--mu
 
 <script>
 let screen=0,lang='en',path='',need='',mode='sit',running=false,remaining=60,phaseTimer,countdownTimer,inhale=true,deferredPrompt;
-let maleVoiceEnabled=true, ambientEnabled=false, selectedVoice=null, ambientCtx=null, ambientGain=null, ambientNodes=[];
+let maleVoiceEnabled=false, ambientEnabled=false, selectedVoice=null, ambientCtx=null, ambientGain=null, ambientNodes=[];
 let currentPattern='448';
 const PATTERNS={
   '446':{inhale:4,hold:4,exhale:6,label:'4 seconds in → 4 seconds gentle hold → 6 seconds out'},
@@ -169,31 +169,13 @@ function next(){if(screen<5){screen++;show()}}function selectPath(el,p){path=p;d
 function setNeed(n,el){need=n;document.querySelectorAll('#needGrid .card').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');document.getElementById('needNext').classList.remove('hidden')}
 function openBreathing(){need='Breathing';setMode('sit');screen=4;show()}
 function preparePractice(){setMode(need==='Rest'?'sleep':'sit')}function setMode(m){mode=m;document.getElementById('sitMode').classList.toggle('active',m==='sit');document.getElementById('sleepMode').classList.toggle('active',m==='sleep');document.getElementById('practiceTitle').textContent=m==='sit'?'Sitting practice':'Sleep practice';document.getElementById('practiceLead').textContent=m==='sit'?'Sit in a supported position. Let the jaw and shoulders soften. Pain is not a goal; adjust when needed.':'Lie down safely. Put the phone aside. Let the guidance become quieter as you move toward sleep.';resetPractice()}
-function chooseMaleVoice(){
- const voices=speechSynthesis.getVoices().filter(v=>/^en/i.test(v.lang||''));
- const maleWords=['male','david','mark','george','daniel','james','guy','ryan','andrew','thomas','aaron','matthew','oliver','alex'];
- selectedVoice=voices.find(v=>maleWords.some(w=>(v.name||'').toLowerCase().includes(w)))||voices[0]||null;
- const s=document.getElementById('voiceStatus');
- if(s) s.textContent=selectedVoice?'Male guide target: '+selectedVoice.name:'No English device voice loaded yet. Uploaded guide audio still works.';
-}
-if('speechSynthesis' in window){
- speechSynthesis.onvoiceschanged=chooseMaleVoice;
- setTimeout(chooseMaleVoice,200);
-}
-function speak(t){
- if(!maleVoiceEnabled || !('speechSynthesis' in window))return;
- const u=new SpeechSynthesisUtterance(t);
- if(selectedVoice)u.voice=selectedVoice;
- u.lang='en-US';
- u.rate=.68;
- u.pitch=.78;
- u.volume=.72;
- speechSynthesis.speak(u);
-}
+function chooseMaleVoice(){ selectedVoice=null; }
+function speak(t){ /* Device text-to-speech intentionally disabled. */ }
 function toggleMaleVoice(){
- maleVoiceEnabled=!maleVoiceEnabled;
- if(!maleVoiceEnabled && 'speechSynthesis' in window)speechSynthesis.cancel();
- document.getElementById('voiceBtn').textContent='Male guide: '+(maleVoiceEnabled?'ON':'OFF');
+ maleVoiceEnabled=false;
+ if('speechSynthesis' in window)speechSynthesis.cancel();
+ document.getElementById('voiceBtn').textContent='Device voice: OFF';
+ document.getElementById('voiceStatus').textContent='Your recorded guide is the voice. Device text-to-speech is disabled.';
 }
 function setPattern(k){
  currentPattern=k;
