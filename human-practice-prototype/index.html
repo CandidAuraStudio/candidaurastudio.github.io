@@ -3,377 +3,264 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0b1014">
-<link rel="manifest" href="./manifest.webmanifest">
-<link rel="icon" href="./icon.svg">
-<title>Practice Prototype</title>
+<meta name="theme-color" content="#214a62">
+<title>Sufi Breath — Stage 2</title>
 <style>
-:root{--bg:#0b1014;--panel:#111920;--soft:#18242d;--text:#eef4f4;--muted:#9fb0b7;--accent:#c7e6d4;--line:#26333b}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 50% 0%,#22333c 0,#0b1014 42%,#070b0e 100%);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-.app{max-width:470px;min-height:100vh;margin:auto;display:flex;flex-direction:column;padding:20px 18px 24px}.top{display:flex;justify-content:space-between;align-items:center;min-height:36px}.progress,.lang-mini{font-size:12px;color:var(--muted)}.lang-mini{border:1px solid var(--line);border-radius:999px;padding:6px 10px}.screen{display:none;flex:1;flex-direction:column;justify-content:center}.screen.active{display:flex}
-h1,h2{letter-spacing:-.03em}h2{font-size:29px;margin:8px 0 10px}p{color:var(--muted);line-height:1.55}.center{text-align:center}.quote{font-size:22px;line-height:1.5;margin:24px auto;max-width:340px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}.stack{display:grid;gap:12px;margin-top:14px}
-.card,.choice{background:linear-gradient(180deg,#142029,#10171d);border:1px solid var(--line);color:var(--text);border-radius:18px;padding:18px;text-align:left;min-height:82px}.choice.selected,.card.selected{border-color:var(--accent)}
-.card small,.choice small{display:block;color:var(--muted);margin-top:6px;line-height:1.35}.btn{width:100%;border:0;border-radius:18px;padding:17px 18px;margin-top:18px;font-size:17px;font-weight:650;background:var(--accent);color:#0b1511}.btn.secondary{background:transparent;color:var(--text);border:1px solid var(--line)}
-.hidden{display:none!important}.orb-wrap{display:grid;place-items:center;margin:26px 0 18px}.orb{width:190px;height:190px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle,#bfe6d5 0,#5b8b7c 22%,#213e3b 52%,#0f1b1d 72%);transition:transform 4s ease-in-out}.orb.inhale{transform:scale(1.13)}.orb.exhale{transform:scale(.88)}.orb span{font-size:22px;font-weight:600}.timer{text-align:center;color:var(--muted);font-size:20px;font-variant-numeric:tabular-nums}
-.count{font-size:34px;text-align:center;margin-top:8px;font-variant-numeric:tabular-nums}
-.prep{background:#10171d;border:1px solid var(--line);border-radius:16px;padding:14px;margin-top:12px;line-height:1.5;color:var(--muted)}
-.stage{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);text-align:center;margin-top:6px}
-.modebar{display:flex;gap:8px;margin-top:12px}.modebar button{flex:1;border:1px solid var(--line);background:#10171d;color:var(--muted);padding:11px;border-radius:13px}.modebar button.active{border-color:var(--accent);color:var(--text)}
-.method-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
-.method-grid button{border:1px solid var(--line);background:#10171d;color:var(--muted);padding:12px;border-radius:13px;text-align:left}
-.method-grid button.active{border-color:var(--accent);color:var(--text)}
-.audio-row{display:flex;gap:8px;align-items:center;margin-top:10px}
-.audio-row button{flex:1;border:1px solid var(--line);background:#10171d;color:var(--text);padding:11px;border-radius:13px}
-.safety{background:#15191a;border:1px solid #3c3a30;color:#d8cba8;border-radius:14px;padding:12px 14px;font-size:12px;line-height:1.45;margin-top:16px}.tags{display:flex;flex-wrap:wrap;gap:9px;margin:14px 0}.tag{border:1px solid var(--line);border-radius:999px;padding:10px 13px;color:var(--muted)}.tag.selected{background:var(--soft);color:var(--text);border-color:var(--accent)}
-.note{width:100%;min-height:100px;border-radius:16px;border:1px solid var(--line);background:#0e151a;color:var(--text);padding:14px;font:inherit}.foot{font-size:12px;color:#7f9198;text-align:center;margin-top:12px}
+:root{
+  --sky:#4f7891;
+  --sky2:#2e5b74;
+  --deep:#163447;
+  --deep2:#0d2432;
+  --text:#f7fafb;
+  --muted:#d2e0e7;
+  --gold:#ffd89a;
+  --gold2:#f3b969;
+  --glass:rgba(16,43,57,.46);
+  --glass2:rgba(15,38,51,.68);
+  --line:rgba(255,255,255,.16);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--text);background:var(--deep2)}
+body{
+  min-height:100vh;
+  overflow-x:hidden;
+  background:
+    radial-gradient(circle at 83% 8%,rgba(255,221,157,.38) 0 5%,rgba(255,212,137,.15) 12%,transparent 28%),
+    linear-gradient(180deg,var(--sky) 0%,var(--sky2) 35%,var(--deep) 66%,var(--deep2) 100%);
+}
+body:before{
+  content:"";
+  position:fixed;
+  width:320px;height:320px;
+  top:-105px;right:-105px;
+  border-radius:50%;
+  background:
+    radial-gradient(circle,rgba(255,240,194,.95) 0 9%,rgba(255,214,141,.55) 18%,rgba(255,200,108,.18) 37%,transparent 63%);
+  filter:blur(.2px);
+  pointer-events:none;
+  z-index:0;
+}
+body:after{
+  content:"";
+  position:fixed;
+  width:520px;height:520px;
+  top:-205px;right:-195px;
+  background:repeating-conic-gradient(from 14deg,rgba(255,224,167,.09) 0 7deg,transparent 7deg 19deg);
+  border-radius:50%;
+  animation:rays 48s linear infinite;
+  pointer-events:none;
+  z-index:0;
+}
+@keyframes rays{to{transform:rotate(360deg)}}
+.app{
+  position:relative;z-index:1;
+  max-width:480px;min-height:100vh;margin:auto;
+  padding:calc(20px + env(safe-area-inset-top)) 18px calc(26px + env(safe-area-inset-bottom));
+  display:flex;flex-direction:column;
+}
+.screen{display:none;flex:1;flex-direction:column;justify-content:center}
+.screen.active{display:flex}
+.center{text-align:center}
+.sunmark{
+  width:112px;height:112px;margin:0 auto 22px;border-radius:50%;
+  position:relative;display:grid;place-items:center;
+  background:radial-gradient(circle at 42% 35%,#fff6da 0 8%,#ffdf9d 20%,#eeb36a 45%,rgba(238,179,106,.16) 68%,transparent 70%);
+  box-shadow:0 0 45px rgba(255,211,138,.24);
+}
+.sunmark:after{
+  content:"";
+  width:46px;height:46px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.62);
+  box-shadow:inset 0 0 20px rgba(255,255,255,.12);
+}
+.kicker{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#ffe4b6;margin-bottom:9px}
+h1,h2{margin:0;letter-spacing:-.038em;text-shadow:0 1px 18px rgba(0,0,0,.16)}
+h1{font-size:33px;line-height:1.08}
+h2{font-size:30px;line-height:1.1}
+p{color:var(--muted);line-height:1.58;margin:13px 0}
+.tagline{max-width:340px;margin:14px auto 0}
+.glass{
+  background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(11,32,44,.26));
+  border:1px solid var(--line);
+  box-shadow:0 22px 70px rgba(3,18,28,.23);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  border-radius:26px;
+  padding:18px;
+}
+.btn{
+  width:100%;border:0;border-radius:18px;padding:17px 18px;margin-top:14px;
+  font:inherit;font-size:17px;font-weight:750;
+  background:linear-gradient(180deg,#ffe2ac,#f4be72);
+  color:#17303e;
+  box-shadow:0 9px 28px rgba(236,174,92,.22);
+}
+.btn:active{transform:translateY(1px)}
+.btn.secondary{
+  background:rgba(10,34,47,.34);color:var(--text);
+  border:1px solid var(--line);box-shadow:none
+}
+.choice{
+  width:100%;border:1px solid var(--line);color:var(--text);
+  border-radius:20px;padding:18px;text-align:left;margin-top:12px;font:inherit;
+  background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(9,32,45,.34));
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+}
+.choice b{font-size:18px}.choice small{display:block;color:var(--muted);margin-top:5px}
+.practice-card{padding:24px 20px}
+.horizon{
+  height:76px;margin:4px -18px -18px;border-radius:0 0 26px 26px;
+  position:relative;overflow:hidden;
+  background:linear-gradient(180deg,rgba(255,214,139,.08),rgba(15,45,61,.28));
+}
+.horizon:before{
+  content:"";position:absolute;left:-8%;right:-8%;top:29px;height:64px;border-radius:50%;
+  border-top:1px solid rgba(255,231,188,.33);
+  background:radial-gradient(ellipse at center top,rgba(255,221,158,.12),transparent 58%);
+}
+.player-card{margin-top:18px;padding:14px}
+.frame-wrap{
+  position:relative;width:100%;aspect-ratio:16/9;border-radius:19px;overflow:hidden;
+  background:linear-gradient(145deg,#0c2736,#173d50);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.07),0 16px 38px rgba(4,18,27,.23)
+}
+iframe{
+  position:absolute;inset:0;width:100%;height:100%;border:0;background:#0a1f2b
+}
+.player-title{display:flex;align-items:center;gap:10px;margin:4px 2px 14px}
+.player-dot{
+  width:10px;height:10px;border-radius:50%;
+  background:#ffd58c;box-shadow:0 0 16px rgba(255,213,140,.66)
+}
+.note{font-size:13px;color:var(--muted);line-height:1.5;margin:14px 4px 2px}
+.footer{text-align:center;color:#adc0ca;font-size:11px;margin-top:15px}
+.minirow{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:14px}
+.pill{font-size:11px;color:#dbe8ed;border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:7px 10px;background:rgba(12,36,49,.24)}
 </style>
 </head>
 <body>
 <div class="app">
-<div class="top"><div class="progress" id="progress">1 / 6</div><div class="lang-mini" id="langMini">EN</div></div>
 
-<section class="screen active" data-screen="0">
-<div class="center"><div style="font-size:56px">◯</div><div class="quote" data-i18n="purpose">To be human on this earth.</div><p data-i18n="intro">Less information. More practice. Begin with the breath.</p></div>
-<button class="btn" onclick="next()" data-i18n="begin">Begin</button>
-<button class="btn secondary hidden" id="installBtn">Install on phone</button>
+<section class="screen active" id="s0">
+  <div class="center">
+    <div class="sunmark"></div>
+    <div class="kicker">Stage 2 prototype</div>
+    <h1>To be human<br>on this earth.</h1>
+    <p class="tagline">Less information. More practice. Begin with the breath.</p>
+  </div>
+  <button class="btn" onclick="go(1)">Begin</button>
 </section>
 
-<section class="screen" data-screen="1">
-<h2>Language</h2><p>Choose how the app speaks to you.</p>
-<div class="stack">
-<button class="choice" onclick="setLang('en');openSufi()"><b>English</b><small>Simple, quiet guidance</small></button>
-<button class="choice" onclick="setLang('ta');openSufi()"><b>தமிழ்</b><small>எளிய, அமைதியான வழிகாட்டல்</small></button>
-</div>
+<section class="screen" id="s1">
+  <div class="glass">
+    <div class="kicker">Language</div>
+    <h2>Choose language</h2>
+    <p>Only the language changes. The practice remains simple.</p>
+    <button class="choice" onclick="chooseLang('en')"><b>English</b><small>Simple, quiet guidance</small></button>
+    <button class="choice" onclick="chooseLang('ta')"><b>தமிழ்</b><small>எளிய, அமைதியான வழிகாட்டல்</small></button>
+  </div>
 </section>
 
-<section class="screen" data-screen="2">
-<div class="center">
-  <div style="font-size:44px">◯</div>
-  <h2 id="sufiTitle">Sufi Breath</h2>
-  <p id="sufiIntro">Breathe gently. Return to the present moment. Let gratitude settle in the body. Nothing to force. Nothing to rush.</p>
-</div>
-<button class="btn" onclick="openSufiPractice()" id="sufiBegin">Begin breathing</button>
-<button class="btn secondary" onclick="screen=1;show()">Change language</button>
-<div class="foot">Gentle prototype only. No rapid breathing or long breath holds.</div>
-</section>
-
-<section class="screen" data-screen="3">
-<h2 data-i18n="needTitle">What do you need right now?</h2><p data-i18n="needSub">Choose one. No explanation needed.</p>
-<div class="grid" id="needGrid">
-<button class="card" onclick="setNeed('Calm',this)">Calm<small>Slow the inner noise</small></button>
-<button class="card" onclick="setNeed('Rest',this)">Rest<small>Prepare for sleep</small></button>
-<button class="card" onclick="setNeed('Observe',this)">Observe<small>See without fixing</small></button>
-<button class="card" onclick="setNeed('Clarity',this)">Clarity<small>One thing at a time</small></button>
-<button class="card" onclick="setNeed('Release',this)">Release<small>Let the body soften</small></button>
-<button class="card" onclick="setNeed('Presence',this)">Presence<small>Return to here</small></button>
-</div>
-<button class="btn hidden" id="needNext" onclick="preparePractice();next()" data-i18n="startPractice">Start practice</button>
-</section>
-
-<section class="screen" data-screen="4">
-<h2 id="practiceTitle">Sitting practice</h2>
-<p id="practiceLead">Sit in a supported position. Let the jaw and shoulders soften. Pain is not a goal; adjust when needed.</p>
-<div class="modebar"><button id="sitMode" class="active" onclick="setMode('sit')">Sitting</button><button id="sleepMode" onclick="setMode('sleep')">Lying down</button></div>
-
-<div class="foot" id="voiceStatus">Prototype voice: silent for now. Your own calm recording can replace this later.</div>
-
-<div class="prep" id="prepBox">
-  <b>Before the practice</b><br>
-  Sit or lie down safely. Let your belly move naturally. Keep the breath comfortable. The guide will give the instruction first, then leave space for you to breathe.
-  <br><br>
-  Prototype rhythm: <b id="patternText">4 seconds in → 6 seconds out</b>. Keep the breath easy and comfortable.
-</div>
-
-<div class="orb-wrap"><div class="orb" id="orb"><span id="cue">Ready</span></div></div>
-<div class="stage" id="stage">Preparation</div>
-<div class="count" id="count">—</div>
-<div class="timer" id="timer">6 gentle cycles</div>
-<button class="btn" id="practiceBtn" onclick="togglePractice()">Start practice</button>
-
-
-<div style="display:none">
-      <input id="privateMediaInput" type="file" accept="audio/*,video/*">
-      <div id="privateMediaName"></div>
-      <button id="guidePlayBtn" type="button"></button>
-      <audio id="privateMediaPlayer" preload="metadata"></audio>
+<section class="screen" id="s2">
+  <div class="glass practice-card">
+    <div class="center">
+      <div class="sunmark" style="width:94px;height:94px;margin-bottom:18px"></div>
+      <div class="kicker">Practice 01</div>
+      <h2 id="practiceTitle">Sufi Breath</h2>
+      <p id="practiceIntro">Sit or lie somewhere comfortable. No rush. No forcing. When you are ready, begin.</p>
+      <div class="minirow">
+        <span class="pill">10 min</span>
+        <span class="pill">English source</span>
+        <span class="pill">Google Drive</span>
+      </div>
     </div>
-    <button class="btn secondary" onclick="endPractice()">Finish / reflect</button>
-<div class="safety">Keep breathing comfortable. This prototype uses only slow breathing and short, gentle holds. Rapid one-second breathing is not included. Stop if you feel dizzy, faint, numb, panicked, short of breath, or have unusual pain. Do not use while driving, in water, or anywhere a fall could hurt you.</div>
+    <button class="btn" id="meditateBtn" onclick="openMeditation()">Meditate now</button>
+    <button class="btn secondary" onclick="go(1)">Change language</button>
+    <div class="horizon"></div>
+  </div>
 </section>
 
-<section class="screen" data-screen="5">
-<h2 data-i18n="noticeTitle">What did you notice?</h2><p data-i18n="noticeSub">No need to explain it perfectly.</p>
-<div class="tags"><span class="tag" onclick="toggleTag(this)">Body</span><span class="tag" onclick="toggleTag(this)">Breath</span><span class="tag" onclick="toggleTag(this)">Thought</span><span class="tag" onclick="toggleTag(this)">Emotion</span><span class="tag" onclick="toggleTag(this)">Nothing</span></div>
-<textarea class="note" id="note" placeholder="One sentence, if you want."></textarea>
-<div style="border-left:2px solid var(--accent);padding-left:14px;margin:18px 0;color:var(--muted)"><b>Tomorrow</b><br>Go outside somewhere safe. Sit or stand still for 10 minutes. Observe changing light without photographing it.</div>
-<button class="btn" onclick="saveReflection()">Save privately on this phone</button>
-<button class="btn secondary" onclick="restart()">Return to beginning</button>
-<div class="foot" id="savedMsg"></div>
+<section class="screen" id="s3">
+  <div class="center">
+    <div class="kicker" id="playerKicker">Sufi Breath · English</div>
+    <h2 id="playerTitle">Meditate now</h2>
+    <p id="playerIntro">Let the recording play. Keep your breathing comfortable and natural.</p>
+  </div>
+
+  <div class="glass player-card">
+    <div class="player-title"><span class="player-dot"></span><strong>10-minute guided source</strong></div>
+    <div class="frame-wrap">
+      <video id="meditationVisual" playsinline preload="metadata"
+        src="https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/16c09e13-37e1-4e37-87e9-4400155c9942.mp4"
+        style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#0a1f2b"></video>
+    </div>
+    <div class="minirow" style="margin-top:14px">
+      <button class="btn secondary" style="margin-top:0;flex:1" onclick="jumpVisual(-10)">−10s</button>
+      <button class="btn" id="visualPlayBtn" style="margin-top:0;flex:1.4" onclick="toggleVisual()">▶ Play</button>
+      <button class="btn secondary" style="margin-top:0;flex:1" onclick="jumpVisual(10)">+10s</button>
+    </div>
+    <input id="visualSeek" type="range" min="0" max="600" value="0" step="0.1"
+      style="width:100%;margin-top:14px;accent-color:#ffd89a">
+    <div class="note" id="playerNote">This Stage 2 player now uses the rebuilt animation and audio together in one verified MP4.</div>
+  </div>
+
+  <button class="btn secondary" onclick="go(2)">Back</button>
+  <div class="footer">Stage 2 prototype · animation + audio · no upload needed</div>
 </section>
+
 </div>
 
 <script>
-let screen=0,lang='en',path='',need='',mode='sit',running=false,remaining=60,phaseTimer,countdownTimer,inhale=true,deferredPrompt;
-let maleVoiceEnabled=false, ambientEnabled=false, selectedVoice=null, ambientCtx=null, ambientGain=null, ambientNodes=[];
-let currentPattern='406';
-const PATTERNS={
-  '446':{inhale:4,hold:4,exhale:6,label:'4 seconds in → 4 seconds gentle hold → 6 seconds out'},
-  '448':{inhale:4,hold:4,exhale:8,label:'4 seconds in → 4 seconds gentle hold → 8 seconds out'},
-  '406':{inhale:4,hold:0,exhale:6,label:'4 seconds in → no hold → 6 seconds out'},
-  '404':{inhale:4,hold:0,exhale:4,label:'4 seconds in → no hold → 4 seconds out'}
-};
-const T={en:{purpose:"To be human on this earth.",intro:"Less information. More practice. Notice what is already here.",begin:"Begin",pathTitle:"Choose a path for today",pathSub:"This is not an identity. It only changes the tone of the practice.",natural:"Natural",naturalSub:"Breath, body, light, silence, earth.",manifest:"Manifest",manifestSub:"Intention, attention, gratitude, action.",spiritual:"Spiritual",spiritualSub:"Stillness, meaning, surrender, wonder.",continue:"Continue",needTitle:"What do you need right now?",needSub:"Choose one. No explanation needed.",startPractice:"Start practice",noticeTitle:"What did you notice?",noticeSub:"No need to explain it perfectly."},ta:{purpose:"இந்த பூமியில் மனிதராக இருப்பதற்கு.",intro:"குறைந்த தகவல். அதிக பயிற்சி. ஏற்கனவே இருப்பதை கவனியுங்கள்.",begin:"தொடங்கு",pathTitle:"இன்றைக்கு ஒரு பாதையைத் தேர்வு செய்யுங்கள்",pathSub:"இது உங்கள் அடையாளம் அல்ல. பயிற்சியின் உணர்வை மட்டும் மாற்றும்.",natural:"இயற்கை",naturalSub:"மூச்சு, உடல், ஒளி, அமைதி, பூமி.",manifest:"நோக்கம்",manifestSub:"நோக்கம், கவனம், நன்றி, செயல்.",spiritual:"ஆன்மீகம்",spiritualSub:"உள் அமைதி, அர்த்தம், ஒப்படைப்பு, வியப்பு.",continue:"தொடரவும்",needTitle:"இப்போது உங்களுக்கு என்ன தேவை?",needSub:"ஒன்றைத் தேர்ந்தெடுக்கவும். விளக்கம் தேவையில்லை.",startPractice:"பயிற்சியைத் தொடங்கு",noticeTitle:"நீங்கள் என்ன கவனித்தீர்கள்?",noticeSub:"அனுபவத்தை சரியாக விளக்க வேண்டியதில்லை."}};
-function applyLang(){document.querySelectorAll('[data-i18n]').forEach(e=>{let k=e.dataset.i18n;if(T[lang][k])e.textContent=T[lang][k]});document.getElementById('langMini').textContent=lang==='en'?'EN':'தமிழ்'}
-function setLang(l){lang=l;applyLang();applySufiLang()}
-function applySufiLang(){
- const title=document.getElementById('sufiTitle');
- const intro=document.getElementById('sufiIntro');
- const begin=document.getElementById('sufiBegin');
- if(!title||!intro||!begin)return;
- if(lang==='ta'){
-   title.textContent='சூஃபி மூச்சுப் பயிற்சி';
-   intro.textContent='மெதுவாக மூச்செடுங்கள். இப்போதைய தருணத்திற்குத் திரும்புங்கள். உடலில் நன்றியுணர்வு அமைதியாக இருக்கட்டும். எதையும் கட்டாயப்படுத்த வேண்டாம். அவசரம் வேண்டாம்.';
-   begin.textContent='மூச்சுப் பயிற்சியை தொடங்கு';
- }else{
-   title.textContent='Sufi Breath';
-   intro.textContent='Breathe gently. Return to the present moment. Let gratitude settle in the body. Nothing to force. Nothing to rush.';
-   begin.textContent='Begin breathing';
- }
-}
-function openSufi(){screen=2;applySufiLang();show()}
-function openSufiPractice(){need='Breathing';currentPattern='406';setMode('sit');screen=4;show();window.scrollTo(0,0)}
-function show(){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.querySelector('[data-screen="'+screen+'"]').classList.add('active');document.getElementById('progress').textContent=(screen+1)+' / 6'}
-function next(){if(screen<5){screen++;show()}}function selectPath(el,p){path=p;document.querySelectorAll('[data-path]').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');document.getElementById('pathNext').classList.remove('hidden')}
-function setNeed(n,el){need=n;document.querySelectorAll('#needGrid .card').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');document.getElementById('needNext').classList.remove('hidden')}
-function preparePractice(){setMode(need==='Rest'?'sleep':'sit')}function setMode(m){mode=m;document.getElementById('sitMode').classList.toggle('active',m==='sit');document.getElementById('sleepMode').classList.toggle('active',m==='sleep');document.getElementById('practiceTitle').textContent=lang==='ta'?(m==='sit'?'சூஃபி மூச்சுப் பயிற்சி':'படுக்கை மூச்சுப் பயிற்சி'):(m==='sit'?'Sufi Breath':'Lying-down breath');document.getElementById('practiceLead').textContent=m==='sit'?'Sit in a supported position. Let the jaw and shoulders soften. Pain is not a goal; adjust when needed.':'Lie down safely. Put the phone aside. Let the guidance become quieter as you move toward sleep.';resetPractice()}
-function chooseMaleVoice(){selectedVoice=null;}
-function speak(t){/* no device TTS in this prototype */}
-function toggleMaleVoice(){maleVoiceEnabled=false;}
-function setPattern(k){
- currentPattern='406';
- const p=document.getElementById('patternText'); if(p)p.textContent='4 seconds in → 6 seconds out';
- resetPractice();
-}
-function ensureAmbient(){
- if(ambientCtx)return;
- ambientCtx=new (window.AudioContext||window.webkitAudioContext)();
- ambientGain=ambientCtx.createGain();
- ambientGain.gain.value=.018;
- ambientGain.connect(ambientCtx.destination);
- const o1=ambientCtx.createOscillator(), o2=ambientCtx.createOscillator();
- const g1=ambientCtx.createGain(), g2=ambientCtx.createGain();
- o1.frequency.value=110; o2.frequency.value=165;
- g1.gain.value=.15; g2.gain.value=.08;
- o1.connect(g1).connect(ambientGain); o2.connect(g2).connect(ambientGain);
- o1.start();o2.start();ambientNodes=[o1,o2];
- ambientGain.gain.value=0;
-}
-function toggleAmbient(){
- ensureAmbient();
- ambientEnabled=!ambientEnabled;
- if(ambientCtx.state==='suspended')ambientCtx.resume();
- ambientGain.gain.setTargetAtTime(ambientEnabled?.018:0,ambientCtx.currentTime,.8);
- document.getElementById('ambientBtn').textContent='Soft ambient: '+(ambientEnabled?'ON':'OFF');
-}
-function setBreathUI(label,stage,count,klass){
- const cue=document.getElementById('cue');
- const orb=document.getElementById('orb');
- cue.textContent=label;
- document.getElementById('stage').textContent=stage;
- document.getElementById('count').textContent=count||'—';
- orb.className='orb '+(klass||'');
-}
-function slowCount(total,onDone){
- let n=1;
- const show=()=>{
-   if(!running)return;
-   document.getElementById('count').textContent=n;
-   speak(String(n));
-   phaseTimer=setTimeout(()=>{
-     n++;
-     if(n<=total)show(); else onDone();
-   },1000);
- };
- show();
-}
-let cyclesDone=0;
-function inhaleSequence(){
- if(!running)return;
- const p=PATTERNS[currentPattern];
- setBreathUI('Breathe in','Settle first','—','inhale');
- speak('Breathe in');
- phaseTimer=setTimeout(()=>{
-   if(!running)return;
-   document.getElementById('stage').textContent='Slow inhale';
-   slowCount(p.inhale,()=>{
-     if(!running)return;
-     if(p.hold>0){
-       setBreathUI('Hold gently','Hold','—','');
-       speak('Hold');
-       phaseTimer=setTimeout(()=>{
-         if(!running)return;
-         slowCount(p.hold,()=>transitionToExhale());
-       },1500);
-     }else transitionToExhale();
-   });
- },1500);
-}
-function transitionToExhale(){
- if(!running)return;
- setBreathUI('Easy…','Transition','—','');
- phaseTimer=setTimeout(()=>exhaleSequence(),1500);
-}
-function exhaleSequence(){
- if(!running)return;
- const p=PATTERNS[currentPattern];
- setBreathUI('Breathe out','Settle first','—','exhale');
- speak('Breathe out');
- phaseTimer=setTimeout(()=>{
-   if(!running)return;
-   document.getElementById('stage').textContent='Slow exhale';
-   slowCount(p.exhale,()=>{
-     if(!running)return;
-     setBreathUI('Rest','Natural breath','—','');
-     phaseTimer=setTimeout(()=>{
-       cyclesDone++;
-       document.getElementById('timer').textContent=(6-cyclesDone)+' cycles remaining';
-       if(cyclesDone>=6){finishGentlePractice();return;}
-       inhaleSequence();
-     },2000);
-   });
- },1500);
-}
-function phase(){ inhaleSequence(); }
-function finishGentlePractice(){
- running=false;clearTimeout(phaseTimer);clearInterval(countdownTimer);
- if('speechSynthesis'in window)speechSynthesis.cancel();
- if(mediaPlayer&&!mediaPlayer.paused)mediaPlayer.pause();
- updateGuideButton();
- setBreathUI('Notice','Body awareness','—','');
- document.getElementById('timer').textContent='Practice complete';
- document.getElementById('practiceBtn').textContent='Practice complete';
- document.getElementById('practiceBtn').disabled=true;
- const box=document.getElementById('prepBox');
- box.innerHTML='<b>Closing awareness</b><br>Stay still if comfortable. Feel your fingers, toes, hands, face, chest and belly without trying to change anything. Notice what supported you today. Offer a simple thank-you to your body. Adjust your position whenever you need.';
-}
-function togglePractice(){
- if(running){pausePractice();return}
- if(cyclesDone>=6){resetPractice();return}
- running=true;
- document.getElementById('practiceBtn').textContent='Pause';
- if(ambientEnabled){ensureAmbient();if(ambientCtx.state==='suspended')ambientCtx.resume();ambientGain.gain.setTargetAtTime(.018,ambientCtx.currentTime,.8);}
- if(guideBlob && mediaPlayer.paused){mediaPlayer.currentTime=0;mediaPlayer.play().catch(()=>{});updateGuideButton();}
- phase();
-}
-function pausePractice(){running=false;clearTimeout(phaseTimer);clearInterval(countdownTimer);if('speechSynthesis'in window)speechSynthesis.cancel();if(mediaPlayer&&!mediaPlayer.paused)mediaPlayer.pause();if(ambientCtx&&ambientGain)ambientGain.gain.setTargetAtTime(0,ambientCtx.currentTime,.4);updateGuideButton();document.getElementById('practiceBtn').textContent='Resume'}function resetPractice(){
- pausePractice();cyclesDone=0;inhale=true;
- document.getElementById('timer').textContent='6 gentle cycles';
- document.getElementById('cue').textContent='Ready';
- document.getElementById('stage').textContent='Preparation';
- document.getElementById('count').textContent='—';
- document.getElementById('orb').className='orb';
- const pb=document.getElementById('practiceBtn');pb.textContent='Start practice';pb.disabled=false;
- const box=document.getElementById('prepBox');
- box.innerHTML='<b>Before the practice</b><br>Sit or lie down safely. Let your belly move naturally. Keep the breath comfortable. Nothing to force and nothing to rush.<br><br>Prototype rhythm: <b id="patternText">4 seconds in → 6 seconds out</b>.';
-}
-function endPractice(){pausePractice();screen=5;show()}function toggleTag(e){e.classList.toggle('selected')}function saveReflection(){let tags=[...document.querySelectorAll('.tag.selected')].map(x=>x.textContent);let a=JSON.parse(localStorage.getItem('practice_reflections')||'[]');a.push({time:new Date().toISOString(),lang,path,need,mode,tags,note:document.getElementById('note').value});localStorage.setItem('practice_reflections',JSON.stringify(a));document.getElementById('savedMsg').textContent='Saved locally. No account. No cloud.'}
-function restart(){resetPractice();screen=0;show()}
+let lang='en';
 
-const mediaInput=document.getElementById('privateMediaInput');
-const mediaPlayer=document.getElementById('privateMediaPlayer');
-const mediaName=document.getElementById('privateMediaName');
-const guidePlayBtn=document.getElementById('guidePlayBtn');
-let privateMediaUrl=null, guideBlob=null, guideFileName='';
+function go(n){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('s'+n).classList.add('active');
+  window.scrollTo({top:0,behavior:'instant'});
+}
 
-function openGuideDB(){
- return new Promise((resolve,reject)=>{
-  const req=indexedDB.open('practiceGuideDB',1);
-  req.onupgradeneeded=()=>req.result.createObjectStore('guide');
-  req.onsuccess=()=>resolve(req.result);
-  req.onerror=()=>reject(req.error);
- });
+function chooseLang(l){
+  lang=l;
+  if(l==='ta'){
+    document.getElementById('practiceTitle').textContent='சூஃபி மூச்சுப் பயிற்சி';
+    document.getElementById('practiceIntro').textContent='வசதியாக அமருங்கள் அல்லது படுத்துக்கொள்ளுங்கள். அவசரம் வேண்டாம். கட்டாயப்படுத்த வேண்டாம். தயாரானபோது தொடங்குங்கள்.';
+    document.getElementById('meditateBtn').textContent='இப்போது தியானியுங்கள்';
+    document.getElementById('playerKicker').textContent='சூஃபி மூச்சு · தமிழ்';
+    document.getElementById('playerTitle').textContent='இப்போது தியானியுங்கள்';
+    document.getElementById('playerIntro').textContent='பதிவு ஒலிக்கட்டும். மூச்சை இயல்பாகவும் வசதியாகவும் வைத்திருங்கள்.';
+    document.getElementById('playerNote').textContent='பகிரப்பட்ட Google Drive பதிவு இந்தப் பக்கம் திறக்கும் போதே முன்கூட்டியே ஏற்றப்படுகிறது. எந்த கோப்பையும் பதிவேற்ற வேண்டியதில்லை.';
+  }else{
+    document.getElementById('practiceTitle').textContent='Sufi Breath';
+    document.getElementById('practiceIntro').textContent='Sit or lie somewhere comfortable. No rush. No forcing. When you are ready, begin.';
+    document.getElementById('meditateBtn').textContent='Meditate now';
+    document.getElementById('playerKicker').textContent='Sufi Breath · English';
+    document.getElementById('playerTitle').textContent='Meditate now';
+    document.getElementById('playerIntro').textContent='Let the recording play. Keep your breathing comfortable and natural.';
+    document.getElementById('playerNote').textContent='The shared Google Drive recording is preloaded when this page opens, so there is no upload step.';
+  }
+  go(2);
 }
-async function saveGuide(blob,name){
- const db=await openGuideDB();
- await new Promise((resolve,reject)=>{
-  const tx=db.transaction('guide','readwrite');
-  tx.objectStore('guide').put({blob,name,type:blob.type},'current');
-  tx.oncomplete=resolve; tx.onerror=()=>reject(tx.error);
- });
- db.close();
-}
-async function loadGuide(){
- try{
-  const db=await openGuideDB();
-  const data=await new Promise((resolve,reject)=>{
-   const tx=db.transaction('guide','readonly');
-   const req=tx.objectStore('guide').get('current');
-   req.onsuccess=()=>resolve(req.result); req.onerror=()=>reject(req.error);
-  });
-  db.close();
-  if(data&&data.blob){ setGuideBlob(data.blob,data.name||'Saved guide'); }
- }catch(e){}
-}
-async function deleteGuide(){
- try{
-  const db=await openGuideDB();
-  await new Promise((resolve,reject)=>{
-   const tx=db.transaction('guide','readwrite');
-   tx.objectStore('guide').delete('current');
-   tx.oncomplete=resolve; tx.onerror=()=>reject(tx.error);
-  });
-  db.close();
- }catch(e){}
-}
-function setGuideBlob(blob,name){
- guideBlob=blob; guideFileName=name;
- if(privateMediaUrl)URL.revokeObjectURL(privateMediaUrl);
- privateMediaUrl=URL.createObjectURL(blob);
- mediaPlayer.src=privateMediaUrl;
- mediaName.textContent=name+' · saved privately on this phone · audio-only use';
- updateGuideButton();
-}
-function updateGuideButton(){
- if(!guideBlob){guidePlayBtn.textContent='Play guide';guidePlayBtn.disabled=true;return}
- guidePlayBtn.disabled=false;
- guidePlayBtn.textContent=mediaPlayer.paused?'Play guide':'Pause guide';
-}
-async function toggleGuide(){
- if(!guideBlob)return;
- if(mediaPlayer.paused){await mediaPlayer.play().catch(()=>{});}else{mediaPlayer.pause();}
- updateGuideButton();
-}
-async function clearGuide(){
- mediaPlayer.pause();
- await deleteGuide();
- guideBlob=null;guideFileName='';
- if(privateMediaUrl)URL.revokeObjectURL(privateMediaUrl);
- privateMediaUrl=null;mediaPlayer.removeAttribute('src');mediaPlayer.load();
- mediaName.textContent='No guide saved. Choose a file above.';
- mediaInput.value='';
- updateGuideButton();
-}
-mediaInput.addEventListener('change',async()=>{
- const file=mediaInput.files&&mediaInput.files[0];
- if(!file)return;
- mediaName.textContent='Saving locally…';
- try{
-  await saveGuide(file,file.name);
-  setGuideBlob(file,file.name);
- }catch(e){
-  setGuideBlob(file,file.name);
-  mediaName.textContent=file.name+' · session only (phone storage would not save this file)';
- }
-});
-mediaPlayer.addEventListener('play',updateGuideButton);
-mediaPlayer.addEventListener('pause',updateGuideButton);
-mediaPlayer.addEventListener('ended',updateGuideButton);
-loadGuide();
 
-window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;document.getElementById('installBtn').classList.remove('hidden')});
-document.getElementById('installBtn').addEventListener('click',async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;document.getElementById('installBtn').classList.add('hidden')});
-if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));
-applyLang();show();
+function openMeditation(){
+  go(3);
+}
+const visual=document.getElementById('meditationVisual');
+const visualPlayBtn=document.getElementById('visualPlayBtn');
+const visualSeek=document.getElementById('visualSeek');
+function toggleVisual(){
+  if(visual.paused){
+    visual.play().then(()=>{visualPlayBtn.textContent='❚❚ Pause';}).catch(()=>{});
+  }else{
+    visual.pause();visualPlayBtn.textContent='▶ Resume';
+  }
+}
+function jumpVisual(sec){
+  visual.currentTime=Math.max(0,Math.min(visual.duration||600,visual.currentTime+sec));
+}
+visual.addEventListener('loadedmetadata',()=>{visualSeek.max=visual.duration||600});
+visual.addEventListener('timeupdate',()=>{visualSeek.value=visual.currentTime||0});
+visual.addEventListener('ended',()=>{visualPlayBtn.textContent='▶ Play again'});
+visualSeek.addEventListener('input',()=>{visual.currentTime=Number(visualSeek.value)||0});
 </script>
-</body></html>
+</body>
+</html>
