@@ -42,7 +42,8 @@ h1,h2{letter-spacing:-.03em}h2{font-size:29px;margin:8px 0 10px}p{color:var(--mu
 
 <section class="screen active" data-screen="0">
 <div class="center"><div style="font-size:56px">◯</div><div class="quote" data-i18n="purpose">To be human on this earth.</div><p data-i18n="intro">Less information. More practice. Notice what is already here.</p><div class="foot">Prototype: one temporary English guide can be reused across every practice.</div></div>
-<button class="btn" onclick="next()" data-i18n="begin">Begin</button>
+<button class="btn" onclick="openBreathingDirect()">▶ TEST BREATHING AUDIO</button>
+<button class="btn secondary" onclick="next()" data-i18n="begin">Open full prototype</button>
 <button class="btn secondary hidden" id="installBtn">Install on phone</button>
 </section>
 
@@ -83,6 +84,19 @@ h1,h2{letter-spacing:-.03em}h2{font-size:29px;margin:8px 0 10px}p{color:var(--mu
 <section class="screen" data-screen="4">
 <h2 id="practiceTitle">Sitting practice</h2>
 <p id="practiceLead">Sit in a supported position. Let the jaw and shoulders soften. Pain is not a goal; adjust when needed.</p>
+<div style="margin-top:18px;padding:18px;border:2px solid var(--accent);border-radius:20px;background:#0e151a">
+  <div style="font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--accent);margin-bottom:4px">Main audio</div>
+  <b style="font-size:22px">My guided recording</b>
+  <p id="guideHelp" style="font-size:13px;margin:6px 0 12px">First time only: choose the combined Part 1 + Part 2 MP3 from your phone. Then press the large PLAY MY ACTUAL AUDIO button below.</p>
+  <input id="privateMediaInput" type="file" accept="audio/*,video/*" style="width:100%;color:var(--muted)">
+  <div id="privateMediaName" class="foot" style="text-align:left;margin-top:10px"></div>
+  <audio id="privateMediaPlayer" preload="metadata"></audio>
+  <button class="btn" id="recordedStartBtn" onclick="startRecordedSession()" style="font-size:20px;padding:20px">▶ PLAY MY ACTUAL AUDIO</button>
+  <button class="btn secondary" style="padding:12px" onclick="clearGuide()">Change recording</button>
+</div>
+
+
+
 <div class="modebar"><button id="sitMode" class="active" onclick="setMode('sit')">Sitting · 7 min</button><button id="sleepMode" onclick="setMode('sleep')">Sleep · 45 min</button></div>
 
 <details style="margin-top:12px">
@@ -114,17 +128,6 @@ h1,h2{letter-spacing:-.03em}h2{font-size:29px;margin:8px 0 10px}p{color:var(--mu
 <div class="timer" id="timer">10 gentle cycles</div>
 <button class="btn secondary" id="practiceBtn" onclick="togglePractice()">Start visual countdown</button>
 </details>
-
-<div style="margin-top:18px;padding:18px;border:2px solid var(--accent);border-radius:20px;background:#0e151a">
-  <div style="font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--accent);margin-bottom:4px">Main audio</div>
-  <b style="font-size:22px">My guided recording</b>
-  <p id="guideHelp" style="font-size:13px;margin:6px 0 12px">First time only: choose the combined Part 1 + Part 2 MP3 from your phone. Then press the large PLAY MY ACTUAL AUDIO button below.</p>
-  <input id="privateMediaInput" type="file" accept="audio/*,video/*" style="width:100%;color:var(--muted)">
-  <div id="privateMediaName" class="foot" style="text-align:left;margin-top:10px"></div>
-  <audio id="privateMediaPlayer" preload="metadata"></audio>
-  <button class="btn" id="recordedStartBtn" onclick="startRecordedSession()" style="font-size:20px;padding:20px">▶ PLAY MY ACTUAL AUDIO</button>
-  <button class="btn secondary" style="padding:12px" onclick="clearGuide()">Change recording</button>
-</div>
 
 <div class="guide-session" id="guideSession">
   <div class="guide-stage" id="guideStage">Recorded session</div>
@@ -170,6 +173,7 @@ function setLang(l){lang=l;applyLang()}function show(){document.querySelectorAll
 function next(){if(screen<5){screen++;show()}}function selectPath(el,p){path=p;document.querySelectorAll('[data-path]').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');document.getElementById('pathNext').classList.remove('hidden')}
 function setNeed(n,el){need=n;document.querySelectorAll('#needGrid .card').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');document.getElementById('needNext').classList.remove('hidden')}
 function openBreathing(){need='Breathing';setMode('sit');screen=4;show()}
+function openBreathingDirect(){lang='en';applyLang();need='Breathing';setMode('sit');screen=4;show();window.scrollTo(0,0)}
 function preparePractice(){setMode(need==='Rest'?'sleep':'sit')}function setMode(m){mode=m;document.getElementById('sitMode').classList.toggle('active',m==='sit');document.getElementById('sleepMode').classList.toggle('active',m==='sleep');document.getElementById('practiceTitle').textContent=m==='sit'?'Sitting practice':'Sleep practice';document.getElementById('practiceLead').textContent=m==='sit'?'Sit in a supported position. Let the jaw and shoulders soften. Pain is not a goal; adjust when needed.':'Lie down safely. Put the phone aside. Let the guidance become quieter as you move toward sleep.';resetPractice()}
 function chooseMaleVoice(){ selectedVoice=null; }
 function speak(t){ /* Device text-to-speech intentionally disabled. */ }
@@ -464,6 +468,9 @@ loadGuide();
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;document.getElementById('installBtn').classList.remove('hidden')});
 document.getElementById('installBtn').addEventListener('click',async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;document.getElementById('installBtn').classList.add('hidden')});
 if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));
-applyLang();show();
+applyLang();
+const params=new URLSearchParams(location.search);
+if(params.get('breathing')==='1'){lang='en';applyLang();need='Breathing';setMode('sit');screen=4;}
+show();
 </script>
 </body></html>
