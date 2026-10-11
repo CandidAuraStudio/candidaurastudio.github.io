@@ -1458,6 +1458,7 @@ button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible,te
 .hc-personal-audio label{display:block;font-size:13px;margin:11px 0 6px}
 .hc-personal-audio input[type=file]{display:block;color:#fff;max-width:100%;width:100%;font-size:12px}
 .hc-personal-audio button{min-height:44px;padding:11px;border-radius:12px;background:#152f3d;color:white;border:1px solid rgba(255,255,255,.35);font:inherit;font-size:13px}
+#soundLabFavouriteBtn[hidden]{display:none!important}
 </style>
 </head>
 <body>
@@ -4891,6 +4892,7 @@ function hcClearPersonalNature(){
     soundLabAudio.pause();soundLabAudio.removeAttribute('src');soundLabAudio.load();
     hcClearSoundBookmark();currentSoundKey='horizon';
     const player=document.getElementById('soundLabPlayBtn');if(player)player.textContent='Play';
+    const fave=document.getElementById('soundLabFavouriteBtn');if(fave){fave.hidden=false;fave.disabled=false}
   }
   hcReleasePersonalNature();
   const status=document.getElementById('hcPersonalNatureStatus');if(status)status.textContent='Personal audio closed. No file was uploaded.';
@@ -5014,6 +5016,8 @@ function openSoundTrack(key){
   show('soundLabPlayer');
   syncSoundLab();
   updateHeartClearFavouriteButtons();
+  const fave=document.getElementById('soundLabFavouriteBtn');
+  if(fave){fave.hidden=currentSoundKey==='personal';fave.disabled=currentSoundKey==='personal'}
 }
 
 let soundLabPlayRequested=false;
