@@ -1452,6 +1452,12 @@ button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible,te
 @media(prefers-reduced-motion:reduce){
   body *,body *::before,body *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
 }
+
+.hc-personal-audio{padding:15px;margin:17px 0;border-radius:17px;border:1px solid rgba(255,255,255,.2);background:rgba(8,31,43,.42)}
+.hc-personal-audio h3{font-size:17px;margin:0 0 7px}.hc-personal-audio p{font-size:12px;color:#dfebef;line-height:1.6}
+.hc-personal-audio label{display:block;font-size:13px;margin:11px 0 6px}
+.hc-personal-audio input[type=file]{display:block;color:#fff;max-width:100%;width:100%;font-size:12px}
+.hc-personal-audio button{min-height:44px;padding:11px;border-radius:12px;background:#152f3d;color:white;border:1px solid rgba(255,255,255,.35);font:inherit;font-size:13px}
 </style>
 </head>
 <body>
@@ -2352,6 +2358,14 @@ button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible,te
     <h2>Sound Lab</h2>
     <p>Everyday nature, ambience and quiet music—independent of religious traditions.</p>
     <div class="hub-note" style="margin-top:12px">Birds · fire · rain · ocean · thunder · ambient beds · closing music</div>
+    <div class="hc-personal-audio">
+      <h3>My Nature Recordings</h3>
+      <p>Listen to the HeartClear 7-, 10- and 15-minute mixes or other audio saved on your device, directly in Sound Lab. No upload, account, payment or public sharing.</p>
+      <label for="hcPersonalNatureFile">Choose a downloaded audio file</label>
+      <input id="hcPersonalNatureFile" type="file" accept="audio/*,.mp3,.m4a,.wav,.ogg,.flac,.opus,.aac" onchange="hcLoadPersonalNature(this)">
+      <p id="hcPersonalNatureStatus" role="status" aria-live="polite">Choose a file; Sound Lab will open its normal player.</p>
+      <button onclick="hcClearPersonalNature()">Close personal recording</button>
+    </div>
     <h3 style="font-size:17px;margin:20px 0 12px">Ambient &amp; Stillness</h3>
     <div class="soundlab-grid">
       <button class="soundlab-card" onclick="openSoundTrack('horizon')"><span class="soundlab-icon">≈</span><span><b>Horizon</b><small>7 min · slow ambient field</small></span><span class="soundlab-duration">7:00</span></button>
@@ -4758,7 +4772,7 @@ function hcTimerTick(){
 const HC_LAST_SOUND='heartclearLastSoundV1';
 function hcStoreSoundLabPosition(){
   if(!soundLabAudio||!soundLabTracks[currentSoundKey])return;
-  if(currentSoundKey==='nature')return; // generated blob is not a durable source across reloads
+  if(currentSoundKey==='nature'||currentSoundKey==='personal')return; // in-memory audio is not durable after reloading
   // Track changes may fire pause on the old source after the new key is selected.
   // Never associate an old recording's position with a different source.
   if(soundLabAudio.getAttribute('src')!==soundLabTracks[currentSoundKey].url)return;
@@ -4845,6 +4859,44 @@ async function toggleFluteOffline(){
   }
 }
 
+
+/* Your downloaded sound is played as a temporary Sound Lab track.
+ * Object URL remains in memory only, not uploaded, not written into localStorage. */
+let hcPersonalNatureUrl='';
+function hcReleasePersonalNature(){
+  if(hcPersonalNatureUrl){URL.revokeObjectURL(hcPersonalNatureUrl);hcPersonalNatureUrl=''}
+  if(Object.prototype.hasOwnProperty.call(soundLabTracks,'personal'))delete soundLabTracks.personal;
+  const input=document.getElementById('hcPersonalNatureFile');if(input)input.value='';
+}
+function hcLoadPersonalNature(input){
+  const file=input?.files?.[0];if(!file)return;
+  const supported=file.type.startsWith('audio/')||/\.(?:mp3|m4a|wav|ogg|flac|opus|aac)$/i.test(file.name);
+  if(!supported){
+    input.value='';
+    document.getElementById('hcPersonalNatureStatus').textContent='Select an audio file (MP3, M4A, WAV or another supported audio format).';
+    return;
+  }
+  if(currentSoundKey==='personal')soundLabAudio.pause();
+  hcReleasePersonalNature();
+  hcPersonalNatureUrl=URL.createObjectURL(file);
+  const name=file.name.replace(/\.[^.]+$/,'').slice(0,110)||'Personal recording';
+  soundLabTracks.personal={title:name,duration:0,url:hcPersonalNatureUrl,
+    desc:'Personal recording from your device · not hosted or uploaded'};
+  openSoundTrack('personal');
+  document.getElementById('hcPersonalNatureStatus').textContent='Loaded privately: '+file.name+'. Press Play in Sound Lab.';
+  document.getElementById('soundLabQueueStatus').textContent='Personal file · auto-next disabled for this recording. Choose any other sound to leave.';
+}
+function hcClearPersonalNature(){
+  if(currentSoundKey==='personal'){
+    soundLabAudio.pause();soundLabAudio.removeAttribute('src');soundLabAudio.load();
+    hcClearSoundBookmark();currentSoundKey='horizon';
+    const player=document.getElementById('soundLabPlayBtn');if(player)player.textContent='Play';
+  }
+  hcReleasePersonalNature();
+  const status=document.getElementById('hcPersonalNatureStatus');if(status)status.textContent='Personal audio closed. No file was uploaded.';
+  show('soundLab');
+}
+
 function openSoundLab(){
   show('soundLab');
 }
@@ -4878,6 +4930,11 @@ function updateSoundLabQueueStatus(){
   if(msg)msg.textContent=(soundLabAutoNext?'Next real recording plays when this one ends.':'This track stops when it ends.')+(soundLabListeningLimit?' Listening target: '+Math.round(soundLabListeningLimit/60)+' min.':' Continuous until you stop.');
 }
 async function playNextSoundLab(userInitiated=false){
+  if(currentSoundKey==='personal'){
+    if(!userInitiated)return;
+    hcClearPersonalNature();
+    return;
+  }
   if(!userInitiated && !soundLabAutoNext)return;
   if(soundLabListeningLimit && soundLabListeningSeconds>=soundLabListeningLimit){stopSoundLab();return}
   const oldIndex=soundLabQueue.indexOf(currentSoundKey);
@@ -4905,6 +4962,10 @@ async function playNextSoundLab(userInitiated=false){
   syncSoundLab();
 }
 function openSoundTrack(key){
+  if(currentSoundKey==='personal'&&key!=='personal'){
+    soundLabAudio.pause();soundLabAudio.removeAttribute('src');soundLabAudio.load();
+    hcReleasePersonalNature();
+  }
   const t=soundLabTracks[key]||soundLabTracks.horizon;
   hcStoreSoundLabPosition();
   currentSoundKey=key in soundLabTracks?key:'horizon';
@@ -4943,6 +5004,10 @@ function openSoundTrack(key){
   const timeChoice=document.getElementById('soundLabDurationChoice');
   soundLabListeningLimit=timeChoice?Math.max(0,Number(timeChoice.value)||0):0;
   updateSoundLabQueueStatus();
+  if(currentSoundKey==='personal'){
+    const msg=document.getElementById('soundLabQueueStatus');
+    if(msg)msg.textContent='Local audio stays private. Auto-next is disabled for this recording.';
+  }
 
   setSoundLabMediaSession();
   updateOrganicFluteTools();
@@ -5008,7 +5073,9 @@ function toggleSoundLoop(){
 
 soundLabAudio.addEventListener('error',()=>{
   const st=document.getElementById('soundLabStatus');
-  if(currentSoundKey==='organicBansuri'){
+  if(currentSoundKey==='personal'){
+    if(st)st.textContent='This local audio format is not supported here. Try the MP3 copy.';
+  }else if(currentSoundKey==='organicBansuri'){
     if(st)st.textContent='Original recording could not load. Use the source link below.';
   }else if(!soundLabFallbackActive&&currentSoundKey!=='nature')fallbackSoundLab();
   else if(st)st.textContent='Sound unavailable. Please retry when connected.';
@@ -5070,7 +5137,12 @@ soundLabAudio.addEventListener('pause',()=>{soundLabClockCommit();hcStoreSoundLa
 soundLabAudio.addEventListener('ended',()=>{
   hcClearSoundBookmark();
   soundLabClockCommit();
-  if(soundLabAutoNext&&!soundLabAudio.loop)playNextSoundLab(false);
+  if(currentSoundKey==='personal'){
+    soundLabPlayRequested=false;
+    const msg=document.getElementById('soundLabStatus');
+    if(msg)msg.textContent='Personal recording finished. Replay or choose another sound.';
+  }
+  else if(soundLabAutoNext&&!soundLabAudio.loop)playNextSoundLab(false);
   else {soundLabPlayRequested=false;const st=document.getElementById('soundLabStatus');if(st)st.textContent='Listening finished. Press Play or choose another sound.'}
 });
 soundLabAudio.addEventListener('timeupdate',()=>{
