@@ -1,15 +1,23 @@
-const APP_CACHE='heartclear-v53';
+const APP_CACHE='heartclear-v54';
 const MEDIA_CACHE='heartclear-media-v1';
 
 self.addEventListener('install',event=>{
-  self.skipWaiting();
+  event.waitUntil((async()=>{
+    // Preserve an app shell so installed HeartClear can reopen without a network.
+    try{
+      const cache=await caches.open(APP_CACHE);
+      await cache.add(new Request('./index.html',{cache:'reload'}));
+    }catch(e){}
+    await self.skipWaiting();
+  })());
 });
 
 self.addEventListener('activate',event=>{
   event.waitUntil((async()=>{
     const keys=await caches.keys();
     for(const key of keys){
-      if(key!==MEDIA_CACHE && key!==APP_CACHE) await caches.delete(key);
+      // Do not remove caches belonging to other apps on this GitHub Pages domain.
+      if(key.startsWith('heartclear-v') && key!==APP_CACHE) await caches.delete(key);
     }
     await self.clients.claim();
   })());
@@ -50,14 +58,28 @@ self.addEventListener('fetch',event=>{
   const request=event.request;
 
   if(request.mode==='navigate'){
-    event.respondWith(
-      fetch(request,{cache:'no-store'})
-        .catch(()=>caches.match(request))
-        .then(response=>response||new Response('HeartClear is offline. Open a saved practice from the installed app.',{
+    event.respondWith((async()=>{
+      try{
+        const response=await fetch(request,{cache:'no-store'});
+        if(response.ok){
+          try{
+            const cache=await caches.open(APP_CACHE);
+            await cache.put('./index.html',response.clone());
+          }catch(e){}
+        }
+        return response;
+      }catch(e){
+        let fallback=null;
+        try{
+          const cache=await caches.open(APP_CACHE);
+          fallback=await cache.match('./index.html');
+        }catch(e){}
+        return fallback||new Response('HeartClear needs an internet connection the first time it is opened.',{
           status:503,
           headers:{'Content-Type':'text/plain; charset=utf-8'}
-        }))
-    );
+        });
+      }
+    })());
     return;
   }
 
