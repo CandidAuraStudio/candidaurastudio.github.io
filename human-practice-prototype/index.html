@@ -958,6 +958,51 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
   margin-top:8px;color:#d6bd8f;font-size:12px
 }
 
+
+/* Priority fixes v47 */
+.app{
+  padding-bottom:calc(var(--nav-h) + 42px + env(safe-area-inset-bottom,0px))!important;
+}
+.screen{
+  padding-bottom:calc(var(--nav-h) + 34px + env(safe-area-inset-bottom,0px));
+}
+.screen#player,.screen#intro,.screen#prep,.screen#instructions,.screen#completion,
+.screen#humanSession,.screen#sacredSession,.screen#bookAudio,.screen#bookReader,.screen#sessionReady{
+  padding-bottom:24px;
+}
+.bottom-nav{
+  background:rgba(4,14,22,.96)!important;
+  border:1px solid rgba(205,229,237,.12)!important;
+  box-shadow:0 18px 60px rgba(0,0,0,.55)!important;
+}
+body{color:#edf3f5}
+p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub-note{
+  color:#9fb0b8;
+}
+.pip-btn{
+  display:none;border:1px solid rgba(202,227,236,.12);background:rgba(4,14,22,.78);
+  color:#d7e1e5;border-radius:13px;padding:9px 11px;font:inherit;font-size:11px;
+}
+.pip-btn.show{display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.player-visual-actions{
+  position:absolute;z-index:5;right:12px;top:12px;display:flex;gap:8px
+}
+.adhkar-shell{padding:18px}
+.adhkar-visual-wrap{
+  position:relative;overflow:hidden;border-radius:22px;background:#06111a;
+  aspect-ratio:16/9;border:1px solid rgba(204,229,237,.09)
+}
+.adhkar-visual{width:100%;height:100%;object-fit:cover;display:block;background:#06111a}
+.adhkar-controls{margin-top:16px}
+.adhkar-times{display:flex;justify-content:space-between;color:#8fa4ae;font-size:11px;margin-top:7px}
+.adhkar-transport{display:grid;grid-template-columns:1fr 1.4fr 1fr;gap:9px;margin-top:13px}
+.adhkar-transport button{
+  border:1px solid rgba(198,225,236,.10);background:rgba(5,18,27,.54);
+  color:#d8e1e5;border-radius:15px;min-height:46px;font:inherit
+}
+.adhkar-transport .primary{background:linear-gradient(180deg,#dfbd80,#b98349);color:#07131b;border:0;font-weight:750}
+.adhkar-status{margin-top:10px;color:#879ba5;font-size:10px;text-align:center}
+
 </style>
 </head>
 <body>
@@ -1258,7 +1303,7 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
   <div class="hub-hero">
     <div class="kicker">Read · Listen · Learn</div>
     <h2>Library</h2>
-    <p>A quiet place for audiobooks and books that you own or are allowed to share.</p>
+    <p>A quiet place for listening and reading.</p>
   </div>
 
   <div class="hub-grid">
@@ -1358,7 +1403,7 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
         <button onclick="openAdhkar('listen')">Listen</button>
         <button onclick="openAdhkar('recite')">Recite Along</button>
       </div>
-      <span class="rights-pill">Pilot source · confirm media permission before public release</span>
+      
     </div>
 
     <div class="chakra-feature" id="hinduFeatured">
@@ -1369,21 +1414,36 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
 
     <div class="empty-shelf" style="margin-top:14px">
       <div class="empty-icon">♪</div>
-      <strong id="sacredEmptyTitle">Sound sessions are ready to be added</strong>
-      <p id="sacredEmptyText">We will add rights-cleared recordings and accurate text/meaning here.</p>
-      <span class="rights-pill">Original / permissioned / licensed audio</span>
+      <strong id="sacredEmptyTitle">Sound practice</strong>
+      <p id="sacredEmptyText">Choose a sound practice and enter it with attention.</p>
+      
     </div>
   </div>
 </section>
 
 <section class="screen" id="sacredSession">
-  <div class="glass">
+  <div class="glass adhkar-shell">
     <button class="collection-back" onclick="show('sacredDetail')">‹ Islamic</button>
     <div class="kicker">Islamic · Sacred Sound</div>
     <h2>Morning Adhkar</h2>
-    <p>28:18 · supplication and remembrance</p>
+    <p>28:18 · remembrance and supplication</p>
 
-    <video id="adhkarVideo" class="sacred-video" controls playsinline preload="metadata" src="https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/4d1904e8-d767-49f3-935b-dda2b31c3082.mp4"></video>
+    <div class="adhkar-visual-wrap">
+      <video id="adhkarVisual" class="adhkar-visual" muted loop playsinline preload="metadata" src="https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/1127aeb9-b874-43ec-967a-885f05240493.mp4"></video>
+      <div class="player-visual-actions">
+        <button class="pip-btn" id="adhkarPipBtn" onclick="togglePip('adhkarVisual')" aria-label="Open Morning Adhkar visual in picture in picture">PiP</button>
+      </div>
+    </div>
+
+    <div class="adhkar-controls">
+      <input id="adhkarSeek" class="seek" type="range" min="0" max="1698" value="0" step="0.1" aria-label="Morning Adhkar position">
+      <div class="adhkar-times"><span id="adhkarElapsed">00:00</span><span id="adhkarTotal">28:18</span></div>
+      <div class="adhkar-transport">
+        <button onclick="adhkarJump(-15)" aria-label="Back 15 seconds">−15s</button>
+        <button class="primary" id="adhkarPlayBtn" onclick="toggleAdhkarAudio()">Play</button>
+        <button onclick="adhkarJump(15)" aria-label="Forward 15 seconds">+15s</button>
+      </div>
+    </div>
 
     <div class="mode-tabs">
       <button id="listenModeBtn" class="active" onclick="setAdhkarMode('listen')">Listen</button>
@@ -1391,10 +1451,11 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
     </div>
 
     <div class="sacred-guidance" id="adhkarGuidance">
-      Listen quietly. You can close your eyes if you are somewhere safe, or simply let the recitation hold your attention.
+      Listen quietly. Let the recitation hold your attention without forcing the breath.
     </div>
+    <div class="adhkar-status" id="adhkarStatus">Audio continues in the background where your browser allows it.</div>
 
-    <div class="hub-note">Sound is physical vibration, but HeartClear does not claim that one recitation or frequency automatically changes the nervous system. Meaning, rhythm, familiarity, breathing and attention can all shape the experience.</div>
+    <audio id="adhkarAudio" preload="auto" playsinline src="https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/b175b71f-4140-4458-baf3-61c9dad3a420.mp3"></audio>
   </div>
 </section>
 
@@ -1537,7 +1598,7 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v46</div>
+    <div class="app-version">HeartClear · prototype v47</div>
   </div>
 </section>
 
@@ -1589,6 +1650,7 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
     </div>
 
     <div class="player-artwork" onclick="togglePlay()" role="button" tabindex="0" aria-label="Play or pause">
+      <div class="player-visual-actions"><button class="pip-btn" id="practicePipBtn" onclick="event.stopPropagation();togglePip('practiceVisual')" aria-label="Open video in picture in picture">PiP</button></div>
       <video id="practiceVisual" class="practice-visual" muted playsinline preload="metadata"></video>
       <div class="practice-visual-shade"></div>
       <div class="waveform" id="waveform" aria-hidden="true">
@@ -1664,7 +1726,7 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v9M7.5 12h9"/></svg><span>Meditation</span>
   </button>
   <button class="nav-item" data-nav="sacred" onclick="navTo('sacred',this)" aria-label="Sacred">
-    <svg viewBox="0 0 24 24"><path d="M12 4v16M8.5 7.5c0-1.7 1.6-3 3.5-3s3.5 1.3 3.5 3-1.3 2.5-3.5 3-3.5 1.4-3.5 3.1 1.6 3 3.5 3 3.5-1.3 3.5-3"/></svg><span>Sacred</span>
+    <svg viewBox="0 0 24 24"><path d="M4 12h2M8 8v8M12 5v14M16 8v8M20 12h-2"/></svg><span>Sacred</span>
   </button>
   <button class="nav-item" data-nav="library" onclick="navTo('library',this)" aria-label="Library">
     <svg viewBox="0 0 24 24"><path d="M5 4.5h5.5c1.2 0 1.5.5 1.5 1.6v13c0-1.3-.8-2.1-2-2.1H5Z"/><path d="M19 4.5h-5.5c-1.2 0-1.5.5-1.5 1.6v13c0-1.3.8-2.1 2-2.1H19Z"/></svg><span>Library</span>
@@ -1843,13 +1905,15 @@ function show(id){
 
   const pv=document.getElementById('practiceVisual');
   if(pv && id!=='player') pv.pause();
-  const av=document.getElementById('adhkarVideo');
+  const av=document.getElementById('adhkarVisual');
   if(av && id!=='sacredSession') av.pause();
+  if(id!=='sacredSession' && !adhkarAudio.paused) adhkarAudio.pause();
   const ba=document.getElementById('bookAudioEl');
   updateBookMini(id);
   if(id==='home') renderDashboard();
   if(id==='history') renderHistory();
   if(id==='settings') renderSettings();
+  if(id==='player'||id==='sacredSession')updatePipButtons();
   window.scrollTo(0,0);
 }
 
@@ -2188,7 +2252,8 @@ function setBookMediaSession(){
     navigator.mediaSession.metadata=new MediaMetadata({
       title:'Shadows of Truth · Chapter 1',
       artist:'HeartClear',
-      album:currentBookAudioLang==='ta'?'Tamil Audiobook':'English Audiobook'
+      album:currentBookAudioLang==='ta'?'Tamil Audiobook':'English Audiobook',
+      artwork:hcArtwork()
     });
     navigator.mediaSession.setActionHandler('play',()=>bookAudioEl.play());
     navigator.mediaSession.setActionHandler('pause',()=>bookAudioEl.pause());
@@ -2204,6 +2269,14 @@ function setBookMediaSession(){
     }catch(e){}
   }catch(e){}
 }
+
+const adhkarAudio=document.getElementById('adhkarAudio');
+const adhkarSeek=document.getElementById('adhkarSeek');
+adhkarAudio.addEventListener('timeupdate',syncAdhkar);
+adhkarAudio.addEventListener('play',syncAdhkar);
+adhkarAudio.addEventListener('pause',syncAdhkar);
+adhkarAudio.addEventListener('loadedmetadata',syncAdhkar);
+adhkarSeek.addEventListener('input',()=>{adhkarAudio.currentTime=Number(adhkarSeek.value)||0;syncAdhkar()});
 
 bookAudioEl.addEventListener('timeupdate',syncBookAudio);
 bookAudioEl.addEventListener('play',syncBookAudio);
@@ -2248,7 +2321,7 @@ function openCollection(kind){
   const list=document.getElementById('collectionList');
   if(kind==='english') list.innerHTML=renderBookCard('en');
   else if(kind==='tamil') list.innerHTML=renderBookCard('ta');
-  else list.innerHTML='<div class="empty-shelf"><div class="empty-icon">◌</div><strong>'+escapeHtml(data.empty||'Ready for content')+'</strong><p>Only public-domain or properly licensed books will be added here.</p><span class="rights-pill">Rights-cleared content only</span></div>';
+  else list.innerHTML='<div class="empty-shelf"><div class="empty-icon">◌</div><strong>'+escapeHtml(data.empty||'Ready for content')+'</strong><p>More reading titles will appear here.</p><span class="rights-pill">Rights-cleared content only</span></div>';
   show('collection');
 }
 
@@ -2258,7 +2331,7 @@ function openSacred(kind){
       kicker:'Islamic',
       title:'Dua · Dhikr · Quranic Sound',
       description:'Prayer, remembrance and Quranic contemplation presented with meaning and respectful context.',
-      meaning:'Show the Arabic text only when accurately sourced, together with meaning/transliteration where appropriate.'
+      meaning:'Listen or recite with attention to meaning and a comfortable natural breath.'
     },
     hindu:{
       kicker:'Hindu',
@@ -2291,25 +2364,108 @@ function openSacred(kind){
   if(hinduFeatured) hinduFeatured.classList.toggle('show',kind==='hindu');
   const empty=document.getElementById('sacredEmptyTitle');
   const emptyText=document.getElementById('sacredEmptyText');
-  if(empty) empty.textContent=kind==='islamic'?'More sessions can be added':kind==='hindu'?'More mantra sessions can be added':'Sound sessions are ready to be added';
+  if(empty) empty.textContent=kind==='islamic'?'More listening':kind==='hindu'?'More mantra practice':'Sound practice';
   if(emptyText) emptyText.textContent=kind==='islamic'
-    ?'Add more rights-cleared dua, dhikr or Quranic listening here.'
+    ?'Explore more remembrance, recitation and reflective listening.'
     :kind==='hindu'
-      ?'Add rights-cleared mantra recordings, pronunciation guides and source notes here.'
-      :'We will add rights-cleared recordings and accurate text/meaning here.';
+      ?'Explore mantra, pronunciation and contemplative sound.'
+      :'Choose a sound practice and enter it with attention.';
   show('sacredDetail');
+}
+
+function updatePipButtons(){
+  const supported=!!document.pictureInPictureEnabled;
+  [['practicePipBtn','practiceVisual'],['adhkarPipBtn','adhkarVisual']].forEach(([bid,vid])=>{
+    const b=document.getElementById(bid);
+    const v=document.getElementById(vid);
+    if(b)b.classList.toggle('show',supported&&!!v&&typeof v.requestPictureInPicture==='function');
+  });
+}
+
+async function togglePip(videoId){
+  const v=document.getElementById(videoId);
+  if(!v||!document.pictureInPictureEnabled||typeof v.requestPictureInPicture!=='function')return;
+  try{
+    if(document.pictureInPictureElement)await document.exitPictureInPicture();
+    else await v.requestPictureInPicture();
+  }catch(e){}
 }
 
 function openChakraGuide(){
   show('chakraGuide');
 }
 
+function setAdhkarMediaSession(){
+  if(!('mediaSession' in navigator))return;
+  try{
+    navigator.mediaSession.metadata=new MediaMetadata({
+      title:'Morning Adhkar',
+      artist:'HeartClear',
+      album:'Islamic · Sacred Sound',
+      artwork:hcArtwork()
+    });
+    navigator.mediaSession.setActionHandler('play',()=>adhkarAudio.play());
+    navigator.mediaSession.setActionHandler('pause',()=>adhkarAudio.pause());
+    navigator.mediaSession.setActionHandler('seekbackward',details=>adhkarJump(-(details.seekOffset||15)));
+    navigator.mediaSession.setActionHandler('seekforward',details=>adhkarJump(details.seekOffset||15));
+    try{
+      navigator.mediaSession.setActionHandler('seekto',details=>{
+        if(typeof details.seekTime==='number'&&Number.isFinite(adhkarAudio.duration)){
+          adhkarAudio.currentTime=Math.max(0,Math.min(adhkarAudio.duration,details.seekTime));
+          syncAdhkar();
+        }
+      });
+    }catch(e){}
+  }catch(e){}
+}
+
 function openAdhkar(mode){
-  if(bookAudioEl && !bookAudioEl.paused) bookAudioEl.pause();
-  const v=document.getElementById('adhkarVideo');
-  if(v){v.pause();v.currentTime=0}
+  if(bookAudioEl && !bookAudioEl.paused)bookAudioEl.pause();
+  if(!audio.paused)audio.pause();
+  adhkarAudio.pause();
+  adhkarAudio.currentTime=0;
+  const visual=document.getElementById('adhkarVisual');
+  if(visual){visual.currentTime=0;visual.play().catch(()=>{})}
   setAdhkarMode(mode||'listen');
+  setAdhkarMediaSession();
   show('sacredSession');
+  updatePipButtons();
+  syncAdhkar();
+}
+
+async function toggleAdhkarAudio(){
+  if(adhkarAudio.paused){
+    try{await adhkarAudio.play()}catch(e){}
+  }else adhkarAudio.pause();
+  syncAdhkar();
+}
+
+function adhkarJump(delta){
+  const d=Number.isFinite(adhkarAudio.duration)?adhkarAudio.duration:1698;
+  adhkarAudio.currentTime=Math.max(0,Math.min(d,(adhkarAudio.currentTime||0)+delta));
+  syncAdhkar();
+}
+
+function syncAdhkar(){
+  const t=adhkarAudio.currentTime||0;
+  const d=Number.isFinite(adhkarAudio.duration)?adhkarAudio.duration:1698;
+  const seek=document.getElementById('adhkarSeek');
+  if(seek){seek.max=d;seek.value=t}
+  const e=document.getElementById('adhkarElapsed');if(e)e.textContent=fmt(t);
+  const tt=document.getElementById('adhkarTotal');if(tt)tt.textContent=fmt(d);
+  const b=document.getElementById('adhkarPlayBtn');if(b)b.textContent=adhkarAudio.paused?'Play':'Pause';
+  const visual=document.getElementById('adhkarVisual');
+  if(visual){
+    if(document.hidden){visual.pause()}
+    else if(!adhkarAudio.paused && visual.paused)visual.play().catch(()=>{});
+    else if(adhkarAudio.paused && !visual.paused)visual.pause();
+  }
+  if('mediaSession' in navigator&&d>0){
+    try{
+      navigator.mediaSession.playbackState=adhkarAudio.paused?'paused':'playing';
+      navigator.mediaSession.setPositionState({duration:d,playbackRate:1,position:Math.min(t,Math.max(0,d-.01))});
+    }catch(e){}
+  }
 }
 
 function setAdhkarMode(mode){
@@ -2320,9 +2476,10 @@ function setAdhkarMode(mode){
   const g=document.getElementById('adhkarGuidance');
   if(!g)return;
   g.textContent=mode==='recite'
-    ? 'Recite along only at a comfortable voice and pace. Do not force loudness, breath length or breath holding. Pause whenever you need to.'
-    : 'Listen quietly. You can close your eyes if you are somewhere safe, or simply let the recitation hold your attention.';
+    ?'Recite at a comfortable voice and pace. Let the breath stay natural and pause whenever needed.'
+    :'Listen quietly. Let the recitation hold your attention without forcing the breath.';
 }
+
 
 function filterPractices(kind,btn){
   document.querySelectorAll('.category-chip').forEach(x=>x.classList.remove('active'));
@@ -2664,13 +2821,20 @@ function setSleepTimer(value){
   document.getElementById('playerNote').textContent=sec>0 ? 'Will stop in '+fmt(sec)+'.' : 'Will stop at the end of the session.';
 }
 
+function hcArtwork(){
+  try{
+    return [{src:new URL('./icon.svg',location.href).href,sizes:'512x512',type:'image/svg+xml'}];
+  }catch(e){return[]}
+}
+
 function setMediaSession(){
   if(!('mediaSession' in navigator)) return;
   try{
     navigator.mediaSession.metadata=new MediaMetadata({
       title:chosenTitle,
       artist:'HeartClear',
-      album:chosenKicker
+      album:chosenKicker,
+      artwork:hcArtwork()
     });
     navigator.mediaSession.setActionHandler('play',async()=>{try{await audio.play();syncPracticeVisual(true)}catch(e){}});
     navigator.mediaSession.setActionHandler('pause',()=>{audio.pause();syncPracticeVisual()});
@@ -3036,14 +3200,17 @@ document.querySelector('.player-orb').addEventListener('keydown',e=>{
 });
 document.addEventListener('visibilitychange',()=>{
   const pv=document.getElementById('practiceVisual');
+  const av=document.getElementById('adhkarVisual');
   if(document.hidden){
     if(pv && !pv.paused)pv.pause();
+    if(av && !av.paused)av.pause();
     if(audio.currentTime>20){
       try{localStorage.setItem('clearWithinResume:'+chosenKicker,String(audio.currentTime))}catch(e){}
       rememberLastSession(audio.currentTime);
     }
-  }else if(!audio.paused){
-    syncPracticeVisual(true);
+  }else{
+    if(!audio.paused)syncPracticeVisual(true);
+    if(!adhkarAudio.paused&&av)av.play().catch(()=>{});
   }
 });
 
