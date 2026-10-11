@@ -1900,6 +1900,9 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
         <div><strong>Offline media</strong><small id="offlineStorageText">No saved media yet</small></div>
         <button class="offline-action" onclick="clearOfflineMedia()">Clear</button>
       </div>
+      <div class="setting-row">
+        <div><strong>Local time</strong><small id="deviceClockText">Checking device time…</small></div>
+      </div>
       <div class="setting-row" id="localContextSetting">
         <div><strong>Local context</strong><small id="localContextSettingText">Optional: use your location for current weather and daylight. HeartClear does not store exact coordinates.</small></div>
         <button class="offline-action" id="localContextBtn" onclick="toggleLocalContext()">Use location</button>
@@ -1910,7 +1913,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v52</div>
+    <div class="app-version">HeartClear · prototype v53</div>
   </div>
 </section>
 
@@ -3306,8 +3309,13 @@ const dailyNotes=[
   {title:'Do one ordinary thing completely.',text:'Walking, cooking, cleaning or making music can become practice when attention stays with the movement instead of rushing ahead.',source:'Human practice'}
 ]
 
+function localDateKey(){
+  const d=new Date();
+  return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();
+}
+
 function renderDailyNote(){
-  const day=Math.floor(Date.now()/86400000);
+  const day=localDateKey();
   const n=dailyNotes[day%dailyNotes.length];
   const t=document.getElementById('dailyNoteTitle');
   const x=document.getElementById('dailyNoteText');
@@ -3418,14 +3426,42 @@ function renderLocalContext(){
   }catch(e){}
 }
 
+function getDeviceLocalClock(){
+  const now=new Date();
+  let hour=now.getHours();
+  let minute=now.getMinutes();
+  let zone='';
+  try{
+    zone=Intl.DateTimeFormat().resolvedOptions().timeZone||'';
+    const parts=new Intl.DateTimeFormat(undefined,{
+      hour:'2-digit',minute:'2-digit',hourCycle:'h23'
+    }).formatToParts(now);
+    const hp=parts.find(x=>x.type==='hour');
+    const mp=parts.find(x=>x.type==='minute');
+    if(hp)hour=Number(hp.value);
+    if(mp)minute=Number(mp.value);
+  }catch(e){}
+  return {hour,minute,zone,date:now};
+}
+
 function setGreeting(){
   renderDailyNote();
-  const h=new Date().getHours();
+  const clock=getDeviceLocalClock();
+  const h=clock.hour;
   const g=h>=5&&h<12?'Good morning':h>=12&&h<17?'Good afternoon':h>=17&&h<21?'Good evening':'Good night';
-  const el=document.getElementById('timeGreeting'); if(el)el.textContent=g;
+  const el=document.getElementById('timeGreeting');
+  if(el)el.textContent=g;
+
+  const debug=document.getElementById('deviceClockText');
+  if(debug){
+    const hh=String(clock.hour).padStart(2,'0');
+    const mm=String(clock.minute).padStart(2,'0');
+    debug.textContent='Device time '+hh+':'+mm+(clock.zone?' · '+clock.zone:'');
+  }
 }
 
 function renderSettings(){
+  setGreeting();
   renderLocalContext();
   renderInstallSetting();
   const reduced=document.body.classList.contains('reduce-motion');
@@ -4031,6 +4067,10 @@ setGreeting();
 renderLocalContext();
 renderDashboard();
 renderSettings();
+
+const greetingRefreshTimer=setInterval(setGreeting,60000);
+window.addEventListener('focus',setGreeting);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)setGreeting()});
 
 window.addEventListener('online',()=>{const n=document.getElementById('playerNote');if(n)n.textContent='Back online.'});
 window.addEventListener('offline',()=>{const n=document.getElementById('playerNote');if(n)n.textContent='Offline mode. Saved audio remains available.'});
