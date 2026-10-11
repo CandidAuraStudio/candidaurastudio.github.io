@@ -3119,8 +3119,14 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
       <button data-min="20" onclick="selectHomeTimerMinutes(20,this)">20 min</button>
       <button data-min="30" onclick="selectHomeTimerMinutes(30,this)">30 min</button>
     </div>
+    <div class="hc-timer-sheet-options">
+      <label class="hc-quiet-check"><input type="checkbox" id="hcTimerSheetBell" checked> Opening and closing bell</label>
+      <label for="hcTimerSheetInterval">Interval bell</label>
+      <select id="hcTimerSheetInterval"><option value="0">None</option><option value="5">Every 5 minutes</option><option value="10">Every 10 minutes</option></select>
+      <label class="hc-quiet-check"><input type="checkbox" id="hcTimerSheetPacer"> Gentle breath pacing (no holds)</label>
+    </div>
     <div class="hc-sheet-actions">
-      <button class="primary" onclick="beginHomeTimer()">Begin</button>
+      <button class="primary" onclick="beginHomeTimer()">Set time</button>
       <button class="secondary" onclick="closeHomeSheets()">Cancel</button>
     </div>
   </div>
@@ -3906,7 +3912,7 @@ function hcStartPathActivity(){
   hcTimerModeChanged();document.getElementById('hcTimerClock').textContent=fmt(day.minutes*60);
  }else if(day.type==='sound')openSoundTrack(day.key);
  else if(day.type==='meditation'){
-   const card=hcMeditationCards().find(x=>x.querySelector('.practice-copy b')?.textContent?.trim()===day.key);
+   const card=hcFindPracticeCard(day.key);
    if(card)card.click();else show('practices');
  }else if(day.type==='human')openHumanCategory(day.category||'observe');
 }
@@ -6763,6 +6769,9 @@ function beginHomeSheetPractice(){
 function openHomeTimerSheet(mode='quiet',minutes=10){
   hcHomeTimerMode=mode==='breath'?'breath':'quiet';
   hcHomeTimerMinutes=Number(minutes)||10;
+  const sheetBell=document.getElementById('hcTimerSheetBell');if(sheetBell)sheetBell.checked=true;
+  const sheetInterval=document.getElementById('hcTimerSheetInterval');if(sheetInterval)sheetInterval.value='0';
+  const pacer=document.getElementById('hcTimerSheetPacer');if(pacer)pacer.checked=hcHomeTimerMode==='breath';
   const title=document.getElementById('hcHomeTimerTitle');
   const purpose=document.getElementById('hcHomeTimerPurpose');
   if(title)title.textContent=hcHomeTimerMode==='breath'?'Gentle breath':'Quiet Timer';
@@ -6790,7 +6799,9 @@ function beginHomeTimer(){
     minutes.value=String(hcHomeTimerMinutes);
   }
   const mode=document.getElementById('hcTimerMode');
-  if(mode)mode.value=hcHomeTimerMode;
+  if(mode)mode.value=document.getElementById('hcTimerSheetPacer')?.checked?'breath':hcHomeTimerMode;
+  const bell=document.getElementById('hcTimerBell');if(bell)bell.checked=!!document.getElementById('hcTimerSheetBell')?.checked;
+  const interval=document.getElementById('hcTimerInterval');if(interval)interval.value=document.getElementById('hcTimerSheetInterval')?.value||'0';
   hcTimerModeChanged();
   const clock=document.getElementById('hcTimerClock');if(clock)clock.textContent=fmt(hcHomeTimerMinutes*60);
 }
