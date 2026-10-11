@@ -2202,7 +2202,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v72</div>
+    <div class="app-version">HeartClear · prototype v73</div>
   </div>
 </section>
 
@@ -2715,7 +2715,7 @@ async function refreshPracticeOfflineButton(){
   const btn=document.getElementById('offlinePracticeBtn');
   if(!btn)return;
   const saved=await cacheHas(chosenUrl);
-  btn.textContent=saved?'✓ Saved offline':'↓ Download offline';
+  btn.textContent=saved?'Remove download':'↓ Download offline';
   btn.setAttribute('aria-label',saved?'Remove meditation audio downloaded to this device':'Download meditation audio for offline listening');
   btn.classList.toggle('saved',saved);
   const status=document.getElementById('practiceOfflineStatus');
@@ -5127,7 +5127,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=72');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=73');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
