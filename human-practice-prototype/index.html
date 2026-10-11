@@ -4694,6 +4694,9 @@ const HC_LAST_SOUND='heartclearLastSoundV1';
 function hcStoreSoundLabPosition(){
   if(!soundLabAudio||!soundLabTracks[currentSoundKey])return;
   if(currentSoundKey==='nature')return; // generated blob is not a durable source across reloads
+  // Track changes may fire pause on the old source after the new key is selected.
+  // Never associate an old recording's position with a different source.
+  if(soundLabAudio.getAttribute('src')!==soundLabTracks[currentSoundKey].url)return;
   const pos=Number(soundLabAudio.currentTime)||0;
   if(pos<5 || !Number.isFinite(pos))return;
   const end=Number.isFinite(soundLabAudio.duration)?soundLabAudio.duration:soundLabTracks[currentSoundKey].duration;
