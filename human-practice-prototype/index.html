@@ -1761,6 +1761,14 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
 #soundLabPlayer .soundlab-transport .primary{background:#fff!important;color:#0c2331!important;border-color:#fff!important}
 #soundLabPlayer .soundlab-transport button{min-height:48px}
 #soundLabPlayer .soundlab-options button{min-height:44px;font-size:12px}
+
+.hc-sound-routes{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:15px 0 3px}
+.hc-sound-routes button{display:flex;align-items:center;gap:10px;text-align:left;padding:12px 11px;border:1px solid rgba(207,230,238,.12);border-radius:17px;background:rgba(8,23,34,.55);color:#ecf3f5;font:inherit;min-height:67px}
+.hc-sound-routes button b{display:block;font-size:12px}
+.hc-sound-routes button small{display:block;color:#a5b7bf;font-size:10px;margin-top:4px}
+.hc-route-icon{width:28px;height:28px;border-radius:10px;display:grid;place-items:center;color:#d5b77d;background:rgba(38,65,77,.45);flex:none}
+.hc-route-icon svg{width:18px;height:18px}
+@media(max-width:349px){.hc-sound-routes button{gap:7px;padding:10px 7px}}
 </style>
 </head>
 <body>
@@ -1879,7 +1887,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
   </div>
 
   <div class="hc-home-section">
-    <div class="hc-home-section-head"><h3>Sounds to explore</h3><button onclick="show('soundHub')">View all</button></div>
+    <div class="hc-home-section-head"><h3>Sounds to explore</h3><button onclick="openSoundLab()">View all</button></div>
     <div class="hc-sound-strip">
       <button class="hc-sound-card" onclick="openSoundLab()"><span>≈</span><b>Nature</b><small>Ocean · rain · birds · fire · thunder</small></button>
       <button class="hc-sound-card" onclick="show('sacred')"><span>✦</span><b>Sacred sound</b><small>Dua · dhikr · mantra · chant</small></button>
@@ -2710,6 +2718,10 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
     <h2>Sounds</h2>
     <p>Nature, calm music and your own mixes.</p>
   </header>
+  <div class="hc-sound-routes" aria-label="Other listening collections">
+    <button onclick="show('sacred')"><span class="hc-route-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3v18M3 12h18M6 6l12 12M18 6 6 18"/></svg></span><span><b>Sacred listening</b><small>Traditions and prayer</small></span></button>
+    <button onclick="openFearPractice()"><span class="hc-route-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></span><span><b>Sound familiarity</b><small>Listen at your pace</small></span></button>
+  </div>
   <div class="hc-sound-filters" id="hcSoundFilters" aria-label="Filter sounds">
     <button class="active" data-filter="all" onclick="hcFilterSounds('all')" aria-pressed="true">All</button>
     <button data-filter="nature" onclick="hcFilterSounds('nature')" aria-pressed="false">Nature</button>
@@ -3119,7 +3131,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
   <button class="nav-item" data-nav="practices" onclick="navTo('practices',this)" aria-label="Practice">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v9M7.5 12h9"/></svg><span>Practice</span>
   </button>
-  <button class="nav-item" data-nav="soundHub" onclick="navTo('soundHub',this)" aria-label="Sounds">
+  <button class="nav-item" data-nav="soundHub" onclick="navTo('soundLab',this)" aria-label="Sounds">
     <svg viewBox="0 0 24 24"><path d="M3 12h2M7 8v8M11 4v16M15 7v10M19 10v4M21 12h-1"/></svg><span>Sounds</span>
   </button>
   <button class="nav-item" data-nav="library" onclick="navTo('library',this)" aria-label="Library">
