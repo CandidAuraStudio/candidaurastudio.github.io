@@ -2043,7 +2043,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v62</div>
+    <div class="app-version">HeartClear · prototype v63</div>
   </div>
 </section>
 
@@ -2181,7 +2181,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
     <div class="player-status" id="natureAfterNote">Nature sounds start automatically when the guided audio ends · 3 min</div>
     <button class="btn secondary" onclick="finish()" id="finishBtn">Finish</button>
   </div>
-  <div class="footer">HeartClear · audio starts only when you press Play</div>
+  <div class="footer">HeartClear · video introduction flows directly into the meditation</div>
   <audio id="audio" preload="auto" playsinline></audio>
 </section>
 
@@ -2694,9 +2694,11 @@ function renderGlobalMini(){
     return;
   }
 
-  // Avoid duplicate controls when user is already on that full player.
+  // On the full player, keep the mini bar hidden near the main controls,
+  // then reveal it after the user scrolls down so Pause/Resume stays reachable.
   const sameScreen=currentScreenId===state.screen;
-  mini.classList.toggle('show',!sameScreen);
+  const scrolledAway=window.scrollY>180;
+  mini.classList.toggle('show',!sameScreen||scrolledAway);
 
   document.getElementById('globalMiniTitle').textContent=state.title;
   document.getElementById('globalMiniMeta').textContent=state.meta;
@@ -4595,6 +4597,7 @@ function resumeIntroAfterScroll(){
   if(introVideo.paused)introVideo.play().catch(()=>{});
 }
 window.addEventListener('scroll',resumeIntroAfterScroll,{passive:true});
+window.addEventListener('scroll',()=>{renderGlobalMini()},{passive:true});
 window.addEventListener('touchend',resumeIntroAfterScroll,{passive:true});
 
 document.querySelector('#player .player-artwork').addEventListener('keydown',e=>{
