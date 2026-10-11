@@ -796,6 +796,72 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
 }
 .chakra-guide strong{color:#cfb37e}
 
+
+/* HeartClear Book & Audiobook Reader v42 */
+.book-card{
+  padding:17px;border-radius:22px;border:1px solid rgba(198,225,236,.09);
+  background:linear-gradient(145deg,rgba(16,38,51,.82),rgba(5,17,27,.88));
+  margin-top:14px
+}
+.book-cover{
+  height:140px;border-radius:18px;padding:18px;display:flex;flex-direction:column;justify-content:flex-end;
+  background:
+    radial-gradient(circle at 78% 14%,rgba(221,180,103,.16),transparent 27%),
+    linear-gradient(160deg,#193e4e,#07151f 75%);
+  border:1px solid rgba(198,225,236,.08);box-shadow:0 18px 40px rgba(0,0,0,.18)
+}
+.book-cover .book-kicker{font-size:10px;color:#b79968;text-transform:uppercase;letter-spacing:.12em}
+.book-cover b{font-size:21px;margin-top:5px}.book-cover small{color:#8ba0aa;margin-top:4px}
+.book-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
+.book-actions button{
+  border:1px solid rgba(198,225,236,.09);background:rgba(5,18,27,.54);color:#d5e0e4;
+  border-radius:14px;padding:11px;font:inherit;font-size:12px
+}
+.book-actions button.primary{background:linear-gradient(180deg,#dfbd80,#b98349);color:#07131b;border:0}
+.reader-shell{min-height:72vh;display:flex;flex-direction:column}
+.reader-toolbar{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px
+}
+.reader-toolbar button,.reader-toolbar select{
+  border:1px solid rgba(198,225,236,.09);background:rgba(5,18,27,.54);color:#c9d7dc;
+  border-radius:12px;padding:9px 10px;font:inherit;font-size:12px
+}
+.reader-page{
+  flex:1;min-height:480px;padding:22px 18px;border-radius:22px;
+  border:1px solid rgba(198,225,236,.08);
+  background:linear-gradient(180deg,rgba(12,30,41,.72),rgba(5,17,26,.78));
+  color:#e6ecef;line-height:1.75;font-size:18px;white-space:pre-wrap;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.02)
+}
+.reader-meta{display:flex;justify-content:space-between;margin-top:11px;color:#7f949e;font-size:11px}
+.reader-nav{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
+.reader-nav button{
+  border:1px solid rgba(198,225,236,.09);background:rgba(5,18,27,.54);color:#d3dee2;
+  border-radius:14px;padding:12px;font:inherit
+}
+.audiobook-art{
+  height:220px;border-radius:24px;margin-top:16px;
+  background:
+    radial-gradient(circle at 75% 18%,rgba(218,177,103,.17),transparent 27%),
+    linear-gradient(160deg,#183d4e,#07131d 75%);
+  border:1px solid rgba(198,225,236,.08);display:grid;place-items:center;
+  box-shadow:0 24px 55px rgba(0,0,0,.24)
+}
+.audiobook-art span{font-size:70px;color:#d6b477}
+.audiobook-controls{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:9px;margin-top:15px}
+.audiobook-controls button{
+  border:1px solid rgba(198,225,236,.09);background:rgba(5,18,27,.54);color:#d5e0e4;
+  border-radius:14px;padding:12px;font:inherit
+}
+.audiobook-controls .primary{background:linear-gradient(180deg,#dfbd80,#b98349);color:#07131b;border:0}
+.audiobook-seek{width:100%;margin-top:14px;accent-color:#d1a867}
+.audiobook-times{display:flex;justify-content:space-between;color:#7f949e;font-size:11px;margin-top:5px}
+.audiobook-options{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+.audiobook-options select{
+  border:1px solid rgba(198,225,236,.09);background:#0a1b28;color:#d6e0e4;
+  border-radius:12px;padding:8px 10px;font:inherit;font-size:12px
+}
+
 </style>
 </head>
 <body>
@@ -1232,6 +1298,54 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
   </div>
 </section>
 
+<section class="screen" id="bookReader">
+  <div class="glass reader-shell">
+    <button class="collection-back" onclick="show('collection')">‹ Library</button>
+    <div class="kicker" id="readerLanguage">English</div>
+    <h2>Shadows of Truth</h2>
+    <p id="readerChapter">Chapter 1 · The boy who was already watching</p>
+    <div class="reader-toolbar">
+      <button onclick="changeReaderFont(-1)">A−</button>
+      <span id="readerPageTop" style="font-size:11px;color:#7f949e">Page 1</span>
+      <button onclick="changeReaderFont(1)">A+</button>
+    </div>
+    <div class="reader-page" id="readerPage"></div>
+    <div class="reader-meta"><span id="readerPageBottom">1 / 1</span><span>position saved on this device</span></div>
+    <div class="reader-nav">
+      <button onclick="readerPrev()">Previous</button>
+      <button onclick="readerNext()">Next</button>
+    </div>
+  </div>
+</section>
+
+<section class="screen" id="bookAudio">
+  <div class="glass">
+    <button class="collection-back" onclick="show('collection')">‹ Library</button>
+    <div class="kicker" id="bookAudioLanguage">English Audiobook</div>
+    <h2>Shadows of Truth</h2>
+    <p>Chapter 1 · voice-only recording</p>
+    <div class="audiobook-art"><span>HC</span></div>
+    <input id="bookSeek" class="audiobook-seek" type="range" min="0" max="100" value="0" step="0.1">
+    <div class="audiobook-times"><span id="bookElapsed">00:00</span><span id="bookTotal">00:00</span></div>
+    <div class="audiobook-controls">
+      <button onclick="bookJump(-30)">−30s</button>
+      <button class="primary" id="bookPlayBtn" onclick="toggleBookAudio()">Play</button>
+      <button onclick="bookJump(30)">+30s</button>
+    </div>
+    <div class="audiobook-options">
+      <span style="font-size:11px;color:#8298a3">Playback speed</span>
+      <select id="bookSpeed" onchange="setBookSpeed(this.value)">
+        <option value="0.75">0.75×</option>
+        <option value="1" selected>1×</option>
+        <option value="1.25">1.25×</option>
+        <option value="1.5">1.5×</option>
+      </select>
+    </div>
+    <div class="hub-note">Your position is saved automatically. Background playback and lock-screen controls are used where the browser supports them.</div>
+    <audio id="bookAudioEl" preload="auto" playsinline></audio>
+  </div>
+</section>
+
 <section class="screen" id="settings">
   <div class="glass">
     <div class="kicker">HeartClear</div>
@@ -1252,7 +1366,7 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v41</div>
+    <div class="app-version">HeartClear · prototype v42</div>
   </div>
 </section>
 
@@ -1398,6 +1512,11 @@ let currentHumanCategory='passion';
 let currentHumanPractice=null;
 let humanRemaining=0;
 let humanTimer=null;
+let readerPages=[];
+let readerPageIndex=0;
+let readerFontSize=18;
+let readerLang='en';
+let currentBookAudioLang='en';
 
 const audio=document.getElementById('audio');
 const seek=document.getElementById('seek');
@@ -1418,7 +1537,7 @@ function show(id){
   const target=document.getElementById(id);
   if(target) target.classList.add('active');
 
-  const immersive=['intro','prep','instructions','player','completion','humanSession','sacredSession'].includes(id);
+  const immersive=['intro','prep','instructions','player','completion','humanSession','sacredSession','bookAudio','bookReader'].includes(id);
   document.getElementById('bottomNav').classList.toggle('hidden',immersive);
   document.getElementById('appTopBar').classList.toggle('hidden',immersive);
 
@@ -1433,6 +1552,8 @@ function show(id){
   if(pv && id!=='player') pv.pause();
   const av=document.getElementById('adhkarVideo');
   if(av && id!=='sacredSession') av.pause();
+  const ba=document.getElementById('bookAudioEl');
+  if(ba && id!=='bookAudio' && !document.hidden) ba.pause();
   if(id==='home') renderDashboard();
   if(id==='history') renderHistory();
   if(id==='settings') renderSettings();
@@ -1534,6 +1655,152 @@ function completeHumanPractice(auto=false){
   renderDashboard();
 }
 
+const bookContent={
+  en:"Chapter 1. The boy who was already watching. Before I learned how to sit still, I knew how to move. For most of my early life, movement was my proof of being alive. Wake up. Work. Travel. Lift. Carry. Earn. Help. Go somewhere. Chase something. Come home tired. Sleep. Begin again. The body sat at the center of everything I did. If you had asked me then whether I was wasting my life, I would have said no. I was trying. I was not lazy. I was doing what my family and my country expected of an eldest son. But there was another truth hidden under the first one. I was feeding the body far more than I was feeding the mind. A person can be very busy and still be deeply asleep inside. That was me. Always moving. Rarely watching. And yet even then, some quiet part of me was already watching. I just did not know its name. I would not give it a name for another 25 years. The name would arrive in a small room in another country, in a place I could not yet have imagined as a boy walking the dust roads of Akkaraipattu. But the watcher was there from the beginning. He was the one taking the photograph of my childhood while the rest of me was busy living it. My grandmother was one of my first teachers, though she never sat me down to teach. She taught me by walking. I still remember the road we took together. The main street. The left turn past the old petrol station. The cows that moved freely along the lane before the streets were ever paved and tidied. The small sharp thorns from certain trees that pricked my legs as we walked to my aunt's house. She would stop and remove them. One by one. With the kind of patience that only certain people carry without being taught it. That sort of care settles into a child's body long before he has words for it. It teaches you something underneath language. That gentleness is not weakness. And that the people who treat small things carefully are usually the same people who treat human beings carefully later on. The boy walked on. Akmal. One afternoon my grandmother was sitting below the tree cutting beetle nut with a sharp metal cutter. My brother and I were being rough with each other the way brothers are when their energy is bigger than their wisdom. In one careless second I threw the cutter. Chapter. Chapter. Chapter. I did not know it then, but the boy who was hiding in that small space was practicing something. Decades later in a cell on another island my body would remember how to make itself small inside a room it could not leave. The hiding had begun long before the prison. Behind our house there was a guava tree that leaned toward the roof. One day my brother slipped from the edge of the roof and fell. At that exact moment my mother happened to be walking out from the kitchen and he fell directly onto her back. Chapter. Chapter. Chapter. Chapter. Chapter. Chapter. Just the small accidents and lessons of being a boy in a small Tamil Muslim village on the eastern coast of Sri Lanka. I did not understand in any of those moments that I was being shaped. It is only now more than 20 years later sitting at a desk on a small island in the Mediterranean that I can see what was happening. Every one of those moments was teaching the watcher and me how to watch. The mango tree was teaching me about consequence. The grandmother was teaching me about patience. The cow was teaching me about provocation. The cutter was teaching me about the unrecoverable second. My mother's back was teaching me about sacrifice. The watcher was learning, but he had not yet been forced to sit still. That would come later, much later, in a place I had not yet imagined, on an island whose name I had not yet heard.",
+  ta:"புகைப்படங்கள் முதல் பகுதி டாஷ் தூதன் அத்தியாயம் ஒன்று. ஏற்கனவே கவனித்துக்கொண்டிருந்த சிறுவன். அமைதியாக அமரைக் கட்டுக்கொள்வதற்கு முன்பே நகரந்துகொண்டிருப்பதைத்தான் நான் அறிந்திருந்தேன். என் வாழ்க்கையின் ஆரம்பப் பகதியின் பிரும்பகதியில் நகர்வதை நான் உயிரோடி இருக்கிறேன் என்பதற்கான சான்றாக இருந்தது. எழுந்திர் வேலை செய், பயனம் செய், எதையாவது தூக்கு, சுமந்து ச நான் முயற்சி செய்தேன். சோம்பெரியாக இருக்க வில்லை. என் குடும்பமும் என் நாடும் ஒரு மூத்தமாகனாகை என்னிடம் எதிர்பார்த்ததை செய்துக்கொண்டிருந்தேன். ஆனால், அந்த உண்மையின் கீழே இன்னொரு உண்மை மறைந்திருந்தது. நான் மனதை விட உடலுக்கே அதிகமாக உன்ன வழித்துக்கொண்டிருந்தேன். ஒரு அதன் பெயரை நான் அறியவில்லை, இன்னும் 25 ஆண்டுகளுக்குப் பிறகுதான் அதற்கு நான் பேர்த்தருவேன். அந்தப் பெயர் வேறு நாட்டில் உள்ள ஒரு சிரியாறையில் வரும், அக்கறைப்பட்டின் தூசி சாலைகளில் நடந்த சிறுவனாக இருந்தபோது நான் இன்னும் கர்ப்பனைக்கூட செய்யாத இடத்தில் ஆனால் உள் சாட்சி ஆ என் பாட்டி என் முதல் ஆசிரியர்களில் ஒருவர் அவர் என்னை உட்கார வைத்து பாடம் கட்டிருக்க வில்லை நடந்து கொண்டைக் கட்டிருக்கொடுத்தார் நாங்கள் சேர்ந்து நடந்த அந்த சாலை இன்னும் நினைவில் இருக்கிறது. பரதான சாலை. பழைய பெட்ரோல் நிலைத்தை தாண்டி இடதுபக்கம் திரும்பும் வழி சாலைகள் இன்ன அந்த வழியில் மாடுகள் சுதந்திரமாகச் சென்றன. என் அற்றை வீட்டிற்கு நடந்து செல்லும்போது சில மரங்களிலிருந்து விழிந்த சிறுக் கூருமையான முட்டிகள் என் காலில் குற்றும் என் பாட்டினின்று அவற்றை ஒன்றொன்றாக எடுத்துவிடுவார். யாரும் கட்டுக்கொடுக்காமல் உடலிலேயே இருந்த அந்த உப அந்த சாலையில் தூசியின் வாசனை இரந்தது. பிற்பகலில் சூடான தாரின் வாசனை. வேலில் காயந்த மாட்டுசானத்தின் வாசனை. முழையிலிருந்த கடையிலிருந்து வந்த பொறித்தையின் வாசனை. இந்த எல்லாவற்றின் வழியாகை என் பாட்டி நடந்தார். பொறுமைக்கு கால்களிருந்தால் அதிப்படித்தான் நடந்திருக் யாரும் ஒரு வார்த்தை சொல்லுவதற்கு முன்பே வெட்கம் என் நெஞ்சில் விழுந்தது. எந்த அறிவரையும் தேவையில்லை. என் மனம் இன்னும் சொல்ல கட்டுக்கொள்ளாதது என் உடலியிருக்கனவே புரிந்துகொண்டது. குற்றமில்லாத ஒன்றைத் தூண்டாதே. ஆழமான பாடங்களைப் போதும் செய்வது போல, அந்த பாடம் விழக்கம என் பாட்டி வீட்டிருக்க, வீடுகளுக்கு நடிவில் ஒரு மாமரம் நின்றிருந்தது, அது அகலமானது, தாராலமானது, அதன் கிளைகள் குறையை நோக்கிப் பறவி இருந்தன, குழந்தைகள் ஏறுவதற்காக வேறு, அது வளர்ந்தது போல, என் தம்பினானும் அதில் ஏறி குறைக்கச் சென்று, ஆபத்தியென்பது வேறு யாருக்கோ நடக்கம ஓடுகள் பழையை வை தூசிப்படிந்தவை மேலிருந்து கீழை தெரிந்த சிறிய ஊர் யாரோ அண்ணியன் அனுப்பி அஞ்சல் அட்டைப் படம் போல தோன்றியது. ஒரு மதியம் என் பாட்டி அந்த மரத்தின் கீழை அமர்ந்து கூர்மையான இறும்புக் கட்டரால் பாக்கை வெட்டிக்கொண்டிருந்தார் என் தம்பியும் நானும் சகோதரகள அறிவை விட உடலில் ஆற்றல் அதிகமாக இருக்கும் வயது அது உள்க அவன குறைவானன் உடியில் நான் அந்தக் கட்டையிருந்தேன். அது அவன் முகத்தின் இடத்துப் பக்கத்திற்கு அறுகே பட்டது, ரத்தம் உடனே வந்தது என்ன அம்மா பயமும் கோபமும் கலந்த ஒரே மூச்சில் ஓடி வந்தார் நான் ஓடினேன் பலமணி நேரம் ஓ நான் என் உடலை சிரிதாகினேன் என் மூச்சை அமைதியாகினேன் நான் உளிந்திருந்த சிரியாயிடத்தை விடை என்னையே இன்னும் சிரிதாகிக் கொண்டேன். சிரியவனாகிவிட்டால் என் கை செய்ததைத் திரும்பப் பெறமுடியுமோ என்று குழந்தை என்னம் போல, உளிந்திருக்கும்போது ஒரு குழந்தைக் கற்றுக்கொள்வது வி ஆனால், அந்த சிறிய இடத்தில் உளிந்திருந்த சிறுவன் ஏதோ ஒன்றைப் பழகிக்கொண்டிருந்தான். பலா ஆண்டுகளுக்குப் பிறகு, இன்னொரு தீவில் உள்ள ஒரு சிறைக் கூடத்தில் வெளியார முடியாத ஆரைக்குள் உடலை எப்படி சிறியதாகக்குவதை என்பதை என உடல நினைவுகூரும். சிறைக்கு நீண்டகாளத்திற்கு முன் நான் இன்னும் குறையின் மேலிருந்தேன். உறைந்து கீழே அவர்களிடம் கத்திக்கொண்டிருந்தேன். அவன் விழுந்த இடையின் பழத்தால் அவர் தாழ்ந்துக் குணிந்து இருந்ததை இன்னும் பார்க்கிறேன். அவன் விழுந்த முழு இடையையும் தனது உடலால் சுமந்த வழை ஒரு தாயைப்பட்டி மனிதர்கள் பல விஷயங்களை சொல்ல காயமடிந்தவன் நான் அல்ல. சாட்சியாக இருந்தவன் நான். சில நேரங்களில் எல்லாவற்றிலும் நீந்த நினைவைக் சுமப்பது சாட்சியே என்பதை நான் பின்னர் கட்டிருக்கொண்டேன். இங்கே ஒரு சிறிய விஷயத்தைச் சேர்க்க விரும்பிகிறேன். ஏனெனில் இந்தப் புத்தகத்தின் மீதியெல்லாம் அதை நீங்கள் புரிந்துகொள்வதில்தான் நிற்கிறது. அந்தக்கந்து சிறிய ஆரம்பத்தரணங்கள், எடுக்கப்பட்ட முழு, உதைத்தமாடு, பரந்தகட்ட, விழந்த உடலைத்தான் தாங்கிய தாய், அவற்றில் ஒன் அந்த தரணங்களில் எதிலும் நான் மெதுவாக வடிவமைக்கப்பட்டு கொண்டிருந்தேன் என்பதை அப்போது புரிந்துகொள்ளவில்லை. இப்போது மட்டுமே 20 ஆண்டுகளுக்கும் மேலாகி மதிதரை கடலில் உள்ள ஒரு சிரிய தீவில் ஒரு மேசையிருக்கை அமர்ந்து எழுதும்போது என்ன நடந்துகொண்டிருந்தது என்பதை பார்க்க ம கட்டர் திரும்ப பெரமுடியாதன் உடியைக் கட்டுக்கொடுத்தது. என் அம்மாவின் முதித்தியாகத்தைக் கட்டுக்கொடுத்தது. உள் சாட்சி கட்டுக்கொண்டிருந்தது ஆனால் இன்னும் அமைதியாக அமரா அது கட்டைப்படுத்த படவில்லை அது பின்னர் தான் வரும் மிகவும் பின்னர் நான் இன்னும் கர்ப்பனை செய்யாத இடத்தில் நான் பேர்க்கூடக் கேட்டிராத ஒரு தீவில் நான் அங்கு வந்து செய்கிறேன் என்று அறியாத மனிதனுக்காக ஏற்கன"
+};
+const bookAudioUrls={en:'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/99885ce0-e839-4df7-b55f-13c6d13a4d12.mp3',ta:'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/24785943-5ad9-4ba2-b5b6-c3c2e6449f36.mp3'};
+
+function splitReaderPages(text,maxChars=1450){
+  const words=String(text||'').split(/\s+/);
+  const pages=[];let page='';
+  for(const w of words){
+    const next=(page? page+' ':'')+w;
+    if(next.length>maxChars && page){pages.push(page);page=w}
+    else page=next;
+  }
+  if(page)pages.push(page);
+  return pages.length?pages:[''];
+}
+
+function openBookReader(lang){
+  readerLang=lang==='ta'?'ta':'en';
+  readerPages=splitReaderPages(bookContent[readerLang],readerLang==='ta'?1100:1450);
+  try{
+    readerPageIndex=Number(localStorage.getItem('heartclearReaderPage:'+readerLang)||0);
+    readerFontSize=Number(localStorage.getItem('heartclearReaderFont')||18);
+  }catch(e){readerPageIndex=0;readerFontSize=18}
+  readerPageIndex=Math.max(0,Math.min(readerPages.length-1,readerPageIndex));
+  document.getElementById('readerLanguage').textContent=readerLang==='ta'?'Tamil':'English';
+  renderReader();
+  show('bookReader');
+}
+
+function renderReader(){
+  const page=document.getElementById('readerPage');
+  if(!page)return;
+  page.textContent=readerPages[readerPageIndex]||'';
+  page.style.fontSize=readerFontSize+'px';
+  document.getElementById('readerPageTop').textContent='Page '+(readerPageIndex+1);
+  document.getElementById('readerPageBottom').textContent=(readerPageIndex+1)+' / '+readerPages.length;
+  try{
+    localStorage.setItem('heartclearReaderPage:'+readerLang,String(readerPageIndex));
+    localStorage.setItem('heartclearReaderFont',String(readerFontSize));
+  }catch(e){}
+}
+
+function readerPrev(){if(readerPageIndex>0){readerPageIndex--;renderReader();window.scrollTo(0,0)}}
+function readerNext(){if(readerPageIndex<readerPages.length-1){readerPageIndex++;renderReader();window.scrollTo(0,0)}}
+function changeReaderFont(delta){
+  readerFontSize=Math.max(14,Math.min(28,readerFontSize+delta));
+  renderReader();
+}
+
+function renderBookCard(lang){
+  const isTamil=lang==='ta';
+  return '<div class="book-card">'+
+    '<div class="book-cover"><div class="book-kicker">HeartClear Library</div><b>Shadows of Truth</b><small>Chapter 1 · '+(isTamil?'Tamil':'English')+'</small></div>'+
+    '<div class="book-actions">'+
+      '<button class="primary" onclick="openBookAudio(\''+lang+'\')">Listen</button>'+
+      '<button onclick="openBookReader(\''+lang+'\')">Read</button>'+
+    '</div>'+
+  '</div>';
+}
+
+const bookAudioEl=document.getElementById('bookAudioEl');
+const bookSeek=document.getElementById('bookSeek');
+
+function openBookAudio(lang){
+  currentBookAudioLang=lang==='ta'?'ta':'en';
+  bookAudioEl.pause();
+  bookAudioEl.src=bookAudioUrls[currentBookAudioLang];
+  bookAudioEl.load();
+  document.getElementById('bookAudioLanguage').textContent=currentBookAudioLang==='ta'?'Tamil Audiobook':'English Audiobook';
+  document.getElementById('bookPlayBtn').textContent='Play';
+  try{
+    const t=Number(localStorage.getItem('heartclearBookPos:'+currentBookAudioLang)||0);
+    if(t>0) bookAudioEl.addEventListener('loadedmetadata',()=>{bookAudioEl.currentTime=Math.min(t,Math.max(0,bookAudioEl.duration-1));syncBookAudio()},{once:true});
+  }catch(e){}
+  setBookMediaSession();
+  show('bookAudio');
+}
+
+async function toggleBookAudio(){
+  if(bookAudioEl.paused){
+    try{await bookAudioEl.play()}catch(e){}
+  }else bookAudioEl.pause();
+  syncBookAudio();
+}
+
+function bookJump(delta){
+  if(!Number.isFinite(bookAudioEl.duration))return;
+  bookAudioEl.currentTime=Math.max(0,Math.min(bookAudioEl.duration,(bookAudioEl.currentTime||0)+delta));
+  syncBookAudio();
+}
+
+function setBookSpeed(value){
+  const rate=Number(value)||1;
+  bookAudioEl.playbackRate=rate;
+  try{localStorage.setItem('heartclearBookSpeed',String(rate))}catch(e){}
+}
+
+function syncBookAudio(){
+  const d=Number.isFinite(bookAudioEl.duration)?bookAudioEl.duration:0;
+  const t=bookAudioEl.currentTime||0;
+  bookSeek.max=d||100;bookSeek.value=t;
+  document.getElementById('bookElapsed').textContent=fmt(t);
+  document.getElementById('bookTotal').textContent=d?fmt(d):'00:00';
+  document.getElementById('bookPlayBtn').textContent=bookAudioEl.paused?'Play':'Pause';
+  if(t>5)try{localStorage.setItem('heartclearBookPos:'+currentBookAudioLang,String(t))}catch(e){}
+  if('mediaSession' in navigator && d>0){
+    try{
+      navigator.mediaSession.playbackState=bookAudioEl.paused?'paused':'playing';
+      navigator.mediaSession.setPositionState({duration:d,playbackRate:bookAudioEl.playbackRate||1,position:Math.min(t,Math.max(0,d-.01))});
+    }catch(e){}
+  }
+}
+
+function setBookMediaSession(){
+  if(!('mediaSession' in navigator))return;
+  try{
+    navigator.mediaSession.metadata=new MediaMetadata({
+      title:'Shadows of Truth · Chapter 1',
+      artist:'HeartClear',
+      album:currentBookAudioLang==='ta'?'Tamil Audiobook':'English Audiobook'
+    });
+    navigator.mediaSession.setActionHandler('play',()=>bookAudioEl.play());
+    navigator.mediaSession.setActionHandler('pause',()=>bookAudioEl.pause());
+    navigator.mediaSession.setActionHandler('seekbackward',details=>bookJump(-(details.seekOffset||30)));
+    navigator.mediaSession.setActionHandler('seekforward',details=>bookJump(details.seekOffset||30));
+  }catch(e){}
+}
+
+bookAudioEl.addEventListener('timeupdate',syncBookAudio);
+bookAudioEl.addEventListener('play',syncBookAudio);
+bookAudioEl.addEventListener('pause',syncBookAudio);
+bookAudioEl.addEventListener('loadedmetadata',()=>{
+  try{
+    const saved=Number(localStorage.getItem('heartclearBookSpeed')||1);
+    bookAudioEl.playbackRate=saved;
+    document.getElementById('bookSpeed').value=String(saved);
+  }catch(e){}
+  syncBookAudio();
+});
+bookSeek.addEventListener('input',()=>{
+  if(Number.isFinite(bookAudioEl.duration))bookAudioEl.currentTime=Number(bookSeek.value)||0;
+  syncBookAudio();
+});
+
 function openCollection(kind){
   const data={
     english:{
@@ -1558,7 +1825,10 @@ function openCollection(kind){
   document.getElementById('collectionKicker').textContent=data.kicker||'Library';
   document.getElementById('collectionTitle').textContent=data.title||'Library';
   document.getElementById('collectionDescription').textContent=data.description||'';
-  document.querySelector('#collectionList .empty-shelf strong').textContent=data.empty||'Ready for content';
+  const list=document.getElementById('collectionList');
+  if(kind==='english') list.innerHTML=renderBookCard('en');
+  else if(kind==='tamil') list.innerHTML=renderBookCard('ta');
+  else list.innerHTML='<div class="empty-shelf"><div class="empty-icon">◌</div><strong>'+escapeHtml(data.empty||'Ready for content')+'</strong><p>Only public-domain or properly licensed books will be added here.</p><span class="rights-pill">Rights-cleared content only</span></div>';
   show('collection');
 }
 
