@@ -1157,9 +1157,33 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
   color:#a99672;font-size:10px;line-height:1.5;text-align:left
 }
 
+
+/* Update available banner v53 */
+.update-banner{
+  position:fixed;left:14px;right:14px;top:calc(12px + env(safe-area-inset-top,0px));
+  z-index:180;display:none;align-items:center;gap:10px;
+  padding:10px 11px;border-radius:16px;
+  border:1px solid rgba(213,181,116,.18);
+  background:rgba(5,17,25,.97);box-shadow:0 16px 45px rgba(0,0,0,.40);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)
+}
+.update-banner.show{display:flex}
+.update-banner div{min-width:0;flex:1}
+.update-banner b{display:block;font-size:12px}
+.update-banner small{display:block;color:#8fa4ae;font-size:10px;margin-top:2px}
+.update-banner button{
+  border:0;border-radius:12px;padding:9px 11px;
+  background:linear-gradient(180deg,#dfbd80,#b98349);color:#07131b;
+  font:inherit;font-size:11px;font-weight:800
+}
+
 </style>
 </head>
 <body>
+<div class="update-banner" id="updateBanner">
+  <div><b>HeartClear updated</b><small>A newer version is ready.</small></div>
+  <button onclick="reloadHeartClear()">Refresh</button>
+</div>
 <div class="install-sheet" id="installSheet" role="dialog" aria-modal="true" aria-labelledby="installTitle">
   <div class="install-card">
     <div class="install-head">
@@ -1900,6 +1924,9 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
         <div><strong>Offline media</strong><small id="offlineStorageText">No saved media yet</small></div>
         <button class="offline-action" onclick="clearOfflineMedia()">Clear</button>
       </div>
+      <div class="setting-row">
+        <div><strong>Local time</strong><small id="deviceClockText">Checking device time…</small></div>
+      </div>
       <div class="setting-row" id="localContextSetting">
         <div><strong>Local context</strong><small id="localContextSettingText">Optional: use your location for current weather and daylight. HeartClear does not store exact coordinates.</small></div>
         <button class="offline-action" id="localContextBtn" onclick="toggleLocalContext()">Use location</button>
@@ -1910,7 +1937,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v52</div>
+    <div class="app-version">HeartClear · prototype v53</div>
   </div>
 </section>
 
@@ -3306,8 +3333,13 @@ const dailyNotes=[
   {title:'Do one ordinary thing completely.',text:'Walking, cooking, cleaning or making music can become practice when attention stays with the movement instead of rushing ahead.',source:'Human practice'}
 ]
 
+function localDateKey(){
+  const d=new Date();
+  return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();
+}
+
 function renderDailyNote(){
-  const day=Math.floor(Date.now()/86400000);
+  const day=localDateKey();
   const n=dailyNotes[day%dailyNotes.length];
   const t=document.getElementById('dailyNoteTitle');
   const x=document.getElementById('dailyNoteText');
@@ -3418,14 +3450,42 @@ function renderLocalContext(){
   }catch(e){}
 }
 
+function getDeviceLocalClock(){
+  const now=new Date();
+  let hour=now.getHours();
+  let minute=now.getMinutes();
+  let zone='';
+  try{
+    zone=Intl.DateTimeFormat().resolvedOptions().timeZone||'';
+    const parts=new Intl.DateTimeFormat(undefined,{
+      hour:'2-digit',minute:'2-digit',hourCycle:'h23'
+    }).formatToParts(now);
+    const hp=parts.find(x=>x.type==='hour');
+    const mp=parts.find(x=>x.type==='minute');
+    if(hp)hour=Number(hp.value);
+    if(mp)minute=Number(mp.value);
+  }catch(e){}
+  return {hour,minute,zone,date:now};
+}
+
 function setGreeting(){
   renderDailyNote();
-  const h=new Date().getHours();
+  const clock=getDeviceLocalClock();
+  const h=clock.hour;
   const g=h>=5&&h<12?'Good morning':h>=12&&h<17?'Good afternoon':h>=17&&h<21?'Good evening':'Good night';
-  const el=document.getElementById('timeGreeting'); if(el)el.textContent=g;
+  const el=document.getElementById('timeGreeting');
+  if(el)el.textContent=g;
+
+  const debug=document.getElementById('deviceClockText');
+  if(debug){
+    const hh=String(clock.hour).padStart(2,'0');
+    const mm=String(clock.minute).padStart(2,'0');
+    debug.textContent='Device time '+hh+':'+mm+(clock.zone?' · '+clock.zone:'');
+  }
 }
 
 function renderSettings(){
+  setGreeting();
   renderLocalContext();
   renderInstallSetting();
   const reduced=document.body.classList.contains('reduce-motion');
@@ -4032,6 +4092,15 @@ renderLocalContext();
 renderDashboard();
 renderSettings();
 
+const greetingRefreshTimer=setInterval(setGreeting,60000);
+window.addEventListener('focus',()=>{
+  setGreeting();
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.getRegistration('./').then(reg=>reg&&reg.update()).catch(()=>{});
+  }
+});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)setGreeting()});
+
 window.addEventListener('online',()=>{const n=document.getElementById('playerNote');if(n)n.textContent='Back online.'});
 window.addEventListener('offline',()=>{const n=document.getElementById('playerNote');if(n)n.textContent='Offline mode. Saved audio remains available.'});
 
@@ -4044,8 +4113,40 @@ document.addEventListener('visibilitychange',async()=>{
   }
 });
 
+let heartclearReloading=false;
+
+function showUpdateBanner(){
+  const b=document.getElementById('updateBanner');
+  if(b)b.classList.add('show');
+}
+
+function reloadHeartClear(){
+  heartclearReloading=true;
+  location.reload();
+}
+
 if('serviceWorker' in navigator){
-  window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{
+    if(!heartclearReloading)showUpdateBanner();
+  });
+
+  window.addEventListener('load',async()=>{
+    try{
+      const reg=await navigator.serviceWorker.register('./sw.js');
+      // Check for a newer worker when the app is opened or resumed.
+      reg.update().catch(()=>{});
+      if(reg.waiting)showUpdateBanner();
+      reg.addEventListener('updatefound',()=>{
+        const worker=reg.installing;
+        if(!worker)return;
+        worker.addEventListener('statechange',()=>{
+          if(worker.state==='installed' && navigator.serviceWorker.controller){
+            showUpdateBanner();
+          }
+        });
+      });
+    }catch(e){}
+  });
 }
 
 window.addEventListener('load',()=>{
