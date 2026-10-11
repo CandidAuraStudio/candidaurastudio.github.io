@@ -2668,6 +2668,7 @@ let chosenTitle='Morning · guided breath';
 let stepIndex=0;
 let scrubbing=false;
 let sleepStopAt=0;
+let sleepTimerFadeActive=false;
 let savedResumeTime=0;
 let sessionStartedAt=0;
 let sessionRecorded=false;
@@ -4814,7 +4815,8 @@ function applyPracticeVolume(){
 
 function updatePracticeSoundNotice(){
   const notice=document.getElementById('practiceSoundNotice');
-  if(notice)notice.hidden=!(audio.muted||audio.volume===0);
+  // Timed fade-to-zero is intentional, not a muted user preference.
+  if(notice)notice.hidden=!(audio.muted||Number(volume.value)===0);
 }
 
 function restorePracticeSound(){
@@ -4988,7 +4990,9 @@ function toggleOptions(){
 function setSleepTimer(value){
   const sec=Number(value)||0;
   sleepStopAt=sec>0 ? Math.min(chosenSeconds,(audio.currentTime||0)+sec) : 0;
-  document.getElementById('playerNote').textContent=sec>0 ? 'Will stop in '+fmt(sec)+'.' : 'Will stop at the end of the session.';
+  sleepTimerFadeActive=false;
+  applyPracticeVolume();
+  document.getElementById('playerNote').textContent=sec>0 ? 'Will fade out gently and stop in '+fmt(sec)+'.' : 'Will stop at the end of the session.';
 }
 
 function hcArtwork(){
@@ -5215,6 +5219,8 @@ function completeSession(completed=false){
   const t=completed?chosenSeconds:Math.max(0,Math.min(chosenSeconds,audio.currentTime||0));
   audio.pause();
   const pv=document.getElementById('practiceVisual'); if(pv)pv.pause();
+  sleepStopAt=0;sleepTimerFadeActive=false;
+  applyPracticeVolume();
   recordSession(completed);
   clearLastSession();
   // Do not keep the completed music recording as an unfinished meditation.
@@ -5352,6 +5358,8 @@ function restart(){
   const pv=document.getElementById('practiceVisual');
   if(pv){pv.pause();try{pv.currentTime=0}catch(e){}}
   sleepStopAt=0;
+  sleepTimerFadeActive=false;
+  applyPracticeVolume();
   document.getElementById('sleepTimer').value='0';
   try{localStorage.removeItem('clearWithinResume:'+chosenKicker)}catch(e){}
   document.getElementById('playerNote').textContent='Restarted. Press Play when ready.';
@@ -5373,12 +5381,27 @@ function sync(){
     loadNatureSound().catch(()=>{});
   }
 
-  if(sleepStopAt>0 && t>=sleepStopAt){
-    audio.pause();
-    sleepStopAt=0;
-    document.getElementById('sleepTimer').value='0';
-    document.getElementById('playerNote').textContent='Timer finished.';
+  if(sleepStopAt>0){
+    const left=sleepStopAt-t;
+    if(left<=0){
+      audio.pause();
+      sleepStopAt=0;
+      sleepTimerFadeActive=false;
+      applyPracticeVolume();
+      document.getElementById('sleepTimer').value='0';
+      document.getElementById('playerNote').textContent='Timer finished gently.';
+    }else if(left<=10 && !audio.paused){
+      // The last 10 seconds attenuate the audible level without modifying the saved slider value.
+      sleepTimerFadeActive=true;
+      const selected=Number(volume.value);
+      audio.volume=Math.max(0,Math.min(1,Number.isFinite(selected)?selected:.85))*Math.max(0,Math.min(1,left/10));
+    }else if(sleepTimerFadeActive){
+      sleepTimerFadeActive=false;
+      applyPracticeVolume();
+    }
   }
+
+
 
   // Never stop an instructor early because a listed duration differs from the file.
   if(t>20 && !audio.ended){
@@ -5441,7 +5464,10 @@ seek.addEventListener('input',()=>{
 });
 volume.addEventListener('input',()=>{
   if(playbackPhase==='nature')syncNature();
-  else audio.volume=Number(volume.value);
+  else if(sleepTimerFadeActive&&sleepStopAt>0){
+    const remaining=Math.max(0,sleepStopAt-(audio.currentTime||0));
+    audio.volume=Number(volume.value)*Math.min(1,remaining/10);
+  }else audio.volume=Number(volume.value);
   // Persist the selected level, not the temporary closing-fade attenuation.
   try{localStorage.setItem('sufiVolume',String(Number(volume.value)))}catch(e){}
 });
