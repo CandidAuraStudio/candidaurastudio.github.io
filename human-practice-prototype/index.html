@@ -1750,6 +1750,14 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
 #globalMini .global-mini-btn.primary{background:#fff!important;color:#081923!important}
 @media(max-width:420px){.hc-sound-row{gap:7px;padding:11px 9px;grid-template-columns:34px minmax(0,1fr) auto auto}.hc-sound-row .hc-track-mark{width:34px;height:34px}.hc-sound-icon-btn{width:38px;height:38px}.hc-track-info{width:30px;height:30px}}
 @media(prefers-reduced-motion:reduce){.hc-global-mini-progress span{transition:none}}
+
+.hc-time-chips{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}
+.hc-time-chips button{flex:1;min-width:65px;min-height:43px;padding:8px 10px;border:1px solid rgba(218,232,240,.2);border-radius:999px;background:rgba(14,36,47,.55);color:#e0e9ed;font:inherit;font-size:11px}
+.hc-time-chips button.active{background:#fff;color:#0b2230;border-color:#fff;font-weight:750}
+.hc-time-select-accessible{position:absolute!important;width:1px!important;height:1px!important;clip-path:inset(50%)!important;overflow:hidden!important}
+.hc-about-credits{margin:16px 0;border:1px solid rgba(220,234,240,.15);border-radius:14px;padding:13px 15px}
+.hc-about-credits summary{font-size:13px;cursor:pointer;min-height:29px;color:#e3edf0}
+.hc-about-credits p{font-size:12px;line-height:1.65;color:#b4c8d1}
 </style>
 </head>
 <body>
@@ -2714,6 +2722,12 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
     </span></div>
     <div id="hcMixLayers" class="hc-mix-layers"></div>
     <p id="hcMixStatus" class="hc-mix-status" role="status" aria-live="polite">Choose one to three layers, then start.</p>
+    <div class="hc-time-chips" id="hcMixTimerChips" aria-label="Mix listening timer">
+      <button class="active" data-time="0" onclick="hcSelectSoundsTimer(0)">Endless</button>
+      <button data-time="900" onclick="hcSelectSoundsTimer(900)">15 min</button>
+      <button data-time="1800" onclick="hcSelectSoundsTimer(1800)">30 min</button>
+      <button data-time="3600" onclick="hcSelectSoundsTimer(3600)">60 min</button>
+    </div>
     <div class="hc-mix-actions"><button class="hc-mix-start" id="hcMixPlayBtn" onclick="hcMixToggle()">Start mix</button><button class="hc-mix-stop" onclick="hcMixStop()">Stop</button></div>
     <div id="hcMixRecent" class="hc-mix-recent" hidden></div>
   </section>
@@ -2764,7 +2778,13 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
     </div>
     <div class="soundlab-continuity">
       <label for="soundLabDurationChoice">Listening time</label>
-      <select id="soundLabDurationChoice" onchange="setSoundLabDuration(this.value)">
+      <div class="hc-time-chips" id="hcSoundTimerChips" aria-label="Listening timer">
+        <button data-time="0" class="active" onclick="hcSelectSoundsTimer(0)">Endless</button>
+        <button data-time="900" onclick="hcSelectSoundsTimer(900)">15 min</button>
+        <button data-time="1800" onclick="hcSelectSoundsTimer(1800)">30 min</button>
+        <button data-time="3600" onclick="hcSelectSoundsTimer(3600)">60 min</button>
+      </div>
+      <select id="soundLabDurationChoice" onchange="setSoundLabDuration(this.value)" class="hc-time-select-accessible">
         <option value="0" selected>Endless</option>
         <option value="900">15 minutes</option>
         <option value="420">7 minutes</option>
@@ -2839,6 +2859,11 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
           </div>
         </div>
       </div>
+      <details class="hc-about-credits">
+        <summary>About · Credits &amp; listening information</summary>
+        <p>HeartClear's nature collection includes credited CC0 field recordings originally linked from BigSoundBank and an acoustic bansuri recording from Wikimedia Commons. Tap the information icon next to any sound for the source link, listed creator and licence. Some existing ambient recordings use a separate media host; their distribution rights are not confirmed by this information panel.</p>
+        <p>Listening is for enjoyment and relaxation, not medical treatment. Mobile browsers can suspend playback when an app is closed or the screen is locked. Downloaded media may work offline where available.</p>
+      </details>
       <div class="setting-row">
         <div><strong>Install HeartClear</strong><small>Add HeartClear to this device for a full-screen app experience.</small></div>
         <button class="offline-action" onclick="showInstallSheet(true)">Install</button>
@@ -5478,6 +5503,8 @@ soundLabAudio.addEventListener('loadedmetadata',()=>{
   const d=soundLabAudio.duration;
   if(Number.isFinite(d)&&d>0&&currentSoundKey!=='personal'){
     hcSoundDurations[currentSoundKey]=d;
+    soundLabTracks[currentSoundKey].duration=d;
+    if(hcSoundLoopSetting==='auto')hcSoundApplyLoop();
     document.querySelectorAll('[data-track-duration]').forEach(el=>{
       if(el.dataset.trackDuration===currentSoundKey)el.textContent=hcTrackDuration(currentSoundKey);
     });
@@ -5628,6 +5655,16 @@ function openSoundLab(){
 }
 
 let soundLabAutoNext=true;
+let hcSoundLoopSetting='auto';
+try{hcSoundLoopSetting=localStorage.getItem('heartclearSoundLoopV2')||'auto'}catch(e){}
+function hcSoundApplyLoop(){
+  const track=soundLabTracks[currentSoundKey]||soundLabTracks.horizon;
+  soundLabAudio.loop=hcSoundLoopSetting==='on'||(hcSoundLoopSetting==='auto'&&(track.duration||0)<300);
+  const button=document.getElementById('soundLoopBtn');
+  if(button){button.textContent=soundLabAudio.loop?'Loop on':'Loop off';button.classList.toggle('active',soundLabAudio.loop)}
+  updateSoundLabQueueStatus();
+}
+
 let soundLabListeningSeconds=0;
 let soundLabListeningLimit=0;
 let soundLabPlaybackStartedAt=0;
@@ -5640,8 +5677,16 @@ function setSoundLabDuration(value){
   soundLabClockCommit();
   soundLabListeningSeconds=0;
   soundLabListeningLimit=Math.max(0,Number(value)||0);
-  if(!soundLabAudio.paused)soundLabPlaybackStartedAt=Date.now();
+  if(!soundLabAudio.paused||hcMixRunning)soundLabPlaybackStartedAt=Date.now();
+  document.querySelectorAll('.hc-time-chips button').forEach(button=>{
+    const active=Number(button.dataset.time)===soundLabListeningLimit;
+    button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));
+  });
   updateSoundLabQueueStatus();
+}
+function hcSelectSoundsTimer(seconds){
+  const sel=document.getElementById('soundLabDurationChoice');if(sel)sel.value=String(seconds);
+  setSoundLabDuration(seconds);
 }
 function toggleSoundLabAutoNext(){
   soundLabAutoNext=!soundLabAutoNext;
@@ -5652,8 +5697,9 @@ function toggleSoundLabAutoNext(){
 }
 function updateSoundLabQueueStatus(){
   const btn=document.getElementById('soundLabAutoNextBtn'),msg=document.getElementById('soundLabQueueStatus');
-  if(btn){btn.textContent='Auto-play next: '+(soundLabAutoNext?'On':'Off');btn.setAttribute('aria-pressed',String(soundLabAutoNext))}
-  if(msg)msg.textContent=(soundLabAutoNext?'Next real recording plays when this one ends.':'This track stops when it ends.')+(soundLabListeningLimit?' Listening target: '+Math.round(soundLabListeningLimit/60)+' min.':' Continuous until you stop.');
+  if(btn){btn.textContent='Next track: '+(soundLabAutoNext?'On':'Off');btn.setAttribute('aria-pressed',String(soundLabAutoNext))}
+  if(msg)msg.textContent=(soundLabAudio.loop?'This recording loops continuously.':soundLabAutoNext?'Another sound plays when this one ends.':'The recording stops when it ends.')+
+    (soundLabListeningLimit?' Timer: '+Math.round(soundLabListeningLimit/60)+' min.':' Endless listening.');
 }
 async function playNextSoundLab(userInitiated=false){
   if(currentSoundKey==='personal'){
@@ -5725,8 +5771,7 @@ function openSoundTrack(key){
   document.getElementById('soundLabTitle').textContent=t.title;
   document.getElementById('soundLabDesc').textContent=t.desc;
   document.getElementById('soundLabTotal').textContent=fmt(t.duration);
-  document.getElementById('soundLoopBtn').textContent='Loop off';
-  document.getElementById('soundLoopBtn').classList.remove('active');
+  hcSoundApplyLoop();
   const timeChoice=document.getElementById('soundLabDurationChoice');
   soundLabListeningLimit=timeChoice?Math.max(0,Number(timeChoice.value)||0):0;
   updateSoundLabQueueStatus();
@@ -5791,14 +5836,9 @@ function soundLabJump(delta){
 }
 
 function toggleSoundLoop(){
-  soundLabAudio.loop=!soundLabAudio.loop;
-  if(soundLabAudio.loop){soundLabAutoNext=false;try{localStorage.setItem('heartclearAutoNext','0')}catch(e){}}
-  updateSoundLabQueueStatus();
-  const b=document.getElementById('soundLoopBtn');
-  if(b){
-    b.textContent=soundLabAudio.loop?'Loop on':'Loop off';
-    b.classList.toggle('active',soundLabAudio.loop);
-  }
+  hcSoundLoopSetting=soundLabAudio.loop?'off':'on';
+  try{localStorage.setItem('heartclearSoundLoopV2',hcSoundLoopSetting)}catch(e){}
+  hcSoundApplyLoop();
 }
 
 soundLabAudio.addEventListener('error',()=>{
