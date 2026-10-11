@@ -6,9 +6,9 @@
 <meta name="theme-color" content="#07131d">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Sufi Breath">
+<meta name="apple-mobile-web-app-title" content="HeartClear">
 <link rel="manifest" href="./manifest.webmanifest">
-<title>Sufi Breath — Stage 2</title>
+<title>HC · HeartClear</title>
 <style>
 :root{
   --sky1:#8eb8cf;--sky2:#5f8ba4;--sky3:#335f78;--deep:#173548;
@@ -689,7 +689,7 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
         <path d="M12 8.2v7.2M9.5 11.1h5" stroke="#7fb0c0" stroke-width="1.1" stroke-linecap="round"/>
       </svg>
     </div>
-    <div class="brand-copy"><strong>Clear Within</strong><span id="topContext">Home</span></div>
+    <div class="brand-copy"><strong>HC · HeartClear</strong><span id="topContext">Home</span></div>
   </div>
   <button class="top-action" onclick="show('settings')" aria-label="Settings">⋯</button>
 </div>
@@ -777,7 +777,7 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
       <video id="introVideo" muted playsinline preload="metadata"></video>
       <div class="intro-overlay">
         <div class="intro-copy">
-          <div class="kicker">Clear Within</div>
+          <div class="kicker">HC · HeartClear</div>
           <h2 id="introTitle">Settle</h2>
         </div>
         <button class="intro-skip" onclick="finishIntro()">Skip</button>
@@ -935,7 +935,7 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
 
 <section class="screen" id="settings">
   <div class="glass">
-    <div class="kicker">Clear Within</div>
+    <div class="kicker">HeartClear</div>
     <h2>Settings</h2>
     <p>Simple controls for how the app behaves on this device.</p>
 
@@ -953,7 +953,7 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">Clear Within · prototype v36</div>
+    <div class="app-version">HeartClear · prototype v37</div>
   </div>
 </section>
 
@@ -1053,7 +1053,7 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
     <div class="player-status" id="playerNote">Press Play when you are ready.</div>
     <button class="btn secondary" onclick="finish()" id="finishBtn">Finish</button>
   </div>
-  <div class="footer">Clear Within · audio starts only when you press Play</div>
+  <div class="footer">HeartClear · audio starts only when you press Play</div>
   <audio id="audio" preload="metadata"></audio>
 </section>
 
@@ -1357,7 +1357,7 @@ function setMediaSession(){
   try{
     navigator.mediaSession.metadata=new MediaMetadata({
       title:chosenTitle,
-      artist:'Clear Within',
+      artist:'HeartClear',
       album:chosenKicker
     });
     navigator.mediaSession.setActionHandler('play',()=>audio.play());
