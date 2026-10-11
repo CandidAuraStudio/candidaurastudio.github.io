@@ -4794,6 +4794,7 @@ async function playNextSoundLab(userInitiated=false){
 }
 function openSoundTrack(key){
   const t=soundLabTracks[key]||soundLabTracks.horizon;
+  hcStoreSoundLabPosition();
   currentSoundKey=key in soundLabTracks?key:'horizon';
 
   if(!audio.paused)audio.pause();
@@ -4802,7 +4803,6 @@ function openSoundTrack(key){
   if(!fearAudio.paused)fearAudio.pause();
   if(!humanSoundAudio.paused)humanSoundAudio.pause();
 
-  hcStoreSoundLabPosition();
   soundLabClockCommit();soundLabListeningSeconds=0;soundLabPlaybackStartedAt=0;
   soundLabPlayRequested=false;soundLabFallbackActive=false;
   soundLabAudio.pause();soundLabAudio.removeAttribute('src');soundLabAudio.load();
@@ -4894,10 +4894,10 @@ soundLabAudio.addEventListener('error',()=>{
   else if(st)st.textContent='Sound unavailable. Please retry when connected.';
 });
 function stopSoundLab(){
-  hcClearSoundBookmark();
   soundLabClockCommit();soundLabListeningSeconds=0;
   soundLabPlayRequested=false;
   soundLabAudio.pause();
+  hcClearSoundBookmark();
   soundLabAudio.currentTime=0;
   syncSoundLab();
 }
