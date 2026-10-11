@@ -1694,6 +1694,62 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
 .bottom-nav .nav-item{font-size:12px!important;min-height:54px!important;gap:4px!important}
 .bottom-nav .nav-item svg{width:21px;height:21px}
 @media(max-width:359px){.bottom-nav .nav-item{font-size:11px!important}}
+
+/* Sounds 1.1 — same surfaces, spacing, typography and movement as Home. */
+#soundLab{justify-content:flex-start;padding-bottom:110px}
+.hc-sounds-header{padding:13px 2px 1px}
+.hc-sounds-header .kicker,.hc-sounds-list-head .kicker,.hc-mix-card .kicker,.hc-credit-card .kicker{font-size:10px;letter-spacing:.12em;color:#cba96d}
+.hc-sounds-header h2{font-size:29px;letter-spacing:-.035em;margin:8px 0 5px}
+.hc-sounds-header p{font-size:13px;line-height:1.45;color:#b7c9d1;margin:0}
+.hc-sound-filters{display:flex;gap:7px;overflow-x:auto;padding:16px 0 12px;scrollbar-width:none}
+.hc-sound-filters::-webkit-scrollbar{display:none}
+.hc-sound-filters button{flex:0 0 auto;min-height:43px;padding:9px 15px;border:1px solid rgba(201,224,233,.18);background:rgba(9,27,38,.46);border-radius:999px;color:#d6e4e9;font:inherit;font-size:12px}
+.hc-sound-filters button.active{background:#fff;color:#112736;border-color:#fff;font-weight:700}
+.hc-mix-card{margin:2px 0 20px;padding:19px;border:1px solid rgba(202,227,235,.12);border-radius:23px;background:linear-gradient(150deg,rgba(17,41,54,.82),rgba(5,18,27,.88))}
+.hc-mix-heading{display:flex;justify-content:space-between;gap:12px;align-items:center}
+.hc-mix-heading h3{margin:7px 0 3px;font-size:20px}
+.hc-mix-heading p{color:#b5c5cd;font-size:12px;margin:0;line-height:1.4}
+.hc-mix-symbol{width:42px;height:42px;border-radius:50%;background:rgba(214,186,125,.12);color:#d9b980;display:grid;place-items:center;flex:none}
+.hc-mix-symbol svg{width:23px;height:23px}
+.hc-mix-layers{display:grid;gap:9px;margin:15px 0 9px}
+.hc-mix-layer{display:grid;grid-template-columns:minmax(85px,1fr) 1.2fr;align-items:center;gap:10px;min-height:50px;border:1px solid rgba(204,229,237,.1);background:rgba(7,23,33,.5);border-radius:13px;padding:9px 12px}
+.hc-mix-layer label{display:flex;align-items:center;gap:8px;font-size:12px;min-width:0}
+.hc-mix-layer input[type=checkbox]{width:18px;height:18px;accent-color:#d7b275}
+.hc-mix-layer input[type=range]{width:100%;accent-color:#d7b275}
+.hc-mix-layer input[type=range]:disabled{opacity:.3}
+.hc-mix-status{font-size:12px;line-height:1.5;color:#b7c7d0;min-height:19px;margin:10px 0 13px}
+.hc-mix-actions{display:flex;gap:9px}
+.hc-mix-actions button{min-height:46px;border-radius:13px;padding:10px 14px;font:inherit;font-weight:700}
+.hc-mix-start{background:linear-gradient(180deg,#e7c386,#c69354);color:#081923;border:0;flex:1}
+.hc-mix-stop{background:transparent;color:white;border:1px solid rgba(210,230,237,.22)}
+.hc-mix-recent{margin-top:12px;display:flex;align-items:center;gap:9px}
+.hc-mix-recent button{font:inherit;font-size:11px;color:#f1f5f6;border:1px solid rgba(210,231,240,.2);background:rgba(22,46,56,.5);border-radius:11px;padding:9px}
+.hc-sounds-list-head{display:flex;justify-content:space-between;align-items:center;margin:2px 2px 10px}
+.hc-sounds-list-head span{font-size:11px;color:#9fb2bb}
+.hc-sound-track-list{display:grid;gap:9px}
+.hc-sound-row{display:grid;grid-template-columns:40px minmax(0,1fr) auto auto;align-items:center;gap:10px;min-height:79px;padding:12px 13px;border:1px solid rgba(205,230,237,.11);border-radius:18px;background:rgba(6,20,29,.61)}
+.hc-sound-row .hc-track-mark{width:39px;height:39px;border-radius:12px;background:rgba(31,59,74,.52);color:#d5b67d;display:grid;place-items:center}
+.hc-track-mark svg{width:22px;height:22px;stroke:currentColor}
+.hc-sound-name{display:block;font-size:13px;font-weight:700;line-height:1.35}
+.hc-sound-sub{display:block;font-size:11px;color:#afc0c8;line-height:1.35;margin-top:3px}
+.hc-sound-length{font-size:11px;color:#cbb083;border:1px solid rgba(203,171,110,.16);padding:5px 6px;border-radius:9px;white-space:nowrap}
+.hc-sound-icon-btn{width:40px;height:40px;display:grid;place-items:center;flex:none;border-radius:50%;background:#fff;border:1px solid white;color:#0e2330}
+.hc-sound-icon-btn svg{width:17px;height:17px}
+.hc-track-info{width:32px;height:32px;flex:none;background:transparent;border:1px solid rgba(210,231,240,.25);border-radius:50%;color:#d0e0e6;font-size:13px}
+.hc-sound-row .hc-track-actions{display:flex;align-items:center;gap:6px}
+.hc-credit-backdrop[hidden]{display:none!important}
+.hc-credit-backdrop{position:fixed;z-index:165;inset:0;display:flex;align-items:flex-end;background:rgba(1,8,14,.73);padding:0 12px}
+.hc-credit-card{position:relative;width:100%;max-width:500px;margin:0 auto;background:#102936;border:1px solid rgba(215,235,243,.2);border-radius:22px 22px 0 0;padding:25px 21px calc(25px + env(safe-area-inset-bottom,0px))}
+.hc-credit-card h3{font-size:22px;margin:9px 0}
+.hc-credit-card p{font-size:13px;line-height:1.7;color:#d9e7ed;white-space:pre-line}
+.hc-credit-card a{display:block;color:#d7b376;font-size:13px;margin-top:18px;overflow-wrap:anywhere}
+.hc-credit-close{position:absolute;right:14px;top:12px;background:transparent;border:0;color:white;font-size:26px;min-width:44px;min-height:44px}
+#globalMini{flex-wrap:wrap}
+.hc-global-mini-progress{order:7;flex-basis:100%;height:3px;background:rgba(216,231,239,.16);border-radius:100px;overflow:hidden}
+.hc-global-mini-progress span{display:block;height:100%;background:#fff;width:0%;transition:width .2s linear}
+#globalMini .global-mini-btn.primary{background:#fff!important;color:#081923!important}
+@media(max-width:420px){.hc-sound-row{gap:7px;padding:11px 9px;grid-template-columns:34px minmax(0,1fr) auto auto}.hc-sound-row .hc-track-mark{width:34px;height:34px}.hc-sound-icon-btn{width:38px;height:38px}.hc-track-info{width:30px;height:30px}}
+@media(prefers-reduced-motion:reduce){.hc-global-mini-progress span{transition:none}}
 </style>
 </head>
 <body>
@@ -2991,6 +3047,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
   <button class="global-mini-btn primary" id="globalMiniPlay" onclick="toggleGlobalMedia()" aria-label="Pause or resume">Ⅱ</button>
   <button class="global-mini-btn" onclick="globalJump(10)" aria-label="Forward 10 seconds">10↷</button>
   <button class="global-mini-btn global-mini-stop" onclick="stopGlobalMedia()" aria-label="Stop playback">×</button>
+  <div class="hc-global-mini-progress" aria-hidden="true"><span id="hcGlobalMiniProgressFill"></span></div>
 </div>
 
 <div class="hc-home-sheet-backdrop" id="hcHomeSessionSheet" onclick="if(event.target===this)closeHomeSheets()">
