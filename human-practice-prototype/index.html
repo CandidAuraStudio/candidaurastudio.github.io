@@ -1151,7 +1151,7 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v40</div>
+    <div class="app-version">HeartClear · prototype v41</div>
   </div>
 </section>
 
@@ -1254,7 +1254,7 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
     <button class="btn secondary" onclick="finish()" id="finishBtn">Finish</button>
   </div>
   <div class="footer">HeartClear · audio starts only when you press Play</div>
-  <audio id="audio" preload="metadata"></audio>
+  <audio id="audio" preload="auto" playsinline></audio>
 </section>
 
 <nav class="bottom-nav" id="bottomNav" aria-label="Primary navigation">
@@ -1305,6 +1305,12 @@ const playCore=document.getElementById('playCore');
 const remainingEl=document.getElementById('remaining');
 const optionsPanel=document.getElementById('optionsPanel');
 const resumeCard=document.getElementById('resumeCard');
+
+try{
+  if('audioSession' in navigator && navigator.audioSession){
+    navigator.audioSession.type='playback';
+  }
+}catch(e){}
 
 function show(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
@@ -1740,8 +1746,17 @@ function setMediaSession(){
     });
     navigator.mediaSession.setActionHandler('play',async()=>{try{await audio.play();syncPracticeVisual(true)}catch(e){}});
     navigator.mediaSession.setActionHandler('pause',()=>{audio.pause();syncPracticeVisual()});
-    navigator.mediaSession.setActionHandler('seekbackward',()=>jump(-10));
-    navigator.mediaSession.setActionHandler('seekforward',()=>jump(10));
+    navigator.mediaSession.setActionHandler('seekbackward',details=>jump(-(details.seekOffset||10)));
+    navigator.mediaSession.setActionHandler('seekforward',details=>jump(details.seekOffset||10));
+    try{
+      navigator.mediaSession.setActionHandler('seekto',details=>{
+        if(typeof details.seekTime==='number'){
+          audio.currentTime=Math.max(0,Math.min(chosenSeconds,details.seekTime));
+          if(!document.hidden)syncPracticeVisual(true);
+          sync();
+        }
+      });
+    }catch(e){}
   }catch(e){}
 }
 
@@ -1945,6 +1960,10 @@ function fmt(sec){
 function syncPracticeVisual(force=false){
   const pv=document.getElementById('practiceVisual');
   if(!pv || !chosenVisualUrl)return;
+  if(document.hidden){
+    if(!pv.paused)pv.pause();
+    return;
+  }
   const target=Math.max(0,audio.currentTime||0);
   try{
     if(force || Math.abs((pv.currentTime||0)-target)>1.0){
@@ -2031,7 +2050,9 @@ function sync(){
   const wf=document.getElementById('waveform'); if(wf)wf.classList.toggle('playing',playing);
   const pv=document.getElementById('practiceVisual');
   if(pv && chosenVisualUrl){
-    if(playing){
+    if(document.hidden){
+      if(!pv.paused)pv.pause();
+    }else if(playing){
       if(Math.abs((pv.currentTime||0)-t)>1.5) syncPracticeVisual(true);
       else if(pv.paused) pv.play().catch(()=>{});
     }else if(!pv.paused){
@@ -2085,9 +2106,15 @@ document.querySelector('.player-orb').addEventListener('keydown',e=>{
   if(e.key==='Enter'||e.key===' '){e.preventDefault();togglePlay()}
 });
 document.addEventListener('visibilitychange',()=>{
-  if(document.hidden && audio.currentTime>20){
-    try{localStorage.setItem('clearWithinResume:'+chosenKicker,String(audio.currentTime))}catch(e){}
-    rememberLastSession(audio.currentTime);
+  const pv=document.getElementById('practiceVisual');
+  if(document.hidden){
+    if(pv && !pv.paused)pv.pause();
+    if(audio.currentTime>20){
+      try{localStorage.setItem('clearWithinResume:'+chosenKicker,String(audio.currentTime))}catch(e){}
+      rememberLastSession(audio.currentTime);
+    }
+  }else if(!audio.paused){
+    syncPracticeVisual(true);
   }
 });
 
@@ -2100,8 +2127,11 @@ renderDashboard();
 renderSettings();
 
 document.addEventListener('visibilitychange',async()=>{
-  if(document.visibilityState==='visible' && wakeLockEnabled && 'wakeLock' in navigator && !wakeLock){
-    try{wakeLock=await navigator.wakeLock.request('screen')}catch(e){}
+  if(document.visibilityState==='visible'){
+    if(wakeLockEnabled && 'wakeLock' in navigator && !wakeLock){
+      try{wakeLock=await navigator.wakeLock.request('screen')}catch(e){}
+    }
+    if(!audio.paused)syncPracticeVisual(true);
   }
 });
 
