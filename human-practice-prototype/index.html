@@ -429,7 +429,7 @@ body{overscroll-behavior-y:none}
   bottom:calc(10px + var(--safe-bottom));
   width:min(calc(100% - 24px),496px);
   height:68px;border-radius:23px;
-  display:grid;grid-template-columns:repeat(4,1fr);align-items:center;
+  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:center;
   background:rgba(5,16,24,.90);
   border:1px solid rgba(196,224,235,.10);
   box-shadow:0 24px 70px rgba(0,0,0,.48),inset 0 1px 0 rgba(255,255,255,.025);
@@ -441,6 +441,8 @@ body{overscroll-behavior-y:none}
   gap:5px;font:inherit;font-size:10px
 }
 .nav-item svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.8}
+.bottom-nav .nav-item{min-width:0;font-size:9px;white-space:nowrap}
+@media(max-width:370px){.bottom-nav .nav-item{font-size:8.5px;gap:4px}.bottom-nav .nav-item svg{width:19px;height:19px}}
 .nav-item.active{color:#dfbd80}
 .nav-item.active:after{
   content:"";position:absolute;bottom:6px;width:18px;height:2px;border-radius:999px;background:#d6ad6e
@@ -1787,14 +1789,10 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       <small>Chant · mindful sound · quiet attention</small>
     </button>
 
-    <button class="sacred-card" onclick="openSacred('open')">
-      <span class="sacred-symbol">○</span>
-      <b>Open Sound</b>
-      <small>Breath · humming · simple sound · silence</small>
-    </button>
+
   </div>
 
-  <div class="hub-note">Traditions stay separate and are not presented as doctrinally identical. Sound sessions use gentle, comfortable breathing rather than rapid breathing or long breath holds.</div>
+  <div class="hub-note">Sacred Sound contains tradition-specific practices. Find independent nature recordings and everyday ambient sounds in the Sounds tab.</div>
 </section>
 
 <section class="screen" id="sacredDetail">
@@ -1819,11 +1817,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       
     </div>
 
-    <div class="chakra-feature" id="openSoundFeatured">
-      <b>Sound Lab</b>
-      <small>Original HeartClear test sounds for quiet listening, humming and simple sound practice.</small>
-      <button onclick="openSoundLab()">Open Sound Lab</button>
-    </div>
+
 
     <div class="chakra-feature" id="hinduFeatured">
       <b>Chakra & Bija Sound</b>
@@ -1831,7 +1825,6 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       <button onclick="openChakraGuide()">Learn & Practice</button>
       <button onclick="openSoundTrack('mantra')" style="margin-top:8px">Play 8 min Mantra Bed</button>
       <button onclick="openOmVideo()" style="margin-top:8px">Play OM chanting video</button>
-      <button onclick="openSoundLab()" style="margin-top:8px">Nature sounds</button>
     </div>
 
     <div class="empty-shelf" style="margin-top:14px">
@@ -2029,14 +2022,15 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
 
 <section class="screen" id="soundLab">
   <div class="glass">
-    <button class="collection-back" onclick="show('sacredDetail')">‹ Sacred Sound</button>
-    <div class="kicker">Open Sound</div>
+    <div class="kicker">Nature · Ambient · Stillness</div>
     <h2>Sound Lab</h2>
-    <p>Simple original HeartClear sound beds for listening, humming or quiet reflection.</p>
+    <p>Everyday nature, ambience and quiet music—independent of religious traditions.</p>
+    <div class="hub-note" style="margin-top:12px">Birds · fire · rain · ocean · thunder · ambient beds · closing music</div>
+    <h3 style="font-size:17px;margin:20px 0 12px">Ambient &amp; Stillness</h3>
     <div class="soundlab-grid">
       <button class="soundlab-card" onclick="openSoundTrack('soft')"><span class="soundlab-icon">◌</span><span><b>Soft Hum</b><small>5 min · soft tonal bed</small></span><span class="soundlab-duration">5:00</span></button>
       <button class="soundlab-card" onclick="openSoundTrack('horizon')"><span class="soundlab-icon">≈</span><span><b>Horizon</b><small>7 min · slow ambient field</small></span><span class="soundlab-duration">7:00</span></button>
-      <button class="soundlab-card" onclick="openSoundTrack('mantra')"><span class="soundlab-icon">ॐ</span><span><b>Mantra Bed</b><small>8 min · steady chant background</small></span><span class="soundlab-duration">8:00</span></button>
+      <button class="soundlab-card" onclick="openSoundTrack('stillness2')"><span class="soundlab-icon">◌</span><span><b>Deep Sleep Stillness</b><small>2 min · closing music</small></span><span class="soundlab-duration">2:00</span></button>
       <button class="soundlab-card" onclick="openSoundTrack('deep')"><span class="soundlab-icon">○</span><span><b>Deep Stillness</b><small>17 min · long quiet ambient</small></span><span class="soundlab-duration">17:00</span></button>
     </div>
     <h3 style="font-size:20px;margin:20px 0 10px">Nature Sounds</h3>
@@ -2050,7 +2044,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       <button class="soundlab-card" onclick="openSoundTrack('storm')"><span class="soundlab-icon">◌</span><span><b>Storm</b><small>Rain and low rumble · 5 min</small></span><span class="soundlab-duration">5:00</span></button>
       <button class="soundlab-card" onclick="openSoundTrack('thunder')"><span class="soundlab-icon">⌁</span><span><b>Distant Thunder</b><small>Low thunder · 6 min</small></span><span class="soundlab-duration">6:00</span></button>
     </div>
-    <div class="hub-note">The Nature Weave mix is stored with HeartClear. Separate birds, fire and rain use credited CC0 field-recording links and require internet.</div>
+    <div class="hub-note">Nature Weave and the 2-minute Deep Sleep stillness preview are stored with HeartClear. Separate birds, fire and rain use credited CC0 field-recording links and require internet.</div>
     <div class="hub-note">Other Sound Lab beds are test sounds, not sacred recitations or medical-frequency claims.</div>
   </div>
 </section>
@@ -2115,7 +2109,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v66</div>
+    <div class="app-version">HeartClear · prototype v67</div>
   </div>
 </section>
 
@@ -2295,6 +2289,9 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
   </button>
   <button class="nav-item" data-nav="practices" onclick="navTo('practices',this)" aria-label="Meditation">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v9M7.5 12h9"/></svg><span>Meditation</span>
+  </button>
+  <button class="nav-item" data-nav="soundLab" onclick="navTo('soundLab',this)" aria-label="Sound Lab">
+    <svg viewBox="0 0 24 24"><path d="M2 12h2M6 9v6M10 5v14M14 8v8M18 3v18M22 10v4"/></svg><span>Sounds</span>
   </button>
   <button class="nav-item" data-nav="sacred" onclick="navTo('sacred',this)" aria-label="Sacred">
     <svg viewBox="0 0 24 24"><path d="M4 12h2M8 8v8M12 5v14M16 8v8M20 12h-2"/></svg><span>Sacred</span>
@@ -2716,7 +2713,7 @@ function show(id){
   const context={home:'Home',practices:'Meditation',human:'Human Practice',humanCategory:'Human Practice',returnJourney:'Observation',fearPractice:'Fear',fearPlayer:'Fear',soundLab:'Sound Lab',soundLabPlayer:'Sound Lab',library:'Library',collection:'Library',sacred:'Sacred Sound',sacredDetail:'Sacred Sound',history:'History',settings:'Settings'}[id]||'';
   const ctx=document.getElementById('topContext'); if(ctx)ctx.textContent=context;
 
-  if(['home','practices','library','sacred'].includes(id)){
+  if(['home','practices','soundLab','library','sacred'].includes(id)){
     document.querySelectorAll('.nav-item').forEach(btn=>btn.classList.toggle('active',btn.dataset.nav===id));
   }
 
@@ -3462,7 +3459,7 @@ function setBookMediaSession(){
   }catch(e){}
 }
 
-const soundLabTracks={"soft":{"title":"Soft Hum","duration":300,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/786c6ede-1f00-4a77-ac39-08e26610fb43.mp3","desc":"5 min · soft tonal bed"},"horizon":{"title":"Horizon","duration":420,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/1e7ed74c-05be-4554-af16-152684e0bad5.mp3","desc":"7 min · slow ambient field"},"mantra":{"title":"Mantra Bed","duration":480,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/24c10e62-fbde-483b-bb36-5646c5715d2d.mp3","desc":"8 min · steady chant background"},"deep":{"title":"Deep Stillness","duration":1020,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/e13e7587-23c0-408a-9f0c-b75177ce8fbe.mp3","desc":"17 min · long quiet ambient"},"nature":{"title":"Nature Weave","duration":180,"url":"","desc":"3 min · birds, streams, ocean, wind and fire"},"birds":{"title":"Birdsong","duration":246,"url":"https://bigsoundbank.com/UPLOAD/mp3/0999.mp3","desc":"4 min · CC0 birds waking"},"fire":{"title":"Fire Crackling","duration":60,"url":"https://bigsoundbank.com/UPLOAD/mp3/0031.mp3","desc":"1 min · CC0 fireplace recording"},"rain":{"title":"Rain","duration":78,"url":"https://bigsoundbank.com/UPLOAD/mp3/1290.mp3","desc":"1 min · CC0 rain recording"},"ocean":{"title":"Ocean","duration":300,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/dc0963fc-8949-4f65-a869-ab254907c829.mp3","desc":"5 min · steady ocean-like sound"},"storm":{"title":"Storm","duration":300,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/917da907-9dbf-4003-86fb-b6806b417fec.mp3","desc":"5 min · rain and low rumble"},"thunder":{"title":"Distant Thunder","duration":360,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/42bb9812-af88-49c0-8680-f2da5c032680.mp3","desc":"6 min · slow thunder swells"}};
+const soundLabTracks={"soft":{"title":"Soft Hum","duration":300,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/786c6ede-1f00-4a77-ac39-08e26610fb43.mp3","desc":"5 min · soft tonal bed"},"horizon":{"title":"Horizon","duration":420,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/1e7ed74c-05be-4554-af16-152684e0bad5.mp3","desc":"7 min · slow ambient field"},"mantra":{"title":"Mantra Bed","duration":480,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/24c10e62-fbde-483b-bb36-5646c5715d2d.mp3","desc":"8 min · steady chant background"},"deep":{"title":"Deep Stillness","duration":1020,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/e13e7587-23c0-408a-9f0c-b75177ce8fbe.mp3","desc":"17 min · long quiet ambient"},"nature":{"title":"Nature Weave","duration":180,"url":"","desc":"3 min · birds, streams, ocean, wind and fire"},"birds":{"title":"Birdsong","duration":246,"url":"https://bigsoundbank.com/UPLOAD/mp3/0999.mp3","desc":"4 min · CC0 birds waking"},"fire":{"title":"Fire Crackling","duration":60,"url":"https://bigsoundbank.com/UPLOAD/mp3/0031.mp3","desc":"1 min · CC0 fireplace recording"},"rain":{"title":"Rain","duration":78,"url":"https://bigsoundbank.com/UPLOAD/mp3/1290.mp3","desc":"1 min · CC0 rain recording"},"ocean":{"title":"Ocean","duration":300,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/dc0963fc-8949-4f65-a869-ab254907c829.mp3","desc":"5 min · steady ocean-like sound"},"storm":{"title":"Storm","duration":300,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/917da907-9dbf-4003-86fb-b6806b417fec.mp3","desc":"5 min · rain and low rumble"},"thunder":{"title":"Distant Thunder","duration":360,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/42bb9812-af88-49c0-8680-f2da5c032680.mp3","desc":"6 min · slow thunder swells"},"stillness2":{"title":"Deep Sleep Stillness","duration":120,"url":"./media/HeartClear_DeepSleep_Stillness_2min_PREVIEW.mp3","desc":"2 min · gentle closing music"}};
 let currentSoundKey='soft';
 const soundLabAudio=document.getElementById('soundLabAudio');
 const soundLabSeek=document.getElementById('soundLabSeek');
@@ -3601,8 +3598,7 @@ function openSacred(kind){
   if(featured) featured.classList.toggle('show',kind==='islamic');
   const hinduFeatured=document.getElementById('hinduFeatured');
   if(hinduFeatured) hinduFeatured.classList.toggle('show',kind==='hindu');
-  const openSoundFeatured=document.getElementById('openSoundFeatured');
-  if(openSoundFeatured) openSoundFeatured.classList.toggle('show',kind==='open');
+
   const empty=document.getElementById('sacredEmptyTitle');
   const emptyText=document.getElementById('sacredEmptyText');
   if(empty) empty.textContent=kind==='islamic'?'More listening':kind==='hindu'?'More mantra practice':'Sound practice';
