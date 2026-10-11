@@ -1662,6 +1662,38 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
   .hc-sounds-hub-grid{grid-template-columns:repeat(3,1fr)}
 }
 
+
+/* Home contrast and touch readability: preserve the current dark floating UI. */
+#home .hc-home-primary-btn,
+#home .hc-primary-resume button,
+.hc-home-sheet .hc-sheet-actions .primary{
+  background:#ffffff!important;color:#091b25!important;
+  border:1px solid #ffffff!important;
+  box-shadow:0 9px 28px rgba(255,255,255,.08)!important;
+}
+#home .hc-home-primary-btn:active,
+#home .hc-primary-resume button:active,
+.hc-home-sheet .hc-sheet-actions .primary:active{transform:scale(.99)}
+#home .hc-secondary-resume strong{font-size:15px;line-height:1.35}
+#home .hc-secondary-resume small{font-size:12px;line-height:1.4;color:#c0d0d7}
+#home .hc-secondary-resume .eyebrow{font-size:11px;line-height:1.25;color:#c3b08b}
+#home .hc-secondary-resume button{font-size:12px;min-height:44px;min-width:84px;padding:10px 14px}
+#home .hc-quick-tile{min-height:94px;padding:13px 10px}
+#home .hc-quick-tile b{font-size:13px;line-height:1.25}
+#home .hc-quick-tile small{font-size:11px;line-height:1.35;color:#b9c9d1}
+#home .hc-quick-tile span{font-size:14px}
+#home .hc-starter-card .eyebrow{font-size:11px}
+#home .hc-starter-card small{font-size:12px}
+#home .hc-starter-card button{min-height:44px;font-size:12px}
+#home .hc-home-section-head button{min-height:44px;font-size:12px;padding:9px 10px}
+#home .hc-sound-card{min-height:115px}
+#home .hc-sound-card b{font-size:14px}
+#home .hc-sound-card small{font-size:11px;line-height:1.45;color:#b9c9d1}
+#home .hc-daily-quiet p{font-size:12px;line-height:1.55}
+#home .hc-week-line b,#home .hc-week-line span{font-size:12px}
+.bottom-nav .nav-item{font-size:12px!important;min-height:54px!important;gap:4px!important}
+.bottom-nav .nav-item svg{width:21px;height:21px}
+@media(max-width:359px){.bottom-nav .nav-item{font-size:11px!important}}
 </style>
 </head>
 <body>
@@ -2790,7 +2822,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear meditation history only</button>
     </div>
-    <div class="app-version">HeartClear · Version 1.0.4</div>
+    <div class="app-version">HeartClear · Version 1.0.5</div>
   </div>
 </section>
 
@@ -6893,7 +6925,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=89');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=90');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
