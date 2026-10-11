@@ -1424,6 +1424,7 @@ body.reduce-motion .hc-quiet-disc{transition:none!important}
 .hc-private-media input[type=file]{width:100%;max-width:100%;font-size:12px;color:#fff;margin-top:8px}
 .hc-private-media video,.hc-private-media audio{display:block;width:100%;max-width:100%;margin:12px 0}
 .hc-private-media[hidden],.hc-private-media video[hidden],.hc-private-media audio[hidden]{display:none!important}
+#quietTimer .btn:not(.secondary),#starterPath .btn:not(.secondary){background:#fff!important;color:#0b2230!important;border-color:#fff!important}
 </style>
 </head>
 <body>
@@ -2450,7 +2451,7 @@ body.reduce-motion .hc-quiet-disc{transition:none!important}
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v79</div>
+    <div class="app-version">HeartClear · prototype v80</div>
   </div>
 </section>
 
@@ -6028,7 +6029,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=79');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=80');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
