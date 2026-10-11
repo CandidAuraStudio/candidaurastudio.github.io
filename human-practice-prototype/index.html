@@ -3594,7 +3594,8 @@ function show(id){
   const ba=document.getElementById('bookAudioEl');
   updateBookMini(id);
   if(id==='home'){setGreeting();renderDashboard();updateHomeOfflineCount();renderHeartClearFavourites();hcRenderSoundResume();}
-  if(id==='practices'||id==='soundLab')hcSyncDriveSections();
+  if(id==='practices')hcSyncDriveSections();
+  if(id==='soundLab'){hcRenderSoundRows();hcRenderMixer()}
   if(id==='history') renderHistory();
   if(id==='downloads') renderDownloads();
   if(id==='settings') renderSettings();
@@ -3626,7 +3627,7 @@ function getActiveMediaState(){
     {
       key:'soundlab',el:soundLabAudio,
       title:(soundLabTracks[currentSoundKey]||soundLabTracks.horizon).title,
-      meta:'Sound Lab · '+fmt(soundLabAudio.currentTime||0),
+      meta:'Sounds · '+fmt(soundLabAudio.currentTime||0),
       screen:'soundLabPlayer'
     },
     {
@@ -3713,6 +3714,7 @@ function toggleHeartClearFavourite(kind,key){
   if(existing>=0)current.splice(existing,1);else current.push({kind,key});
   try{localStorage.setItem(HC_FAVOURITES_KEY,JSON.stringify(current.slice(0,32)))}catch(e){}
   renderHeartClearFavourites();
+  if(hcSoundsCurrentFilter==='favourites')hcRenderSoundRows();
 }
 function openHeartClearFavourite(kind,key){
   if(kind==='soundlab'&&Object.prototype.hasOwnProperty.call(soundLabTracks,key)){
@@ -5366,8 +5368,112 @@ function hcClearPersonalNature(){
   show('soundLab');
 }
 
+
+/* Sounds 1.1 library: catalogue entries are source pointers, never embedded third-party media. */
+const hcSoundSections={
+  ambient:['horizon','stillness2','deep'],
+  flute:['organicBansuri'],
+  mixes:['nature'],
+  nature:['birds','fire','rain','ocean','storm','thunder','foreststream','treewind','windfield','nightforest','countryside','frogswater']
+};
+const hcSoundListKeys=[...hcSoundSections.mixes,...hcSoundSections.nature,...hcSoundSections.ambient,...hcSoundSections.flute];
+let hcSoundsCurrentFilter='all';
+const hcSoundDurations=Object.create(null);
+function hcSoundCategory(key){
+  return Object.keys(hcSoundSections).find(category=>hcSoundSections[category].includes(key))||'ambient';
+}
+function hcSoundCaption(key){
+  const titles={
+    horizon:'Soft ambient',stillness2:'Gentle closing music',deep:'Long-form ambience',organicBansuri:'Acoustic flute',
+    nature:'Nature blend',birds:'Morning birds',fire:'Crackling fireplace',rain:'Natural rainfall',ocean:'Ocean waves',
+    storm:'Rain and thunder',thunder:'A distant thunderclap',foreststream:'Forest stream',treewind:'Wind in leaves',
+    windfield:'Open field',nightforest:'Night woodland',countryside:'Rural ambience',frogswater:'Frogs and water'
+  };
+  return titles[key]||'Nature recording';
+}
+function hcTrackDuration(key){
+  const raw=hcSoundDurations[key]||soundLabTracks[key]?.duration||0;
+  return fmt(Math.max(0,Math.round(raw)));
+}
+function hcSoundSvg(kind){
+  // A single line icon family rather than unrelated decorative Unicode glyphs.
+  const p=kind==='flute'?'<path d="M5 18 19 5M8 15l2 2M12 11l2 2M16 7l2 2"/>'
+    :kind==='ambient'?'<path d="M3 10h2l2-5 4 13 3-9 2 4h5"/>'
+    :kind==='mixes'?'<path d="M4 7h16M4 12h16M4 17h16"/><path d="M9 5v4M15 10v4M11 15v4"/>'
+    :'<path d="M2 14c3-5 5 5 8 0s5-5 8 0 4 0 4 0M2 19c3-5 5 5 8 0s5-5 8 0 4 0 4 0"/>';
+  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+p+'</svg>';
+}
+function hcRenderSoundRows(){
+  const list=document.getElementById('hcSoundTrackList');if(!list)return;
+  list.replaceChildren();
+  const favs=getHeartClearFavourites();
+  const visible=hcSoundListKeys.filter(key=>{
+    if(hcSoundsCurrentFilter==='all')return true;
+    if(hcSoundsCurrentFilter==='favourites')return favs.some(v=>v.kind==='soundlab'&&v.key===key);
+    return hcSoundCategory(key)===hcSoundsCurrentFilter;
+  });
+  const count=document.getElementById('hcSoundCount');
+  if(count)count.textContent=visible.length+' recordings';
+  if(!visible.length){const empty=document.createElement('p');empty.className='hc-mix-status';empty.textContent='No recordings in this category yet.';list.append(empty)}
+  visible.forEach(key=>{
+    const track=soundLabTracks[key];if(!track)return;
+    const row=document.createElement('div');row.className='hc-sound-row';
+    const symbol=document.createElement('span');symbol.className='hc-track-mark';
+    symbol.innerHTML=hcSoundSvg(hcSoundCategory(key));
+    const words=document.createElement('div');
+    const title=document.createElement('b');title.className='hc-sound-name';title.textContent=track.title;
+    const caption=document.createElement('small');caption.className='hc-sound-sub';caption.textContent=hcSoundCaption(key);
+    words.append(title,caption);
+    const duration=document.createElement('span');duration.className='hc-sound-length';duration.textContent=hcTrackDuration(key);duration.dataset.trackDuration=key;
+    const actions=document.createElement('div');actions.className='hc-track-actions';
+    const info=document.createElement('button');info.type='button';info.className='hc-track-info';info.textContent='i';info.setAttribute('aria-label','Recording information for '+track.title);info.onclick=()=>hcShowSoundCredits(key);
+    const play=document.createElement('button');play.type='button';play.className='hc-sound-icon-btn';
+    play.innerHTML='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
+    play.setAttribute('aria-label','Open '+track.title);play.onclick=()=>openSoundTrack(key);
+    actions.append(info,play);row.append(symbol,words,duration,actions);list.append(row);
+  });
+}
+function hcFilterSounds(filter){
+  if(!['all','nature','ambient','flute','mixes','favourites'].includes(filter))filter='all';
+  hcSoundsCurrentFilter=filter;
+  document.querySelectorAll('#hcSoundFilters [data-filter]').forEach(button=>{
+    const yes=button.dataset.filter===filter;
+    button.classList.toggle('active',yes);button.setAttribute('aria-pressed',String(yes));
+  });
+  const card=document.getElementById('hcMixCard');
+  if(card)card.hidden=filter==='favourites'||filter==='flute'||filter==='ambient';
+  hcRenderSoundRows();
+}
+function hcShowSoundCredits(key){
+  const t=soundLabTracks[key];if(!t)return;
+  const external=t.url.startsWith('https://bigsoundbank.com/');
+  const original=t.sourcePage||t.url;
+  const kind=external?'BigSoundBank recording':t.sourcePage?'Wikimedia Commons recording':t.url.startsWith('./')||!t.url?'Included with HeartClear':'Existing HeartClear audio host';
+  const rights=external?'CC0, as identified in the original HeartClear catalogue':
+    t.license?t.license:'Rights and creator information not yet verified in this listing';
+  document.getElementById('hcSoundCreditTitle').textContent=t.title;
+  document.getElementById('hcSoundCreditInfo').textContent='Source: '+kind+
+    '\nCreator: '+(t.creator||'Not specified in this catalogue')+
+    '\nLicence: '+rights+'\nLength: '+hcTrackDuration(key);
+  const link=document.getElementById('hcSoundCreditSource');
+  link.hidden=!original;link.href=original||'#';link.textContent='View recording source ↗';
+  document.getElementById('hcSoundCreditSheet').hidden=false;
+}
+function hcHideSoundCredits(){document.getElementById('hcSoundCreditSheet').hidden=true}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')hcHideSoundCredits()});
+soundLabAudio.addEventListener('loadedmetadata',()=>{
+  const d=soundLabAudio.duration;
+  if(Number.isFinite(d)&&d>0&&currentSoundKey!=='personal'){
+    hcSoundDurations[currentSoundKey]=d;
+    document.querySelectorAll('[data-track-duration]').forEach(el=>{
+      if(el.dataset.trackDuration===currentSoundKey)el.textContent=hcTrackDuration(currentSoundKey);
+    });
+  }
+});
+
 function openSoundLab(){
-  hcSyncDriveSections();
+  hcRenderSoundRows();
+  hcRenderMixer();
   show('soundLab');
 }
 
