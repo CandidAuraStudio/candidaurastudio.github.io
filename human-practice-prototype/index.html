@@ -1266,6 +1266,10 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
 
   <div class="home-section">
     <div class="section-head"><h3>Start now</h3><button onclick="show('practices')">View all</button></div>
+    <div class="quick-practice" style="display:block;margin-bottom:12px">
+      <div><strong>Closing music test</strong><small>2-minute Deep Sleep stillness · press Play to listen</small></div>
+      <audio class="heartclear-stillness-audio" controls playsinline preload="metadata" src="./media/HeartClear_DeepSleep_Stillness_2min_PREVIEW.mp3" style="width:100%;margin:10px 0;display:block"></audio>
+    </div>
     <div class="quick-practice">
       <div><strong>Deep Wake Up</strong><small>Morning · guided breath</small></div>
       <button class="quick-start" onclick="startSettleQuick()" aria-label="Start Settle">▶</button>
@@ -1945,7 +1949,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v54</div>
+    <div class="app-version">HeartClear · prototype v55</div>
   </div>
 </section>
 
@@ -1971,6 +1975,13 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
     <h2>Stay for a moment.</h2>
     <p id="completionSummary">You practiced for 10 minutes.</p>
     <div class="completion-time" id="completionPractice">Deep Wake Up</div>
+    <div class="hub-note" style="margin:18px 0">
+      <b style="display:block;margin-bottom:8px">Continue in stillness</b>
+      <p>After the guided practice, stay in a comfortable position and listen gently. Press Play to start the closing soundtrack.</p>
+      <audio class="heartclear-stillness-audio" controls playsinline preload="metadata" src="./media/HeartClear_DeepSleep_Stillness_2min_PREVIEW.mp3" style="width:100%;margin:10px 0;display:block"></audio>
+      <div style="font-size:12px;margin-top:8px"><a href="./media/HeartClear_DeepSleep_Stillness_2min_PREVIEW.mp3" target="_blank" rel="noopener">Open 2-minute MP3 directly</a></div>
+      <div style="font-size:12px;margin-top:8px">Longer previews: <a href="https://drive.google.com/file/d/17WzV9SRm0EHqe4vWSAadEZq27GpEZYNa/view" target="_blank" rel="noopener">3 min</a> · <a href="https://drive.google.com/file/d/1q9ljNUjNyrptWvubnKrz3sNsYqO4CDqy/view" target="_blank" rel="noopener">5 min</a> (open in Drive)</div>
+    </div>
 
     <div class="reflection-label">What do you notice now? <span style="color:#6f858f">Optional</span></div>
     <div class="reflections" id="reflectionChips">
@@ -2343,6 +2354,10 @@ function show(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   const target=document.getElementById(id);
   if(target) target.classList.add('active');
+  // Avoid two preview tracks continuing when switching between Home and Completion.
+  document.querySelectorAll('.heartclear-stillness-audio').forEach(el=>{
+    if(!el.closest('.screen.active') && !el.paused)el.pause();
+  });
 
   const immersive=['sessionReady','intro','prep','instructions','player','completion','humanSession','sacredSession','bookAudio','bookReader','soundLabPlayer','fearPlayer'].includes(id);
   document.getElementById('bottomNav').classList.toggle('hidden',immersive);
