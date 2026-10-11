@@ -2043,7 +2043,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v58</div>
+    <div class="app-version">HeartClear · prototype v59</div>
   </div>
 </section>
 
@@ -2232,7 +2232,7 @@ let natureLastPosition=0;
 let naturePrefetchStarted=false;
 let natureAfterSeconds=180;
 try{
-  const savedNature=localStorage.getItem('heartclearNatureAfterSeconds');
+  const savedNature=localStorage.getItem('heartclearNatureAfterSecondsV2');
   if(savedNature!==null){
     const configured=Number(savedNature);
     if([0,120,180,300].includes(configured))natureAfterSeconds=configured;
@@ -2273,7 +2273,7 @@ function setNatureAfterSeconds(value){
   const next=Number(value);
   if(![0,120,180,300].includes(next))return;
   natureAfterSeconds=next;
-  try{localStorage.setItem('heartclearNatureAfterSeconds',String(next))}catch(e){}
+  try{localStorage.setItem('heartclearNatureAfterSecondsV2',String(next))}catch(e){}
   const sel=document.getElementById('natureAfterSeconds');
   if(sel)sel.value=String(next);
   const note=document.getElementById('natureAfterNote');
