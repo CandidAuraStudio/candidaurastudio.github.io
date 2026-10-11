@@ -1111,6 +1111,52 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
 }
 
 
+
+/* Fear Sound Familiarity v52 */
+.fear-hero{
+  padding:20px 18px;border-radius:24px;
+  background:linear-gradient(145deg,rgba(28,42,52,.86),rgba(7,17,25,.92));
+  border:1px solid rgba(202,226,234,.09)
+}
+.fear-hero h2{font-size:27px;margin-top:5px}
+.fear-levels{display:grid;gap:10px;margin-top:16px}
+.fear-card{
+  width:100%;display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:12px;align-items:center;
+  padding:14px;border-radius:18px;border:1px solid rgba(198,225,236,.08);
+  background:rgba(5,18,27,.46);color:var(--ink);font:inherit;text-align:left
+}
+.fear-card b{display:block;font-size:13px}
+.fear-card small{display:block;color:#8ca0a9;font-size:10px;line-height:1.45;margin-top:3px}
+.fear-level{
+  width:46px;height:46px;border-radius:14px;display:grid;place-items:center;
+  background:rgba(18,42,54,.72);border:1px solid rgba(200,226,234,.08);
+  color:#d5b477;font-size:11px;text-align:center
+}
+.fear-count{color:#b79b69;font-size:10px;text-align:right}
+.fear-player{text-align:center}
+.fear-orb{
+  width:118px;height:118px;margin:10px auto 18px;border-radius:50%;
+  border:1px solid rgba(210,231,237,.12);
+  background:radial-gradient(circle,rgba(69,113,129,.18),rgba(6,20,29,.88) 68%);
+  box-shadow:0 0 55px rgba(67,121,140,.12)
+}
+.fear-rating{margin-top:14px;padding:13px;border-radius:16px;background:rgba(5,18,27,.44);border:1px solid rgba(198,225,236,.07);text-align:left}
+.fear-rating b{font-size:11px}
+.fear-rating-row{display:flex;gap:7px;margin-top:9px}
+.fear-rating-row button{
+  flex:1;min-height:38px;border-radius:11px;border:1px solid rgba(198,225,236,.09);
+  background:rgba(15,38,49,.70);color:#9db0b8;font:inherit;font-size:11px
+}
+.fear-rating-row button.active{background:rgba(126,87,42,.18);border-color:rgba(215,181,116,.25);color:#e1c58f}
+.fear-volume{margin-top:14px;padding:13px;border-radius:16px;background:rgba(5,18,27,.44);border:1px solid rgba(198,225,236,.07);text-align:left}
+.fear-volume label{display:flex;justify-content:space-between;font-size:11px;color:#9aacb4}
+.fear-volume input{width:100%;margin-top:10px}
+.fear-warning{
+  margin-top:13px;padding:12px 13px;border-radius:15px;
+  background:rgba(103,74,42,.10);border:1px solid rgba(207,174,112,.12);
+  color:#a99672;font-size:10px;line-height:1.5;text-align:left
+}
+
 </style>
 </head>
 <body>
@@ -1373,6 +1419,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
     <button class="human-card" onclick="openHumanCategory('move')"><span class="human-symbol">↗</span><b>Movement</b><small>Walking · hands & fingers · gentle mobility</small></button>
     <button class="human-card" onclick="openHumanCategory('observe')"><span class="human-symbol">◉</span><b>Observation</b><small>Moon · sky · tree · horizon · one object</small></button>
     <button class="human-card" onclick="openHumanCategory('attention')"><span class="human-symbol">◎</span><b>Attention</b><small>Listen · look · speak with intention · phone down</small></button>
+    <button class="human-card" onclick="openFearPractice()"><span class="human-symbol">≈</span><b>Fear</b><small>Ocean · storm · distant thunder · gradual familiarity</small></button>
   </div>
   <div class="hub-note">Progress here means consistency and attention—not a score of how “awakened” someone is.</div>
 </section>
@@ -1398,6 +1445,89 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
     <div class="human-session-note" id="humanSessionNote">No multitasking. Notice rhythm, silence and what changes in your attention.</div>
     <button class="btn" id="humanStartBtn" onclick="toggleHumanTimer()">Start</button>
     <button class="btn secondary" onclick="completeHumanPractice()">Done</button>
+  </div>
+</section>
+
+<section class="screen" id="fearPractice">
+  <div class="glass">
+    <button class="collection-back" onclick="show('human')">‹ Human Practice</button>
+    <div class="fear-hero">
+      <div class="kicker">Human Practice · Fear</div>
+      <h2>Sound Familiarity</h2>
+      <p>Meet a sound gradually instead of avoiding it. Start with the easiest level and keep the volume comfortable.</p>
+    </div>
+
+    <div class="fear-levels" id="fearLevels">
+      <button class="fear-card" onclick="openFearTrack('ocean')">
+        <span class="fear-level">1<br>Easy</span>
+        <span><b>Ocean Familiarity</b><small>5 min · steady ocean-like sound</small></span>
+        <span class="fear-count" id="fearCountOcean">0 times</span>
+      </button>
+      <button class="fear-card" onclick="openFearTrack('storm')">
+        <span class="fear-level">2<br>Medium</span>
+        <span><b>Storm Familiarity</b><small>5 min · rain and low rumble</small></span>
+        <span class="fear-count" id="fearCountStorm">0 times</span>
+      </button>
+      <button class="fear-card" onclick="openFearTrack('thunder')">
+        <span class="fear-level">3<br>Strong</span>
+        <span><b>Distant Thunder</b><small>6 min · slow distant thunder swells</small></span>
+        <span class="fear-count" id="fearCountThunder">0 times</span>
+      </button>
+    </div>
+
+    <div class="fear-warning">Use this only for ordinary sound fear or discomfort. Start low. If the sound is connected to a traumatic event, severe panic, or you feel overwhelmed, stop and use a gentler practice instead.</div>
+  </div>
+</section>
+
+<section class="screen" id="fearPlayer">
+  <div class="glass fear-player">
+    <button class="collection-back" onclick="show('fearPractice')">‹ Fear</button>
+    <div class="fear-orb"></div>
+    <div class="kicker" id="fearLevelLabel">Easy</div>
+    <h2 id="fearTitle">Ocean Familiarity</h2>
+    <p id="fearDescription">5 min · steady ocean-like sound</p>
+
+    <div class="fear-rating">
+      <b>Before listening, how strong does the fear feel?</b>
+      <div class="fear-rating-row" id="fearBeforeRating">
+        <button onclick="setFearRating('before',0,this)">0</button>
+        <button onclick="setFearRating('before',1,this)">1</button>
+        <button onclick="setFearRating('before',2,this)">2</button>
+        <button onclick="setFearRating('before',3,this)">3</button>
+        <button onclick="setFearRating('before',4,this)">4</button>
+        <button onclick="setFearRating('before',5,this)">5</button>
+      </div>
+    </div>
+
+    <div class="fear-volume">
+      <label><span>Sound intensity</span><span id="fearVolumeLabel">25%</span></label>
+      <input id="fearVolume" type="range" min="10" max="60" value="25" step="5" oninput="setFearVolume(this.value)" aria-label="Fear practice sound intensity">
+    </div>
+
+    <input id="fearSeek" class="seek" type="range" min="0" max="300" value="0" step="0.1" aria-label="Fear practice position">
+    <div class="adhkar-times"><span id="fearElapsed">00:00</span><span id="fearTotal">05:00</span></div>
+
+    <div class="soundlab-transport">
+      <button onclick="fearJump(-10)">−10s</button>
+      <button class="primary" id="fearPlayBtn" onclick="toggleFearAudio()">Play</button>
+      <button onclick="fearJump(10)">+10s</button>
+    </div>
+
+    <div class="fear-rating">
+      <b>After listening, what is it now?</b>
+      <div class="fear-rating-row" id="fearAfterRating">
+        <button onclick="setFearRating('after',0,this)">0</button>
+        <button onclick="setFearRating('after',1,this)">1</button>
+        <button onclick="setFearRating('after',2,this)">2</button>
+        <button onclick="setFearRating('after',3,this)">3</button>
+        <button onclick="setFearRating('after',4,this)">4</button>
+        <button onclick="setFearRating('after',5,this)">5</button>
+      </div>
+    </div>
+
+    <button class="btn" onclick="finishFearPractice()">Finish practice</button>
+    <div class="fear-warning">You do not need to eliminate fear in one session. The goal is to notice that you can hear the sound safely and choose what to do next.</div>
+    <audio id="fearAudio" preload="auto" playsinline></audio>
   </div>
 </section>
 
@@ -1780,7 +1910,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v51</div>
+    <div class="app-version">HeartClear · prototype v52</div>
   </div>
 </section>
 
@@ -1957,6 +2087,9 @@ let readerPageIndex=0;
 let readerFontSize=18;
 let readerLang='en';
 let currentBookAudioLang='en';
+let currentFearKey='ocean';
+let fearBefore=null;
+let fearAfter=null;
 
 const audio=document.getElementById('audio');
 const seek=document.getElementById('seek');
@@ -2176,11 +2309,11 @@ function show(id){
   const target=document.getElementById(id);
   if(target) target.classList.add('active');
 
-  const immersive=['sessionReady','intro','prep','instructions','player','completion','humanSession','sacredSession','bookAudio','bookReader','soundLabPlayer'].includes(id);
+  const immersive=['sessionReady','intro','prep','instructions','player','completion','humanSession','sacredSession','bookAudio','bookReader','soundLabPlayer','fearPlayer'].includes(id);
   document.getElementById('bottomNav').classList.toggle('hidden',immersive);
   document.getElementById('appTopBar').classList.toggle('hidden',immersive);
 
-  const context={home:'Home',practices:'Meditation',human:'Human Practice',humanCategory:'Human Practice',returnJourney:'Observation',soundLab:'Sound Lab',soundLabPlayer:'Sound Lab',library:'Library',collection:'Library',sacred:'Sacred Sound',sacredDetail:'Sacred Sound',history:'History',settings:'Settings'}[id]||'';
+  const context={home:'Home',practices:'Meditation',human:'Human Practice',humanCategory:'Human Practice',returnJourney:'Observation',fearPractice:'Fear',fearPlayer:'Fear',soundLab:'Sound Lab',soundLabPlayer:'Sound Lab',library:'Library',collection:'Library',sacred:'Sacred Sound',sacredDetail:'Sacred Sound',history:'History',settings:'Settings'}[id]||'';
   const ctx=document.getElementById('topContext'); if(ctx)ctx.textContent=context;
 
   if(['home','practices','library','sacred'].includes(id)){
@@ -2220,6 +2353,12 @@ function getActiveMediaState(){
       title:(soundLabTracks[currentSoundKey]||soundLabTracks.soft).title,
       meta:'Sound Lab · '+fmt(soundLabAudio.currentTime||0),
       screen:'soundLabPlayer'
+    },
+    {
+      key:'fear',el:fearAudio,
+      title:(fearTracks[currentFearKey]||fearTracks.ocean).title,
+      meta:'Fear practice · '+fmt(fearAudio.currentTime||0),
+      screen:'fearPlayer'
     },
     {
       key:'book',el:bookAudioEl,
@@ -2281,6 +2420,8 @@ function globalJump(delta){
   if(state.key==='meditation')sync();
   else if(state.key==='adhkar')syncAdhkar();
   else if(state.key==='soundlab')syncSoundLab();
+  else if(state.key==='fear')syncFear();
+  else if(state.key==='fear')syncFear();
   else if(state.key==='book')syncBookAudio();
   renderGlobalMini();
 }
@@ -2410,6 +2551,157 @@ function saveReturnCheck(){
   renderReturnJourney();
   renderDashboard();
 }
+
+const fearTracks={"ocean":{"title":"Ocean Familiarity","level":"Easy","duration":300,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/dc0963fc-8949-4f65-a869-ab254907c829.mp3","desc":"5 min · steady ocean-like sound"},"storm":{"title":"Storm Familiarity","level":"Medium","duration":300,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/917da907-9dbf-4003-86fb-b6806b417fec.mp3","desc":"5 min · rain and low rumble"},"thunder":{"title":"Distant Thunder","level":"Stronger","duration":360,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/42bb9812-af88-49c0-8680-f2da5c032680.mp3","desc":"6 min · slow distant thunder swells"}};
+const fearAudio=document.getElementById('fearAudio');
+const fearSeek=document.getElementById('fearSeek');
+
+function getFearStats(){
+  try{return JSON.parse(localStorage.getItem('heartclearFearStats')||'{}')||{}}catch(e){return{}}
+}
+
+function renderFearStats(){
+  const s=getFearStats();
+  const map={ocean:'fearCountOcean',storm:'fearCountStorm',thunder:'fearCountThunder'};
+  Object.keys(map).forEach(k=>{
+    const el=document.getElementById(map[k]);
+    if(el){
+      const n=Number(s[k]?.count||0);
+      el.textContent=n+' time'+(n===1?'':'s');
+    }
+  });
+}
+
+function openFearPractice(){
+  renderFearStats();
+  show('fearPractice');
+}
+
+function openFearTrack(key){
+  const t=fearTracks[key]||fearTracks.ocean;
+  currentFearKey=key in fearTracks?key:'ocean';
+  fearBefore=null;fearAfter=null;
+
+  if(!audio.paused)audio.pause();
+  if(typeof bookAudioEl!=='undefined'&&!bookAudioEl.paused)bookAudioEl.pause();
+  if(typeof adhkarAudio!=='undefined'&&!adhkarAudio.paused)adhkarAudio.pause();
+  if(typeof soundLabAudio!=='undefined'&&!soundLabAudio.paused)soundLabAudio.pause();
+
+  fearAudio.pause();
+  fearAudio.src=t.url;
+  fearAudio.currentTime=0;
+  fearAudio.volume=.25;
+
+  document.getElementById('fearTitle').textContent=t.title;
+  document.getElementById('fearLevelLabel').textContent=t.level;
+  document.getElementById('fearDescription').textContent=t.desc;
+  document.getElementById('fearTotal').textContent=fmt(t.duration);
+  document.getElementById('fearVolume').value=25;
+  document.getElementById('fearVolumeLabel').textContent='25%';
+  document.querySelectorAll('#fearBeforeRating button,#fearAfterRating button').forEach(b=>b.classList.remove('active'));
+
+  setFearMediaSession();
+  show('fearPlayer');
+  syncFear();
+}
+
+function setFearRating(which,value,btn){
+  if(which==='before')fearBefore=value;
+  else fearAfter=value;
+  const wrap=document.getElementById(which==='before'?'fearBeforeRating':'fearAfterRating');
+  wrap.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+}
+
+function setFearVolume(value){
+  const v=Math.max(.10,Math.min(.60,Number(value)/100));
+  fearAudio.volume=v;
+  const label=document.getElementById('fearVolumeLabel');if(label)label.textContent=Math.round(v*100)+'%';
+}
+
+async function toggleFearAudio(){
+  if(fearAudio.paused){
+    try{await fearAudio.play();rememberActiveMedia('fear')}catch(e){}
+  }else fearAudio.pause();
+  syncFear();
+}
+
+function fearJump(delta){
+  const t=fearTracks[currentFearKey]||fearTracks.ocean;
+  const d=Number.isFinite(fearAudio.duration)?fearAudio.duration:t.duration;
+  fearAudio.currentTime=Math.max(0,Math.min(d,(fearAudio.currentTime||0)+delta));
+  syncFear();
+}
+
+function syncFear(){
+  const t=fearTracks[currentFearKey]||fearTracks.ocean;
+  const d=Number.isFinite(fearAudio.duration)?fearAudio.duration:t.duration;
+  const now=fearAudio.currentTime||0;
+  if(fearSeek){fearSeek.max=d;fearSeek.value=now}
+  document.getElementById('fearElapsed').textContent=fmt(now);
+  document.getElementById('fearTotal').textContent=fmt(d);
+  document.getElementById('fearPlayBtn').textContent=fearAudio.paused?'Play':'Pause';
+
+  if('mediaSession' in navigator&&d>0){
+    try{
+      navigator.mediaSession.playbackState=fearAudio.paused?'paused':'playing';
+      navigator.mediaSession.setPositionState({duration:d,playbackRate:1,position:Math.min(now,Math.max(0,d-.01))});
+    }catch(e){}
+  }
+}
+
+function setFearMediaSession(){
+  if(!('mediaSession' in navigator))return;
+  const t=fearTracks[currentFearKey]||fearTracks.ocean;
+  try{
+    navigator.mediaSession.metadata=new MediaMetadata({
+      title:t.title,
+      artist:'HeartClear',
+      album:'Human Practice · Fear',
+      artwork:hcArtwork()
+    });
+    navigator.mediaSession.setActionHandler('play',()=>{rememberActiveMedia('fear');return fearAudio.play()});
+    navigator.mediaSession.setActionHandler('pause',()=>{fearAudio.pause();renderGlobalMini()});
+    navigator.mediaSession.setActionHandler('seekbackward',details=>fearJump(-(details.seekOffset||10)));
+    navigator.mediaSession.setActionHandler('seekforward',details=>fearJump(details.seekOffset||10));
+  }catch(e){}
+}
+
+function finishFearPractice(){
+  fearAudio.pause();
+  const t=fearTracks[currentFearKey]||fearTracks.ocean;
+  const stats=getFearStats();
+  const existing=stats[currentFearKey]||{count:0};
+  stats[currentFearKey]={
+    count:Number(existing.count||0)+1,
+    lastAt:Date.now(),
+    before:fearBefore,
+    after:fearAfter
+  };
+  try{localStorage.setItem('heartclearFearStats',JSON.stringify(stats))}catch(e){}
+
+  const history=getHistory();
+  history.push({
+    practice:t.title,
+    title:'Fear',
+    category:'Fear',
+    listenedSeconds:Math.round(fearAudio.currentTime||0),
+    targetSeconds:t.duration,
+    completed:true,
+    endedAt:Date.now(),
+    reflection:(fearBefore!==null||fearAfter!==null)?('Before '+(fearBefore??'—')+' · After '+(fearAfter??'—')):''
+  });
+  saveHistory(history);
+  renderFearStats();
+  renderDashboard();
+  show('fearPractice');
+}
+
+fearAudio.addEventListener('timeupdate',syncFear);
+fearAudio.addEventListener('play',syncFear);
+fearAudio.addEventListener('pause',syncFear);
+fearAudio.addEventListener('loadedmetadata',syncFear);
+fearSeek.addEventListener('input',()=>{fearAudio.currentTime=Number(fearSeek.value)||0;syncFear()});
 
 const humanPracticeData={
   passion:{title:'Passion',icon:'♪',description:'Give full attention to something you care about.',items:[
@@ -2675,6 +2967,7 @@ function attachGlobalMiniEvents(el,key){
 attachGlobalMiniEvents(audio,'meditation');
 attachGlobalMiniEvents(adhkarAudio,'adhkar');
 attachGlobalMiniEvents(soundLabAudio,'soundlab');
+attachGlobalMiniEvents(fearAudio,'fear');
 attachGlobalMiniEvents(bookAudioEl,'book');
 
 bookAudioEl.addEventListener('timeupdate',syncBookAudio);
