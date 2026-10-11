@@ -1402,6 +1402,14 @@ body.reduce-motion .hc-quiet-disc{transition:none!important}
 .hc-quiet-options select{width:100%;min-height:44px;font:inherit;padding:9px;color:#fff;background:#112c3a;border-radius:11px;border:1px solid rgba(255,255,255,.25)}
 .hc-quiet-check{display:flex;align-items:center;gap:10px;font-size:13px}
 .hc-quiet-check input{width:20px;height:20px}
+
+.hc-mood-options{display:flex;flex-wrap:wrap;gap:8px;margin:9px 0 14px}
+.hc-mood-options button{border:1px solid rgba(255,255,255,.35);border-radius:12px;background:rgba(255,255,255,.08);color:#fff;padding:9px 12px;min-height:44px;font:inherit;font-size:13px}
+.hc-mood-options button[aria-pressed="true"]{background:#fff;color:#07131d;border-color:#fff}
+.hc-private-note{display:block;width:100%;min-height:76px;border-radius:12px;padding:12px;margin-top:12px;background:rgba(9,31,42,.48);color:#fff;font:inherit;border:1px solid rgba(255,255,255,.26)}
+.hc-mood-svg{width:100%;max-width:460px;display:block;margin:auto;height:auto}
+.hc-personal-settings{display:grid;gap:8px;margin-top:10px}
+.hc-personal-settings input[type=time]{background:#102e3c;color:white;border:1px solid rgba(255,255,255,.35);border-radius:12px;padding:10px;min-height:44px;font:inherit}
 </style>
 </head>
 <body>
@@ -1641,6 +1649,17 @@ body.reduce-motion .hc-quiet-disc{transition:none!important}
       </div>
     </div>
 
+    <div class="hc-personal" style="text-align:left;margin:16px 0">
+      <h3>Before you begin <small style="font-size:12px;color:#d5e5ec">· optional</small></h3>
+      <p>How do you feel right now? A private check-in, not a score.</p>
+      <div class="hc-mood-options" id="hcMoodBefore">
+        <button onclick="hcChooseBeforeMood('Calm')" aria-pressed="false">Calm</button>
+        <button onclick="hcChooseBeforeMood('Clear')" aria-pressed="false">Clear</button>
+        <button onclick="hcChooseBeforeMood('Restless')" aria-pressed="false">Restless</button>
+        <button onclick="hcChooseBeforeMood('Tired')" aria-pressed="false">Tired</button>
+        <button onclick="hcChooseBeforeMood('Unsure')" aria-pressed="false">Unsure</button>
+      </div>
+    </div>
     <div class="ready-help" id="readyDeviceHelp">Android: swipe down for Quick Settings → Do Not Disturb. iPhone: Control Center → Focus → Do Not Disturb.</div>
 
     <button class="btn" onclick="confirmSessionReady()">Quiet mode is on · Continue</button>
@@ -2353,6 +2372,18 @@ body.reduce-motion .hc-quiet-disc{transition:none!important}
         <button class="offline-action" id="localContextBtn" onclick="toggleLocalContext()">Use location</button>
       </div>
       <div class="setting-row">
+        <div style="width:100%">
+          <strong>Optional practice reminder</strong>
+          <small>Add a daily reminder to your own calendar. No account or app notifications are needed.</small>
+          <div class="hc-personal-settings">
+            <label for="hcReminderTime">Local time</label>
+            <input type="time" id="hcReminderTime" value="20:00">
+            <button class="offline-action" onclick="hcDownloadReminder()">Add to calendar</button>
+            <small id="hcReminderStatus" role="status">Your calendar controls the notification.</small>
+          </div>
+        </div>
+      </div>
+      <div class="setting-row">
         <div><strong>Install HeartClear</strong><small>Add HeartClear to this device for a full-screen app experience.</small></div>
         <button class="offline-action" onclick="showInstallSheet(true)">Install</button>
       </div>
@@ -2364,6 +2395,12 @@ body.reduce-motion .hc-quiet-disc{transition:none!important}
 
 <section class="screen" id="history">
   <div class="glass">
+    <div class="hc-personal" style="margin-top:0">
+      <h3>Weekly check-ins</h3>
+      <p>Optional mood words before and after meditation. These are observations, not grades. Stored only here.</p>
+      <svg class="hc-mood-svg" id="hcMoodTrend" viewBox="0 0 360 215" role="img" aria-label="Before and after check-ins in the last seven days"></svg>
+      <p id="hcMoodTrendText" class="player-status">No paired check-ins yet.</p>
+    </div>
     <div class="kicker">On this device</div>
     <h2>Your history</h2>
     <p>Your practice history stays in this browser. No account is required.</p>
@@ -2401,6 +2438,13 @@ body.reduce-motion .hc-quiet-disc{transition:none!important}
       <button class="reflection-chip" onclick="saveReflection('Nothing',this)">Nothing</button>
     </div>
 
+    <div class="hc-personal">
+      <h3>Private reflection <small style="font-size:12px">· optional</small></h3>
+      <label for="hcSessionNote" style="font-size:12px">One thing you noticed</label>
+      <textarea class="hc-private-note" id="hcSessionNote" maxlength="750" placeholder="Write a short note, or leave this empty."></textarea>
+      <button class="btn secondary" onclick="hcSavePrivateNote()" style="margin-top:10px">Save note on device</button>
+      <p id="hcNoteStatus" class="player-status" role="status"></p>
+    </div>
     <button class="btn" onclick="doneCompletion()">Done</button>
     <button class="btn secondary" onclick="repeatPractice()">Practice again</button>
   </div>
@@ -3137,6 +3181,81 @@ function openHeartClearFavourite(kind,key){
     if(card){card.click();return}
     show('practices');
   }
+}
+
+
+/* Private, optional check-ins: no mood scores, account or network. */
+let hcMoodBefore='',hcMoodLogged=false;
+const HC_MOOD_KEY='heartclearMoodPairsV1';
+function hcChooseBeforeMood(value){
+  hcMoodBefore=value;
+  document.querySelectorAll('#hcMoodBefore button').forEach(btn=>btn.setAttribute('aria-pressed',String(btn.textContent.trim()===value)));
+}
+function hcGetMoodPairs(){
+  try{const result=JSON.parse(localStorage.getItem(HC_MOOD_KEY)||'[]');return Array.isArray(result)?result:[]}catch(e){return[]}
+}
+function hcRecordMoodAfter(value){
+  if(hcMoodLogged||!hcMoodBefore)return;
+  const rows=hcGetMoodPairs();
+  rows.push({before:hcMoodBefore,after:value,date:Date.now(),meditation:chosenKicker});
+  try{localStorage.setItem(HC_MOOD_KEY,JSON.stringify(rows.slice(-120)))}catch(e){}
+  hcMoodLogged=true;
+}
+function hcRenderMoodTrend(){
+  const svg=document.getElementById('hcMoodTrend'),label=document.getElementById('hcMoodTrendText');
+  if(!svg||!label)return;
+  svg.replaceChildren();
+  const recent=hcGetMoodPairs().filter(x=>x.date>=Date.now()-7*86400000);
+  if(!recent.length){label.textContent='No paired check-ins in the past seven days.';return}
+  label.textContent=recent.length+' optional check-in'+(recent.length===1?'':'s')+' in the past week.';
+  const ns='http://www.w3.org/2000/svg',states=['Calm','Clear','Restless','Tired','Unsure'];
+  function elem(name,attrs,labelText){
+    const el=document.createElementNS(ns,name);Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,String(v)));
+    if(labelText!==undefined)el.textContent=labelText;svg.append(el);
+  }
+  const max=Math.max(1,...states.map(x=>Math.max(recent.filter(y=>y.before===x).length,recent.filter(y=>y.after===x).length)));
+  states.forEach((state,i)=>{
+    const y=12+i*37;
+    elem('text',{x:5,y:y+15,fill:'#f8fbfd','font-size':12},state);
+    const before=recent.filter(x=>x.before===state).length;
+    const after=recent.filter(x=>x.after===state).length;
+    elem('rect',{x:96,y,width:Math.round(before/max*200),height:11,rx:3,fill:'#9ab5c0'});
+    elem('rect',{x:96,y:y+14,width:Math.round(after/max*200),height:11,rx:3,fill:'#fff'});
+    elem('text',{x:305,y:y+11,fill:'#dbe7ec','font-size':11},String(before));
+    elem('text',{x:330,y:y+25,fill:'#fff','font-size':11},String(after));
+  });
+  elem('text',{x:94,y:206,fill:'#9ab5c0','font-size':10},'Grey: before');
+  elem('text',{x:215,y:206,fill:'#fff','font-size':10},'White: after');
+}
+function hcSavePrivateNote(){
+  const note=document.getElementById('hcSessionNote'),status=document.getElementById('hcNoteStatus');
+  if(!note||completionHistoryIndex<0){if(status)status.textContent='Complete a practice before saving a note.';return}
+  const history=getHistory();
+  if(history[completionHistoryIndex]){
+    history[completionHistoryIndex].privateNote=note.value.trim();
+    saveHistory(history);
+    if(status)status.textContent='Saved privately on this device.';
+  }else if(status)status.textContent='This session is no longer available to update.';
+}
+function hcDownloadReminder(){
+  const input=document.getElementById('hcReminderTime'),status=document.getElementById('hcReminderStatus');
+  const v=input?.value||'20:00',parts=v.split(':').map(Number);
+  if(parts.length!==2||parts[0]>23||parts[1]>59){status.textContent='Choose a valid reminder time.';return}
+  const d=new Date(),start=new Date(d.getFullYear(),d.getMonth(),d.getDate(),parts[0],parts[1]);
+  if(start<=d)start.setDate(start.getDate()+1);
+  const local=date=>[date.getFullYear(),String(date.getMonth()+1).padStart(2,'0'),String(date.getDate()).padStart(2,'0')].join('')+'T'+String(date.getHours()).padStart(2,'0')+String(date.getMinutes()).padStart(2,'0')+'00';
+  const uid='hc-reminder-'+Date.now()+'@heartclear.local';
+  const ics=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//HeartClear//Optional practice reminder//EN',
+   'BEGIN:VEVENT','UID:'+uid,'DTSTAMP:'+new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,''),
+   'DTSTART:'+local(start),'DURATION:PT10M','RRULE:FREQ=DAILY',
+   'SUMMARY:HeartClear quiet practice','DESCRIPTION:Optional time for your own practice. No obligation.',
+   'BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:HeartClear practice reminder','TRIGGER:PT0S','END:VALARM',
+   'END:VEVENT','END:VCALENDAR',''].join('\r\n');
+  const url=URL.createObjectURL(new Blob([ics],{type:'text/calendar;charset=utf-8'}));
+  const a=document.createElement('a');a.href=url;a.download='heartclear-optional-daily-reminder.ics';
+  document.body.append(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  status.textContent='Calendar file prepared. Open it to accept the reminder in your calendar app.';
 }
 
 function rememberActiveMedia(key){
@@ -4915,6 +5034,7 @@ function clearLocalHistory(){
       if(k.startsWith('clearWithinHistory')||k.startsWith('clearWithinResume:')||k==='clearWithinLastSession') localStorage.removeItem(k);
     });
   }catch(e){}
+  try{localStorage.removeItem(HC_MOOD_KEY)}catch(e){}
   renderDashboard();renderHistory();
 }
 
@@ -4926,6 +5046,8 @@ function choosePractice(seconds,url,kicker,title,introUrl,visualUrl){
   chosenUrl=url;
   chosenIntroUrl=introUrl || '';
   chosenVisualUrl=visualUrl || '';
+  hcMoodBefore='';hcMoodLogged=false;
+  document.querySelectorAll('#hcMoodBefore button').forEach(b=>b.setAttribute('aria-pressed','false'));
   chosenKicker=kicker || 'Practice';
   chosenTitle=title || 'Breathing practice';
   stepIndex=0;
@@ -5291,6 +5413,7 @@ function openHistory(){
 }
 
 function renderHistory(){
+  hcRenderMoodTrend();
   const items=getHistory().slice().reverse();
   const stats=last7DayStats();
   const a=document.getElementById('histWeekSessions');
@@ -5377,6 +5500,8 @@ function completeSession(completed=false){
   document.getElementById('completionSummary').textContent='You practiced for '+friendlyDuration(t)+'.';
   document.getElementById('completionPractice').textContent=chosenKicker;
   document.querySelectorAll('.reflection-chip').forEach(x=>x.classList.remove('selected'));
+  const memo=document.getElementById('hcSessionNote');if(memo)memo.value='';
+  const msg=document.getElementById('hcNoteStatus');if(msg)msg.textContent='';
   show('completion');
   renderDashboard();
 }
@@ -5391,6 +5516,7 @@ function friendlyDuration(sec){
 }
 
 function saveReflection(value,el){
+  hcRecordMoodAfter(value);
   document.querySelectorAll('.reflection-chip').forEach(x=>x.classList.remove('selected'));
   if(el)el.classList.add('selected');
   const items=getHistory();
