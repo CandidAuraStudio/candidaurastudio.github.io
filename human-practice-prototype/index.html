@@ -1293,6 +1293,11 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
 .player-inline-actions .offline-action{min-width:160px;font-weight:800}
 .player-offline-caption{margin-top:10px;font-size:11px;color:#bfd0d8;text-align:center;line-height:1.5}
 .player-offline-caption.ready{color:#e8f7f1}
+.practice-sound-notice{margin-top:12px;text-align:center;color:#edf4f7;font-size:12px}
+.practice-sound-notice[hidden]{display:none}
+.practice-sound-notice button{margin-left:8px;padding:8px 12px;border:0;border-radius:10px;background:#fff;color:#07131b;font:inherit;font-weight:700}
+#introPlayBtn{display:block;margin:12px auto 0;min-height:44px;padding:10px 18px;border:0;border-radius:14px;background:#fff;color:#07131b;font:inherit;font-weight:700}
+#introPlayBtn[hidden]{display:none}
 .home-offline-shortcut{margin:10px 0 14px;width:100%;display:flex;align-items:center;gap:12px;min-height:68px;padding:13px 15px;text-align:left;border-radius:18px;background:rgba(5,18,27,.72);border:1px solid rgba(212,231,239,.19);color:#f7fafb;font:inherit}
 .home-offline-icon{width:39px;height:39px;flex:0 0 39px;display:grid;place-items:center;background:#ffffff;color:#07131b;border-radius:12px;font-size:21px;font-weight:800}
 .home-offline-copy{min-width:0;flex:1}.home-offline-copy strong{display:block;font-size:14px}.home-offline-copy small{display:block;color:#afc3cd;font-size:11px;margin-top:4px}.home-offline-open{font-size:21px;color:#ffffff}
@@ -1564,7 +1569,8 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
         <button class="intro-skip" onclick="finishIntro()">Skip</button>
       </div>
     </div>
-    <p class="intro-note">The session begins here.</p>
+    <p class="intro-note" role="status">Visual introduction · guided audio starts next.</p>
+    <button id="introPlayBtn" onclick="startIntro()" hidden>Play introduction</button>
   </div>
 </section>
 
@@ -2214,7 +2220,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v76</div>
+    <div class="app-version">HeartClear · prototype v77</div>
   </div>
 </section>
 
@@ -2315,6 +2321,9 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       <button class="option-select" onclick="toggleOptions()">More options</button>
     </div>
     <div class="player-offline-caption" id="practiceOfflineStatus" role="status" aria-live="polite">Save guided audio to this device for offline listening.</div>
+    <div class="practice-sound-notice" id="practiceSoundNotice" role="status" hidden>
+      <span>Sound is off.</span><button id="restorePracticeSoundBtn" onclick="restorePracticeSound()">Restore sound</button>
+    </div>
 
     <div class="resume-card" id="resumeCard">
       <span id="resumeText">Continue where you left off?</span>
@@ -2558,7 +2567,7 @@ function finishNature(){
   audio.pause();
   audio.loop=false;
   playbackPhase='meditation';
-  audio.volume=Number(document.getElementById('volume').value)||.85;
+  applyPracticeVolume();
   completeSession(true);
 }
 
@@ -4488,21 +4497,44 @@ function confirmSessionReady(){
 
 let introShouldPlay=false;
 
+function applyPracticeVolume(){
+  const selected=Number(volume.value);
+  audio.volume=Number.isFinite(selected)?Math.max(0,Math.min(1,selected)):.85;
+}
+
+function updatePracticeSoundNotice(){
+  const notice=document.getElementById('practiceSoundNotice');
+  if(notice)notice.hidden=!(audio.muted||audio.volume===0);
+}
+
+function restorePracticeSound(){
+  audio.muted=false;
+  if(Number(volume.value)<=0)volume.value='0.85';
+  applyPracticeVolume();
+  try{localStorage.setItem('sufiVolume',String(audio.volume))}catch(e){}
+  updatePracticeSoundNotice();
+}
+
 function startIntro(){
   const v=document.getElementById('introVideo');
+  const retry=document.getElementById('introPlayBtn');
+  const note=document.querySelector('.intro-note');
+  retry.hidden=true;
+  if(note)note.textContent='Visual introduction · guided audio starts next.';
   document.getElementById('introTitle').textContent=chosenKicker;
   v.pause();
   v.src=chosenIntroUrl;
   v.currentTime=0;
   v.muted=false;
-  v.volume=Math.max(.35,Math.min(1,Number(audio.volume)||.85));
+  v.volume=Math.max(0,Math.min(1,Number(volume.value)));
   introShouldPlay=!!chosenIntroUrl;
   show('intro');
 
   if(chosenIntroUrl){
     v.play().catch(()=>{
-      const note=document.querySelector('.intro-note');
-      if(note)note.textContent='Tap the video once to begin.';
+      if(currentScreenId!=='intro'||!introShouldPlay)return;
+      retry.hidden=false;
+      if(note)note.textContent='Tap Play introduction to begin. Guided audio follows.';
     });
   }else{
     finishIntro();
@@ -4572,6 +4604,9 @@ function preparePlayer(){
   playbackPhase='meditation';
   audio.loop=false;
   audio.pause();
+  // A closing fade changes the element's volume, never the saved preference.
+  applyPracticeVolume();
+  updatePracticeSoundNotice();
   // Begin loading closing ambience after the guided audio starts.
   naturePrefetchStarted=false;
   setNatureAfterSeconds(natureAfterSeconds);
@@ -4930,7 +4965,7 @@ function syncPracticeVisual(force=false){
   const pv=document.getElementById('practiceVisual');
   if(!pv || !chosenVisualUrl)return;
   const pipActive=document.pictureInPictureElement===pv;
-  if(document.hidden && !pipActive){
+  if((document.hidden||currentScreenId!=='player') && !pipActive){
     if(!pv.paused)pv.pause();
     return;
   }
@@ -5052,16 +5087,7 @@ function sync(){
   playCore.textContent=playing?'❚❚':'▶';
   const wf=document.getElementById('waveform'); if(wf)wf.classList.toggle('playing',playing);
   const pv=document.getElementById('practiceVisual');
-  if(pv && chosenVisualUrl){
-    if(document.hidden){
-      if(!pv.paused)pv.pause();
-    }else if(playing){
-      if(Math.abs((pv.currentTime||0)-t)>1.5) syncPracticeVisual(true);
-      else if(pv.paused) pv.play().catch(()=>{});
-    }else if(!pv.paused){
-      pv.pause();
-    }
-  }
+  if(pv && chosenVisualUrl)syncPracticeVisual();
 
   if('mediaSession' in navigator && Number.isFinite(audio.duration) && audio.duration>0){
     try{
@@ -5106,8 +5132,10 @@ seek.addEventListener('input',()=>{
 volume.addEventListener('input',()=>{
   if(playbackPhase==='nature')syncNature();
   else audio.volume=Number(volume.value);
-  try{localStorage.setItem('sufiVolume',String(audio.volume))}catch(e){}
+  // Persist the selected level, not the temporary closing-fade attenuation.
+  try{localStorage.setItem('sufiVolume',String(Number(volume.value)))}catch(e){}
 });
+audio.addEventListener('volumechange',updatePracticeSoundNotice);
 try{
   const raw=localStorage.getItem('sufiVolume');
   const saved=raw===null?NaN:Number(raw);
@@ -5118,6 +5146,12 @@ setNatureAfterSeconds(natureAfterSeconds);
 setInterval(sync,500);
 
 const introVideo=document.getElementById('introVideo');
+introVideo.addEventListener('playing',()=>{
+  if(currentScreenId!=='intro'||!introShouldPlay)return;
+  document.getElementById('introPlayBtn').hidden=true;
+  const note=document.querySelector('.intro-note');
+  if(note)note.textContent='Visual introduction · guided audio starts next.';
+});
 introVideo.addEventListener('ended',finishIntro);
 introVideo.addEventListener('error',()=>{
   introShouldPlay=false;
@@ -5203,7 +5237,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=76');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=77');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
