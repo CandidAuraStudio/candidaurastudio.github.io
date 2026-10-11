@@ -1770,6 +1770,52 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
 .hc-route-icon{width:28px;height:28px;border-radius:10px;display:grid;place-items:center;color:#d5b77d;background:rgba(38,65,77,.45);flex:none}
 .hc-route-icon svg{width:18px;height:18px}
 @media(max-width:349px){.hc-sound-routes button{gap:7px;padding:10px 7px}}
+/* Shared floating SessionCard design, built on Home's glass styling. */
+#practices{padding-top:0}
+#practices .hc-practice-intro{padding-top:5px;margin-top:0}
+#practices .hc-practice-intro h2{margin:5px 0}
+#practices .hc-practice-intro p{margin:0 0 9px;color:#b8c9d1;font-size:12px}
+#practices .category-tabs{padding-top:5px;margin-bottom:10px}
+#practices .category-chip{font-size:12px;min-height:44px;display:inline-flex;align-items:center;gap:6px}
+#practices .hc-filter-num{font-size:10px;opacity:.72}
+#practices .hc-practice-group{margin:16px 0}
+#practices .hc-practice-group[hidden]{display:none!important}
+#practices .hc-group-heading{font-size:10px;letter-spacing:.11em;color:#c8a66c;margin:3px 1px 11px}
+#practices .hc-practice-group .library-list{display:grid;gap:10px}
+#practices .hc-shared-session{width:100%;background:linear-gradient(145deg,rgba(15,39,53,.9),rgba(5,18,28,.93));border:1px solid rgba(202,227,235,.13);border-radius:20px;box-shadow:0 15px 36px rgba(0,0,0,.18);min-height:96px;text-align:left}
+#practices .hc-shared-session .practice-art{display:grid;place-items:center}
+#practices .hc-art-center{position:relative;z-index:2;font-size:24px;color:#e3c48a;text-shadow:0 0 14px rgba(223,189,131,.24)}
+#practices [data-session="wake"] .practice-art{background:linear-gradient(145deg,#1b5061,#0b2734)}
+#practices [data-session="noon"] .practice-art{background:linear-gradient(145deg,#284968,#142338)}
+#practices [data-session="evening"] .practice-art{background:linear-gradient(145deg,#46364e,#181d32)}
+#practices [data-session="sleep"] .practice-art{background:linear-gradient(145deg,#273351,#090e22)}
+#practices [data-session="human"] .practice-art{background:linear-gradient(145deg,#355044,#12242b)}
+#practices [data-session="quiet5"] .practice-art{background:linear-gradient(145deg,#355b56,#102a30)}
+#practices [data-session="quiet10"] .practice-art{background:linear-gradient(145deg,#315469,#132533)}
+#practices [data-session="quiet20"] .practice-art{background:linear-gradient(145deg,#474756,#1a2231)}
+#practices .practice-copy b{font-size:15px}
+#practices .practice-copy small{font-size:11px;line-height:1.4;color:#b8c8d0}
+#practices .duration{font-size:12px;white-space:nowrap}
+#practices .hc-practice-markers{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+#practices .hc-practice-tag{border:1px solid rgba(205,227,236,.14);border-radius:99px;color:#c7d5db;background:rgba(4,17,26,.45);font-size:9px;padding:3px 6px}
+#practices .hc-practice-tag.is-now{border-color:rgba(225,190,118,.45);color:#e8ca94;background:rgba(119,82,36,.16)}
+#practices .hc-practice-timer{display:grid;grid-template-columns:43px minmax(0,1fr) auto;gap:11px;align-items:center;padding:13px;min-height:81px;margin-top:9px;border-radius:19px}
+#practices .hc-timer-thumb{width:43px;height:43px;display:grid;place-items:center;font-size:21px;border-radius:14px;border:1px solid rgba(220,239,245,.14);color:#d9bb84;background:rgba(38,65,77,.42)}
+#practices .hc-practice-timer b{display:block;font-size:14px}
+#practices .hc-practice-timer small{display:block;font-size:11px;color:#b5c5cd;line-height:1.3;margin-top:4px}
+#practices .hc-practice-timer button{min-height:44px;white-space:nowrap;border-radius:12px;background:#fff;color:#0a2432;border:0;padding:10px 12px;font:inherit;font-size:12px;font-weight:700}
+#hcHomeSessionSheet .hc-sheet-observe{color:#e0e8ec;font-size:13px;line-height:1.55;margin:12px 0 7px}
+#hcHomeSessionSheet .hc-sheet-safety{color:#b9c6ce;font-size:12px;line-height:1.5;margin:7px 0 15px}
+#hcHomeSessionSheet .hc-sheet-sleep-label{display:block;color:#d5e2e8;font-size:12px;margin:9px 0 6px}
+#hcHomeSessionSheet .hc-sheet-sleep{width:100%;min-height:44px;background:#122f3c;color:white;border:1px solid rgba(215,234,240,.3);border-radius:11px;padding:10px}
+.hc-timer-sheet-options{display:grid;gap:9px;margin:13px 0}
+.hc-timer-sheet-options label{color:#d2e0e6;font-size:12px}
+.hc-timer-sheet-options .hc-quiet-check{display:flex;align-items:center;gap:9px}
+.hc-timer-sheet-options .hc-quiet-check input{accent-color:#dfba78;flex:none}
+.hc-timer-sheet-options select{width:100%;background:#14303f;color:#fff;padding:9px;border-radius:10px;border:1px solid rgba(230,245,250,.24)}
+#hcHomeSessionSheet .hc-sheet-actions .primary{background:linear-gradient(180deg,#e6c687,#bd8e53)!important;color:#0b1720!important;border:0!important}
+#hcHomeSessionSheet .hc-sheet-actions .secondary[hidden]{display:none!important}
+@media(prefers-reduced-motion:reduce){#practices .practice-card{animation:none!important}}
 </style>
 </head>
 <body>
@@ -1913,57 +1959,51 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
 </section>
 
 <section class="screen practice-library" id="practices">
-  <header class="library-intro">
-    <div class="library-label">Meditation</div>
-    <h2 id="practiceHeading">Choose your time.</h2>
-    <p>Morning, noon, evening or night.</p>
-    <div class="category-tabs">
-      <button class="category-chip active" onclick="filterPractices('all',this)">All</button>
-      <button class="category-chip" onclick="filterPractices('short',this)">Short</button>
-      <button class="category-chip" onclick="filterPractices('deep',this)">Deep</button>
-      <button class="category-chip" onclick="filterPractices('sleep',this)">Sleep</button>
-      <button class="category-chip" onclick="filterPractices('human',this)">Human</button>
-    </div>
-  </header>
-
-  <div class="quick-practice" style="margin-bottom:14px"><div><strong>Quiet Timer</strong><small>Silence, soft bells or gentle breath pacing</small></div><button class="quick-start" onclick="openQuietTimer()" aria-label="Open quiet timer">▶</button></div>
-  <div class="library-list" aria-label="Available guided practices">
-    <button class="choice practice-card" data-kind="short" aria-label="Start Deep Wake Up, 10-minute morning practice" onclick="choosePractice(600,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/f4d262f6-56fe-40e3-84ea-930c11fe7c54.mp3','Deep Wake Up','Morning · guided breath','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/7fd8e8ee-cc5a-49c3-940b-6b4330a42c5e.mp4','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/d10879c1-d600-400c-999e-3237ec672b86.mp4')">
-      <span class="practice-art" aria-hidden="true"></span>
-      <span class="practice-copy"><b>Deep Wake Up</b><small>Morning · guided breath</small></span>
-      <span class="duration">10:00</span>
-    </button>
-
-    <button class="choice practice-card" data-kind="deep" aria-label="Start Noon Reset, 40-minute practice" onclick="choosePractice(2400,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/b7f691a0-16a1-4449-b143-38e7b3be74df.mp3','Noon Reset','Noon · guided breath','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/a71c8fd6-be58-4262-83ef-1469597b1630.mp4','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/40c72fc3-df5b-4dc9-a518-2ba3ab7f4ac3.mp4')">
-      <span class="practice-art" aria-hidden="true"></span>
-      <span class="practice-copy"><b>Noon Reset</b><small>Noon · guided breath</small></span>
-      <span class="duration">40:00</span>
-    </button>
-
-    <button class="choice practice-card" data-kind="release" aria-label="Start Evening Release, 60-minute practice" onclick="choosePractice(3600,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/93c0e1fe-0e8b-4e7e-9277-47edf8dd0b63.mp3','Evening Release','Evening · guided breath','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/12095b12-f0ae-4859-9b9b-cf28c8224987.mp4','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/c1a8df3c-dabd-4b96-ac42-92f57d3f1ce1.mp4')">
-      <span class="practice-art" aria-hidden="true"></span>
-      <span class="practice-copy"><b>Evening Release</b><small>Evening · guided breath</small></span>
-      <span class="duration">60:00</span>
-    </button>
-
-    <button class="choice practice-card" data-kind="sleep" aria-label="Start Deep Sleep, 60-minute night practice" onclick="choosePractice(3600,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/74f43c24-d734-4ace-b1d0-f1c3263cb299.mp3','Deep Sleep','Night · nose only','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/e4717cb6-dae0-4bce-a4c3-f1ccab0fb9bf.mp4','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/c8bffc30-9905-4e18-8321-e6ecbb597947.mp4')">
-      <span class="practice-art" aria-hidden="true"></span>
-      <span class="practice-copy"><b>Deep Sleep</b><small>Night · nose only</small></span>
-      <span class="duration">60:00</span>
-    </button>
-    <button class="choice practice-card" data-kind="human" aria-label="Open Human Practice" onclick="show('human')">
-      <span class="practice-art" aria-hidden="true"></span>
-      <span class="practice-copy"><b>Human Practice</b><small>Passion · movement · observation · attention</small></span>
-      <span class="duration">Life</span>
-    </button>
-  </div>
-  <div class="quick-practice" style="margin-top:15px"><div><strong>Nature sounds</strong><small>Birds, fire, ocean, rain and thunder</small></div><button class="quick-start" onclick="openSoundLab()" aria-label="Open nature library">▶</button></div>
-  <div style="padding:12px 16px;margin-top:14px">
-    <h3 style="font-size:18px;margin:12px 0">More guided videos · From Drive</h3>
-    <div id="hcMeditationDriveCards" class="soundlab-grid"></div>
-    <p class="library-footnote">These recordings are stored in Drive, not downloaded into HeartClear. Watch separately from the original guided exercises.</p>
-  </div>
-  <p class="library-footnote"><span aria-hidden="true">✦</span><span>Choose a session to see a few gentle instructions first. The audio starts only when you press Play.</span></p>
+<header class="library-intro hc-practice-intro"><div class="library-label">PRACTICE</div>
+<h2 id="practiceHeading">Choose your time.</h2><p>Guided listening and quiet moments, at your own pace.</p>
+<div class="category-tabs" aria-label="Filter practices">
+<button class="category-chip active" data-practice-filter="all" onclick="filterPractices('all',this)" aria-pressed="true">All <span class="hc-filter-num"></span></button>
+<button class="category-chip" data-practice-filter="short" onclick="filterPractices('short',this)" aria-pressed="false">Short <span class="hc-filter-num"></span></button>
+<button class="category-chip" data-practice-filter="deep" onclick="filterPractices('deep',this)" aria-pressed="false">Deep <span class="hc-filter-num"></span></button>
+<button class="category-chip" data-practice-filter="sleep" onclick="filterPractices('sleep',this)" aria-pressed="false">Sleep <span class="hc-filter-num"></span></button>
+<button class="category-chip" data-practice-filter="breath" onclick="filterPractices('breath',this)" aria-pressed="false">Breath <span class="hc-filter-num"></span></button>
+<button class="category-chip" data-practice-filter="human" onclick="filterPractices('human',this)" aria-pressed="false">Human <span class="hc-filter-num"></span></button>
+</div></header>
+<div class="hc-practice-timer hc-shared-session"><span class="hc-timer-thumb" aria-hidden="true">◷</span><span><b>Quiet Timer</b><small>Set your time · gentle bells optional</small></span><button onclick="openHomeTimerSheet('quiet',10)">Set time</button></div>
+<section class="hc-practice-group" data-group="guided"><div class="kicker hc-group-heading">GUIDED BREATH</div><div class="library-list">
+<button class="choice practice-card hc-shared-session" data-session="wake" data-kind="short" data-tags="short breath" aria-label="View Deep Wake Up session · 10 minutes" onclick="openHomeSessionSheet('Deep Wake Up')">
+ <span class="practice-art" aria-hidden="true"><span class="hc-art-center">☀</span></span>
+ <span class="practice-copy"><b>Deep Wake Up</b><small>Morning · guided breath</small><span class="hc-practice-markers" aria-hidden="true"></span></span>
+ <span class="duration">10:00</span>
+ </button>
+<button class="choice practice-card hc-shared-session" data-session="noon" data-kind="deep" data-tags="deep breath" aria-label="View Noon Reset session · 40 minutes" onclick="openHomeSessionSheet('Noon Reset')">
+ <span class="practice-art" aria-hidden="true"><span class="hc-art-center">◌</span></span>
+ <span class="practice-copy"><b>Noon Reset</b><small>Midday · longer guided practice</small><span class="hc-practice-markers" aria-hidden="true"></span></span>
+ <span class="duration">40:00</span>
+ </button>
+<button class="choice practice-card hc-shared-session" data-session="evening" data-kind="release" data-tags="deep breath" aria-label="View Evening Release session · 60 minutes" onclick="openHomeSessionSheet('Evening Release')">
+ <span class="practice-art" aria-hidden="true"><span class="hc-art-center">☾</span></span>
+ <span class="practice-copy"><b>Evening Release</b><small>Evening · guided practice</small><span class="hc-practice-markers" aria-hidden="true"></span></span>
+ <span class="duration">60:00</span>
+ </button>
+</div></section>
+<section class="hc-practice-group" data-group="short"><div class="kicker hc-group-heading">SHORT & FLEXIBLE · UNGUIDED</div><div class="library-list"><button class="choice practice-card hc-shared-session hc-quiet-card" data-session="quiet5" data-kind="short" data-tags="short breath" onclick="openHomeTimerSheet('quiet',5)" aria-label="Morning Quiet, 5 minute unguided timer">
+<span class="practice-art" aria-hidden="true"><span class="hc-art-center">☼</span></span>
+<span class="practice-copy"><b>Morning Quiet</b><small>Morning · unguided quiet</small></span><span class="duration">5:00</span></button>
+<button class="choice practice-card hc-shared-session hc-quiet-card" data-session="quiet10" data-kind="short" data-tags="short breath" onclick="openHomeTimerSheet('quiet',10)" aria-label="Midday Pause, 10 minute unguided timer">
+<span class="practice-art" aria-hidden="true"><span class="hc-art-center">◌</span></span>
+<span class="practice-copy"><b>Midday Pause</b><small>Noon · unguided attention</small></span><span class="duration">10:00</span></button>
+<button class="choice practice-card hc-shared-session hc-quiet-card" data-session="quiet20" data-kind="short" data-tags="short breath" onclick="openHomeTimerSheet('quiet',20)" aria-label="Evening Quiet, 20 minute unguided timer">
+<span class="practice-art" aria-hidden="true"><span class="hc-art-center">☾</span></span>
+<span class="practice-copy"><b>Evening Quiet</b><small>Evening · unguided quiet</small></span><span class="duration">20:00</span></button></div></section>
+<section class="hc-practice-group" data-group="sleep"><div class="kicker hc-group-heading">SLEEP</div><div class="library-list"><button class="choice practice-card hc-shared-session" data-session="sleep" data-kind="sleep" data-tags="sleep" aria-label="View Deep Sleep session · 60 minutes" onclick="openHomeSessionSheet('Deep Sleep')">
+ <span class="practice-art" aria-hidden="true"><span class="hc-art-center">✧</span></span>
+ <span class="practice-copy"><b>Deep Sleep</b><small>Night · restful listening</small><span class="hc-practice-markers" aria-hidden="true"></span></span>
+ <span class="duration">60:00</span>
+ </button></div></section>
+<section class="hc-practice-group" data-group="human"><div class="kicker hc-group-heading">HUMAN PRACTICE</div><div class="library-list">
+<button class="choice practice-card hc-shared-session" data-kind="human" data-session="human" data-tags="human" aria-label="Open Human Practice" onclick="show('human')"><span class="practice-art" aria-hidden="true"><span class="hc-art-center">✦</span></span><span class="practice-copy"><b>Human Practice</b><small>Movement · observation · attention</small></span><span class="duration">4 areas</span></button>
+</div></section>
 </section>
 
 <section class="screen" id="starterPath">
@@ -2896,7 +2936,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear meditation history only</button>
     </div>
-    <div class="app-version">HeartClear · Version 1.1.1</div>
+    <div class="app-version">HeartClear · Version 1.1.2</div>
   </div>
 </section>
 
@@ -3097,8 +3137,15 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
     <h3 id="hcHomeSheetTitle">Deep Sleep</h3>
     <p id="hcHomeSheetPurpose">A guided practice you can pause or stop at any time.</p>
     <p id="hcHomeSheetDuration">Duration · 60:00</p>
+    <p class="hc-sheet-observe" id="hcHomeSheetObserve">Notice what is happening around you.</p>
+    <p class="hc-sheet-safety" id="hcHomeSheetSafety">Breathe naturally. Stop if dizzy or uncomfortable; do not force or hold the breath.</p>
+    <label class="hc-sheet-sleep-label" for="hcHomeSheetSleep">Optional gentle stop</label>
+    <select id="hcHomeSheetSleep" class="hc-sheet-sleep" aria-label="Sleep timer">
+      <option value="0">At session end</option><option value="600">After 10 minutes</option><option value="1200">After 20 minutes</option><option value="1800">After 30 minutes</option>
+    </select>
     <div class="hc-sheet-actions">
       <button class="primary" onclick="beginHomeSheetPractice()">Begin</button>
+      <button class="secondary" id="hcHomeSheetResume" hidden onclick="hcBeginPracticeSheetResume()">Continue saved session</button>
       <button class="secondary" onclick="closeHomeSheets()">Not now</button>
     </div>
   </div>
@@ -3118,8 +3165,14 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
       <button data-min="20" onclick="selectHomeTimerMinutes(20,this)">20 min</button>
       <button data-min="30" onclick="selectHomeTimerMinutes(30,this)">30 min</button>
     </div>
+    <div class="hc-timer-sheet-options">
+      <label class="hc-quiet-check"><input type="checkbox" id="hcTimerSheetBell" checked> Opening and closing bell</label>
+      <label for="hcTimerSheetInterval">Interval bell</label>
+      <select id="hcTimerSheetInterval"><option value="0">None</option><option value="5">Every 5 minutes</option><option value="10">Every 10 minutes</option></select>
+      <label class="hc-quiet-check"><input type="checkbox" id="hcTimerSheetPacer"> Gentle breath pacing (no holds)</label>
+    </div>
     <div class="hc-sheet-actions">
-      <button class="primary" onclick="beginHomeTimer()">Begin</button>
+      <button class="primary" onclick="beginHomeTimer()">Set time</button>
       <button class="secondary" onclick="closeHomeSheets()">Cancel</button>
     </div>
   </div>
@@ -3635,7 +3688,7 @@ function show(id){
   const ba=document.getElementById('bookAudioEl');
   updateBookMini(id);
   if(id==='home'){setGreeting();renderDashboard();updateHomeOfflineCount();renderHeartClearFavourites();hcRenderSoundResume();}
-  if(id==='practices')hcSyncDriveSections();
+  if(id==='practices'){filterPractices(hcPracticeActiveFilter);}
   if(id==='soundLab'){hcRenderSoundRows();hcRenderMixer()}
   if(id==='history') renderHistory();
   if(id==='downloads') renderDownloads();
@@ -3905,7 +3958,7 @@ function hcStartPathActivity(){
   hcTimerModeChanged();document.getElementById('hcTimerClock').textContent=fmt(day.minutes*60);
  }else if(day.type==='sound')openSoundTrack(day.key);
  else if(day.type==='meditation'){
-   const card=hcMeditationCards().find(x=>x.querySelector('.practice-copy b')?.textContent?.trim()===day.key);
+   const card=hcFindPracticeCard(day.key);
    if(card)card.click();else show('practices');
  }else if(day.type==='human')openHumanCategory(day.category||'observe');
 }
@@ -5037,7 +5090,7 @@ function openOmVideo(){
   if(frame)frame.src='https://drive.google.com/file/d/11ogtK6FopRz-g8o-gHLY6-TV4fTJ5GjN/preview';
 }
 function closeOmVideo(){show('sacredDetail');openSacred('hindu')}
-const HC_DRIVE_COLLECTIONS=[{"key":"generalIndianRaga","name":"Indian Classical Raga · Long Listening","section":"general","type":"Indian classical music · uploader-described","id":"1Ec2jsCaK-7arZZBshGMjT0BCtcMNDyZW","note":"User describes this 451 MB Drive recording as Indian Raga music. Exact raga, performer and reuse rights remain unverified; categorized separately from Hindu devotional chanting."},{"key":"islamDhir120","name":"Islamic Dhikr · Extended Playlist","section":"islamic","type":"Devotional dhikr · 120 min","id":"1AJCfNPgTdq2cOc4rtjFcAh0ixnyKMm_C","note":"Two-hour video titled DHIKR with twelve remembrance phrases. The uploader, performance and reuse rights are not verified. Not Quran recitation."},{"key":"islamSufiDrum","name":"Sufi Devotional Music · Frame Drum","section":"islamic","type":"Sufi-style music · 52 min","id":"13HiHCfsS2EH5muCrp9-v-veKOEUraHdp","note":"Devotional-themed music with a frame-drum image. Exact instrumentation and reuse rights require independent verification. Not Quran recitation."},{"key":"hinduKrishnaFlute","name":"Krishna Flute · Long Listening","section":"hindu","type":"Hindu-inspired flute music · 66 min","id":"1jyI0O3Tib36sKTdhohU4iQ2CbUuSJLCc","note":"Video titled Cortisol Reset with Krishna playing flute. Cortisol claims are not medically verified. Original music and licence not verified."},{"key":"islamLa","name":"La Ilaha Illallah","section":"islamic","type":"Dhikr · uploaded recording","id":"1_TQu-U5o0mTKds6W-NliHq59QzZPYrkH","note":"Remembrance of God's oneness. Exact performance style not independently checked."},{"key":"islamHu","name":"Hu Hu Hu Allah","section":"islamic","type":"Sufi-style dhikr · uploaded recording","id":"11Sgca-PXcd4-5DRaPQPslynyc7QtkVYx","note":"Devotional remembrance. This is not labelled Quran recitation."},{"key":"islamNaat","name":"Taksim ve Naat-ı Mevlâna","section":"islamic","type":"Sufi devotional performance · instrumental and vocal","id":"1Tih27JXlqpkz5X_vfE2_vLO9EiD6JCEu","note":"Traditional devotional music. Not Quran recitation or a standalone dhikr instruction."},{"key":"islamMorning","name":"Morning Adhkar · Drive recording","section":"islamic","type":"Morning supplications · uploaded recording","id":"1nTyMwDveS6Z4gQDaEMb2MAfcbghpabgd","note":"Separate Drive video; the existing HeartClear Morning Adhkar audio is also preserved."},{"key":"hinduOm","name":"OM Chanting & Singing Bowls","section":"hindu","type":"OM contemplation · uploaded video","id":"11ogtK6FopRz-g8o-gHLY6-TV4fTJ5GjN","note":"Traditional OM practice with singing bowls. Frequency-related benefits are not medically verified."},{"key":"generalDuduk","name":"Echoes of the Divine · Duduk","section":"general","type":"Sufi-inspired instrumental · not dhikr","id":"1o7d2xUS53vM0NiJhe3M-GH6gfKHCJZ47","note":"Duduk meditation music with Rumi-inspired presentation; kept separate from Quran and dhikr."},{"key":"generalAmbient","name":"Inner Balance · Ambient Listening","section":"general","type":"Ambient music · uploaded recording","id":"1Lx_e-fTNlQx7q9aXuDqX23kZV24DkfR4","note":"Ambient listening only. Claims about 432Hz, 111Hz or healing are not endorsed."},{"key":"med15","name":"15-Minute Gentle Breathwork","section":"meditation","type":"Guided meditation video","id":"1Sk1zzpCcNvJ9tS7YgoLzIzENQ-J7yPk8","note":"Follow only comfortable, ordinary breathing; pause if uncomfortable."},{"key":"med60","name":"Transformational Breathwork Journey · 1 Hour","section":"meditation","type":"Long-form guided meditation video","id":"1pZ0q75WOiPkOxNSoNQVqqFj9Ehkk2hYV","note":"Previously uploaded long guided video, available as a standalone Drive session; stop if uncomfortable."},{"key":"medSleep","name":"Deep Sleep · Guided Breathing & Affirmations","section":"meditation","type":"Night listening · uploaded video","id":"1fPW6jZcgOcZFi0ZnDIfvCzIUepydS5V7","note":"A quiet night-time listening choice; no health outcome is guaranteed."}];
+const HC_DRIVE_COLLECTIONS=[{"key":"generalIndianRaga","name":"Indian Classical Raga · Long Listening","section":"general","type":"Indian classical music · uploader-described","id":"1Ec2jsCaK-7arZZBshGMjT0BCtcMNDyZW","note":"User describes this 451 MB Drive recording as Indian Raga music. Exact raga, performer and reuse rights remain unverified; categorized separately from Hindu devotional chanting."},{"key":"islamDhir120","name":"Islamic Dhikr · Extended Playlist","section":"islamic","type":"Devotional dhikr · 120 min","id":"1AJCfNPgTdq2cOc4rtjFcAh0ixnyKMm_C","note":"Two-hour video titled DHIKR with twelve remembrance phrases. The uploader, performance and reuse rights are not verified. Not Quran recitation."},{"key":"islamSufiDrum","name":"Sufi Devotional Music · Frame Drum","section":"islamic","type":"Sufi-style music · 52 min","id":"13HiHCfsS2EH5muCrp9-v-veKOEUraHdp","note":"Devotional-themed music with a frame-drum image. Exact instrumentation and reuse rights require independent verification. Not Quran recitation."},{"key":"hinduKrishnaFlute","name":"Krishna Flute · Long Listening","section":"hindu","type":"Hindu-inspired flute music · 66 min","id":"1jyI0O3Tib36sKTdhohU4iQ2CbUuSJLCc","note":"Video titled Cortisol Reset with Krishna playing flute. Cortisol claims are not medically verified. Original music and licence not verified."},{"key":"islamLa","name":"La Ilaha Illallah","section":"islamic","type":"Dhikr · uploaded recording","id":"1_TQu-U5o0mTKds6W-NliHq59QzZPYrkH","note":"Remembrance of God's oneness. Exact performance style not independently checked."},{"key":"islamHu","name":"Hu Hu Hu Allah","section":"islamic","type":"Sufi-style dhikr · uploaded recording","id":"11Sgca-PXcd4-5DRaPQPslynyc7QtkVYx","note":"Devotional remembrance. This is not labelled Quran recitation."},{"key":"islamNaat","name":"Taksim ve Naat-ı Mevlâna","section":"islamic","type":"Sufi devotional performance · instrumental and vocal","id":"1Tih27JXlqpkz5X_vfE2_vLO9EiD6JCEu","note":"Traditional devotional music. Not Quran recitation or a standalone dhikr instruction."},{"key":"islamMorning","name":"Morning Adhkar · Drive recording","section":"islamic","type":"Morning supplications · uploaded recording","id":"1nTyMwDveS6Z4gQDaEMb2MAfcbghpabgd","note":"Separate Drive video; the existing HeartClear Morning Adhkar audio is also preserved."},{"key":"hinduOm","name":"OM Chanting & Singing Bowls","section":"hindu","type":"OM contemplation · uploaded video","id":"11ogtK6FopRz-g8o-gHLY6-TV4fTJ5GjN","note":"Traditional OM practice with singing bowls. Frequency-related benefits are not medically verified."},{"key":"generalDuduk","name":"Echoes of the Divine · Duduk","section":"general","type":"Sufi-inspired instrumental · not dhikr","id":"1o7d2xUS53vM0NiJhe3M-GH6gfKHCJZ47","note":"Duduk meditation music with Rumi-inspired presentation; kept separate from Quran and dhikr."},{"key":"generalAmbient","name":"Inner Balance · Ambient Listening","section":"general","type":"Ambient music · uploaded recording","id":"1Lx_e-fTNlQx7q9aXuDqX23kZV24DkfR4","note":"Ambient listening only. Claims about 432Hz, 111Hz or healing are not endorsed."}];
 let hcDriveActiveKey=null;
 let hcDriveBackScreen='sacredDetail';
 function hcDriveSourceUrl(id){return 'https://drive.google.com/file/d/'+encodeURIComponent(id)+'/view';}
@@ -6092,13 +6145,59 @@ function setAdhkarMode(mode){
 }
 
 
-function filterPractices(kind,btn){
-  document.querySelectorAll('.category-chip').forEach(x=>x.classList.remove('active'));
-  if(btn)btn.classList.add('active');
-  document.querySelectorAll('.practice-card').forEach(card=>{
-    const match=kind==='all'||card.dataset.kind===kind||(kind==='deep'&&card.dataset.kind==='release');
-    card.classList.toggle('is-hidden',!match);
+/* Original guided audio is preserved exactly; short quiet timers never truncate narration. */
+function hcStartExistingGuidedSession(key){
+ switch(key){
+  case 'wake': return choosePractice(600,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/f4d262f6-56fe-40e3-84ea-930c11fe7c54.mp3','Deep Wake Up','Morning · guided breath','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/7fd8e8ee-cc5a-49c3-940b-6b4330a42c5e.mp4','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/d10879c1-d600-400c-999e-3237ec672b86.mp4');
+  case 'noon': return choosePractice(2400,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/b7f691a0-16a1-4449-b143-38e7b3be74df.mp3','Noon Reset','Noon · guided breath','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/a71c8fd6-be58-4262-83ef-1469597b1630.mp4','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/40c72fc3-df5b-4dc9-a518-2ba3ab7f4ac3.mp4');
+  case 'evening': return choosePractice(3600,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/93c0e1fe-0e8b-4e7e-9277-47edf8dd0b63.mp3','Evening Release','Evening · guided breath','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/12095b12-f0ae-4859-9b9b-cf28c8224987.mp4','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/c1a8df3c-dabd-4b96-ac42-92f57d3f1ce1.mp4');
+  case 'sleep': return choosePractice(3600,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/74f43c24-d734-4ace-b1d0-f1c3263cb299.mp3','Deep Sleep','Night · nose only','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/e4717cb6-dae0-4bce-a4c3-f1ccab0fb9bf.mp4','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/c8bffc30-9905-4e18-8321-e6ecbb597947.mp4');
+  default:return show('practices');
+ }
+}
+
+let hcPracticeActiveFilter='all';
+function hcPracticeRefreshCards(){
+  const cards=[...document.querySelectorAll('#practices .practice-card')];
+  const hist=getHistory();
+  let last=null;
+  try{last=JSON.parse(localStorage.getItem('clearWithinLastSession')||'null')}catch(e){}
+  const favourites=getHeartClearFavourites();
+  const preferred=hcRecommendedForHour((typeof getDeviceLocalClock==='function'?getDeviceLocalClock():{hour:new Date().getHours()}).hour).title;
+  cards.forEach(card=>{
+    const title=card.querySelector('.practice-copy b')?.textContent?.trim()||'';
+    const marks=card.querySelector('.hc-practice-markers');if(!marks)return;
+    const tags=[];
+    if(title===preferred)tags.push('NOW');
+    const recent=hist.filter(e=>e.practice===title || e.title===title);
+    if(recent.some(e=>e.completed))tags.push('Played');
+    if(last&&last.kicker===title&&Number(last.time)>20&&Number(last.time)<Number(last.seconds)-20)tags.push('In progress · Continue');
+    if(favourites.some(v=>v.kind==='meditation'&&v.key===title))tags.push('Favourite');
+    marks.textContent='';
+    tags.forEach(t=>{
+      const b=document.createElement('span');b.className='hc-practice-tag'+(t==='NOW'?' is-now':'');b.textContent=t;marks.appendChild(b);
+    });
   });
+}
+
+function filterPractices(kind,btn){
+  hcPracticeActiveFilter=['all','short','deep','sleep','breath','human'].includes(kind)?kind:'all';
+  const cards=[...document.querySelectorAll('#practices .practice-card')];
+  function matches(card,tag){
+    const tags=(card.dataset.tags||'').split(/\s+/);
+    return tag==='all'||tags.includes(tag);
+  }
+  document.querySelectorAll('#practices [data-practice-filter]').forEach(button=>{
+    const current=button.dataset.practiceFilter;
+    const count=button.querySelector('.hc-filter-num');if(count)count.textContent=String(cards.filter(card=>matches(card,current)).length);
+    const active=current===hcPracticeActiveFilter;
+    button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));
+  });
+  cards.forEach(card=>card.classList.toggle('is-hidden',!matches(card,hcPracticeActiveFilter)));
+  document.querySelectorAll('#practices .hc-practice-group').forEach(group=>{
+    group.hidden=![...group.querySelectorAll('.practice-card')].some(card=>!card.classList.contains('is-hidden'));
+  });
+  hcPracticeRefreshCards();
 }
 
 const dailyNotes=[
@@ -6670,31 +6769,58 @@ function renderHomeStarterProgress(){
 
 function openHomeSessionSheet(title){
   const card=hcFindPracticeCard(title);
-  if(!card){show('practices');return}
+  if(!card || !['wake','noon','evening','sleep'].includes(card.dataset.session)){show('practices');return}
   hcHomeSheetPractice=title;
   const meta=card.querySelector('.practice-copy small')?.textContent?.trim()||'Guided practice';
   const duration=card.querySelector('.duration')?.textContent?.trim()||'';
   const purposes={
-    'Deep Wake Up':'Begin the day with a guided practice before attention scatters.',
-    'Noon Reset':'Make a little space in the middle of the day without multitasking.',
-    'Evening Release':'Move from the day into a quieter evening.',
-    'Deep Sleep':'Prepare for rest with a slower night practice.'
+    'Deep Wake Up':'Begin the day with comfortable breath and attention.',
+    'Noon Reset':'A longer guided listening practice for the middle of your day.',
+    'Evening Release':'Notice the transition from activity into a quieter evening.',
+    'Deep Sleep':'Settle for the night with comfortable, unforced breathing.'
   };
-  const t=document.getElementById('hcHomeSheetTitle');if(t)t.textContent=title;
-  const p=document.getElementById('hcHomeSheetPurpose');if(p)p.textContent=purposes[title]||meta;
-  const d=document.getElementById('hcHomeSheetDuration');if(d)d.textContent=meta+(duration?' · '+duration:'');
-  document.getElementById('hcHomeSessionSheet')?.classList.add('show');
+  const observe={
+    'Deep Wake Up':'Notice the sounds of the room and the natural rhythm of breathing.',
+    'Noon Reset':'Notice movement, thoughts and the sensation of returning to the present.',
+    'Evening Release':'Notice your surroundings and the changing pace of the evening.',
+    'Deep Sleep':'Notice comfort and rest; you can pause or stop whenever needed.'
+  };
+  document.getElementById('hcHomeSheetTitle').textContent=title;
+  document.getElementById('hcHomeSheetPurpose').textContent=purposes[title]||meta;
+  document.getElementById('hcHomeSheetDuration').textContent=meta+(duration?' · '+duration:'');
+  document.getElementById('hcHomeSheetObserve').textContent='What to notice: '+(observe[title]||'Your surroundings.');
+  document.getElementById('hcHomeSheetSafety').textContent='Comfortable breathing only. Do not force your breath or use long holds; stop if dizzy or uncomfortable.';
+  document.getElementById('hcHomeSheetSleep').value='0';
+  const btn=document.querySelector('#hcHomeSessionSheet .hc-sheet-actions .primary');
+  if(btn)btn.textContent='Begin';
+  let last=null;
+  try{last=JSON.parse(localStorage.getItem('clearWithinLastSession')||'null')}catch(e){}
+  const canContinue=last&&last.kicker===title&&Number(last.time)>20&&Number(last.time)<Number(last.seconds)-20;
+  const hint=document.getElementById('hcHomeSheetObserve');
+  if(canContinue&&hint)hint.textContent+=' · Previous position: '+fmt(last.time)+'.';
+  const continueBtn=document.getElementById('hcHomeSheetResume');
+  if(continueBtn)continueBtn.hidden=!canContinue;
+  document.getElementById('hcHomeSessionSheet').classList.add('show');
 }
-
+function hcBeginPracticeSheetResume(){
+  closeHomeSheets();continueLastSession();
+}
 function beginHomeSheetPractice(){
   const card=hcFindPracticeCard(hcHomeSheetPractice);
+  const selectedSleep=document.getElementById('hcHomeSheetSleep')?.value||'0';
   closeHomeSheets();
-  if(card)card.click();else show('practices');
+  if(!card){show('practices');return}
+  hcStartExistingGuidedSession(card.dataset.session);
+  const sleep=document.getElementById('sleepTimer');if(sleep)sleep.value=selectedSleep;
+  setSleepTimer(selectedSleep);
 }
 
 function openHomeTimerSheet(mode='quiet',minutes=10){
   hcHomeTimerMode=mode==='breath'?'breath':'quiet';
   hcHomeTimerMinutes=Number(minutes)||10;
+  const sheetBell=document.getElementById('hcTimerSheetBell');if(sheetBell)sheetBell.checked=true;
+  const sheetInterval=document.getElementById('hcTimerSheetInterval');if(sheetInterval)sheetInterval.value='0';
+  const pacer=document.getElementById('hcTimerSheetPacer');if(pacer)pacer.checked=hcHomeTimerMode==='breath';
   const title=document.getElementById('hcHomeTimerTitle');
   const purpose=document.getElementById('hcHomeTimerPurpose');
   if(title)title.textContent=hcHomeTimerMode==='breath'?'Gentle breath':'Quiet Timer';
@@ -6722,7 +6848,9 @@ function beginHomeTimer(){
     minutes.value=String(hcHomeTimerMinutes);
   }
   const mode=document.getElementById('hcTimerMode');
-  if(mode)mode.value=hcHomeTimerMode;
+  if(mode)mode.value=document.getElementById('hcTimerSheetPacer')?.checked?'breath':hcHomeTimerMode;
+  const bell=document.getElementById('hcTimerBell');if(bell)bell.checked=!!document.getElementById('hcTimerSheetBell')?.checked;
+  const interval=document.getElementById('hcTimerInterval');if(interval)interval.value=document.getElementById('hcTimerSheetInterval')?.value||'0';
   hcTimerModeChanged();
   const clock=document.getElementById('hcTimerClock');if(clock)clock.textContent=fmt(hcHomeTimerMinutes*60);
 }
@@ -6747,6 +6875,7 @@ function renderDashboard(){
   if(weekLine)weekLine.textContent=stats.sessions+' session'+(stats.sessions===1?'':'s')+' · '+stats.minutes+' min';
 
   renderLibraryResumeCard();
+  hcPracticeRefreshCards();
   const card=document.getElementById('homeResumeCard');
   if(!card)return;
   try{
@@ -7293,7 +7422,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=92');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=93');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
