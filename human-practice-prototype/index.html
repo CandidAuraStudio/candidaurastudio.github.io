@@ -1518,6 +1518,12 @@ body.reduce-motion .hc-quiet-disc{transition:none!important}
       <small id="homeResumeMeta">Continue from 04:12</small>
       <button onclick="continueLastSession()">Continue session</button>
     </div>
+    <div class="home-resume" id="hcSoundResumeCard" style="display:none">
+      <div class="eyebrow">Continue Sound Lab</div>
+      <strong id="hcSoundResumeTitle">Nature listening</strong>
+      <small id="hcSoundResumeMeta">Continue where you left off</small>
+      <button onclick="hcResumeSoundLab()" aria-label="Resume last Sound Lab recording">Continue sound</button>
+    </div>
     <div class="home-resume library-resume" id="homeLibraryResumeCard">
       <div class="eyebrow">Continue Audiobook · Library</div>
       <strong id="homeLibraryResumeTitle">Shadows of Truth · Chapter 1</strong>
@@ -2392,7 +2398,7 @@ body.reduce-motion .hc-quiet-disc{transition:none!important}
     </div>
 
     <div class="hub-note">Audio can continue while you move around HeartClear. Lock-screen controls are used where the browser supports them.</div>
-    <audio id="soundLabAudio" preload="auto" playsinline></audio>
+    <audio id="soundLabAudio" preload="metadata" playsinline></audio>
   </div>
 </section>
 
@@ -2451,7 +2457,7 @@ body.reduce-motion .hc-quiet-disc{transition:none!important}
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v80</div>
+    <div class="app-version">HeartClear · prototype v81</div>
   </div>
 </section>
 
@@ -3120,7 +3126,7 @@ function show(id){
   if(av && id!=='sacredSession') av.pause();
   const ba=document.getElementById('bookAudioEl');
   updateBookMini(id);
-  if(id==='home'){setGreeting();renderDashboard();updateHomeOfflineCount();renderHeartClearFavourites();}
+  if(id==='home'){setGreeting();renderDashboard();updateHomeOfflineCount();renderHeartClearFavourites();hcRenderSoundResume();}
   if(id==='history') renderHistory();
   if(id==='downloads') renderDownloads();
   if(id==='settings') renderSettings();
@@ -4681,6 +4687,56 @@ function hcTimerTick(){
   }
 }
 
+
+/* Recover a sound after Android/browser reclaims the page, without auto-playing on a new launch.
+ * Only a real Play session creates this bookmark. No private file URLs are stored. */
+const HC_LAST_SOUND='heartclearLastSoundV1';
+function hcStoreSoundLabPosition(){
+  if(!soundLabAudio||!soundLabTracks[currentSoundKey])return;
+  if(currentSoundKey==='nature')return; // generated blob is not a durable source across reloads
+  // Track changes may fire pause on the old source after the new key is selected.
+  // Never associate an old recording's position with a different source.
+  if(soundLabAudio.getAttribute('src')!==soundLabTracks[currentSoundKey].url)return;
+  const pos=Number(soundLabAudio.currentTime)||0;
+  if(pos<5 || !Number.isFinite(pos))return;
+  const end=Number.isFinite(soundLabAudio.duration)?soundLabAudio.duration:soundLabTracks[currentSoundKey].duration;
+  if(end-pos<4)return;
+  try{localStorage.setItem(HC_LAST_SOUND,JSON.stringify({key:currentSoundKey,position:pos,updatedAt:Date.now()}))}catch(e){}
+}
+function hcClearSoundBookmark(){
+  try{localStorage.removeItem(HC_LAST_SOUND)}catch(e){}
+}
+function hcLoadSoundBookmark(){
+  try{
+    const s=JSON.parse(localStorage.getItem(HC_LAST_SOUND)||'null');
+    if(!s||!Object.prototype.hasOwnProperty.call(soundLabTracks,s.key)||!soundLabTracks[s.key].url)return null;
+    if(!Number.isFinite(Number(s.position))||Number(s.position)<5 || Number(s.position)>=Number(soundLabTracks[s.key].duration)-4)return null;
+    return s;
+  }catch(e){return null}
+}
+function hcRenderSoundResume(){
+  const box=document.getElementById('hcSoundResumeCard');
+  if(!box)return;
+  const last=hcLoadSoundBookmark();
+  box.style.display=last?'block':'none';
+  if(last){
+    document.getElementById('hcSoundResumeTitle').textContent=soundLabTracks[last.key].title;
+    document.getElementById('hcSoundResumeMeta').textContent='Continue at '+fmt(last.position)+' · saves on this device';
+  }
+}
+function hcResumeSoundLab(){
+  const last=hcLoadSoundBookmark();if(!last){openSoundLab();return}
+  openSoundTrack(last.key);
+  const pos=last.position;
+  const apply=()=>{try{
+    soundLabAudio.currentTime=Math.max(0,Math.min(pos,Math.max(0,soundLabAudio.duration-1)));
+    syncSoundLab();
+  }catch(e){}};
+  if(soundLabAudio.readyState>=1)apply();else soundLabAudio.addEventListener('loadedmetadata',apply,{once:true});
+  // Never silently autostart after a browser process was closed; the explicit Play button remains available.
+  const st=document.getElementById('soundLabStatus');if(st)st.textContent='Position restored. Press Play to continue listening.';
+}
+
 function openSoundLab(){
   show('soundLab');
 }
@@ -4741,6 +4797,7 @@ async function playNextSoundLab(userInitiated=false){
 }
 function openSoundTrack(key){
   const t=soundLabTracks[key]||soundLabTracks.horizon;
+  hcStoreSoundLabPosition();
   currentSoundKey=key in soundLabTracks?key:'horizon';
 
   if(!audio.paused)audio.pause();
@@ -4843,6 +4900,7 @@ function stopSoundLab(){
   soundLabClockCommit();soundLabListeningSeconds=0;
   soundLabPlayRequested=false;
   soundLabAudio.pause();
+  hcClearSoundBookmark();
   soundLabAudio.currentTime=0;
   syncSoundLab();
 }
@@ -4875,7 +4933,7 @@ function setSoundLabMediaSession(){
       artwork:hcArtwork()
     });
     navigator.mediaSession.setActionHandler('play',()=>{rememberActiveMedia('soundlab');return soundLabAudio.play()});
-    navigator.mediaSession.setActionHandler('pause',()=>{soundLabAudio.pause();renderGlobalMini()});
+    navigator.mediaSession.setActionHandler('pause',()=>{soundLabAudio.pause();hcStoreSoundLabPosition();renderGlobalMini()});
     try{navigator.mediaSession.setActionHandler('nexttrack',()=>playNextSoundLab(true))}catch(e){}
     navigator.mediaSession.setActionHandler('seekbackward',details=>soundLabJump(-(details.seekOffset||15)));
     navigator.mediaSession.setActionHandler('seekforward',details=>soundLabJump(details.seekOffset||15));
@@ -4890,9 +4948,10 @@ function setSoundLabMediaSession(){
   }catch(e){}
 }
 
-soundLabAudio.addEventListener('play',()=>{if(!soundLabPlaybackStartedAt)soundLabPlaybackStartedAt=Date.now()});
-soundLabAudio.addEventListener('pause',soundLabClockCommit);
+soundLabAudio.addEventListener('play',()=>{if(!soundLabPlaybackStartedAt)soundLabPlaybackStartedAt=Date.now();setSoundLabMediaSession();rememberActiveMedia('soundlab')});
+soundLabAudio.addEventListener('pause',()=>{soundLabClockCommit();hcStoreSoundLabPosition()});
 soundLabAudio.addEventListener('ended',()=>{
+  hcClearSoundBookmark();
   soundLabClockCommit();
   if(soundLabAutoNext&&!soundLabAudio.loop)playNextSoundLab(false);
   else {soundLabPlayRequested=false;const st=document.getElementById('soundLabStatus');if(st)st.textContent='Listening finished. Press Play or choose another sound.'}
@@ -4902,6 +4961,13 @@ soundLabAudio.addEventListener('timeupdate',()=>{
      soundLabListeningSeconds+(Date.now()-soundLabPlaybackStartedAt)/1000>=soundLabListeningLimit){
     stopSoundLab();
     const st=document.getElementById('soundLabStatus');if(st)st.textContent='Your selected listening time is complete.';
+  }
+});
+soundLabAudio.addEventListener('timeupdate',()=>{
+  // Save at most every ~5 seconds for low-storage overhead, never on every frame.
+  const now=Number(soundLabAudio.currentTime)||0;
+  if(!soundLabAudio.paused && now>=5 && Math.floor(now)%5===0 && (!hcStoreSoundLabPosition.lastAt||Date.now()-hcStoreSoundLabPosition.lastAt>4000)){
+    hcStoreSoundLabPosition.lastAt=Date.now();hcStoreSoundLabPosition();
   }
 });
 soundLabAudio.addEventListener('timeupdate',syncSoundLab);
@@ -5962,7 +6028,20 @@ window.addEventListener('touchend',resumeIntroAfterScroll,{passive:true});
 document.querySelector('#player .player-artwork').addEventListener('keydown',e=>{
   if(e.key==='Enter'||e.key===' '){e.preventDefault();togglePlay()}
 });
+window.addEventListener('pagehide',()=>{
+  // Keep media elements untouched. Save position only; do not pause a playing track.
+  hcStoreSoundLabPosition();
+  if(typeof saveBookBookmark==='function')saveBookBookmark();
+  if(playbackPhase==='meditation' && audio.currentTime>20)rememberLastSession(audio.currentTime);
+});
+window.addEventListener('pageshow',event=>{
+  // BFCache restores the existing player; a full reload exposes Continue controls.
+  hcRenderSoundResume();
+  renderGlobalMini();
+  if(event.persisted && !soundLabAudio.paused)setSoundLabMediaSession();
+});
 document.addEventListener('visibilitychange',()=>{
+  if(document.hidden)hcStoreSoundLabPosition();
   const pv=document.getElementById('practiceVisual');
   const av=document.getElementById('adhkarVisual');
   if(document.hidden){
@@ -5987,6 +6066,7 @@ setGreeting();
 renderLocalContext();
 renderDashboard();
 renderHeartClearFavourites();
+hcRenderSoundResume();
 renderSettings();
 
 const greetingRefreshTimer=setInterval(setGreeting,60000);
@@ -6029,7 +6109,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=80');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=81');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
