@@ -10,7 +10,14 @@
 <link rel="manifest" href="./manifest.webmanifest?v=79-install-fix">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
-<title>HC · HeartClear</title>
+<title>HeartClear · Meditation, Sounds & Reflection</title>
+<meta name="description" content="HeartClear brings together guided meditation, nature sounds, gentle breathing, Sacred Sound and reading. Listen, reflect and save your progress on your device.">
+<meta name="application-name" content="HeartClear">
+<meta property="og:type" content="website">
+<meta property="og:title" content="HeartClear · Meditation, Sounds & Reflection">
+<meta property="og:description" content="Quiet listening, meditation, nature soundscapes, breathing and private reflection.">
+<meta property="og:url" content="https://candidaurastudio.github.io/human-practice-prototype/">
+<meta name="color-scheme" content="dark">
 <style>
 :root{
   --sky1:#8eb8cf;--sky2:#5f8ba4;--sky3:#335f78;--deep:#173548;
@@ -1425,6 +1432,26 @@ body.reduce-motion .hc-quiet-disc{transition:none!important}
 .hc-private-media video,.hc-private-media audio{display:block;width:100%;max-width:100%;margin:12px 0}
 .hc-private-media[hidden],.hc-private-media video[hidden],.hc-private-media audio[hidden]{display:none!important}
 #quietTimer .btn:not(.secondary),#starterPath .btn:not(.secondary){background:#fff!important;color:#0b2230!important;border-color:#fff!important}
+
+/* Personal data controls stay legible and accessible without changing the core palette. */
+.hc-data-tools{padding:16px;border:1px solid rgba(255,255,255,.18);border-radius:16px;background:rgba(9,30,42,.38)}
+.hc-data-tools strong{display:block;font-size:14px}
+.hc-data-tools p{font-size:12px;color:#e1eaf0;line-height:1.6;margin:8px 0}
+.hc-data-tools .hc-data-buttons{display:flex;gap:8px;flex-wrap:wrap}
+.hc-data-tools .hc-data-buttons button{min-height:44px;padding:11px 14px;border-radius:11px;border:1px solid rgba(255,255,255,.32);background:#142f3c;color:#fff;font:inherit;font-size:13px;flex:1}
+.hc-data-tools .hc-data-buttons button:first-child{background:#fff;color:#081923;border-color:#fff}
+.hc-data-tools button:focus-visible{outline:2px solid white;outline-offset:3px}
+
+/* Final mobile accessibility refinements. Preserve all six navigation destinations. */
+.bottom-nav .nav-item{font-size:10px!important;font-weight:600;line-height:1.15;min-height:50px;padding:5px 1px;letter-spacing:0}
+.bottom-nav .nav-item svg{width:20px;height:20px}
+@media(max-width:360px){.bottom-nav .nav-item{font-size:9px!important}.bottom-nav .nav-item svg{width:19px;height:19px}}
+button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible,
+[role="button"]:focus-visible{outline:2px solid #fff!important;outline-offset:3px!important}
+#soundLabPlayBtn,#playBtn,#finishBtn,#bookPlayBtn,#adhkarPlayBtn,#fearPlayBtn,#naturePlayBtn{min-height:44px}
+@media(prefers-reduced-motion:reduce){
+  body *,body *::before,body *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
 </style>
 </head>
 <body>
@@ -1728,7 +1755,7 @@ body.reduce-motion .hc-quiet-disc{transition:none!important}
 <section class="screen" id="intro">
   <div class="glass intro-card">
     <div class="intro-media">
-      <video id="introVideo" playsinline preload="auto"></video>
+      <video id="introVideo" playsinline preload="metadata"></video>
       <div class="intro-overlay">
         <div class="intro-copy">
           <div class="kicker">HC · HeartClear</div>
@@ -1812,7 +1839,7 @@ body.reduce-motion .hc-quiet-disc{transition:none!important}
     <div class="kicker">Human Practice</div>
     <h2>Practice life itself.</h2>
     <p>Passion, movement and observation without needing a special identity or belief.</p>
-    <div class="hub-note">These are real-world activities with timers. Spoken guidance is not recorded yet. You can add optional background audio inside each activity.</div>
+    <div class="hub-note">These are timed everyday activities with optional background listening. Choose a comfortable pace.</div>
   </div>
   <div class="human-grid">
     <button class="human-card" onclick="openHumanCategory('passion')"><span class="human-symbol">♪</span><b>Passion</b><small>Music · dance · cooking · gardening · house reset</small></button>
@@ -1962,7 +1989,7 @@ body.reduce-motion .hc-quiet-disc{transition:none!important}
 
     <button class="btn" onclick="finishFearPractice()">Finish practice</button>
     <div class="fear-warning">You do not need to eliminate fear in one session. The goal is to notice that you can hear the sound safely and choose what to do next.</div>
-    <audio id="fearAudio" preload="auto" playsinline></audio>
+    <audio id="fearAudio" preload="metadata" playsinline></audio>
   </div>
 </section>
 
@@ -2096,7 +2123,7 @@ body.reduce-motion .hc-quiet-disc{transition:none!important}
         <button onclick="openAdhkar('listen')">Listen</button>
         <button onclick="openAdhkar('recite')">Recite Along</button>
       </div>
-      <div class="hub-note" style="margin-top:12px">Quran Surahs 1–30 with spoken English translation: awaiting uploaded audio. This will be a separate Quran collection; Morning Adhkar is not English Quran translation.</div>
+      <div class="hub-note" style="margin-top:12px">Morning Adhkar is a remembrance and supplication session, not a Quran translation.</div>
       <div class="hc-private-media">
         <b style="display:block">Private Sufi-inspired listening</b>
         <p style="font-size:12px;line-height:1.6">Choose your own audio or video file from this device to listen privately. Sufi-inspired music is not labelled Quran recitation or dhikr. HeartClear does not upload, distribute or permanently save the file.</p>
@@ -2123,7 +2150,7 @@ body.reduce-motion .hc-quiet-disc{transition:none!important}
     <div class="chakra-feature" id="buddhistFeatured" style="display:none;margin-top:12px">
       <b>Before chanting · Meaning and context</b>
       <small>Identify the chant, its Buddhist tradition, language, pronunciation and translation, then listen comfortably. Properly attribute the original recording.</small>
-      <div class="hub-note">A verified Buddhist chanting recording has not yet been uploaded. A player will be added when it is available.</div>
+      <div class="hub-note">Quiet sound practice: listen to your surroundings at a comfortable pace. Traditional chanting recordings should be named, translated and properly attributed.</div>
     </div>
     <div class="empty-shelf" style="margin-top:14px">
       <div class="empty-icon">♪</div>
@@ -2168,7 +2195,7 @@ body.reduce-motion .hc-quiet-disc{transition:none!important}
     </div>
     <div class="adhkar-status" id="adhkarStatus">Audio continues in the background where your browser allows it.</div>
 
-    <audio id="adhkarAudio" preload="auto" playsinline src="https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/b175b71f-4140-4458-baf3-61c9dad3a420.mp3"></audio>
+    <audio id="adhkarAudio" preload="metadata" playsinline src="https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/b175b71f-4140-4458-baf3-61c9dad3a420.mp3"></audio>
   </div>
 </section>
 
@@ -2315,7 +2342,7 @@ body.reduce-motion .hc-quiet-disc{transition:none!important}
     </div>
 
     <div class="audiobook-now" id="bookResumeNote">Your place in each chapter is saved automatically on this device.</div>
-    <audio id="bookAudioEl" preload="auto" playsinline></audio>
+    <audio id="bookAudioEl" preload="metadata" playsinline></audio>
   </div>
 </section>
 
@@ -2353,7 +2380,7 @@ body.reduce-motion .hc-quiet-disc{transition:none!important}
     </div>
     <div class="hub-note">These extra tracks are real CC0 field recordings documented in HeartClear Nature Audio on Drive. They stream from their source site; they are not the new mastered v2 previews and need internet. Continuous Play can keep the listening experience going past the end of each source.</div>
     <div class="hub-note">Nature Weave and the 2-minute Deep Sleep stillness preview are stored with HeartClear. Other nature recordings require internet unless separately downloaded.</div>
-    <div class="hub-note">Other Sound Lab beds are test sounds, not sacred recitations or medical-frequency claims.</div>
+    <div class="hub-note">Ambient music and nature recordings are for comfortable listening, without frequency-based or medical claims.</div>
   </div>
 </section>
 
@@ -2429,6 +2456,12 @@ body.reduce-motion .hc-quiet-disc{transition:none!important}
         <button class="switch" id="wakeLockSwitch" onclick="toggleWakeLock()" aria-label="Toggle keep screen awake"></button>
       </div>
       <div class="setting-row">
+        <div style="width:100%">
+          <strong>Listening with the screen off</strong>
+          <small>Use Play before minimizing HeartClear. Android and iPhone sometimes suspend web apps to save battery. If sound stops, reopen HeartClear and use Continue Sound Lab, Continue Meditation or Resume Audiobook. Lock-screen controls depend on the browser.</small>
+        </div>
+      </div>
+      <div class="setting-row">
         <div><strong>Offline media</strong><small id="offlineStorageText">No saved media yet</small></div>
         <button class="offline-action" onclick="show('downloads')">View</button>
       </div>
@@ -2455,9 +2488,19 @@ body.reduce-motion .hc-quiet-disc{transition:none!important}
         <div><strong>Install HeartClear</strong><small>Add HeartClear to this device for a full-screen app experience.</small></div>
         <button class="offline-action" onclick="showInstallSheet(true)">Install</button>
       </div>
-      <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
+      <div class="hc-data-tools">
+        <strong>Privacy &amp; your data</strong>
+        <p>No account or advertising. Practice history, mood check-ins, notes, favourites and listening positions are stored in this browser. Playback streams may contact the recording's host. Weather uses your location only if you enable it.</p>
+        <p>You control your local information. Export it before clearing or changing devices. Downloaded media is managed separately under Offline downloads; a voice recording saved to your device remains outside HeartClear's storage.</p>
+        <div class="hc-data-buttons">
+          <button onclick="hcExportPersonalData()" aria-label="Export personal HeartClear data as JSON">Export my data</button>
+          <button onclick="hcErasePersonalData()" aria-label="Erase my HeartClear personal data from this browser">Erase personal data</button>
+        </div>
+        <p id="hcDataStatus" role="status" aria-live="polite"></p>
+      </div>
+      <button class="danger-btn" onclick="clearLocalHistory()">Clear meditation history only</button>
     </div>
-    <div class="app-version">HeartClear · prototype v81</div>
+    <div class="app-version">HeartClear · Version 1.0.0</div>
   </div>
 </section>
 
@@ -2628,7 +2671,7 @@ body.reduce-motion .hc-quiet-disc{transition:none!important}
     <button class="btn secondary" onclick="finish()" id="finishBtn">Finish</button>
   </div>
   <div class="footer">HeartClear · video introduction flows directly into the meditation</div>
-  <audio id="audio" preload="auto" playsinline></audio>
+  <audio id="audio" preload="metadata" playsinline></audio>
 </section>
 
 <div class="book-mini" id="bookMini" aria-live="polite">
@@ -5267,6 +5310,44 @@ async function toggleWakeLock(){
   renderSettings();
 }
 
+
+/* User-directed device-only data portability. This does not touch other apps on this domain. */
+function hcOwnStorageKey(key){
+  return typeof key==='string' && /^(heartclear|clearWithin|sufi)/.test(key);
+}
+function hcPersonalDataSnapshot(){
+  const result={};
+  for(let i=0;i<localStorage.length;i++){
+    const key=localStorage.key(i);
+    if(hcOwnStorageKey(key))result[key]=localStorage.getItem(key);
+  }
+  return result;
+}
+function hcExportPersonalData(){
+  const status=document.getElementById('hcDataStatus');
+  try{
+    const content={application:'HeartClear',format:'HeartClear Local Data Backup',schema_version:1,
+      exported_at:new Date().toISOString(),storage:hcPersonalDataSnapshot()};
+    const blob=new Blob([JSON.stringify(content,null,2)],{type:'application/json;charset=utf-8'});
+    const url=URL.createObjectURL(blob),link=document.createElement('a');
+    link.href=url;link.download='heartclear-data-'+new Date().toISOString().slice(0,10)+'.json';
+    document.body.appendChild(link);link.click();link.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),30000);
+    if(status)status.textContent='Backup prepared. Keep the file private; it may contain notes and listening history.';
+  }catch(e){if(status)status.textContent='Data export is unavailable in this browser. Check browser storage settings.'}
+}
+function hcErasePersonalData(){
+  if(!confirm('Erase HeartClear notes, practice history, moods, favourites, bookmarks and preferences from this browser? This cannot be undone. Your downloaded audio is managed separately.'))return;
+  if(!confirm('Confirm permanent removal of this browser’s HeartClear personal data?'))return;
+  const status=document.getElementById('hcDataStatus');
+  try{
+    const keys=Object.keys(localStorage).filter(hcOwnStorageKey);
+    keys.forEach(key=>localStorage.removeItem(key));
+    if(status)status.textContent='Personal data erased. Downloaded media has not been removed. The page will reload.';
+    setTimeout(()=>location.reload(),650);
+  }catch(e){if(status)status.textContent='Some data could not be erased. Check browser storage permissions.'}
+}
+
 function clearLocalHistory(){
   if(!confirm('Clear meditation practice history and meditation resume positions? Your audiobook listening positions will stay saved.'))return;
   try{
@@ -6109,7 +6190,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=81');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=82');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
