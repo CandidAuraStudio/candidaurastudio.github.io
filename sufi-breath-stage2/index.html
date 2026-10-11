@@ -1039,6 +1039,35 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
 }
 .soundlab-options button.active{color:#e0c38d;border-color:rgba(215,181,116,.25);background:rgba(118,80,37,.14)}
 
+
+/* Universal background mini-player v49 */
+.global-mini{
+  position:fixed;left:12px;right:12px;
+  bottom:calc(82px + env(safe-area-inset-bottom,0px));
+  z-index:60;display:none;align-items:center;gap:8px;
+  padding:9px 10px;border-radius:18px;
+  border:1px solid rgba(202,228,236,.12);
+  background:rgba(4,14,22,.97);
+  box-shadow:0 18px 55px rgba(0,0,0,.48);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)
+}
+.global-mini.show{display:flex}
+.global-mini-copy{
+  min-width:0;flex:1;text-align:left;border:0;background:transparent;color:inherit;padding:0 4px
+}
+.global-mini-copy b{display:block;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.global-mini-copy small{display:block;color:#8298a3;font-size:10px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.global-mini-btn{
+  flex:0 0 auto;min-width:39px;height:38px;border-radius:12px;
+  border:1px solid rgba(202,228,236,.10);background:rgba(18,40,51,.82);
+  color:#d7e1e5;font:inherit;font-size:11px
+}
+.global-mini-btn.primary{
+  min-width:46px;background:linear-gradient(180deg,#dfbd80,#b98349);color:#07131b;border:0;font-weight:800
+}
+.global-mini-stop{color:#9aaab1}
+.bottom-nav.hidden ~ .global-mini{bottom:calc(14px + env(safe-area-inset-bottom,0px))}
+
 </style>
 </head>
 <body>
@@ -1684,7 +1713,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v48</div>
+    <div class="app-version">HeartClear · prototype v49</div>
   </div>
 </section>
 
@@ -1804,6 +1833,17 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
   <button class="book-mini-close" onclick="stopBookAudio()" aria-label="Stop audiobook">×</button>
 </div>
 
+<div class="global-mini" id="globalMini" aria-live="polite">
+  <button class="global-mini-copy" onclick="openActiveMediaPlayer()" aria-label="Open current audio player">
+    <b id="globalMiniTitle">HeartClear</b>
+    <small id="globalMiniMeta">00:00</small>
+  </button>
+  <button class="global-mini-btn" onclick="globalJump(-15)" aria-label="Back 15 seconds">−15</button>
+  <button class="global-mini-btn primary" id="globalMiniPlay" onclick="toggleGlobalMedia()" aria-label="Pause or resume">Ⅱ</button>
+  <button class="global-mini-btn" onclick="globalJump(15)" aria-label="Forward 15 seconds">+15</button>
+  <button class="global-mini-btn global-mini-stop" onclick="stopGlobalMedia()" aria-label="Stop playback">×</button>
+</div>
+
 <nav class="bottom-nav" id="bottomNav" aria-label="Primary navigation">
   <button class="nav-item active" data-nav="home" onclick="navTo('home',this)" aria-label="Home">
     <svg viewBox="0 0 24 24"><path d="M3.5 10.4 12 3.7l8.5 6.7v9.1h-6v-5.7h-5v5.7h-6Z"/></svg><span>Home</span>
@@ -1836,6 +1876,7 @@ let sessionStartedAt=0;
 let sessionRecorded=false;
 let completionHistoryIndex=-1;
 let wakeLock=null;
+let currentScreenId='home';
 let wakeLockEnabled=false;
 let prepIndex=0;
 let prepElapsed=0;
@@ -1974,6 +2015,7 @@ async function clearOfflineMedia(){
 }
 
 function show(id){
+  currentScreenId=id;
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   const target=document.getElementById(id);
   if(target) target.classList.add('active');
@@ -1993,14 +2035,116 @@ function show(id){
   if(pv && id!=='player') pv.pause();
   const av=document.getElementById('adhkarVisual');
   if(av && id!=='sacredSession') av.pause();
-  if(id!=='sacredSession' && !adhkarAudio.paused) adhkarAudio.pause();
   const ba=document.getElementById('bookAudioEl');
   updateBookMini(id);
   if(id==='home') renderDashboard();
   if(id==='history') renderHistory();
   if(id==='settings') renderSettings();
   if(id==='player'||id==='sacredSession')updatePipButtons();
+  renderGlobalMini();
   window.scrollTo(0,0);
+}
+
+function getActiveMediaState(){
+  const options=[
+    {
+      key:'meditation',el:audio,
+      title:chosenKicker||'Meditation',
+      meta:'Meditation · '+fmt(audio.currentTime||0),
+      screen:'player'
+    },
+    {
+      key:'adhkar',el:adhkarAudio,
+      title:'Morning Adhkar',
+      meta:'Sacred Sound · '+fmt(adhkarAudio.currentTime||0),
+      screen:'sacredSession'
+    },
+    {
+      key:'soundlab',el:soundLabAudio,
+      title:(soundLabTracks[currentSoundKey]||soundLabTracks.soft).title,
+      meta:'Sound Lab · '+fmt(soundLabAudio.currentTime||0),
+      screen:'soundLabPlayer'
+    },
+    {
+      key:'book',el:bookAudioEl,
+      title:'Shadows of Truth · Chapter 1',
+      meta:(currentBookAudioLang==='ta'?'Tamil audiobook':'English audiobook')+' · '+fmt(bookAudioEl.currentTime||0),
+      screen:'bookAudio'
+    }
+  ];
+
+  // Prefer the source that is actually playing.
+  let active=options.find(x=>x.el && !x.el.paused && !!x.el.getAttribute('src'));
+  // If nothing is currently playing, keep the last loaded/paused source controllable.
+  if(!active){
+    try{
+      const last=localStorage.getItem('heartclearActiveMedia');
+      active=options.find(x=>x.key===last && x.el && !!x.el.getAttribute('src'));
+    }catch(e){}
+  }
+  return active||null;
+}
+
+function rememberActiveMedia(key){
+  try{localStorage.setItem('heartclearActiveMedia',key)}catch(e){}
+}
+
+function renderGlobalMini(){
+  const mini=document.getElementById('globalMini');
+  if(!mini)return;
+  const state=getActiveMediaState();
+  if(!state){
+    mini.classList.remove('show');
+    return;
+  }
+
+  // Avoid duplicate controls when user is already on that full player.
+  const sameScreen=currentScreenId===state.screen;
+  mini.classList.toggle('show',!sameScreen);
+
+  document.getElementById('globalMiniTitle').textContent=state.title;
+  document.getElementById('globalMiniMeta').textContent=state.meta;
+  document.getElementById('globalMiniPlay').textContent=state.el.paused?'▶':'Ⅱ';
+}
+
+async function toggleGlobalMedia(){
+  const state=getActiveMediaState();
+  if(!state)return;
+  try{
+    if(state.el.paused)await state.el.play();
+    else state.el.pause();
+  }catch(e){}
+  renderGlobalMini();
+}
+
+function globalJump(delta){
+  const state=getActiveMediaState();
+  if(!state)return;
+  const d=Number.isFinite(state.el.duration)?state.el.duration:Infinity;
+  state.el.currentTime=Math.max(0,Math.min(d,(state.el.currentTime||0)+delta));
+  if(state.key==='meditation')sync();
+  else if(state.key==='adhkar')syncAdhkar();
+  else if(state.key==='soundlab')syncSoundLab();
+  else if(state.key==='book')syncBookAudio();
+  renderGlobalMini();
+}
+
+function stopGlobalMedia(){
+  const state=getActiveMediaState();
+  if(!state)return;
+  state.el.pause();
+  try{state.el.currentTime=0}catch(e){}
+  try{localStorage.removeItem('heartclearActiveMedia')}catch(e){}
+  if(state.key==='meditation')sync();
+  else if(state.key==='adhkar')syncAdhkar();
+  else if(state.key==='soundlab')syncSoundLab();
+  else if(state.key==='book')syncBookAudio();
+  document.getElementById('globalMini').classList.remove('show');
+}
+
+function openActiveMediaPlayer(){
+  const state=getActiveMediaState();
+  if(state)show(state.screen);
 }
 
 function navTo(id,btn){
@@ -2278,7 +2422,7 @@ function updateBookMini(currentScreen){
   const mini=document.getElementById('bookMini');
   if(!mini || !bookAudioEl)return;
   const hasSource=!!bookAudioEl.getAttribute('src');
-  const shouldShow=hasSource && currentScreen!=='bookAudio';
+  const shouldShow=false;
   mini.classList.toggle('show',shouldShow);
   const meta=document.getElementById('bookMiniMeta');
   if(meta)meta.textContent=(currentBookAudioLang==='ta'?'Tamil':'English')+' · '+fmt(bookAudioEl.currentTime||0);
@@ -2297,7 +2441,7 @@ function stopBookAudio(){
 
 async function toggleBookAudio(){
   if(bookAudioEl.paused){
-    try{await bookAudioEl.play()}catch(e){}
+    try{await bookAudioEl.play();rememberActiveMedia('book')}catch(e){}
   }else bookAudioEl.pause();
   syncBookAudio();
 }
@@ -2341,8 +2485,8 @@ function setBookMediaSession(){
       album:currentBookAudioLang==='ta'?'Tamil Audiobook':'English Audiobook',
       artwork:hcArtwork()
     });
-    navigator.mediaSession.setActionHandler('play',()=>bookAudioEl.play());
-    navigator.mediaSession.setActionHandler('pause',()=>bookAudioEl.pause());
+    navigator.mediaSession.setActionHandler('play',()=>{rememberActiveMedia('book');return bookAudioEl.play()});
+    navigator.mediaSession.setActionHandler('pause',()=>{bookAudioEl.pause();renderGlobalMini()});
     navigator.mediaSession.setActionHandler('seekbackward',details=>bookJump(-(details.seekOffset||30)));
     navigator.mediaSession.setActionHandler('seekforward',details=>bookJump(details.seekOffset||30));
     try{
@@ -2363,6 +2507,19 @@ adhkarAudio.addEventListener('play',syncAdhkar);
 adhkarAudio.addEventListener('pause',syncAdhkar);
 adhkarAudio.addEventListener('loadedmetadata',syncAdhkar);
 adhkarSeek.addEventListener('input',()=>{adhkarAudio.currentTime=Number(adhkarSeek.value)||0;syncAdhkar()});
+
+function attachGlobalMiniEvents(el,key){
+  if(!el)return;
+  el.addEventListener('play',()=>{rememberActiveMedia(key);renderGlobalMini()});
+  el.addEventListener('pause',renderGlobalMini);
+  el.addEventListener('timeupdate',renderGlobalMini);
+  el.addEventListener('ended',renderGlobalMini);
+}
+
+attachGlobalMiniEvents(audio,'meditation');
+attachGlobalMiniEvents(adhkarAudio,'adhkar');
+attachGlobalMiniEvents(soundLabAudio,'soundlab');
+attachGlobalMiniEvents(bookAudioEl,'book');
 
 bookAudioEl.addEventListener('timeupdate',syncBookAudio);
 bookAudioEl.addEventListener('play',syncBookAudio);
@@ -2514,7 +2671,7 @@ function openSoundTrack(key){
 
 async function toggleSoundLab(){
   if(soundLabAudio.paused){
-    try{await soundLabAudio.play()}catch(e){}
+    try{await soundLabAudio.play();rememberActiveMedia('soundlab')}catch(e){}
   }else soundLabAudio.pause();
   syncSoundLab();
 }
@@ -2568,8 +2725,8 @@ function setSoundLabMediaSession(){
       album:'Sound Lab',
       artwork:hcArtwork()
     });
-    navigator.mediaSession.setActionHandler('play',()=>soundLabAudio.play());
-    navigator.mediaSession.setActionHandler('pause',()=>soundLabAudio.pause());
+    navigator.mediaSession.setActionHandler('play',()=>{rememberActiveMedia('soundlab');return soundLabAudio.play()});
+    navigator.mediaSession.setActionHandler('pause',()=>{soundLabAudio.pause();renderGlobalMini()});
     navigator.mediaSession.setActionHandler('seekbackward',details=>soundLabJump(-(details.seekOffset||15)));
     navigator.mediaSession.setActionHandler('seekforward',details=>soundLabJump(details.seekOffset||15));
     try{
@@ -2602,8 +2759,8 @@ function setAdhkarMediaSession(){
       album:'Islamic · Sacred Sound',
       artwork:hcArtwork()
     });
-    navigator.mediaSession.setActionHandler('play',()=>adhkarAudio.play());
-    navigator.mediaSession.setActionHandler('pause',()=>adhkarAudio.pause());
+    navigator.mediaSession.setActionHandler('play',()=>{rememberActiveMedia('adhkar');return adhkarAudio.play()});
+    navigator.mediaSession.setActionHandler('pause',()=>{adhkarAudio.pause();renderGlobalMini()});
     navigator.mediaSession.setActionHandler('seekbackward',details=>adhkarJump(-(details.seekOffset||15)));
     navigator.mediaSession.setActionHandler('seekforward',details=>adhkarJump(details.seekOffset||15));
     try{
@@ -2634,7 +2791,7 @@ function openAdhkar(mode){
 
 async function toggleAdhkarAudio(){
   if(adhkarAudio.paused){
-    try{await adhkarAudio.play()}catch(e){}
+    try{await adhkarAudio.play();rememberActiveMedia('adhkar')}catch(e){}
   }else adhkarAudio.pause();
   syncAdhkar();
 }
@@ -3036,8 +3193,8 @@ function setMediaSession(){
       album:chosenKicker,
       artwork:hcArtwork()
     });
-    navigator.mediaSession.setActionHandler('play',async()=>{try{await audio.play();syncPracticeVisual(true)}catch(e){}});
-    navigator.mediaSession.setActionHandler('pause',()=>{audio.pause();syncPracticeVisual()});
+    navigator.mediaSession.setActionHandler('play',async()=>{try{await audio.play();rememberActiveMedia('meditation');syncPracticeVisual(true);renderGlobalMini()}catch(e){}});
+    navigator.mediaSession.setActionHandler('pause',()=>{audio.pause();syncPracticeVisual();renderGlobalMini()});
     navigator.mediaSession.setActionHandler('seekbackward',details=>jump(-(details.seekOffset||10)));
     navigator.mediaSession.setActionHandler('seekforward',details=>jump(details.seekOffset||10));
     try{
@@ -3275,6 +3432,7 @@ async function togglePlay(){
   if(audio.paused){
     try{
       await audio.play();
+      rememberActiveMedia('meditation');
       syncPracticeVisual(true);
       if(!sessionStartedAt) sessionStartedAt=Date.now();
       resumeCard.classList.remove('show');
@@ -3411,6 +3569,7 @@ document.addEventListener('visibilitychange',()=>{
   }else{
     if(!audio.paused)syncPracticeVisual(true);
     if(!adhkarAudio.paused&&av)av.play().catch(()=>{});
+    renderGlobalMini();
   }
 });
 
