@@ -1356,6 +1356,24 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
   background:#fff!important;color:#07131b!important;border:1px solid #fff!important;
   box-shadow:0 8px 28px rgba(255,255,255,.10)!important;
 }
+
+/* Sound Lab continuity, sources and local voice reflection */
+.soundlab-continuity{margin-top:14px;padding:14px;border:1px solid rgba(220,239,245,.17);border-radius:17px;background:rgba(10,30,42,.45)}
+.soundlab-continuity label{display:block;font-size:12px;margin-bottom:8px;color:#f0f7f9}
+.soundlab-continuity select{width:100%;min-height:44px;padding:9px 12px;background:#112b38;color:#fff;border:1px solid rgba(255,255,255,.2);border-radius:12px;font:inherit}
+.soundlab-continuity .soundlab-options{margin-top:10px}
+.soundlab-continuity .soundlab-options button{min-height:44px}
+#soundLabAutoNextBtn[aria-pressed="true"]{background:#fff!important;color:#07131b!important;border-color:#fff!important}
+.hc-voice-box{display:none;margin:20px 0;padding:16px;border:1px solid rgba(217,237,241,.2);border-radius:18px;background:rgba(10,31,42,.6)}
+.hc-voice-box.show{display:block}
+.hc-voice-box .voice-buttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.hc-voice-box button,.hc-voice-box a{background:#fff;color:#07131b;border:1px solid white;border-radius:12px;min-height:44px;padding:11px 15px;font:inherit;font-size:13px;text-decoration:none}
+.hc-voice-box button[disabled]{opacity:.4}
+.hc-voice-box audio{display:none;width:100%;margin-top:12px}
+.hc-voice-box audio.show{display:block}
+.hc-voice-status{font-size:12px;line-height:1.5;margin-top:10px;color:#dfebf0}
+@media(max-width:390px){.hc-voice-box .voice-buttons button,.hc-voice-box .voice-buttons a{flex:1}}
+
 </style>
 </head>
 <body>
@@ -1688,6 +1706,17 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
     <button class="btn secondary" id="humanSoundBtn" onclick="toggleHumanSound()">Play background sound</button>
     <button class="btn" id="humanStartBtn" onclick="toggleHumanTimer()">Start timer</button>
     <audio id="humanSoundAudio" playsinline preload="none" loop></audio>
+    <div class="hc-voice-box" id="humanVoiceBox">
+      <b>Read or speak in your own voice</b>
+      <p style="font-size:12px;line-height:1.6">Optional voice reflection. Tap Record, say a few sentences, stop, listen back and save the recording to your device. HeartClear does not upload or store your voice online. Recording will pause background sound.</p>
+      <div class="voice-buttons">
+        <button id="humanVoiceRecordBtn" onclick="beginHumanVoiceRecording()">Record voice</button>
+        <button id="humanVoiceStopBtn" onclick="endHumanVoiceRecording()" disabled>Stop recording</button>
+        <a id="humanVoiceSaveBtn" style="display:none" download>Save recording</a>
+      </div>
+      <audio id="humanVoicePreview" controls playsinline></audio>
+      <p id="humanVoiceStatus" class="hc-voice-status" role="status">Microphone access is requested only when you press Record.</p>
+    </div>
     <button class="btn secondary" onclick="completeHumanPractice()">Done</button>
   </div>
 </section>
@@ -1706,6 +1735,16 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
         <span class="fear-level">1<br>Easy</span>
         <span><b>Ocean Familiarity</b><small>2:46 · recorded sea waves</small></span>
         <span class="fear-count" id="fearCountOcean">0 times</span>
+      </button>
+      <button class="fear-card" onclick="openFearTrack('rain')">
+        <span class="fear-level">1<br>Easy</span>
+        <span><b>Rain Familiarity</b><small>1:18 · steady rain on water</small></span>
+        <span class="fear-count" id="fearCountRain">0 times</span>
+      </button>
+      <button class="fear-card" onclick="openFearTrack('wind')">
+        <span class="fear-level">1<br>Easy</span>
+        <span><b>Wind Familiarity</b><small>1:56 · real wind in trees</small></span>
+        <span class="fear-count" id="fearCountWind">0 times</span>
       </button>
       <button class="fear-card" onclick="openFearTrack('storm')">
         <span class="fear-level">2<br>Medium</span>
@@ -2128,7 +2167,6 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
     <div class="hub-note" style="margin-top:12px">Birds · fire · rain · ocean · thunder · ambient beds · closing music</div>
     <h3 style="font-size:17px;margin:20px 0 12px">Ambient &amp; Stillness</h3>
     <div class="soundlab-grid">
-      <button class="soundlab-card" onclick="openSoundTrack('soft')"><span class="soundlab-icon">◌</span><span><b>Soft Hum</b><small>5 min · soft tonal bed</small></span><span class="soundlab-duration">5:00</span></button>
       <button class="soundlab-card" onclick="openSoundTrack('horizon')"><span class="soundlab-icon">≈</span><span><b>Horizon</b><small>7 min · slow ambient field</small></span><span class="soundlab-duration">7:00</span></button>
       <button class="soundlab-card" onclick="openSoundTrack('stillness2')"><span class="soundlab-icon">◌</span><span><b>Deep Sleep Stillness</b><small>2 min · closing music</small></span><span class="soundlab-duration">2:00</span></button>
       <button class="soundlab-card" onclick="openSoundTrack('deep')"><span class="soundlab-icon">○</span><span><b>Deep Stillness</b><small>17 min · long quiet ambient</small></span><span class="soundlab-duration">17:00</span></button>
@@ -2144,7 +2182,17 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       <button class="soundlab-card" onclick="openSoundTrack('storm')"><span class="soundlab-icon">◌</span><span><b>Storm</b><small>Rain and low rumble · 5 min</small></span><span class="soundlab-duration">2:37</span></button>
       <button class="soundlab-card" onclick="openSoundTrack('thunder')"><span class="soundlab-icon">⌁</span><span><b>Distant Thunder</b><small>Low thunder · 6 min</small></span><span class="soundlab-duration">0:42</span></button>
     </div>
-    <div class="hub-note">Nature Weave and the 2-minute Deep Sleep stillness preview are stored with HeartClear. Separate birds, fire and rain use credited CC0 field-recording links and require internet.</div>
+    <h3 style="font-size:18px;margin:22px 0 10px">More real nature recordings</h3>
+    <div class="soundlab-grid">
+      <button class="soundlab-card" onclick="openSoundTrack('foreststream')"><span class="soundlab-icon">≈</span><span><b>Forest Stream</b><small>5:01 · flowing brook and birds</small></span><span class="soundlab-duration">5:01</span></button>
+      <button class="soundlab-card" onclick="openSoundTrack('treewind')"><span class="soundlab-icon">◌</span><span><b>Wind in a Tree</b><small>1:56 · leaves and distant birds</small></span><span class="soundlab-duration">1:56</span></button>
+      <button class="soundlab-card" onclick="openSoundTrack('windfield')"><span class="soundlab-icon">〰</span><span><b>Wind in a Field</b><small>3:25 · wind across a cornfield</small></span><span class="soundlab-duration">3:25</span></button>
+      <button class="soundlab-card" onclick="openSoundTrack('nightforest')"><span class="soundlab-icon">◐</span><span><b>Forest After Rain</b><small>0:30 · nighttime ambience</small></span><span class="soundlab-duration">0:30</span></button>
+      <button class="soundlab-card" onclick="openSoundTrack('countryside')"><span class="soundlab-icon">✺</span><span><b>Countryside</b><small>1:52 · real birds, wind and insects</small></span><span class="soundlab-duration">1:52</span></button>
+      <button class="soundlab-card" onclick="openSoundTrack('frogswater')"><span class="soundlab-icon">≈</span><span><b>Frogs &amp; Waterfall</b><small>2:30 · frogs and distant falling water</small></span><span class="soundlab-duration">2:30</span></button>
+    </div>
+    <div class="hub-note">These extra tracks are real CC0 field recordings documented in HeartClear Nature Audio on Drive. They stream from their source site; they are not the new mastered v2 previews and need internet. Continuous Play can keep the listening experience going past the end of each source.</div>
+    <div class="hub-note">Nature Weave and the 2-minute Deep Sleep stillness preview are stored with HeartClear. Other nature recordings require internet unless separately downloaded.</div>
     <div class="hub-note">Other Sound Lab beds are test sounds, not sacred recitations or medical-frequency claims.</div>
   </div>
 </section>
@@ -2154,8 +2202,8 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
     <button class="collection-back" onclick="show('soundLab')">‹ Sound Lab</button>
     <div class="soundlab-orb"></div>
     <div class="kicker">HeartClear · Sound Lab</div>
-    <h2 id="soundLabTitle">Soft Hum</h2>
-    <p id="soundLabDesc">5 min · soft tonal bed</p>
+    <h2 id="soundLabTitle">Horizon</h2>
+    <p id="soundLabDesc">7 min · slow ambient field</p>
 
     <input id="soundLabSeek" class="seek" type="range" min="0" max="300" value="0" step="0.1" aria-label="Sound Lab position">
     <div class="adhkar-times"><span id="soundLabElapsed">00:00</span><span id="soundLabTotal">05:00</span></div>
@@ -2170,6 +2218,22 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
     <div class="soundlab-options">
       <button id="soundLoopBtn" onclick="toggleSoundLoop()">Loop off</button>
       <button onclick="stopSoundLab()">Stop</button>
+    </div>
+    <div class="soundlab-continuity">
+      <label for="soundLabDurationChoice">Listening time</label>
+      <select id="soundLabDurationChoice" onchange="setSoundLabDuration(this.value)">
+        <option value="0" selected>Continuous · until I stop</option>
+        <option value="420">7 minutes</option>
+        <option value="600">10 minutes</option>
+        <option value="900">15 minutes</option>
+        <option value="1800">30 minutes</option>
+        <option value="3600">60 minutes</option>
+      </select>
+      <div class="soundlab-options">
+        <button id="soundLabAutoNextBtn" onclick="toggleSoundLabAutoNext()" aria-pressed="true">Auto-play next: On</button>
+        <button onclick="playNextSoundLab(true)">Next sound →</button>
+      </div>
+      <p id="soundLabQueueStatus" class="player-status" role="status">Next track plays automatically. Continuous listening uses successive recordings, not a single 60-minute master.</p>
     </div>
 
     <div class="hub-note">Audio can continue while you move around HeartClear. Lock-screen controls are used where the browser supports them.</div>
@@ -2220,7 +2284,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v77</div>
+    <div class="app-version">HeartClear · prototype v78</div>
   </div>
 </section>
 
@@ -2888,7 +2952,7 @@ function getActiveMediaState(){
     },
     {
       key:'soundlab',el:soundLabAudio,
-      title:(soundLabTracks[currentSoundKey]||soundLabTracks.soft).title,
+      title:(soundLabTracks[currentSoundKey]||soundLabTracks.horizon).title,
       meta:'Sound Lab · '+fmt(soundLabAudio.currentTime||0),
       screen:'soundLabPlayer'
     },
@@ -3099,7 +3163,7 @@ function saveReturnCheck(){
   renderDashboard();
 }
 
-const fearTracks={"ocean":{"title":"Ocean Familiarity","level":"Easy","duration":166,"url":"https://bigsoundbank.com/UPLOAD/mp3/0698.mp3","desc":"2:46 · recorded sea waves · begin at a comfortable volume"},"storm":{"title":"Storm Familiarity","level":"Medium","duration":157,"url":"https://bigsoundbank.com/UPLOAD/mp3/0740.mp3","desc":"2:37 · rain and thunder · begin quietly"},"thunder":{"title":"Distant Thunder","level":"Stronger","duration":42,"url":"https://bigsoundbank.com/UPLOAD/mp3/3181.mp3","desc":"0:42 · distant thunder recording · low volume"}};
+const fearTracks={"ocean":{"title":"Ocean Familiarity","level":"Easy","duration":166,"url":"https://bigsoundbank.com/UPLOAD/mp3/0698.mp3","desc":"2:46 · recorded sea waves · begin at a comfortable volume"},"storm":{"title":"Storm Familiarity","level":"Medium","duration":157,"url":"https://bigsoundbank.com/UPLOAD/mp3/0740.mp3","desc":"2:37 · rain and thunder · begin quietly"},"thunder":{"title":"Distant Thunder","level":"Stronger","duration":42,"url":"https://bigsoundbank.com/UPLOAD/mp3/3181.mp3","desc":"0:42 · distant thunder recording · low volume"},"rain":{"title":"Rain Familiarity","level":"Easy","duration":78,"url":"https://bigsoundbank.com/UPLOAD/mp3/1290.mp3","desc":"1:18 · real rain on puddle · start quietly"},"wind":{"title":"Wind Familiarity","level":"Easy","duration":116,"url":"https://bigsoundbank.com/UPLOAD/mp3/0659.mp3","desc":"1:56 · real wind in trees · start quietly"}};
 const fearAudio=document.getElementById('fearAudio');
 const fearSeek=document.getElementById('fearSeek');
 
@@ -3109,7 +3173,7 @@ function getFearStats(){
 
 function renderFearStats(){
   const s=getFearStats();
-  const map={ocean:'fearCountOcean',storm:'fearCountStorm',thunder:'fearCountThunder'};
+  const map={ocean:'fearCountOcean',rain:'fearCountRain',wind:'fearCountWind',storm:'fearCountStorm',thunder:'fearCountThunder'};
   Object.keys(map).forEach(k=>{
     const el=document.getElementById(map[k]);
     if(el){
@@ -3325,10 +3389,70 @@ function openHumanPractice(kind,index){
   document.getElementById('humanSessionNote').textContent=currentHumanPractice.note;
   document.getElementById('humanClock').textContent=fmt(humanRemaining);
   document.getElementById('humanStartBtn').textContent='Start timer';
+  const voiceBox=document.getElementById('humanVoiceBox');
+  if(voiceBox)voiceBox.classList.toggle('show',kind==='attention'&&currentHumanPractice.title==='Speak With Intention');
+  if(humanVoiceRecorder && humanVoiceRecorder.state==='recording')endHumanVoiceRecording();
   show('humanSession');
   prepareHumanSound('nature');
 }
 
+let humanVoiceRecorder=null;
+let humanVoiceStream=null;
+let humanVoiceUrl='';
+let humanVoiceLimit=null;
+function humanVoiceMessage(msg){
+  const el=document.getElementById('humanVoiceStatus');if(el)el.textContent=msg;
+}
+async function beginHumanVoiceRecording(){
+  const start=document.getElementById('humanVoiceRecordBtn'),stop=document.getElementById('humanVoiceStopBtn');
+  if(humanVoiceRecorder&&humanVoiceRecorder.state==='recording')return;
+  if(!navigator.mediaDevices?.getUserMedia||typeof MediaRecorder==='undefined'){
+    humanVoiceMessage('Voice recording is unavailable in this browser. Open HeartClear on HTTPS in a supported browser.');return;
+  }
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true},video:false});
+    humanVoiceStream=stream;
+    const options={};
+    const format=['audio/mp4','audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus'].find(t=>MediaRecorder.isTypeSupported(t));
+    if(format)options.mimeType=format;
+    const rec=new MediaRecorder(stream,options),parts=[];
+    humanVoiceRecorder=rec;
+    if(typeof humanSoundAudio!=='undefined')humanSoundAudio.pause();
+    const playPreview=document.getElementById('humanVoicePreview');if(playPreview)playPreview.pause();
+    rec.ondataavailable=e=>{if(e.data&&e.data.size)parts.push(e.data)};
+    rec.onerror=()=>humanVoiceMessage('Recording error. Please stop and try again.');
+    rec.onstop=()=>{
+      if(humanVoiceLimit){clearTimeout(humanVoiceLimit);humanVoiceLimit=null}
+      stream.getTracks().forEach(t=>t.stop());
+      humanVoiceStream=null;
+      if(!parts.length){humanVoiceMessage('No audio was captured. Try recording again.');return}
+      if(humanVoiceUrl)URL.revokeObjectURL(humanVoiceUrl);
+      const blob=new Blob(parts,{type:rec.mimeType||parts[0].type||'audio/webm'});
+      humanVoiceUrl=URL.createObjectURL(blob);
+      const player=document.getElementById('humanVoicePreview');
+      player.src=humanVoiceUrl;player.classList.add('show');
+      const link=document.getElementById('humanVoiceSaveBtn');
+      const ext=blob.type.includes('mp4')?'m4a':blob.type.includes('ogg')?'ogg':'webm';
+      link.href=humanVoiceUrl;link.download='heartclear-my-voice-'+new Date().toISOString().slice(0,10)+'.'+ext;
+      link.style.display='inline-flex';
+      humanVoiceMessage('Recording ready. Listen to it or tap Save recording. It stays on this device unless you choose to share it.');
+    };
+    rec.start(250);
+    if(start)start.disabled=true;
+    if(stop)stop.disabled=false;
+    humanVoiceMessage('Recording now. Tap Stop when you finish. Maximum 10 minutes.');
+    humanVoiceLimit=setTimeout(()=>endHumanVoiceRecording(),600000);
+  }catch(e){humanVoiceMessage('Microphone permission was not granted or recording could not start. Check browser permission and try again.');
+    if(humanVoiceStream){humanVoiceStream.getTracks().forEach(t=>t.stop());humanVoiceStream=null}
+  }
+}
+function endHumanVoiceRecording(){
+  if(humanVoiceLimit){clearTimeout(humanVoiceLimit);humanVoiceLimit=null}
+  if(humanVoiceRecorder && humanVoiceRecorder.state==='recording')humanVoiceRecorder.stop();
+  const start=document.getElementById('humanVoiceRecordBtn'),stop=document.getElementById('humanVoiceStopBtn');
+  if(start)start.disabled=false;
+  if(stop)stop.disabled=true;
+}
 const humanSoundAudio=document.getElementById('humanSoundAudio');
 let humanSoundChoice='nature';
 let humanSoundPrepareVersion=0;
@@ -3809,8 +3933,8 @@ function setBookMediaSession(){
   }catch(e){}
 }
 
-const soundLabTracks={"soft":{"title":"Soft Hum","duration":300,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/786c6ede-1f00-4a77-ac39-08e26610fb43.mp3","desc":"5 min · soft tonal bed"},"horizon":{"title":"Horizon","duration":420,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/1e7ed74c-05be-4554-af16-152684e0bad5.mp3","desc":"7 min · slow ambient field"},"mantra":{"title":"Mantra Bed","duration":480,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/24c10e62-fbde-483b-bb36-5646c5715d2d.mp3","desc":"8 min · steady chant background"},"deep":{"title":"Deep Stillness","duration":1020,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/e13e7587-23c0-408a-9f0c-b75177ce8fbe.mp3","desc":"17 min · long quiet ambient"},"nature":{"title":"Nature Weave","duration":180,"url":"","desc":"3 min · birds, streams, ocean, wind and fire"},"birds":{"title":"Birdsong","duration":246,"url":"https://bigsoundbank.com/UPLOAD/mp3/0999.mp3","desc":"4 min · CC0 birds waking"},"fire":{"title":"Fire Crackling","duration":60,"url":"https://bigsoundbank.com/UPLOAD/mp3/0031.mp3","desc":"1 min · CC0 fireplace recording"},"rain":{"title":"Rain","duration":78,"url":"https://bigsoundbank.com/UPLOAD/mp3/1290.mp3","desc":"1 min · CC0 rain recording"},"ocean":{"title":"Ocean","duration":166,"url":"https://bigsoundbank.com/UPLOAD/mp3/0698.mp3","desc":"2:46 · Atlantic sea waves, CC0 field recording"},"storm":{"title":"Storm","duration":157,"url":"https://bigsoundbank.com/UPLOAD/mp3/0740.mp3","desc":"2:37 · natural storm with rain and thunder, CC0"},"thunder":{"title":"Distant Thunder","duration":42,"url":"https://bigsoundbank.com/UPLOAD/mp3/3181.mp3","desc":"0:42 · one recorded thunderclap, CC0"},"stillness2":{"title":"Deep Sleep Stillness","duration":120,"url":"./media/HeartClear_DeepSleep_Stillness_2min_PREVIEW.mp3","desc":"2 min · gentle closing music"}};
-let currentSoundKey='soft';
+const soundLabTracks={"horizon":{"title":"Horizon","duration":420,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/1e7ed74c-05be-4554-af16-152684e0bad5.mp3","desc":"7 min · slow ambient field"},"mantra":{"title":"Mantra Bed","duration":480,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/24c10e62-fbde-483b-bb36-5646c5715d2d.mp3","desc":"8 min · steady chant background"},"deep":{"title":"Deep Stillness","duration":1020,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/e13e7587-23c0-408a-9f0c-b75177ce8fbe.mp3","desc":"17 min · long quiet ambient"},"nature":{"title":"Nature Weave","duration":180,"url":"","desc":"3 min · birds, streams, ocean, wind and fire"},"birds":{"title":"Birdsong","duration":246,"url":"https://bigsoundbank.com/UPLOAD/mp3/0999.mp3","desc":"4 min · CC0 birds waking"},"fire":{"title":"Fire Crackling","duration":60,"url":"https://bigsoundbank.com/UPLOAD/mp3/0031.mp3","desc":"1 min · CC0 fireplace recording"},"rain":{"title":"Rain","duration":78,"url":"https://bigsoundbank.com/UPLOAD/mp3/1290.mp3","desc":"1 min · CC0 rain recording"},"ocean":{"title":"Ocean","duration":166,"url":"https://bigsoundbank.com/UPLOAD/mp3/0698.mp3","desc":"2:46 · Atlantic sea waves, CC0 field recording"},"storm":{"title":"Storm","duration":157,"url":"https://bigsoundbank.com/UPLOAD/mp3/0740.mp3","desc":"2:37 · natural storm with rain and thunder, CC0"},"thunder":{"title":"Distant Thunder","duration":42,"url":"https://bigsoundbank.com/UPLOAD/mp3/3181.mp3","desc":"0:42 · one recorded thunderclap, CC0"},"stillness2":{"title":"Deep Sleep Stillness","duration":120,"url":"./media/HeartClear_DeepSleep_Stillness_2min_PREVIEW.mp3","desc":"2 min · gentle closing music"},"foreststream":{"title":"Forest Stream","duration":301,"url":"https://bigsoundbank.com/UPLOAD/mp3/2713.mp3","desc":"5:01 · real stream, blackbird and forest · CC0"},"treewind":{"title":"Wind in a Tree","duration":116,"url":"https://bigsoundbank.com/UPLOAD/mp3/0659.mp3","desc":"1:56 · wind in a tree and birds · CC0"},"windfield":{"title":"Wind in a Field","duration":205,"url":"https://bigsoundbank.com/UPLOAD/mp3/1097.mp3","desc":"3:25 · wind in a cornfield · CC0"},"nightforest":{"title":"Forest After Rain","duration":30,"url":"https://bigsoundbank.com/UPLOAD/mp3/0555.mp3","desc":"0:30 · night ambience after rain · CC0"},"countryside":{"title":"Countryside","duration":112,"url":"https://bigsoundbank.com/UPLOAD/mp3/0097.mp3","desc":"1:52 · wind, birds and insects · CC0"},"frogswater":{"title":"Frogs & Waterfall","duration":150,"url":"https://bigsoundbank.com/UPLOAD/mp3/0998.mp3","desc":"2:30 · frogs, distant waterfall · CC0"}};
+let currentSoundKey='horizon';
 const soundLabAudio=document.getElementById('soundLabAudio');
 const soundLabSeek=document.getElementById('soundLabSeek');
 
@@ -4015,14 +4139,71 @@ function openSoundLab(){
   show('soundLab');
 }
 
+let soundLabAutoNext=true;
+let soundLabListeningSeconds=0;
+let soundLabListeningLimit=0;
+let soundLabPlaybackStartedAt=0;
+const soundLabQueue=['nature','rain','foreststream','ocean','birds','windfield','treewind','countryside','fire','nightforest','frogswater','storm','thunder','horizon','stillness2','deep'];
+try{const saved=localStorage.getItem('heartclearAutoNext');if(saved!==null)soundLabAutoNext=saved==='1'}catch(e){}
+function soundLabClockCommit(){
+  if(soundLabPlaybackStartedAt){soundLabListeningSeconds+=(Date.now()-soundLabPlaybackStartedAt)/1000;soundLabPlaybackStartedAt=0}
+}
+function setSoundLabDuration(value){
+  soundLabClockCommit();
+  soundLabListeningSeconds=0;
+  soundLabListeningLimit=Math.max(0,Number(value)||0);
+  if(!soundLabAudio.paused)soundLabPlaybackStartedAt=Date.now();
+  updateSoundLabQueueStatus();
+}
+function toggleSoundLabAutoNext(){
+  soundLabAutoNext=!soundLabAutoNext;
+  try{localStorage.setItem('heartclearAutoNext',soundLabAutoNext?'1':'0')}catch(e){}
+  soundLabAudio.loop=false;
+  const loop=document.getElementById('soundLoopBtn');if(loop){loop.textContent='Loop off';loop.classList.remove('active')}
+  updateSoundLabQueueStatus();
+}
+function updateSoundLabQueueStatus(){
+  const btn=document.getElementById('soundLabAutoNextBtn'),msg=document.getElementById('soundLabQueueStatus');
+  if(btn){btn.textContent='Auto-play next: '+(soundLabAutoNext?'On':'Off');btn.setAttribute('aria-pressed',String(soundLabAutoNext))}
+  if(msg)msg.textContent=(soundLabAutoNext?'Next real recording plays when this one ends.':'This track stops when it ends.')+(soundLabListeningLimit?' Listening target: '+Math.round(soundLabListeningLimit/60)+' min.':' Continuous until you stop.');
+}
+async function playNextSoundLab(userInitiated=false){
+  if(!userInitiated && !soundLabAutoNext)return;
+  if(soundLabListeningLimit && soundLabListeningSeconds>=soundLabListeningLimit){stopSoundLab();return}
+  const oldIndex=soundLabQueue.indexOf(currentSoundKey);
+  const next=soundLabQueue[(oldIndex+1+soundLabQueue.length)%soundLabQueue.length];
+  currentSoundKey=next;
+  const item=soundLabTracks[next];
+  soundLabFallbackActive=false;
+  soundLabAudio.loop=false;
+  const loop=document.getElementById('soundLoopBtn');if(loop){loop.textContent='Loop off';loop.classList.remove('active')}
+  soundLabAudio.pause();
+  if(next==='nature'){
+    try{soundLabAudio.src=await loadNatureSound()}catch(e){const st=document.getElementById('soundLabStatus');if(st)st.textContent='Nature mix unavailable. Tap Next sound to continue.';return}
+  }else soundLabAudio.src=item.url;
+  soundLabAudio.load();
+  document.getElementById('soundLabTitle').textContent=item.title;
+  document.getElementById('soundLabDesc').textContent=item.desc;
+  document.getElementById('soundLabTotal').textContent=fmt(item.duration);
+  setSoundLabMediaSession();
+  try{
+    await soundLabAudio.play();
+    soundLabPlayRequested=true;rememberActiveMedia('soundlab');
+    const st=document.getElementById('soundLabStatus');if(st)st.textContent='Now playing · '+item.title;
+  }catch(e){const st=document.getElementById('soundLabStatus');if(st)st.textContent='Next sound is ready. Tap Play if your device blocked automatic playback.'}
+  syncSoundLab();
+}
 function openSoundTrack(key){
-  const t=soundLabTracks[key]||soundLabTracks.soft;
-  currentSoundKey=key in soundLabTracks?key:'soft';
+  const t=soundLabTracks[key]||soundLabTracks.horizon;
+  currentSoundKey=key in soundLabTracks?key:'horizon';
 
   if(!audio.paused)audio.pause();
   if(bookAudioEl&&!bookAudioEl.paused)bookAudioEl.pause();
   if(!adhkarAudio.paused)adhkarAudio.pause();
+  if(!fearAudio.paused)fearAudio.pause();
+  if(!humanSoundAudio.paused)humanSoundAudio.pause();
 
+  soundLabClockCommit();soundLabListeningSeconds=0;soundLabPlaybackStartedAt=0;
   soundLabPlayRequested=false;soundLabFallbackActive=false;
   soundLabAudio.pause();soundLabAudio.removeAttribute('src');soundLabAudio.load();
   soundLabAudio.loop=false;soundLabAudio.volume=.55;
@@ -4047,6 +4228,9 @@ function openSoundTrack(key){
   document.getElementById('soundLabTotal').textContent=fmt(t.duration);
   document.getElementById('soundLoopBtn').textContent='Loop off';
   document.getElementById('soundLoopBtn').classList.remove('active');
+  const timeChoice=document.getElementById('soundLabDurationChoice');
+  soundLabListeningLimit=timeChoice?Math.max(0,Number(timeChoice.value)||0):0;
+  updateSoundLabQueueStatus();
 
   setSoundLabMediaSession();
   show('soundLabPlayer');
@@ -4079,14 +4263,14 @@ async function toggleSoundLab(){
       if(currentSoundKey==='nature'&&!soundLabAudio.getAttribute('src'))soundLabAudio.src=await loadNatureSound();
       await soundLabAudio.play();rememberActiveMedia('soundlab');
       const st=document.getElementById('soundLabStatus');
-      if(st)st.textContent='Playing · '+(soundLabTracks[currentSoundKey]||soundLabTracks.soft).title;
+      if(st)st.textContent='Playing · '+(soundLabTracks[currentSoundKey]||soundLabTracks.horizon).title;
     }catch(e){await fallbackSoundLab()}
   }else{soundLabPlayRequested=false;soundLabAudio.pause()}
   syncSoundLab();
 }
 
 function soundLabJump(delta){
-  const t=soundLabTracks[currentSoundKey]||soundLabTracks.soft;
+  const t=soundLabTracks[currentSoundKey]||soundLabTracks.horizon;
   const d=Number.isFinite(soundLabAudio.duration)?soundLabAudio.duration:t.duration;
   soundLabAudio.currentTime=Math.max(0,Math.min(d,(soundLabAudio.currentTime||0)+delta));
   syncSoundLab();
@@ -4094,6 +4278,8 @@ function soundLabJump(delta){
 
 function toggleSoundLoop(){
   soundLabAudio.loop=!soundLabAudio.loop;
+  if(soundLabAudio.loop){soundLabAutoNext=false;try{localStorage.setItem('heartclearAutoNext','0')}catch(e){}}
+  updateSoundLabQueueStatus();
   const b=document.getElementById('soundLoopBtn');
   if(b){
     b.textContent=soundLabAudio.loop?'Loop on':'Loop off';
@@ -4107,13 +4293,15 @@ soundLabAudio.addEventListener('error',()=>{
   else if(st)st.textContent='Sound unavailable. Please retry when connected.';
 });
 function stopSoundLab(){
+  soundLabClockCommit();soundLabListeningSeconds=0;
+  soundLabPlayRequested=false;
   soundLabAudio.pause();
   soundLabAudio.currentTime=0;
   syncSoundLab();
 }
 
 function syncSoundLab(){
-  const t=soundLabTracks[currentSoundKey]||soundLabTracks.soft;
+  const t=soundLabTracks[currentSoundKey]||soundLabTracks.horizon;
   const d=Number.isFinite(soundLabAudio.duration)?soundLabAudio.duration:t.duration;
   const now=soundLabAudio.currentTime||0;
   if(soundLabSeek){soundLabSeek.max=d;soundLabSeek.value=now}
@@ -4131,7 +4319,7 @@ function syncSoundLab(){
 
 function setSoundLabMediaSession(){
   if(!('mediaSession' in navigator))return;
-  const t=soundLabTracks[currentSoundKey]||soundLabTracks.soft;
+  const t=soundLabTracks[currentSoundKey]||soundLabTracks.horizon;
   try{
     navigator.mediaSession.metadata=new MediaMetadata({
       title:t.title,
@@ -4154,6 +4342,20 @@ function setSoundLabMediaSession(){
   }catch(e){}
 }
 
+soundLabAudio.addEventListener('play',()=>{if(!soundLabPlaybackStartedAt)soundLabPlaybackStartedAt=Date.now()});
+soundLabAudio.addEventListener('pause',soundLabClockCommit);
+soundLabAudio.addEventListener('ended',()=>{
+  soundLabClockCommit();
+  if(soundLabAutoNext&&!soundLabAudio.loop)playNextSoundLab(false);
+  else {soundLabPlayRequested=false;const st=document.getElementById('soundLabStatus');if(st)st.textContent='Listening finished. Press Play or choose another sound.'}
+});
+soundLabAudio.addEventListener('timeupdate',()=>{
+  if(soundLabListeningLimit && soundLabPlaybackStartedAt &&
+     soundLabListeningSeconds+(Date.now()-soundLabPlaybackStartedAt)/1000>=soundLabListeningLimit){
+    stopSoundLab();
+    const st=document.getElementById('soundLabStatus');if(st)st.textContent='Your selected listening time is complete.';
+  }
+});
 soundLabAudio.addEventListener('timeupdate',syncSoundLab);
 soundLabAudio.addEventListener('play',syncSoundLab);
 soundLabAudio.addEventListener('pause',syncSoundLab);
@@ -5237,7 +5439,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=77');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=78');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
