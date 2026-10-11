@@ -760,6 +760,42 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
   color:#91a5ae;font-size:12px;line-height:1.55
 }
 
+
+/* Hindu Chakra & Bija Sound v41 */
+.chakra-feature{
+  display:none;margin-top:14px;padding:15px;border-radius:20px;
+  border:1px solid rgba(212,178,115,.14);
+  background:linear-gradient(145deg,rgba(25,42,52,.72),rgba(6,18,26,.80))
+}
+.chakra-feature.show{display:block}
+.chakra-feature b{display:block;font-size:15px}
+.chakra-feature small{display:block;color:#8ca1aa;font-size:11px;line-height:1.5;margin-top:5px}
+.chakra-feature button{
+  width:100%;margin-top:12px;border:1px solid rgba(212,178,115,.16);
+  background:rgba(7,21,29,.62);color:#d7c198;border-radius:14px;padding:11px;
+  font:inherit;font-size:12px
+}
+.chakra-list{display:grid;gap:10px;margin-top:16px}
+.chakra-row{
+  display:grid;grid-template-columns:46px minmax(0,1fr) auto;gap:12px;align-items:center;
+  padding:13px 14px;border-radius:18px;border:1px solid rgba(198,225,236,.08);
+  background:rgba(5,18,27,.46)
+}
+.chakra-num{
+  width:42px;height:42px;border-radius:14px;display:grid;place-items:center;
+  background:rgba(14,38,50,.72);border:1px solid rgba(198,225,236,.08);
+  color:#bfa16d;font-size:12px
+}
+.chakra-row b{display:block;font-size:13px}
+.chakra-row small{display:block;color:#8096a1;font-size:10px;line-height:1.45;margin-top:3px}
+.chakra-bija{font-size:15px;color:#dfc38f;letter-spacing:.06em}
+.chakra-guide{
+  margin-top:14px;padding:14px;border-radius:18px;
+  border:1px solid rgba(198,225,236,.07);background:rgba(5,18,27,.42);
+  color:#94a8b2;font-size:12px;line-height:1.6
+}
+.chakra-guide strong{color:#cfb37e}
+
 </style>
 </head>
 <body>
@@ -1100,6 +1136,12 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
       <span class="rights-pill">Pilot source · confirm media permission before public release</span>
     </div>
 
+    <div class="chakra-feature" id="hinduFeatured">
+      <b>Chakra & Bija Sound</b>
+      <small>Traditional seed-syllable practice: LAM · VAM · RAM · YAM · HAM · OM · Silence.</small>
+      <button onclick="openChakraGuide()">Learn & Practice</button>
+    </div>
+
     <div class="empty-shelf" style="margin-top:14px">
       <div class="empty-icon">♪</div>
       <strong id="sacredEmptyTitle">Sound sessions are ready to be added</strong>
@@ -1131,6 +1173,65 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
   </div>
 </section>
 
+<section class="screen" id="chakraGuide">
+  <div class="glass">
+    <button class="collection-back" onclick="show('sacredDetail')">‹ Hindu</button>
+    <div class="kicker">Hindu · Traditional Sound Practice</div>
+    <h2>Chakra & Bija Sound</h2>
+    <p>A traditional contemplative map from yogic and tantric traditions. Use it as attention and sound practice, not as anatomy or medical treatment.</p>
+
+    <div class="chakra-list">
+      <div class="chakra-row">
+        <span class="chakra-num">1</span>
+        <span><b>Muladhara · Root</b><small>Base of the spine · grounding · earth association</small></span>
+        <span class="chakra-bija">LAM</span>
+      </div>
+      <div class="chakra-row">
+        <span class="chakra-num">2</span>
+        <span><b>Svadhisthana · Sacral</b><small>Lower belly · flow · water association</small></span>
+        <span class="chakra-bija">VAM</span>
+      </div>
+      <div class="chakra-row">
+        <span class="chakra-num">3</span>
+        <span><b>Manipura · Navel</b><small>Navel / solar-plexus region · intention · fire association</small></span>
+        <span class="chakra-bija">RAM</span>
+      </div>
+      <div class="chakra-row">
+        <span class="chakra-num">4</span>
+        <span><b>Anahata · Heart</b><small>Center of the chest · connection · air association</small></span>
+        <span class="chakra-bija">YAM</span>
+      </div>
+      <div class="chakra-row">
+        <span class="chakra-num">5</span>
+        <span><b>Vishuddha · Throat</b><small>Throat · expression · space association</small></span>
+        <span class="chakra-bija">HAM</span>
+      </div>
+      <div class="chakra-row">
+        <span class="chakra-num">6</span>
+        <span><b>Ajna · Brow</b><small>Brow / inner-attention center · often paired with OM or AUM</small></span>
+        <span class="chakra-bija">OM</span>
+      </div>
+      <div class="chakra-row">
+        <span class="chakra-num">7</span>
+        <span><b>Sahasrara · Crown</b><small>Crown · traditionally represented by silence in many systems</small></span>
+        <span class="chakra-bija">SILENCE</span>
+      </div>
+    </div>
+
+    <div class="chakra-guide">
+      <strong>Gentle practice</strong><br>
+      Sit comfortably. Let the inhale happen naturally. On an easy exhale, chant one syllable without forcing volume or breath length. Try 3 comfortable repetitions, then pause in silence before moving to the next center. Do not hold the breath. Stop if you feel dizzy or uncomfortable.
+    </div>
+
+    <div class="chakra-guide">
+      <strong>OM / AUM</strong><br>
+      If using A-U-M, let the sound move naturally from an open “A” toward “U” and finish with the closed-lip “M” hum. The goal is attention and listening, not producing a special frequency.
+    </div>
+
+    <div class="hub-note">HeartClear presents these as traditional contemplative associations. It does not claim that chanting a particular syllable cures disease, “activates” a physical organ, or guarantees a spiritual state.</div>
+  </div>
+</section>
+
 <section class="screen" id="settings">
   <div class="glass">
     <div class="kicker">HeartClear</div>
@@ -1151,7 +1252,7 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v40</div>
+    <div class="app-version">HeartClear · prototype v41</div>
   </div>
 </section>
 
@@ -1254,7 +1355,7 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
     <button class="btn secondary" onclick="finish()" id="finishBtn">Finish</button>
   </div>
   <div class="footer">HeartClear · audio starts only when you press Play</div>
-  <audio id="audio" preload="metadata"></audio>
+  <audio id="audio" preload="auto" playsinline></audio>
 </section>
 
 <nav class="bottom-nav" id="bottomNav" aria-label="Primary navigation">
@@ -1305,6 +1406,12 @@ const playCore=document.getElementById('playCore');
 const remainingEl=document.getElementById('remaining');
 const optionsPanel=document.getElementById('optionsPanel');
 const resumeCard=document.getElementById('resumeCard');
+
+try{
+  if('audioSession' in navigator && navigator.audioSession){
+    navigator.audioSession.type='playback';
+  }
+}catch(e){}
 
 function show(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
@@ -1488,11 +1595,21 @@ function openSacred(kind){
   document.getElementById('sacredMeaning').textContent=data.meaning||'Understand the meaning before listening.';
   const featured=document.getElementById('islamicFeatured');
   if(featured) featured.classList.toggle('show',kind==='islamic');
+  const hinduFeatured=document.getElementById('hinduFeatured');
+  if(hinduFeatured) hinduFeatured.classList.toggle('show',kind==='hindu');
   const empty=document.getElementById('sacredEmptyTitle');
   const emptyText=document.getElementById('sacredEmptyText');
-  if(empty) empty.textContent=kind==='islamic'?'More sessions can be added':'Sound sessions are ready to be added';
-  if(emptyText) emptyText.textContent=kind==='islamic'?'Add more rights-cleared dua, dhikr or Quranic listening here.':'We will add rights-cleared recordings and accurate text/meaning here.';
+  if(empty) empty.textContent=kind==='islamic'?'More sessions can be added':kind==='hindu'?'More mantra sessions can be added':'Sound sessions are ready to be added';
+  if(emptyText) emptyText.textContent=kind==='islamic'
+    ?'Add more rights-cleared dua, dhikr or Quranic listening here.'
+    :kind==='hindu'
+      ?'Add rights-cleared mantra recordings, pronunciation guides and source notes here.'
+      :'We will add rights-cleared recordings and accurate text/meaning here.';
   show('sacredDetail');
+}
+
+function openChakraGuide(){
+  show('chakraGuide');
 }
 
 function openAdhkar(mode){
@@ -1740,8 +1857,17 @@ function setMediaSession(){
     });
     navigator.mediaSession.setActionHandler('play',async()=>{try{await audio.play();syncPracticeVisual(true)}catch(e){}});
     navigator.mediaSession.setActionHandler('pause',()=>{audio.pause();syncPracticeVisual()});
-    navigator.mediaSession.setActionHandler('seekbackward',()=>jump(-10));
-    navigator.mediaSession.setActionHandler('seekforward',()=>jump(10));
+    navigator.mediaSession.setActionHandler('seekbackward',details=>jump(-(details.seekOffset||10)));
+    navigator.mediaSession.setActionHandler('seekforward',details=>jump(details.seekOffset||10));
+    try{
+      navigator.mediaSession.setActionHandler('seekto',details=>{
+        if(typeof details.seekTime==='number'){
+          audio.currentTime=Math.max(0,Math.min(chosenSeconds,details.seekTime));
+          if(!document.hidden)syncPracticeVisual(true);
+          sync();
+        }
+      });
+    }catch(e){}
   }catch(e){}
 }
 
@@ -1945,6 +2071,10 @@ function fmt(sec){
 function syncPracticeVisual(force=false){
   const pv=document.getElementById('practiceVisual');
   if(!pv || !chosenVisualUrl)return;
+  if(document.hidden){
+    if(!pv.paused)pv.pause();
+    return;
+  }
   const target=Math.max(0,audio.currentTime||0);
   try{
     if(force || Math.abs((pv.currentTime||0)-target)>1.0){
@@ -2031,7 +2161,9 @@ function sync(){
   const wf=document.getElementById('waveform'); if(wf)wf.classList.toggle('playing',playing);
   const pv=document.getElementById('practiceVisual');
   if(pv && chosenVisualUrl){
-    if(playing){
+    if(document.hidden){
+      if(!pv.paused)pv.pause();
+    }else if(playing){
       if(Math.abs((pv.currentTime||0)-t)>1.5) syncPracticeVisual(true);
       else if(pv.paused) pv.play().catch(()=>{});
     }else if(!pv.paused){
@@ -2085,9 +2217,15 @@ document.querySelector('.player-orb').addEventListener('keydown',e=>{
   if(e.key==='Enter'||e.key===' '){e.preventDefault();togglePlay()}
 });
 document.addEventListener('visibilitychange',()=>{
-  if(document.hidden && audio.currentTime>20){
-    try{localStorage.setItem('clearWithinResume:'+chosenKicker,String(audio.currentTime))}catch(e){}
-    rememberLastSession(audio.currentTime);
+  const pv=document.getElementById('practiceVisual');
+  if(document.hidden){
+    if(pv && !pv.paused)pv.pause();
+    if(audio.currentTime>20){
+      try{localStorage.setItem('clearWithinResume:'+chosenKicker,String(audio.currentTime))}catch(e){}
+      rememberLastSession(audio.currentTime);
+    }
+  }else if(!audio.paused){
+    syncPracticeVisual(true);
   }
 });
 
@@ -2100,8 +2238,11 @@ renderDashboard();
 renderSettings();
 
 document.addEventListener('visibilitychange',async()=>{
-  if(document.visibilityState==='visible' && wakeLockEnabled && 'wakeLock' in navigator && !wakeLock){
-    try{wakeLock=await navigator.wakeLock.request('screen')}catch(e){}
+  if(document.visibilityState==='visible'){
+    if(wakeLockEnabled && 'wakeLock' in navigator && !wakeLock){
+      try{wakeLock=await navigator.wakeLock.request('screen')}catch(e){}
+    }
+    if(!audio.paused)syncPracticeVisual(true);
   }
 });
 
