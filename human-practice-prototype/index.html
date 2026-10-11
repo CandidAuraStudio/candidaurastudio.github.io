@@ -1003,6 +1003,42 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
 .adhkar-transport .primary{background:linear-gradient(180deg,#dfbd80,#b98349);color:#07131b;border:0;font-weight:750}
 .adhkar-status{margin-top:10px;color:#879ba5;font-size:10px;text-align:center}
 
+
+/* Sound Lab v48 */
+.soundlab-grid{display:grid;gap:10px;margin-top:16px}
+.soundlab-card{
+  width:100%;display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:12px;align-items:center;
+  padding:14px;border-radius:18px;border:1px solid rgba(198,225,236,.08);
+  background:rgba(5,18,27,.46);color:var(--ink);font:inherit;text-align:left
+}
+.soundlab-icon{
+  width:46px;height:46px;border-radius:14px;display:grid;place-items:center;
+  background:linear-gradient(145deg,rgba(22,53,67,.78),rgba(6,19,29,.88));
+  border:1px solid rgba(203,228,236,.09);color:#d6b477;font-size:18px
+}
+.soundlab-card b{display:block;font-size:13px}
+.soundlab-card small{display:block;color:#869aa4;font-size:10px;margin-top:3px}
+.soundlab-duration{color:#c1a36f;font-size:11px}
+.soundlab-player{text-align:center}
+.soundlab-orb{
+  width:120px;height:120px;border-radius:50%;margin:12px auto 20px;
+  border:1px solid rgba(207,230,236,.13);
+  background:radial-gradient(circle,rgba(48,108,129,.18),rgba(7,23,33,.80) 65%);
+  box-shadow:0 0 55px rgba(52,118,139,.12)
+}
+.soundlab-transport{display:grid;grid-template-columns:1fr 1.3fr 1fr;gap:9px;margin-top:13px}
+.soundlab-transport button{
+  min-height:46px;border:1px solid rgba(198,225,236,.10);
+  background:rgba(5,18,27,.55);color:#d6e0e4;border-radius:15px;font:inherit
+}
+.soundlab-transport .primary{border:0;background:linear-gradient(180deg,#dfbd80,#b98349);color:#07131b;font-weight:750}
+.soundlab-options{display:flex;justify-content:center;gap:9px;margin-top:12px}
+.soundlab-options button{
+  border:1px solid rgba(198,225,236,.10);background:rgba(5,18,27,.50);color:#96aab3;
+  border-radius:999px;padding:9px 12px;font:inherit;font-size:11px
+}
+.soundlab-options button.active{color:#e0c38d;border-color:rgba(215,181,116,.25);background:rgba(118,80,37,.14)}
+
 </style>
 </head>
 <body>
@@ -1406,10 +1442,17 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       
     </div>
 
+    <div class="chakra-feature" id="openSoundFeatured">
+      <b>Sound Lab</b>
+      <small>Original HeartClear test sounds for quiet listening, humming and simple sound practice.</small>
+      <button onclick="openSoundLab()">Open Sound Lab</button>
+    </div>
+
     <div class="chakra-feature" id="hinduFeatured">
       <b>Chakra & Bija Sound</b>
       <small>Traditional seed-syllable practice: LAM · VAM · RAM · YAM · HAM · OM · Silence.</small>
       <button onclick="openChakraGuide()">Learn & Practice</button>
+      <button onclick="openSoundTrack('mantra')" style="margin-top:8px">Play 8 min Mantra Bed</button>
     </div>
 
     <div class="empty-shelf" style="margin-top:14px">
@@ -1570,6 +1613,49 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
   </div>
 </section>
 
+<section class="screen" id="soundLab">
+  <div class="glass">
+    <button class="collection-back" onclick="show('sacredDetail')">‹ Sacred Sound</button>
+    <div class="kicker">Open Sound</div>
+    <h2>Sound Lab</h2>
+    <p>Simple original HeartClear sound beds for listening, humming or quiet reflection.</p>
+    <div class="soundlab-grid">
+      <button class="soundlab-card" onclick="openSoundTrack('soft')"><span class="soundlab-icon">◌</span><span><b>Soft Hum</b><small>5 min · soft tonal bed</small></span><span class="soundlab-duration">5:00</span></button>
+      <button class="soundlab-card" onclick="openSoundTrack('horizon')"><span class="soundlab-icon">≈</span><span><b>Horizon</b><small>7 min · slow ambient field</small></span><span class="soundlab-duration">7:00</span></button>
+      <button class="soundlab-card" onclick="openSoundTrack('mantra')"><span class="soundlab-icon">ॐ</span><span><b>Mantra Bed</b><small>8 min · steady chant background</small></span><span class="soundlab-duration">8:00</span></button>
+      <button class="soundlab-card" onclick="openSoundTrack('deep')"><span class="soundlab-icon">○</span><span><b>Deep Stillness</b><small>17 min · long quiet ambient</small></span><span class="soundlab-duration">17:00</span></button>
+    </div>
+    <div class="hub-note">These are temporary HeartClear test sound beds, not sacred recitations and not medical-frequency claims.</div>
+  </div>
+</section>
+
+<section class="screen" id="soundLabPlayer">
+  <div class="glass soundlab-player">
+    <button class="collection-back" onclick="show('soundLab')">‹ Sound Lab</button>
+    <div class="soundlab-orb"></div>
+    <div class="kicker">HeartClear · Sound Lab</div>
+    <h2 id="soundLabTitle">Soft Hum</h2>
+    <p id="soundLabDesc">5 min · soft tonal bed</p>
+
+    <input id="soundLabSeek" class="seek" type="range" min="0" max="300" value="0" step="0.1" aria-label="Sound Lab position">
+    <div class="adhkar-times"><span id="soundLabElapsed">00:00</span><span id="soundLabTotal">05:00</span></div>
+
+    <div class="soundlab-transport">
+      <button onclick="soundLabJump(-15)">−15s</button>
+      <button class="primary" id="soundLabPlayBtn" onclick="toggleSoundLab()">Play</button>
+      <button onclick="soundLabJump(15)">+15s</button>
+    </div>
+
+    <div class="soundlab-options">
+      <button id="soundLoopBtn" onclick="toggleSoundLoop()">Loop off</button>
+      <button onclick="stopSoundLab()">Stop</button>
+    </div>
+
+    <div class="hub-note">Audio can continue while you move around HeartClear. Lock-screen controls are used where the browser supports them.</div>
+    <audio id="soundLabAudio" preload="auto" playsinline></audio>
+  </div>
+</section>
+
 <section class="screen" id="settings">
   <div class="glass">
     <div class="kicker">HeartClear</div>
@@ -1598,7 +1684,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v47</div>
+    <div class="app-version">HeartClear · prototype v48</div>
   </div>
 </section>
 
@@ -1892,11 +1978,11 @@ function show(id){
   const target=document.getElementById(id);
   if(target) target.classList.add('active');
 
-  const immersive=['sessionReady','intro','prep','instructions','player','completion','humanSession','sacredSession','bookAudio','bookReader'].includes(id);
+  const immersive=['sessionReady','intro','prep','instructions','player','completion','humanSession','sacredSession','bookAudio','bookReader','soundLabPlayer'].includes(id);
   document.getElementById('bottomNav').classList.toggle('hidden',immersive);
   document.getElementById('appTopBar').classList.toggle('hidden',immersive);
 
-  const context={home:'Home',practices:'Meditation',human:'Human Practice',humanCategory:'Human Practice',returnJourney:'Observation',library:'Library',collection:'Library',sacred:'Sacred Sound',sacredDetail:'Sacred Sound',history:'History',settings:'Settings'}[id]||'';
+  const context={home:'Home',practices:'Meditation',human:'Human Practice',humanCategory:'Human Practice',returnJourney:'Observation',soundLab:'Sound Lab',soundLabPlayer:'Sound Lab',library:'Library',collection:'Library',sacred:'Sacred Sound',sacredDetail:'Sacred Sound',history:'History',settings:'Settings'}[id]||'';
   const ctx=document.getElementById('topContext'); if(ctx)ctx.textContent=context;
 
   if(['home','practices','library','sacred'].includes(id)){
@@ -2362,6 +2448,8 @@ function openSacred(kind){
   if(featured) featured.classList.toggle('show',kind==='islamic');
   const hinduFeatured=document.getElementById('hinduFeatured');
   if(hinduFeatured) hinduFeatured.classList.toggle('show',kind==='hindu');
+  const openSoundFeatured=document.getElementById('openSoundFeatured');
+  if(openSoundFeatured) openSoundFeatured.classList.toggle('show',kind==='open');
   const empty=document.getElementById('sacredEmptyTitle');
   const emptyText=document.getElementById('sacredEmptyText');
   if(empty) empty.textContent=kind==='islamic'?'More listening':kind==='hindu'?'More mantra practice':'Sound practice';
@@ -2390,6 +2478,116 @@ async function togglePip(videoId){
     else await v.requestPictureInPicture();
   }catch(e){}
 }
+
+const soundLabTracks={"soft":{"title":"Soft Hum","duration":300,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/786c6ede-1f00-4a77-ac39-08e26610fb43.mp3","desc":"5 min · soft tonal bed"},"horizon":{"title":"Horizon","duration":420,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/1e7ed74c-05be-4554-af16-152684e0bad5.mp3","desc":"7 min · slow ambient field"},"mantra":{"title":"Mantra Bed","duration":480,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/24c10e62-fbde-483b-bb36-5646c5715d2d.mp3","desc":"8 min · steady chant background"},"deep":{"title":"Deep Stillness","duration":1020,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/e13e7587-23c0-408a-9f0c-b75177ce8fbe.mp3","desc":"17 min · long quiet ambient"}};
+let currentSoundKey='soft';
+const soundLabAudio=document.getElementById('soundLabAudio');
+const soundLabSeek=document.getElementById('soundLabSeek');
+
+function openSoundLab(){
+  show('soundLab');
+}
+
+function openSoundTrack(key){
+  const t=soundLabTracks[key]||soundLabTracks.soft;
+  currentSoundKey=key in soundLabTracks?key:'soft';
+
+  if(!audio.paused)audio.pause();
+  if(bookAudioEl&&!bookAudioEl.paused)bookAudioEl.pause();
+  if(!adhkarAudio.paused)adhkarAudio.pause();
+
+  soundLabAudio.pause();
+  soundLabAudio.src=t.url;
+  soundLabAudio.loop=false;
+  soundLabAudio.currentTime=0;
+
+  document.getElementById('soundLabTitle').textContent=t.title;
+  document.getElementById('soundLabDesc').textContent=t.desc;
+  document.getElementById('soundLabTotal').textContent=fmt(t.duration);
+  document.getElementById('soundLoopBtn').textContent='Loop off';
+  document.getElementById('soundLoopBtn').classList.remove('active');
+
+  setSoundLabMediaSession();
+  show('soundLabPlayer');
+  syncSoundLab();
+}
+
+async function toggleSoundLab(){
+  if(soundLabAudio.paused){
+    try{await soundLabAudio.play()}catch(e){}
+  }else soundLabAudio.pause();
+  syncSoundLab();
+}
+
+function soundLabJump(delta){
+  const t=soundLabTracks[currentSoundKey]||soundLabTracks.soft;
+  const d=Number.isFinite(soundLabAudio.duration)?soundLabAudio.duration:t.duration;
+  soundLabAudio.currentTime=Math.max(0,Math.min(d,(soundLabAudio.currentTime||0)+delta));
+  syncSoundLab();
+}
+
+function toggleSoundLoop(){
+  soundLabAudio.loop=!soundLabAudio.loop;
+  const b=document.getElementById('soundLoopBtn');
+  if(b){
+    b.textContent=soundLabAudio.loop?'Loop on':'Loop off';
+    b.classList.toggle('active',soundLabAudio.loop);
+  }
+}
+
+function stopSoundLab(){
+  soundLabAudio.pause();
+  soundLabAudio.currentTime=0;
+  syncSoundLab();
+}
+
+function syncSoundLab(){
+  const t=soundLabTracks[currentSoundKey]||soundLabTracks.soft;
+  const d=Number.isFinite(soundLabAudio.duration)?soundLabAudio.duration:t.duration;
+  const now=soundLabAudio.currentTime||0;
+  if(soundLabSeek){soundLabSeek.max=d;soundLabSeek.value=now}
+  document.getElementById('soundLabElapsed').textContent=fmt(now);
+  document.getElementById('soundLabTotal').textContent=fmt(d);
+  document.getElementById('soundLabPlayBtn').textContent=soundLabAudio.paused?'Play':'Pause';
+
+  if('mediaSession' in navigator&&d>0){
+    try{
+      navigator.mediaSession.playbackState=soundLabAudio.paused?'paused':'playing';
+      navigator.mediaSession.setPositionState({duration:d,playbackRate:1,position:Math.min(now,Math.max(0,d-.01))});
+    }catch(e){}
+  }
+}
+
+function setSoundLabMediaSession(){
+  if(!('mediaSession' in navigator))return;
+  const t=soundLabTracks[currentSoundKey]||soundLabTracks.soft;
+  try{
+    navigator.mediaSession.metadata=new MediaMetadata({
+      title:t.title,
+      artist:'HeartClear',
+      album:'Sound Lab',
+      artwork:hcArtwork()
+    });
+    navigator.mediaSession.setActionHandler('play',()=>soundLabAudio.play());
+    navigator.mediaSession.setActionHandler('pause',()=>soundLabAudio.pause());
+    navigator.mediaSession.setActionHandler('seekbackward',details=>soundLabJump(-(details.seekOffset||15)));
+    navigator.mediaSession.setActionHandler('seekforward',details=>soundLabJump(details.seekOffset||15));
+    try{
+      navigator.mediaSession.setActionHandler('seekto',details=>{
+        if(typeof details.seekTime==='number'&&Number.isFinite(soundLabAudio.duration)){
+          soundLabAudio.currentTime=Math.max(0,Math.min(soundLabAudio.duration,details.seekTime));
+          syncSoundLab();
+        }
+      });
+    }catch(e){}
+  }catch(e){}
+}
+
+soundLabAudio.addEventListener('timeupdate',syncSoundLab);
+soundLabAudio.addEventListener('play',syncSoundLab);
+soundLabAudio.addEventListener('pause',syncSoundLab);
+soundLabAudio.addEventListener('loadedmetadata',syncSoundLab);
+soundLabSeek.addEventListener('input',()=>{soundLabAudio.currentTime=Number(soundLabSeek.value)||0;syncSoundLab()});
 
 function openChakraGuide(){
   show('chakraGuide');
@@ -2421,6 +2619,7 @@ function setAdhkarMediaSession(){
 
 function openAdhkar(mode){
   if(bookAudioEl && !bookAudioEl.paused)bookAudioEl.pause();
+  if(soundLabAudio && !soundLabAudio.paused)soundLabAudio.pause();
   if(!audio.paused)audio.pause();
   adhkarAudio.pause();
   adhkarAudio.currentTime=0;
@@ -2661,6 +2860,7 @@ function clearLocalHistory(){
 
 function choosePractice(seconds,url,kicker,title,introUrl,visualUrl){
   if(bookAudioEl && !bookAudioEl.paused) bookAudioEl.pause();
+  if(soundLabAudio && !soundLabAudio.paused) soundLabAudio.pause();
   chosenSeconds=seconds;
   chosenUrl=url;
   chosenIntroUrl=introUrl || '';
