@@ -1223,7 +1223,15 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
 
 <section class="screen active" id="home">
   <div class="home-hero">
-    <div class="home-greeting" id="timeGreeting">Good evening</div>
+    <div class="home-greeting" id="timeGreeting">Welcome</div>
+    <script>
+      // Set the greeting while the home screen loads, even if a later feature fails.
+      (function(){
+        const hour=new Date().getHours();
+        const greeting=hour>=5&&hour<12?'Good morning':hour>=12&&hour<17?'Good afternoon':hour>=17&&hour<21?'Good evening':'Good night';
+        document.getElementById('timeGreeting').textContent=greeting;
+      })();
+    </script>
     <h1>Take a moment.</h1>
     <p>Choose how much space you want to give yourself right now.</p>
     <div class="hero-orbit" aria-hidden="true"></div>
@@ -1937,7 +1945,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v53</div>
+    <div class="app-version">HeartClear · prototype v54</div>
   </div>
 </section>
 
@@ -2353,7 +2361,7 @@ function show(id){
   if(av && id!=='sacredSession') av.pause();
   const ba=document.getElementById('bookAudioEl');
   updateBookMini(id);
-  if(id==='home') renderDashboard();
+  if(id==='home'){setGreeting();renderDashboard();}
   if(id==='history') renderHistory();
   if(id==='settings') renderSettings();
   if(id==='player'||id==='sacredSession')updatePipButtons();
@@ -3469,12 +3477,12 @@ function getDeviceLocalClock(){
 }
 
 function setGreeting(){
-  renderDailyNote();
   const clock=getDeviceLocalClock();
   const h=clock.hour;
   const g=h>=5&&h<12?'Good morning':h>=12&&h<17?'Good afternoon':h>=17&&h<21?'Good evening':'Good night';
   const el=document.getElementById('timeGreeting');
   if(el)el.textContent=g;
+  renderDailyNote();
 
   const debug=document.getElementById('deviceClockText');
   if(debug){
@@ -4051,10 +4059,11 @@ volume.addEventListener('input',()=>{
   try{localStorage.setItem('sufiVolume',String(audio.volume))}catch(e){}
 });
 try{
-  const saved=Number(localStorage.getItem('sufiVolume'));
+  const raw=localStorage.getItem('sufiVolume');
+  const saved=raw===null?NaN:Number(raw);
   if(Number.isFinite(saved) && saved>=0 && saved<=1){audio.volume=saved;volume.value=saved}
-  else audio.volume=.85;
-}catch(e){audio.volume=.85}
+  else {audio.volume=.85;volume.value=.85}
+}catch(e){audio.volume=.85;volume.value=.85}
 setInterval(sync,500);
 
 const introVideo=document.getElementById('introVideo');
