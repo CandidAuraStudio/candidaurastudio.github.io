@@ -1639,8 +1639,12 @@ button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible,te
     </button>
   </div>
   <div class="quick-practice" style="margin-top:15px"><div><strong>Nature sounds</strong><small>Birds, fire, ocean, rain and thunder</small></div><button class="quick-start" onclick="openSoundLab()" aria-label="Open nature library">▶</button></div>
+  <div style="padding:12px 16px;margin-top:14px">
+    <h3 style="font-size:18px;margin:12px 0">More guided videos · From Drive</h3>
+    <div id="hcMeditationDriveCards" class="soundlab-grid"></div>
+    <p class="library-footnote">These recordings are stored in Drive, not downloaded into HeartClear. Watch separately from the original guided exercises.</p>
+  </div>
   <p class="library-footnote"><span aria-hidden="true">✦</span><span>Choose a session to see a few gentle instructions first. The audio starts only when you press Play.</span></p>
-  
 </section>
 
 <section class="screen" id="starterPath">
@@ -2152,6 +2156,12 @@ button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible,te
       <small>Identify the chant, its Buddhist tradition, language, pronunciation and translation, then listen comfortably. Properly attribute the original recording.</small>
       <div class="hub-note">Quiet sound practice: listen to your surroundings at a comfortable pace. Traditional chanting recordings should be named, translated and properly attributed.</div>
     </div>
+
+    <div id="hcSacredDriveLibrary" style="display:none;margin-top:17px">
+      <h3 style="font-size:18px;margin:14px 0 9px" id="hcSacredDriveTitle">Recorded listening</h3>
+      <p style="font-size:13px;line-height:1.5;color:#c2ced6">Videos stored in your Google Drive. Playback uses Drive preview and may require internet. Not HeartClear-produced recordings.</p>
+      <div id="hcSacredDriveCards" class="soundlab-grid"></div>
+    </div>
     <div class="empty-shelf" style="margin-top:14px">
       <div class="empty-icon">♪</div>
       <strong id="sacredEmptyTitle">Sound practice</strong>
@@ -2196,6 +2206,23 @@ button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible,te
     <div class="adhkar-status" id="adhkarStatus">Audio continues in the background where your browser allows it.</div>
 
     <audio id="adhkarAudio" preload="metadata" playsinline src="https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/b175b71f-4140-4458-baf3-61c9dad3a420.mp3"></audio>
+  </div>
+</section>
+
+<section class="screen" id="hcDriveMedia">
+  <div class="glass" style="padding:18px">
+    <button class="collection-back" onclick="hcExitDriveMedia()">‹ Back to collection</button>
+    <div class="kicker">HeartClear · Drive Listening</div>
+    <h2 id="hcDriveVideoTitle">Recording</h2>
+    <p id="hcDriveVideoCategory"></p>
+    <p id="hcDriveVideoDescription" class="player-status"></p>
+    <div style="position:relative;width:100%;aspect-ratio:16/9;background:#02090f;border-radius:16px;overflow:hidden;margin:14px 0">
+      <iframe id="hcDriveVideoFrame" title="Google Drive meditation video preview" loading="lazy" referrerpolicy="no-referrer" allow="autoplay;fullscreen;picture-in-picture" allowfullscreen style="border:0;width:100%;height:100%"></iframe>
+    </div>
+    <button class="btn" onclick="hcLoadDrivePreview()">Load video preview</button>
+    <p class="player-status" role="status" id="hcDriveVideoStatus">Choose Load video preview.</p>
+    <a id="hcDriveOpenSource" href="#" class="btn secondary" target="_blank" rel="noopener noreferrer" style="text-align:center;display:block;text-decoration:none">Open original in Google Drive ↗</a>
+    <div class="hub-note">The original is already saved in your Drive. GitHub hosts only this player interface, not a duplicate video. Playback requires access to Drive; embedded playback, offline mode and background playback depend on Google Drive and your browser.</div>
   </div>
 </section>
 
@@ -2364,6 +2391,10 @@ button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible,te
       <button class="soundlab-card" onclick="openSoundTrack('organicBansuri')"><span class="soundlab-icon">♫</span><span><b>Natural Bansuri · Nepal</b><small>7:54 · Learnerktm · CC0 recording</small></span><span class="soundlab-duration">7:54</span></button>
     </div>
     <div class="hub-note">Original uploader's CC0 flute recording from Wikimedia Commons. The app uses Wikimedia's MP3 listening copy of the original OGG; no AI flute or WAV mastering is claimed. <a href="https://commons.wikimedia.org/wiki/File:%E0%A4%AC%E0%A4%BE%E0%A4%81%E0%A4%B8%E0%A5%81%E0%A4%B0%E0%A5%80%E0%A4%95%E0%A5%8B_%E0%A4%A7%E0%A5%81%E0%A4%A8_Basuri.ogg" target="_blank" rel="noopener noreferrer" style="color:#d6bd86">Recording, creator and licence ↗</a></div>
+
+    <h3 style="font-size:18px;margin:22px 0 10px">Instrumental &amp; Ambient Videos · From Drive</h3>
+    <div id="hcGeneralDriveCards" class="soundlab-grid"></div>
+    <div class="hub-note">These user-uploaded videos stream through Google Drive. They are not remixed or redistributed by HeartClear.</div>
     <h3 style="font-size:20px;margin:20px 0 10px">Nature Sounds</h3>
     <p>Choose a sound, then press Play at a comfortable volume.</p>
     <div class="soundlab-grid">
@@ -3154,6 +3185,10 @@ function show(id){
   if(id!=='humanSession'&&typeof humanSoundAudio!=='undefined'&&!humanSoundAudio.paused)humanSoundAudio.pause();
   currentScreenId=id;
   if(id!=='omVideo'){const frame=document.getElementById('omVideoFrame');if(frame&&frame.getAttribute('src')){frame.removeAttribute('src');frame.src='about:blank'}}
+  if(id!=='hcDriveMedia'){
+    const frame=document.getElementById('hcDriveVideoFrame');
+    if(frame&&frame.getAttribute('src')){frame.removeAttribute('src');frame.src='about:blank'}
+  }
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   const target=document.getElementById(id);
   if(target) target.classList.add('active');
@@ -3163,11 +3198,11 @@ function show(id){
   });
 
   if(id!=='quietTimer' && hcTimerActive)hcTimerStop(true);
-  const immersive=['quietTimer','sessionReady','intro','prep','instructions','player','aftercare','completion','omVideo','humanSession','sacredSession','bookAudio','bookReader','soundLabPlayer','fearPlayer'].includes(id);
+  const immersive=['quietTimer','sessionReady','intro','prep','instructions','player','aftercare','completion','hcDriveMedia','omVideo','humanSession','sacredSession','bookAudio','bookReader','soundLabPlayer','fearPlayer'].includes(id);
   document.getElementById('bottomNav').classList.toggle('hidden',immersive);
   document.getElementById('appTopBar').classList.toggle('hidden',immersive);
 
-  const context={home:'Home',practices:'Meditation',human:'Human Practice',humanCategory:'Human Practice',returnJourney:'Observation',fearPractice:'Fear',fearPlayer:'Fear',soundLab:'Sound Lab',soundLabPlayer:'Sound Lab',downloads:'Offline',library:'Library',collection:'Library',sacred:'Sacred Sound',sacredDetail:'Sacred Sound',history:'History',settings:'Settings'}[id]||'';
+  const context={hcDriveMedia:'Drive Listening',home:'Home',practices:'Meditation',human:'Human Practice',humanCategory:'Human Practice',returnJourney:'Observation',fearPractice:'Fear',fearPlayer:'Fear',soundLab:'Sound Lab',soundLabPlayer:'Sound Lab',downloads:'Offline',library:'Library',collection:'Library',sacred:'Sacred Sound',sacredDetail:'Sacred Sound',history:'History',settings:'Settings'}[id]||'';
   const ctx=document.getElementById('topContext'); if(ctx)ctx.textContent=context;
 
   if(['home','practices','soundLab','human','library','sacred','downloads'].includes(id)){
@@ -3185,6 +3220,7 @@ function show(id){
   const ba=document.getElementById('bookAudioEl');
   updateBookMini(id);
   if(id==='home'){setGreeting();renderDashboard();updateHomeOfflineCount();renderHeartClearFavourites();hcRenderSoundResume();}
+  if(id==='practices'||id==='soundLab')hcSyncDriveSections();
   if(id==='history') renderHistory();
   if(id==='downloads') renderDownloads();
   if(id==='settings') renderSettings();
@@ -4569,6 +4605,67 @@ function openOmVideo(){
   if(frame)frame.src='https://drive.google.com/file/d/11ogtK6FopRz-g8o-gHLY6-TV4fTJ5GjN/preview';
 }
 function closeOmVideo(){show('sacredDetail');openSacred('hindu')}
+const HC_DRIVE_COLLECTIONS=[{"key":"islamLa","name":"La Ilaha Illallah","section":"islamic","type":"Dhikr · uploaded recording","id":"1_TQu-U5o0mTKds6W-NliHq59QzZPYrkH","note":"Remembrance of God's oneness. Exact performance style not independently checked."},{"key":"islamHu","name":"Hu Hu Hu Allah","section":"islamic","type":"Sufi-style dhikr · uploaded recording","id":"11Sgca-PXcd4-5DRaPQPslynyc7QtkVYx","note":"Devotional remembrance. This is not labelled Quran recitation."},{"key":"islamNaat","name":"Taksim ve Naat-ı Mevlâna","section":"islamic","type":"Sufi devotional performance · instrumental and vocal","id":"1Tih27JXlqpkz5X_vfE2_vLO9EiD6JCEu","note":"Traditional devotional music. Not Quran recitation or a standalone dhikr instruction."},{"key":"islamMorning","name":"Morning Adhkar · Drive recording","section":"islamic","type":"Morning supplications · uploaded recording","id":"1nTyMwDveS6Z4gQDaEMb2MAfcbghpabgd","note":"Separate Drive video; the existing HeartClear Morning Adhkar audio is also preserved."},{"key":"hinduOm","name":"OM Chanting & Singing Bowls","section":"hindu","type":"OM contemplation · uploaded video","id":"11ogtK6FopRz-g8o-gHLY6-TV4fTJ5GjN","note":"Traditional OM practice with singing bowls. Frequency-related benefits are not medically verified."},{"key":"generalDuduk","name":"Echoes of the Divine · Duduk","section":"general","type":"Sufi-inspired instrumental · not dhikr","id":"1o7d2xUS53vM0NiJhe3M-GH6gfKHCJZ47","note":"Duduk meditation music with Rumi-inspired presentation; kept separate from Quran and dhikr."},{"key":"generalAmbient","name":"Inner Balance · Ambient Listening","section":"general","type":"Ambient music · uploaded recording","id":"1Lx_e-fTNlQx7q9aXuDqX23kZV24DkfR4","note":"Ambient listening only. Claims about 432Hz, 111Hz or healing are not endorsed."},{"key":"med15","name":"15-Minute Gentle Breathwork","section":"meditation","type":"Guided meditation video","id":"1Sk1zzpCcNvJ9tS7YgoLzIzENQ-J7yPk8","note":"Follow only comfortable, ordinary breathing; pause if uncomfortable."},{"key":"med60","name":"Transformational Breathwork Journey · 1 Hour","section":"meditation","type":"Long-form guided meditation video","id":"1pZ0q75WOiPkOxNSoNQVqqFj9Ehkk2hYV","note":"Previously uploaded long guided video, available as a standalone Drive session; stop if uncomfortable."},{"key":"medSleep","name":"Deep Sleep · Guided Breathing & Affirmations","section":"meditation","type":"Night listening · uploaded video","id":"1fPW6jZcgOcZFi0ZnDIfvCzIUepydS5V7","note":"A quiet night-time listening choice; no health outcome is guaranteed."}];
+let hcDriveActiveKey=null;
+let hcDriveBackScreen='sacredDetail';
+function hcDriveSourceUrl(id){return 'https://drive.google.com/file/d/'+encodeURIComponent(id)+'/view';}
+function hcDrivePreviewUrl(id){return 'https://drive.google.com/file/d/'+encodeURIComponent(id)+'/preview';}
+function hcDriveCard(item){
+  const btn=document.createElement('button');
+  btn.className='soundlab-card hc-drive-card';
+  btn.type='button';
+  btn.style.width='100%';
+  btn.style.textAlign='left';
+  const ico=document.createElement('span');ico.className='soundlab-icon';ico.textContent='▶';
+  const body=document.createElement('span');
+  const name=document.createElement('b');name.textContent=item.name;
+  const meta=document.createElement('small');meta.textContent=item.type+' · Google Drive';
+  body.append(name,meta);
+  const arrow=document.createElement('span');arrow.className='soundlab-duration';arrow.textContent='Open ›';
+  btn.append(ico,body,arrow);
+  btn.addEventListener('click',()=>openHcDriveMedia(item.key));
+  return btn;
+}
+function hcRenderDriveCards(section,containerId){
+  const el=document.getElementById(containerId);
+  if(!el)return;
+  el.replaceChildren();
+  HC_DRIVE_COLLECTIONS.filter(item=>item.section===section).forEach(item=>el.appendChild(hcDriveCard(item)));
+}
+function openHcDriveMedia(key){
+  const item=HC_DRIVE_COLLECTIONS.find(i=>i.key===key);
+  if(!item)return;
+  hcDriveActiveKey=key;
+  hcDriveBackScreen=item.section==='meditation'?'practices':item.section==='general'?'soundLab':'sacredDetail';
+  document.getElementById('hcDriveVideoTitle').textContent=item.name;
+  document.getElementById('hcDriveVideoCategory').textContent=item.type;
+  document.getElementById('hcDriveVideoDescription').textContent=item.note;
+  const link=document.getElementById('hcDriveOpenSource');
+  link.href=hcDriveSourceUrl(item.id);
+  document.getElementById('hcDriveVideoStatus').textContent='Tap Load preview to play this video from your Google Drive. No audio is copied into GitHub.';
+  const frame=document.getElementById('hcDriveVideoFrame');
+  frame.removeAttribute('src');
+  for(const el of [audio,adhkarAudio,fearAudio,soundLabAudio,bookAudioEl]){
+    if(el && !el.paused)el.pause();
+  }
+  show('hcDriveMedia');
+}
+function hcLoadDrivePreview(){
+  const item=HC_DRIVE_COLLECTIONS.find(i=>i.key===hcDriveActiveKey);
+  if(!item)return;
+  const frame=document.getElementById('hcDriveVideoFrame');
+  frame.src=hcDrivePreviewUrl(item.id);
+  document.getElementById('hcDriveVideoStatus').textContent='Drive preview is loading. If it fails, use Open in Drive below.';
+}
+function hcExitDriveMedia(){
+  const origin=hcDriveBackScreen;
+  show(origin);
+}
+function hcSyncDriveSections(){
+  hcRenderDriveCards('general','hcGeneralDriveCards');
+  hcRenderDriveCards('meditation','hcMeditationDriveCards');
+}
+
 function openSacred(kind){
   const data={
     islamic:{
@@ -4608,6 +4705,16 @@ function openSacred(kind){
   if(hinduFeatured) hinduFeatured.classList.toggle('show',kind==='hindu');
   const buddhistFeatured=document.getElementById('buddhistFeatured');
   if(buddhistFeatured)buddhistFeatured.style.display=kind==='buddhist'?'block':'none';
+
+  const media=document.getElementById('hcSacredDriveLibrary');
+  if(media){
+    const enabled=kind==='islamic'||kind==='hindu';
+    media.style.display=enabled?'block':'none';
+    if(enabled){
+      document.getElementById('hcSacredDriveTitle').textContent=kind==='islamic'?'Islamic · Uploaded dhikr and devotional videos':'Hindu · Uploaded mantra listening';
+      hcRenderDriveCards(kind,'hcSacredDriveCards');
+    }
+  }
 
   const empty=document.getElementById('sacredEmptyTitle');
   const emptyText=document.getElementById('sacredEmptyText');
@@ -4846,6 +4953,7 @@ async function toggleFluteOffline(){
 }
 
 function openSoundLab(){
+  hcSyncDriveSections();
   show('soundLab');
 }
 
@@ -6264,7 +6372,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=83');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=84');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
