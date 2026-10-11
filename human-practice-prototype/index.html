@@ -1458,6 +1458,46 @@ button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible,te
 .hc-personal-audio input[type=file]{display:block;color:#fff;max-width:100%;width:100%;font-size:12px}
 .hc-personal-audio button{min-height:44px;padding:11px;border-radius:12px;background:#152f3d;color:white;border:1px solid rgba(255,255,255,.35);font:inherit;font-size:13px}
 #soundLabFavouriteBtn[hidden]{display:none!important}
+
+/* Unified classic HeartClear floating movement for EVERY guided meditation.
+ * Overlays the original muted video rather than replacing or mixing source media. */
+@keyframes hcMeditationFloatOuter{
+  0%,100%{transform:translate(-50%,-50%) translateY(4px) scale(.96);opacity:.62}
+  50%{transform:translate(-50%,-50%) translateY(-8px) scale(1.035);opacity:.96}
+}
+@keyframes hcMeditationFloatInner{
+  0%,100%{transform:translate(-50%,-50%) translateY(-3px) scale(.91);opacity:.67}
+  50%{transform:translate(-50%,-50%) translateY(7px) scale(1.055);opacity:.95}
+}
+@keyframes hcMeditationCardHalo{
+  0%,100%{transform:translateY(3px) scale(.94);opacity:.70}
+  50%{transform:translateY(-5px) scale(1.055);opacity:1}
+}
+#player .player-artwork::before{
+  border-color:rgba(213,237,243,.24);
+  background:radial-gradient(circle,rgba(79,145,171,.16),rgba(24,80,107,.075) 52%,transparent 72%);
+  box-shadow:0 0 58px rgba(68,148,170,.20),inset 0 0 28px rgba(189,227,237,.08);
+  animation:hcMeditationFloatOuter 12s ease-in-out infinite;
+  pointer-events:none;
+}
+#player .player-artwork::after{
+  border-color:rgba(233,240,243,.28);
+  background:radial-gradient(circle,rgba(202,234,240,.18),rgba(207,176,117,.055) 55%,transparent 75%);
+  box-shadow:0 0 38px rgba(144,198,214,.16);
+  animation:hcMeditationFloatInner 10.5s ease-in-out infinite;
+  pointer-events:none;
+}
+#practices .practice-card:not([data-kind="human"]) .practice-art::after{
+  animation:hcMeditationCardHalo 11s ease-in-out infinite;
+}
+#player .practice-visual-shade{pointer-events:none}
+body.reduce-motion #player .player-artwork::before,
+body.reduce-motion #player .player-artwork::after,
+body.reduce-motion #practices .practice-card .practice-art::after{animation:none!important}
+@media(prefers-reduced-motion:reduce){
+  #player .player-artwork::before,#player .player-artwork::after,
+  #practices .practice-card .practice-art::after{animation:none!important}
+}
 </style>
 </head>
 <body>
@@ -2570,7 +2610,7 @@ button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible,te
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear meditation history only</button>
     </div>
-    <div class="app-version">HeartClear · Version 1.0.2</div>
+    <div class="app-version">HeartClear · Version 1.0.3</div>
   </div>
 </section>
 
@@ -2657,7 +2697,7 @@ button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible,te
 
     <div class="player-artwork" onclick="togglePlay()" role="button" tabindex="0" aria-label="Play or pause">
       <div class="player-visual-actions"><button class="pip-btn" id="practicePipBtn" onclick="event.stopPropagation();togglePip('practiceVisual')" aria-label="Open video in picture in picture">PiP</button></div>
-      <video id="practiceVisual" class="practice-visual" muted playsinline preload="metadata"></video>
+      <video id="practiceVisual" class="practice-visual" muted loop playsinline preload="metadata"></video>
       <div class="practice-visual-shade"></div>
       <div class="waveform" id="waveform" aria-hidden="true">
         <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
@@ -4322,7 +4362,8 @@ function renderBookShelf(lang){
 
   return '<div class="book-card">'+
     '<div class="book-cover"><div class="book-kicker">HeartClear Library</div><b>Shadows of Truth</b><small>'+(isTamil?'Tamil':'English')+' Audiobook</small></div>'+
-    '<div class="book-shelf-head"><b>'+(isTamil?'Available chapter':'First 10 chapters')+'</b><span>'+items.length+' chapter'+(items.length===1?'':'s')+'</span></div>'+
+    '<div class="book-shelf-head"><b>'+(isTamil?'Tamil recording':'English · First 10 chapters')+'</b><span>'+items.length+' available</span></div>'+
+    '<p class="hub-note">Shadows of Truth has 61 verified numbered chapters. Only the listed voice recordings are currently available in HeartClear. The remaining chapters are being prepared; no extra chapter or recording is invented.</p>'+ 
     '<div class="book-shelf">'+chapterRows+'</div>'+
     '<div class="book-actions">'+
       '<button onclick="openBookReader(\''+(isTamil?'ta':'en')+'\')">Read</button>'+
@@ -4772,6 +4813,7 @@ async function togglePip(videoId){
 
 const practiceVisualForPip=document.getElementById('practiceVisual');
 if(practiceVisualForPip){
+  practiceVisualForPip.addEventListener('loadedmetadata',()=>syncPracticeVisual(true));
   practiceVisualForPip.addEventListener('enterpictureinpicture',()=>{
     if(!audio.paused)syncPracticeVisual(true);
   });
@@ -6184,17 +6226,28 @@ function syncPracticeVisual(force=false){
     if(!pv.paused)pv.pause();
     return;
   }
-  const target=Math.max(0,audio.currentTime||0);
+  // Honour reduced-motion preferences without interrupting the independent voice audio.
+  const reduceMotion=document.body.classList.contains('reduce-motion') ||
+    (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  if(reduceMotion && !pipActive){if(!pv.paused)pv.pause();return}
+  const audioPos=Math.max(0,audio.currentTime||0);
+  const duration=Number.isFinite(pv.duration)&&pv.duration>0?pv.duration:0;
+  // Shorter original visuals repeat smoothly; never leave a frozen frame at the end.
+  // Seek only when visibly out of sync, not on every timeupdate event.
+  if(!duration){
+    if(audio.paused && !pv.paused)pv.pause();
+    else if(!audio.paused && pv.paused)pv.play().catch(()=>{});
+    return;
+  }
+  const target=duration>.1?(audioPos%duration):0;
+  const actual=Number(pv.currentTime)||0;
+  const wrappedDifference=Math.min(Math.abs(actual-target),Math.abs(actual-target+duration),Math.abs(actual-target-duration));
   try{
-    if(force || Math.abs((pv.currentTime||0)-target)>1.0){
-      if(Number.isFinite(pv.duration) && pv.duration>0){
-        pv.currentTime=Math.min(target,Math.max(0,pv.duration-.05));
-      }else{
-        pv.currentTime=target;
-      }
+    if(force||wrappedDifference>1.25){
+      pv.currentTime=Math.max(0,Math.min(target,Math.max(0,duration-.04)));
     }
-    if(audio.paused) pv.pause();
-    else pv.play().catch(()=>{});
+    if(audio.paused)pv.pause();
+    else if(pv.paused)pv.play().catch(()=>{});
   }catch(e){}
 }
 
@@ -6487,7 +6540,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=86');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=87');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
