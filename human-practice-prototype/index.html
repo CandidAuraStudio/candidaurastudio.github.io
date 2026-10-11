@@ -2228,6 +2228,12 @@ button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible,te
     <button class="btn" onclick="hcLoadDrivePreview()">Load video preview</button>
     <p class="player-status" role="status" id="hcDriveVideoStatus">Choose Load video preview.</p>
     <a id="hcDriveOpenSource" href="#" class="btn secondary" target="_blank" rel="noopener noreferrer" style="text-align:center;display:block;text-decoration:none">Open original in Google Drive ↗</a>
+    <div class="hub-note" style="margin-top:12px">
+      <b>Listen with the screen off or while using another app</b>
+      <p style="margin:7px 0;font-size:12px;line-height:1.6">The Drive video player can stop when Android minimizes Chrome. Download this recording to your phone from Drive first; then select that saved MP4 below to listen using HeartClear's native audio player. The video will not appear, and the file stays on your device.</p>
+      <label for="hcDriveAudioOnlyFile" style="font-size:12px">Select a saved MP4 or MP3 for audio-only playback</label>
+      <input id="hcDriveAudioOnlyFile" type="file" accept="audio/*,video/mp4,.mp4,.mp3,.m4a,.wav,.ogg" onchange="hcLoadPersonalNature(this)" style="max-width:100%;display:block;margin-top:8px">
+    </div>
     <div class="hub-note">The original is already saved in your Drive. GitHub hosts only this player interface, not a duplicate video. Playback requires access to Drive; embedded playback, offline mode and background playback depend on Google Drive and your browser.</div>
   </div>
 </section>
@@ -2388,8 +2394,8 @@ button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible,te
     <div class="hc-personal-audio">
       <h3>My Nature Recordings</h3>
       <p>Listen to the HeartClear 7-, 10- and 15-minute mixes or other audio saved on your device, directly in Sound Lab. No upload, account, payment or public sharing.</p>
-      <label for="hcPersonalNatureFile">Choose a downloaded audio file</label>
-      <input id="hcPersonalNatureFile" type="file" accept="audio/*,.mp3,.m4a,.wav,.ogg,.flac,.opus,.aac" onchange="hcLoadPersonalNature(this)">
+      <label for="hcPersonalNatureFile">Choose saved audio or downloaded MP4 for audio-only listening</label>
+      <input id="hcPersonalNatureFile" type="file" accept="audio/*,video/mp4,.mp3,.m4a,.wav,.ogg,.flac,.opus,.aac,.mp4" onchange="hcLoadPersonalNature(this)">
       <p id="hcPersonalNatureStatus" role="status" aria-live="polite">Choose a file; Sound Lab will open its normal player.</p>
       <button onclick="hcClearPersonalNature()">Close personal recording</button>
     </div>
@@ -2483,6 +2489,11 @@ button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible,te
       <p id="soundLabQueueStatus" class="player-status" role="status">Next track plays automatically. Continuous listening uses successive recordings, not a single 60-minute master.</p>
     </div>
 
+    <div class="hub-note" id="hcBgListeningHint" style="margin-top:12px">
+      <b>Android background playback</b>
+      <p style="font-size:12px;line-height:1.6;margin:7px 0">Use the Play button before minimizing. The native player supports lock-screen controls when Android allows it. If streaming stops, try Save offline where available or a locally saved MP3/MP4 from Sound Lab. Google Drive embedded videos use a different player and may stop in the background.</p>
+      <p class="player-status" id="hcBgPlaybackStatus" role="status" aria-live="polite">Ready to test background playback.</p>
+    </div>
     <div class="hub-note">Audio can continue while you move around HeartClear. Lock-screen controls are used where the browser supports them.</div>
     <audio id="soundLabAudio" preload="metadata" playsinline></audio>
   </div>
@@ -2559,7 +2570,7 @@ button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible,te
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear meditation history only</button>
     </div>
-    <div class="app-version">HeartClear · Version 1.0.1</div>
+    <div class="app-version">HeartClear · Version 1.0.2</div>
   </div>
 </section>
 
@@ -4619,7 +4630,7 @@ function openOmVideo(){
   if(frame)frame.src='https://drive.google.com/file/d/11ogtK6FopRz-g8o-gHLY6-TV4fTJ5GjN/preview';
 }
 function closeOmVideo(){show('sacredDetail');openSacred('hindu')}
-const HC_DRIVE_COLLECTIONS=[{"key":"islamLa","name":"La Ilaha Illallah","section":"islamic","type":"Dhikr · uploaded recording","id":"1_TQu-U5o0mTKds6W-NliHq59QzZPYrkH","note":"Remembrance of God's oneness. Exact performance style not independently checked."},{"key":"islamHu","name":"Hu Hu Hu Allah","section":"islamic","type":"Sufi-style dhikr · uploaded recording","id":"11Sgca-PXcd4-5DRaPQPslynyc7QtkVYx","note":"Devotional remembrance. This is not labelled Quran recitation."},{"key":"islamNaat","name":"Taksim ve Naat-ı Mevlâna","section":"islamic","type":"Sufi devotional performance · instrumental and vocal","id":"1Tih27JXlqpkz5X_vfE2_vLO9EiD6JCEu","note":"Traditional devotional music. Not Quran recitation or a standalone dhikr instruction."},{"key":"islamMorning","name":"Morning Adhkar · Drive recording","section":"islamic","type":"Morning supplications · uploaded recording","id":"1nTyMwDveS6Z4gQDaEMb2MAfcbghpabgd","note":"Separate Drive video; the existing HeartClear Morning Adhkar audio is also preserved."},{"key":"hinduOm","name":"OM Chanting & Singing Bowls","section":"hindu","type":"OM contemplation · uploaded video","id":"11ogtK6FopRz-g8o-gHLY6-TV4fTJ5GjN","note":"Traditional OM practice with singing bowls. Frequency-related benefits are not medically verified."},{"key":"generalDuduk","name":"Echoes of the Divine · Duduk","section":"general","type":"Sufi-inspired instrumental · not dhikr","id":"1o7d2xUS53vM0NiJhe3M-GH6gfKHCJZ47","note":"Duduk meditation music with Rumi-inspired presentation; kept separate from Quran and dhikr."},{"key":"generalAmbient","name":"Inner Balance · Ambient Listening","section":"general","type":"Ambient music · uploaded recording","id":"1Lx_e-fTNlQx7q9aXuDqX23kZV24DkfR4","note":"Ambient listening only. Claims about 432Hz, 111Hz or healing are not endorsed."},{"key":"med15","name":"15-Minute Gentle Breathwork","section":"meditation","type":"Guided meditation video","id":"1Sk1zzpCcNvJ9tS7YgoLzIzENQ-J7yPk8","note":"Follow only comfortable, ordinary breathing; pause if uncomfortable."},{"key":"med60","name":"Transformational Breathwork Journey · 1 Hour","section":"meditation","type":"Long-form guided meditation video","id":"1pZ0q75WOiPkOxNSoNQVqqFj9Ehkk2hYV","note":"Previously uploaded long guided video, available as a standalone Drive session; stop if uncomfortable."},{"key":"medSleep","name":"Deep Sleep · Guided Breathing & Affirmations","section":"meditation","type":"Night listening · uploaded video","id":"1fPW6jZcgOcZFi0ZnDIfvCzIUepydS5V7","note":"A quiet night-time listening choice; no health outcome is guaranteed."}];
+const HC_DRIVE_COLLECTIONS=[{"key":"islamDhir120","name":"Islamic Dhikr · Extended Playlist","section":"islamic","type":"Devotional dhikr · 120 min","id":"1AJCfNPgTdq2cOc4rtjFcAh0ixnyKMm_C","note":"Two-hour video titled DHIKR with twelve remembrance phrases. The uploader, performance and reuse rights are not verified. Not Quran recitation."},{"key":"islamSufiDrum","name":"Sufi Devotional Music · Frame Drum","section":"islamic","type":"Sufi-style music · 52 min","id":"13HiHCfsS2EH5muCrp9-v-veKOEUraHdp","note":"Devotional-themed music with a frame-drum image. Exact instrumentation and reuse rights require independent verification. Not Quran recitation."},{"key":"hinduKrishnaFlute","name":"Krishna Flute · Long Listening","section":"hindu","type":"Hindu-inspired flute music · 66 min","id":"1jyI0O3Tib36sKTdhohU4iQ2CbUuSJLCc","note":"Video titled Cortisol Reset with Krishna playing flute. Cortisol claims are not medically verified. Original music and licence not verified."},{"key":"islamLa","name":"La Ilaha Illallah","section":"islamic","type":"Dhikr · uploaded recording","id":"1_TQu-U5o0mTKds6W-NliHq59QzZPYrkH","note":"Remembrance of God's oneness. Exact performance style not independently checked."},{"key":"islamHu","name":"Hu Hu Hu Allah","section":"islamic","type":"Sufi-style dhikr · uploaded recording","id":"11Sgca-PXcd4-5DRaPQPslynyc7QtkVYx","note":"Devotional remembrance. This is not labelled Quran recitation."},{"key":"islamNaat","name":"Taksim ve Naat-ı Mevlâna","section":"islamic","type":"Sufi devotional performance · instrumental and vocal","id":"1Tih27JXlqpkz5X_vfE2_vLO9EiD6JCEu","note":"Traditional devotional music. Not Quran recitation or a standalone dhikr instruction."},{"key":"islamMorning","name":"Morning Adhkar · Drive recording","section":"islamic","type":"Morning supplications · uploaded recording","id":"1nTyMwDveS6Z4gQDaEMb2MAfcbghpabgd","note":"Separate Drive video; the existing HeartClear Morning Adhkar audio is also preserved."},{"key":"hinduOm","name":"OM Chanting & Singing Bowls","section":"hindu","type":"OM contemplation · uploaded video","id":"11ogtK6FopRz-g8o-gHLY6-TV4fTJ5GjN","note":"Traditional OM practice with singing bowls. Frequency-related benefits are not medically verified."},{"key":"generalDuduk","name":"Echoes of the Divine · Duduk","section":"general","type":"Sufi-inspired instrumental · not dhikr","id":"1o7d2xUS53vM0NiJhe3M-GH6gfKHCJZ47","note":"Duduk meditation music with Rumi-inspired presentation; kept separate from Quran and dhikr."},{"key":"generalAmbient","name":"Inner Balance · Ambient Listening","section":"general","type":"Ambient music · uploaded recording","id":"1Lx_e-fTNlQx7q9aXuDqX23kZV24DkfR4","note":"Ambient listening only. Claims about 432Hz, 111Hz or healing are not endorsed."},{"key":"med15","name":"15-Minute Gentle Breathwork","section":"meditation","type":"Guided meditation video","id":"1Sk1zzpCcNvJ9tS7YgoLzIzENQ-J7yPk8","note":"Follow only comfortable, ordinary breathing; pause if uncomfortable."},{"key":"med60","name":"Transformational Breathwork Journey · 1 Hour","section":"meditation","type":"Long-form guided meditation video","id":"1pZ0q75WOiPkOxNSoNQVqqFj9Ehkk2hYV","note":"Previously uploaded long guided video, available as a standalone Drive session; stop if uncomfortable."},{"key":"medSleep","name":"Deep Sleep · Guided Breathing & Affirmations","section":"meditation","type":"Night listening · uploaded video","id":"1fPW6jZcgOcZFi0ZnDIfvCzIUepydS5V7","note":"A quiet night-time listening choice; no health outcome is guaranteed."}];
 let hcDriveActiveKey=null;
 let hcDriveBackScreen='sacredDetail';
 function hcDriveSourceUrl(id){return 'https://drive.google.com/file/d/'+encodeURIComponent(id)+'/view';}
@@ -4976,10 +4987,10 @@ function hcReleasePersonalNature(){
 }
 function hcLoadPersonalNature(input){
   const file=input?.files?.[0];if(!file)return;
-  const supported=file.type.startsWith('audio/')||/\.(?:mp3|m4a|wav|ogg|flac|opus|aac)$/i.test(file.name);
+  const supported=file.type.startsWith('audio/')||file.type==='video/mp4'||/\.(?:mp3|m4a|wav|ogg|flac|opus|aac|mp4)$/i.test(file.name);
   if(!supported){
     input.value='';
-    document.getElementById('hcPersonalNatureStatus').textContent='Select an audio file (MP3, M4A, WAV or another supported audio format).';
+    document.getElementById('hcPersonalNatureStatus').textContent='Choose an audio file, or an MP4 with compatible audio. If MP4 fails, use an MP3 copy.';
     return;
   }
   if(currentSoundKey==='personal')soundLabAudio.pause();
@@ -4987,7 +4998,7 @@ function hcLoadPersonalNature(input){
   hcPersonalNatureUrl=URL.createObjectURL(file);
   const name=file.name.replace(/\.[^.]+$/,'').slice(0,110)||'Personal recording';
   soundLabTracks.personal={title:name,duration:0,url:hcPersonalNatureUrl,
-    desc:'Personal recording from your device · not hosted or uploaded'};
+    desc:'Private listening from your device · no upload · background support depends on Android'};
   openSoundTrack('personal');
   document.getElementById('hcPersonalNatureStatus').textContent='Loaded privately: '+file.name+'. Press Play in Sound Lab.';
   document.getElementById('soundLabQueueStatus').textContent='Personal file · auto-next disabled for this recording. Choose any other sound to leave.';
@@ -5186,7 +5197,7 @@ function toggleSoundLoop(){
 soundLabAudio.addEventListener('error',()=>{
   const st=document.getElementById('soundLabStatus');
   if(currentSoundKey==='personal'){
-    if(st)st.textContent='This local audio format is not supported here. Try the MP3 copy.';
+    if(st)st.textContent='This file cannot play as audio on this phone. Try an MP3 or M4A copy of the same recording.';
   }else if(currentSoundKey==='organicBansuri'){
     if(st)st.textContent='Original recording could not load. Use the source link below.';
   }else if(!soundLabFallbackActive&&currentSoundKey!=='nature')fallbackSoundLab();
@@ -5243,6 +5254,35 @@ function setSoundLabMediaSession(){
     }catch(e){}
   }catch(e){}
 }
+
+let hcSoundBgSnapshot=null;
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden){
+    hcSoundBgSnapshot={key:currentSoundKey,playing:!soundLabAudio.paused,
+      time:soundLabAudio.currentTime||0,at:Date.now()};
+    return;
+  }
+  const snap=hcSoundBgSnapshot;
+  hcSoundBgSnapshot=null;
+  if(!snap||!snap.playing||currentSoundKey!==snap.key)return;
+  const label=document.getElementById('hcBgPlaybackStatus');
+  if(!label)return;
+  if(soundLabAudio.paused){
+    label.textContent='Playback was interrupted while HeartClear was in the background. Press Play to continue. Android may have paused the browser or another app may have taken audio focus.';
+  }else if(Date.now()-snap.at>10000 && (soundLabAudio.currentTime||0)-snap.time<1){
+    label.textContent='The audio stream made little progress while the app was hidden. It may be buffering or Android may have suspended it. Try offline or a local audio file.';
+  }else{
+    label.textContent='The native audio player stayed active when you returned.';
+  }
+});
+soundLabAudio.addEventListener('waiting',()=>{
+  const x=document.getElementById('hcBgPlaybackStatus');
+  if(x&&currentSoundKey!=='personal')x.textContent='Waiting for audio data from the source. If this continues, test a locally saved recording.';
+});
+soundLabAudio.addEventListener('playing',()=>{
+  const x=document.getElementById('hcBgPlaybackStatus');
+  if(x)x.textContent='Audio playing. You can test locking or minimizing the screen now.';
+});
 
 soundLabAudio.addEventListener('play',()=>{if(!soundLabPlaybackStartedAt)soundLabPlaybackStartedAt=Date.now();setSoundLabMediaSession();rememberActiveMedia('soundlab')});
 soundLabAudio.addEventListener('pause',()=>{soundLabClockCommit();hcStoreSoundLabPosition()});
@@ -6447,7 +6487,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=85');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=86');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
