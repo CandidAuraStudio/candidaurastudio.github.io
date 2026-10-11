@@ -1647,7 +1647,18 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
     <p id="humanSessionInstruction">Choose one piece of music and give it your full attention.</p>
     <div class="clock" id="humanClock">10:00</div>
     <div class="human-session-note" id="humanSessionNote">No multitasking. Notice rhythm, silence and what changes in your attention.</div>
-    <button class="btn" id="humanStartBtn" onclick="toggleHumanTimer()">Start</button>
+    <div class="option-row" style="margin:14px 0">
+      <div><label for="humanSoundChoice">Optional background sound</label><small>This is an activity timer, not voice guidance.</small></div>
+      <select class="option-select" id="humanSoundChoice" onchange="prepareHumanSound(this.value)">
+        <option value="nature">Nature Weave</option><option value="birds">Birdsong</option>
+        <option value="fire">Fire</option><option value="rain">Rain</option><option value="ocean">Ocean</option>
+        <option value="none">Silence</option>
+      </select>
+    </div>
+    <p class="player-status" role="status" id="humanSoundStatus">Preparing optional background sound…</p>
+    <button class="btn secondary" id="humanSoundBtn" onclick="toggleHumanSound()">Play background sound</button>
+    <button class="btn" id="humanStartBtn" onclick="toggleHumanTimer()">Start timer</button>
+    <audio id="humanSoundAudio" playsinline preload="none" loop></audio>
     <button class="btn secondary" onclick="completeHumanPractice()">Done</button>
   </div>
 </section>
@@ -2173,7 +2184,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v70</div>
+    <div class="app-version">HeartClear · prototype v71</div>
   </div>
 </section>
 
@@ -2770,6 +2781,7 @@ async function clearOfflineMedia(){
 }
 
 function show(id){
+  if(id!=='humanSession'&&typeof humanSoundAudio!=='undefined'&&!humanSoundAudio.paused)humanSoundAudio.pause();
   currentScreenId=id;
   if(id!=='omVideo'){const frame=document.getElementById('omVideoFrame');if(frame&&frame.getAttribute('src')){frame.removeAttribute('src');frame.src='about:blank'}}
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
@@ -3252,14 +3264,74 @@ function openHumanPractice(kind,index){
   document.getElementById('humanSessionInstruction').textContent=currentHumanPractice.instruction;
   document.getElementById('humanSessionNote').textContent=currentHumanPractice.note;
   document.getElementById('humanClock').textContent=fmt(humanRemaining);
-  document.getElementById('humanStartBtn').textContent='Start';
+  document.getElementById('humanStartBtn').textContent='Start timer';
   show('humanSession');
+  prepareHumanSound('nature');
 }
 
+const humanSoundAudio=document.getElementById('humanSoundAudio');
+let humanSoundChoice='nature';
+let humanSoundPrepareVersion=0;
+async function prepareHumanSound(key){
+  humanSoundChoice=['nature','birds','fire','rain','ocean','none'].includes(key)?key:'nature';
+  const version=++humanSoundPrepareVersion;
+  const sel=document.getElementById('humanSoundChoice');if(sel)sel.value=humanSoundChoice;
+  const status=document.getElementById('humanSoundStatus');
+  const btn=document.getElementById('humanSoundBtn');
+  humanSoundAudio.pause();humanSoundAudio.removeAttribute('src');humanSoundAudio.load();
+  if(humanSoundChoice==='none'){
+    if(status)status.textContent='Silent activity timer selected.';
+    if(btn){btn.disabled=true;btn.textContent='Sound off'}
+    return;
+  }
+  if(btn){btn.disabled=true;btn.textContent='Preparing sound…'}
+  if(status)status.textContent='Preparing '+humanSoundChoice+' sound…';
+  try{
+    const src=humanSoundChoice==='nature'?await loadNatureSound():soundLabTracks[humanSoundChoice].url;
+    if(version!==humanSoundPrepareVersion)return;
+    humanSoundAudio.src=src;humanSoundAudio.volume=.30;humanSoundAudio.loop=true;
+    if(btn){btn.disabled=false;btn.textContent='Play background sound'}
+    if(status)status.textContent='Background audio ready. Start timer or tap Play sound.';
+  }catch(e){
+    if(version!==humanSoundPrepareVersion)return;
+    if(status)status.textContent='Sound unavailable. You can still run the activity timer.';
+    if(btn){btn.disabled=false;btn.textContent='Retry sound'}
+  }
+}
+async function toggleHumanSound(){
+  const status=document.getElementById('humanSoundStatus');
+  if(humanSoundChoice==='none')return;
+  if(!humanSoundAudio.getAttribute('src')){await prepareHumanSound(humanSoundChoice);return}
+  try{
+    if(humanSoundAudio.paused)await humanSoundAudio.play();else humanSoundAudio.pause();
+    if(status)status.textContent=humanSoundAudio.paused?'Background sound paused.':'Background sound playing.';
+    document.getElementById('humanSoundBtn').textContent=humanSoundAudio.paused?'Play background sound':'Pause background sound';
+  }catch(e){
+    if(status)status.textContent='Sound could not play. Try Nature Weave or the silent timer.';
+  }
+}
+humanSoundAudio.addEventListener('error',()=>{
+  const status=document.getElementById('humanSoundStatus');
+  if(status)status.textContent='Sound did not load. Try Nature Weave or the silent timer.';
+});
 function toggleHumanTimer(){
   const btn=document.getElementById('humanStartBtn');
-  if(humanTimer){clearInterval(humanTimer);humanTimer=null;btn.textContent='Resume';return}
-  btn.textContent='Pause';
+  if(humanTimer){
+    clearInterval(humanTimer);humanTimer=null;btn.textContent='Resume timer';
+    humanSoundAudio.pause();
+    return;
+  }
+  btn.textContent='Pause timer';
+  if(humanSoundChoice!=='none'&&humanSoundAudio.getAttribute('src')&&humanSoundAudio.paused){
+    humanSoundAudio.play().then(()=>{
+      const status=document.getElementById('humanSoundStatus');
+      if(status)status.textContent='Background sound playing.';
+      document.getElementById('humanSoundBtn').textContent='Pause background sound';
+    }).catch(()=>{
+      const status=document.getElementById('humanSoundStatus');
+      if(status)status.textContent='Timer started. Tap Play background sound to hear audio.';
+    });
+  }
   humanTimer=setInterval(()=>{
     humanRemaining=Math.max(0,humanRemaining-1);
     document.getElementById('humanClock').textContent=fmt(humanRemaining);
@@ -3269,6 +3341,7 @@ function toggleHumanTimer(){
 
 function completeHumanPractice(auto=false){
   if(!currentHumanPractice)return;
+  humanSoundAudio.pause();
   if(humanTimer){clearInterval(humanTimer);humanTimer=null}
   const used=auto?currentHumanPractice.seconds:Math.max(20,currentHumanPractice.seconds-humanRemaining);
   const items=getHistory();
