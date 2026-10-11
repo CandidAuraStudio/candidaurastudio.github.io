@@ -10,7 +10,14 @@
 <link rel="manifest" href="./manifest.webmanifest?v=79-install-fix">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
-<title>HC · HeartClear</title>
+<title>HeartClear · Meditation, Sounds & Reflection</title>
+<meta name="description" content="HeartClear brings together guided meditation, nature sounds, gentle breathing, Sacred Sound and reading. Listen, reflect and save your progress on your device.">
+<meta name="application-name" content="HeartClear">
+<meta property="og:type" content="website">
+<meta property="og:title" content="HeartClear · Meditation, Sounds & Reflection">
+<meta property="og:description" content="Quiet listening, meditation, nature soundscapes, breathing and private reflection.">
+<meta property="og:url" content="https://candidaurastudio.github.io/human-practice-prototype/">
+<meta name="color-scheme" content="dark">
 <style>
 :root{
   --sky1:#8eb8cf;--sky2:#5f8ba4;--sky3:#335f78;--deep:#173548;
@@ -1812,7 +1819,7 @@ body.reduce-motion .hc-quiet-disc{transition:none!important}
     <div class="kicker">Human Practice</div>
     <h2>Practice life itself.</h2>
     <p>Passion, movement and observation without needing a special identity or belief.</p>
-    <div class="hub-note">These are real-world activities with timers. Spoken guidance is not recorded yet. You can add optional background audio inside each activity.</div>
+    <div class="hub-note">These are timed everyday activities with optional background listening. Choose a comfortable pace.</div>
   </div>
   <div class="human-grid">
     <button class="human-card" onclick="openHumanCategory('passion')"><span class="human-symbol">♪</span><b>Passion</b><small>Music · dance · cooking · gardening · house reset</small></button>
@@ -2096,7 +2103,7 @@ body.reduce-motion .hc-quiet-disc{transition:none!important}
         <button onclick="openAdhkar('listen')">Listen</button>
         <button onclick="openAdhkar('recite')">Recite Along</button>
       </div>
-      <div class="hub-note" style="margin-top:12px">Quran Surahs 1–30 with spoken English translation: awaiting uploaded audio. This will be a separate Quran collection; Morning Adhkar is not English Quran translation.</div>
+      <div class="hub-note" style="margin-top:12px">Morning Adhkar is a remembrance and supplication session, not a Quran translation.</div>
       <div class="hc-private-media">
         <b style="display:block">Private Sufi-inspired listening</b>
         <p style="font-size:12px;line-height:1.6">Choose your own audio or video file from this device to listen privately. Sufi-inspired music is not labelled Quran recitation or dhikr. HeartClear does not upload, distribute or permanently save the file.</p>
@@ -2123,7 +2130,7 @@ body.reduce-motion .hc-quiet-disc{transition:none!important}
     <div class="chakra-feature" id="buddhistFeatured" style="display:none;margin-top:12px">
       <b>Before chanting · Meaning and context</b>
       <small>Identify the chant, its Buddhist tradition, language, pronunciation and translation, then listen comfortably. Properly attribute the original recording.</small>
-      <div class="hub-note">A verified Buddhist chanting recording has not yet been uploaded. A player will be added when it is available.</div>
+      <div class="hub-note">Quiet sound practice: listen to your surroundings at a comfortable pace. Traditional chanting recordings should be named, translated and properly attributed.</div>
     </div>
     <div class="empty-shelf" style="margin-top:14px">
       <div class="empty-icon">♪</div>
@@ -2353,7 +2360,7 @@ body.reduce-motion .hc-quiet-disc{transition:none!important}
     </div>
     <div class="hub-note">These extra tracks are real CC0 field recordings documented in HeartClear Nature Audio on Drive. They stream from their source site; they are not the new mastered v2 previews and need internet. Continuous Play can keep the listening experience going past the end of each source.</div>
     <div class="hub-note">Nature Weave and the 2-minute Deep Sleep stillness preview are stored with HeartClear. Other nature recordings require internet unless separately downloaded.</div>
-    <div class="hub-note">Other Sound Lab beds are test sounds, not sacred recitations or medical-frequency claims.</div>
+    <div class="hub-note">Ambient music and nature recordings are for comfortable listening, without frequency-based or medical claims.</div>
   </div>
 </section>
 
@@ -2457,7 +2464,7 @@ body.reduce-motion .hc-quiet-disc{transition:none!important}
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v81</div>
+    <div class="app-version">HeartClear · Version 1.0.0</div>
   </div>
 </section>
 
@@ -2628,7 +2635,7 @@ body.reduce-motion .hc-quiet-disc{transition:none!important}
     <button class="btn secondary" onclick="finish()" id="finishBtn">Finish</button>
   </div>
   <div class="footer">HeartClear · video introduction flows directly into the meditation</div>
-  <audio id="audio" preload="auto" playsinline></audio>
+  <audio id="audio" preload="metadata" playsinline></audio>
 </section>
 
 <div class="book-mini" id="bookMini" aria-live="polite">
@@ -6109,7 +6116,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=81');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=82');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
