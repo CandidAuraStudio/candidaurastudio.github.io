@@ -1847,7 +1847,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
     </div>
 
     <div class="home-resume hc-secondary-resume" id="hcSoundResumeCard" style="display:none">
-      <div class="eyebrow">Continue listening</div>
+      <div class="eyebrow">Continue Sounds</div>
       <strong id="hcSoundResumeTitle">Nature listening</strong>
       <small id="hcSoundResumeMeta">Continue where you left off</small>
       <button onclick="hcResumeSoundLab()" aria-label="Resume last listening session">Resume</button>
@@ -3730,7 +3730,7 @@ function renderHeartClearFavourites(){
     const label=document.createElement('span');
     label.textContent=heartclearFavouriteLabel(item.kind,item.key);
     const type=document.createElement('small');
-    type.textContent=item.kind==='meditation'?'Meditation':'Sound Lab';
+    type.textContent=item.kind==='meditation'?'Meditation':'Sounds';
     button.append(label,type);
     button.addEventListener('click',()=>openHeartClearFavourite(item.kind,item.key));
     list.appendChild(button);
@@ -5519,7 +5519,7 @@ soundLabAudio.addEventListener('loadedmetadata',()=>{
 const hcMixOptions=[{id:'rain',key:'rain',name:'Rain'},{id:'fire',key:'fire',name:'Fire'},
   {id:'birds',key:'birds',name:'Birds'},{id:'ocean',key:'ocean',name:'Ocean'},
   {id:'wind',key:'treewind',name:'Wind'},{id:'thunder',key:'thunder',name:'Thunder'}];
-let hcMixSelected={rain:.45,wind:.34},hcMixDecks=[],hcMixRunning=false,hcMixTimerId=null,hcMixFadeFactor=1;
+let hcMixSelected={rain:.45,wind:.34},hcMixDecks=[],hcMixRunning=false,hcMixStarting=false,hcMixTimerId=null,hcMixFadeFactor=1;
 function hcMixMessage(message){const el=document.getElementById('hcMixStatus');if(el)el.textContent=message}
 function hcMixSelect(id,checked){
   if(!hcMixOptions.some(v=>v.id===id))return;
@@ -5565,7 +5565,7 @@ function hcRenderMixer(){
     row.append(label,slider);root.append(row);
   });
   const b=document.getElementById('hcMixPlayBtn');
-  if(b)b.textContent=hcMixRunning?'Pause mix':hcMixDecks.length?'Resume mix':'Start mix';
+  if(b){b.textContent=hcMixRunning?'Pause mix':hcMixDecks.length?'Resume mix':'Start mix';b.disabled=hcMixStarting}
   const recent=document.getElementById('hcMixRecent');if(!recent)return;
   let saved=null;try{saved=JSON.parse(localStorage.getItem('heartclearRecentMixV1')||'null')}catch(e){}
   recent.replaceChildren();recent.hidden=!saved||!Array.isArray(saved.layers);
@@ -5582,7 +5582,7 @@ function hcRenderMixer(){
   }
 }
 function hcMixStop(showMessage=true){
-  hcMixRunning=false;hcMixFadeFactor=1;
+  hcMixRunning=false;hcMixStarting=false;hcMixFadeFactor=1;
   hcMixDecks.forEach(({audio:el})=>{
     try{el.pause();el.removeAttribute('src');el.load()}catch(e){}
   });
@@ -5604,6 +5604,7 @@ function hcMixPause(){
   renderGlobalMini();
 }
 async function hcMixToggle(){
+  if(hcMixStarting)return;
   if(hcMixRunning){hcMixPause();return}
   if(hcMixDecks.length){
     try{
@@ -5619,7 +5620,10 @@ async function hcMixToggle(){
   for(const el of [audio,adhkarAudio,soundLabAudio,bookAudioEl,fearAudio,humanSoundAudio,hcPrivateIslamAudio,hcPrivateIslamVideo]){
     if(el&&!el.paused)el.pause();
   }
-  hcMixFadeFactor=1;
+  hcMixStarting=true;hcMixFadeFactor=1;
+  const startButton=document.getElementById('hcMixPlayBtn');
+  if(startButton){startButton.disabled=true;startButton.textContent='Preparing…'}
+  hcMixMessage('Preparing selected recordings…');
   hcMixDecks=selected.map(x=>{
     const el=new Audio(soundLabTracks[x.key].url);
     el.preload='metadata';el.loop=true;el.playsInline=true;
@@ -5639,6 +5643,7 @@ async function hcMixToggle(){
     hcMixMessage(selected.map(x=>x.name).join(' + ')+' · playing');
     rememberActiveMedia('mix');hcMixTimerId=setInterval(hcMixTick,350);renderGlobalMini();
   }catch(e){hcMixStop(false);hcMixMessage('Could not start all layers. Check your internet connection.')}
+  finally{hcMixStarting=false;if(startButton)startButton.disabled=false}
 }
 function hcMixTick(){
   if(!hcMixRunning)return;
@@ -5891,7 +5896,7 @@ function setSoundLabMediaSession(){
     navigator.mediaSession.metadata=new MediaMetadata({
       title:t.title,
       artist:'HeartClear',
-      album:'Sound Lab',
+      album:'Sounds',
       artwork:hcArtwork()
     });
     navigator.mediaSession.setActionHandler('play',()=>{rememberActiveMedia('soundlab');return soundLabAudio.play()});
