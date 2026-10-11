@@ -2638,70 +2638,52 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
 </section>
 
 <section class="screen" id="soundLab">
-  <div class="glass">
-    <div class="kicker">Nature · Ambient · Stillness</div>
-    <h2>Sound Lab</h2>
-    <p>Everyday nature, ambience and quiet music—independent of religious traditions.</p>
-    <div class="hub-note" style="margin-top:12px">Birds · fire · rain · ocean · thunder · ambient beds · closing music</div>
-    <div class="hc-personal-audio">
-      <h3>My Nature Recordings</h3>
-      <p>Listen to the HeartClear 7-, 10- and 15-minute mixes or other audio saved on your device, directly in Sound Lab. No upload, account, payment or public sharing.</p>
-      <label for="hcPersonalNatureFile">Choose saved audio or downloaded MP4 for audio-only listening</label>
-      <input id="hcPersonalNatureFile" type="file" accept="audio/*,video/mp4,.mp3,.m4a,.wav,.ogg,.flac,.opus,.aac,.mp4" onchange="hcLoadPersonalNature(this)">
-      <p id="hcPersonalNatureStatus" role="status" aria-live="polite">Choose a file; Sound Lab will open its normal player.</p>
-      <button onclick="hcClearPersonalNature()">Close personal recording</button>
-    </div>
-    <h3 style="font-size:17px;margin:20px 0 12px">Ambient &amp; Stillness</h3>
-    <div class="soundlab-grid">
-      <button class="soundlab-card" onclick="openSoundTrack('horizon')"><span class="soundlab-icon">≈</span><span><b>Horizon</b><small>7 min · slow ambient field</small></span><span class="soundlab-duration">7:00</span></button>
-      <button class="soundlab-card" onclick="openSoundTrack('stillness2')"><span class="soundlab-icon">◌</span><span><b>Deep Sleep Stillness</b><small>2 min · closing music</small></span><span class="soundlab-duration">2:00</span></button>
-      <button class="soundlab-card" onclick="openSoundTrack('deep')"><span class="soundlab-icon">○</span><span><b>Deep Stillness</b><small>17 min · long quiet ambient</small></span><span class="soundlab-duration">17:00</span></button>
-    </div>
-    <h3 style="font-size:19px;margin:22px 0 10px">Organic Flute · Original Recordings</h3>
-    <p>Traditional acoustic flute performances, separate from religious chanting.</p>
-    <div class="soundlab-grid">
-      <button class="soundlab-card" onclick="openSoundTrack('organicBansuri')"><span class="soundlab-icon">♫</span><span><b>Natural Bansuri · Nepal</b><small>7:54 · Learnerktm · CC0 recording</small></span><span class="soundlab-duration">7:54</span></button>
-    </div>
-    <div class="hub-note">Original uploader's CC0 flute recording from Wikimedia Commons. The app uses Wikimedia's MP3 listening copy of the original OGG; no AI flute or WAV mastering is claimed. <a href="https://commons.wikimedia.org/wiki/File:%E0%A4%AC%E0%A4%BE%E0%A4%81%E0%A4%B8%E0%A5%81%E0%A4%B0%E0%A5%80%E0%A4%95%E0%A5%8B_%E0%A4%A7%E0%A5%81%E0%A4%A8_Basuri.ogg" target="_blank" rel="noopener noreferrer" style="color:#d6bd86">Recording, creator and licence ↗</a></div>
-
-    <h3 style="font-size:18px;margin:22px 0 10px">Instrumental, Raga &amp; Ambient Videos · From Drive</h3>
-    <div id="hcGeneralDriveCards" class="soundlab-grid"></div>
-    <div class="hub-note">These user-uploaded videos stream through Google Drive. They are not remixed or redistributed by HeartClear.</div>
-    <h3 style="font-size:20px;margin:20px 0 10px">Nature Sounds</h3>
-    <p>Choose a sound, then press Play at a comfortable volume.</p>
-    <div class="soundlab-grid">
-      <button class="soundlab-card" onclick="openSoundTrack('nature')"><span class="soundlab-icon">≈</span><span><b>Nature Weave</b><small>Birds · fire · coast · forest · 3 min</small></span><span class="soundlab-duration">3:00</span></button>
-      <button class="soundlab-card" onclick="openSoundTrack('birds')"><span class="soundlab-icon">◉</span><span><b>Birdsong</b><small>Birds waking · 4 min</small></span><span class="soundlab-duration">4:06</span></button>
-      <button class="soundlab-card" onclick="openSoundTrack('fire')"><span class="soundlab-icon">✦</span><span><b>Fire Crackling</b><small>Real fireplace · 1 min</small></span><span class="soundlab-duration">1:00</span></button>
-      <button class="soundlab-card" onclick="openSoundTrack('rain')"><span class="soundlab-icon">··</span><span><b>Rain</b><small>Real rain · 1 min</small></span><span class="soundlab-duration">1:18</span></button>
-      <button class="soundlab-card" onclick="openSoundTrack('ocean')"><span class="soundlab-icon">≈</span><span><b>Ocean</b><small>Steady sea · 5 min</small></span><span class="soundlab-duration">2:46</span></button>
-      <button class="soundlab-card" onclick="openSoundTrack('storm')"><span class="soundlab-icon">◌</span><span><b>Storm</b><small>Rain and low rumble · 5 min</small></span><span class="soundlab-duration">2:37</span></button>
-      <button class="soundlab-card" onclick="openSoundTrack('thunder')"><span class="soundlab-icon">⌁</span><span><b>Distant Thunder</b><small>Low thunder · 6 min</small></span><span class="soundlab-duration">0:42</span></button>
-    </div>
-    <h3 style="font-size:18px;margin:22px 0 10px">More real nature recordings</h3>
-    <div class="soundlab-grid">
-      <button class="soundlab-card" onclick="openSoundTrack('foreststream')"><span class="soundlab-icon">≈</span><span><b>Forest Stream</b><small>5:01 · flowing brook and birds</small></span><span class="soundlab-duration">5:01</span></button>
-      <button class="soundlab-card" onclick="openSoundTrack('treewind')"><span class="soundlab-icon">◌</span><span><b>Wind in a Tree</b><small>1:56 · leaves and distant birds</small></span><span class="soundlab-duration">1:56</span></button>
-      <button class="soundlab-card" onclick="openSoundTrack('windfield')"><span class="soundlab-icon">〰</span><span><b>Wind in a Field</b><small>3:25 · wind across a cornfield</small></span><span class="soundlab-duration">3:25</span></button>
-      <button class="soundlab-card" onclick="openSoundTrack('nightforest')"><span class="soundlab-icon">◐</span><span><b>Forest After Rain</b><small>0:30 · nighttime ambience</small></span><span class="soundlab-duration">0:30</span></button>
-      <button class="soundlab-card" onclick="openSoundTrack('countryside')"><span class="soundlab-icon">✺</span><span><b>Countryside</b><small>1:52 · real birds, wind and insects</small></span><span class="soundlab-duration">1:52</span></button>
-      <button class="soundlab-card" onclick="openSoundTrack('frogswater')"><span class="soundlab-icon">≈</span><span><b>Frogs &amp; Waterfall</b><small>2:30 · frogs and distant falling water</small></span><span class="soundlab-duration">2:30</span></button>
-    </div>
-    <div class="hub-note">These extra tracks are real CC0 field recordings documented in HeartClear Nature Audio on Drive. They stream from their source site; they are not the new mastered v2 previews and need internet. Continuous Play can keep the listening experience going past the end of each source.</div>
-    <div class="hub-note">Nature Weave and the 2-minute Deep Sleep stillness preview are stored with HeartClear. Other nature recordings require internet unless separately downloaded.</div>
-    <div class="hub-note">Ambient music and nature recordings are for comfortable listening, without frequency-based or medical claims.</div>
+  <header class="hc-sounds-header">
+    <div class="kicker">YOUR LISTENING SPACE</div>
+    <h2>Sounds</h2>
+    <p>Nature, calm music and your own mixes.</p>
+  </header>
+  <div class="hc-sound-filters" id="hcSoundFilters" aria-label="Filter sounds">
+    <button class="active" data-filter="all" onclick="hcFilterSounds('all')" aria-pressed="true">All</button>
+    <button data-filter="nature" onclick="hcFilterSounds('nature')" aria-pressed="false">Nature</button>
+    <button data-filter="ambient" onclick="hcFilterSounds('ambient')" aria-pressed="false">Ambient</button>
+    <button data-filter="flute" onclick="hcFilterSounds('flute')" aria-pressed="false">Flute</button>
+    <button data-filter="mixes" onclick="hcFilterSounds('mixes')" aria-pressed="false">Mixes</button>
+    <button data-filter="favourites" onclick="hcFilterSounds('favourites')" aria-pressed="false">Favourites</button>
   </div>
+  <section class="hc-mix-card" id="hcMixCard" aria-label="Make your own sound mix">
+    <div class="kicker">CREATE A SOUND</div>
+    <div class="hc-mix-heading"><div><h3>Mix your own</h3><p>Combine up to three nature sounds.</p></div><span class="hc-mix-symbol" aria-hidden="true">
+       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 7h16M4 12h16M4 17h16"/><circle cx="9" cy="7" r="2.1" fill="#142e3e"/><circle cx="16" cy="12" r="2.1" fill="#142e3e"/><circle cx="11" cy="17" r="2.1" fill="#142e3e"/></svg>
+    </span></div>
+    <div id="hcMixLayers" class="hc-mix-layers"></div>
+    <p id="hcMixStatus" class="hc-mix-status" role="status" aria-live="polite">Choose one to three layers, then start.</p>
+    <div class="hc-mix-actions"><button class="hc-mix-start" id="hcMixPlayBtn" onclick="hcMixToggle()">Start mix</button><button class="hc-mix-stop" onclick="hcMixStop()">Stop</button></div>
+    <div id="hcMixRecent" class="hc-mix-recent" hidden></div>
+  </section>
+  <div class="hc-sounds-list-head"><div class="kicker">LISTEN</div><span id="hcSoundCount"></span></div>
+  <div id="hcSoundTrackList" class="hc-sound-track-list" aria-label="Available sounds"></div>
 </section>
+
+<div id="hcSoundCreditSheet" class="hc-credit-backdrop" role="dialog" aria-modal="true" aria-label="Recording information" hidden onclick="if(event.target===this)hcHideSoundCredits()">
+  <div class="hc-credit-card">
+    <button class="hc-credit-close" onclick="hcHideSoundCredits()" aria-label="Close recording information">×</button>
+    <div class="kicker">RECORDING INFORMATION</div>
+    <h3 id="hcSoundCreditTitle">Track</h3>
+    <p id="hcSoundCreditInfo"></p>
+    <a id="hcSoundCreditSource" target="_blank" rel="noopener noreferrer">Open source details ↗</a>
+  </div>
+</div>
 
 <section class="screen" id="soundLabPlayer">
   <div class="glass soundlab-player">
-    <button class="collection-back" onclick="show('soundLab')">‹ Sound Lab</button>
+    <button class="collection-back" onclick="show('soundLab')">‹ Sounds</button>
     <div class="soundlab-orb"></div>
-    <div class="kicker">HeartClear · Sound Lab</div>
+    <div class="kicker">HeartClear · Sounds</div>
     <h2 id="soundLabTitle">Horizon</h2>
     <p id="soundLabDesc">7 min · slow ambient field</p>
 
-    <input id="soundLabSeek" class="seek" type="range" min="0" max="300" value="0" step="0.1" aria-label="Sound Lab position">
+    <input id="soundLabSeek" class="seek" type="range" min="0" max="300" value="0" step="0.1" aria-label="Sounds position">
     <div class="adhkar-times"><span id="soundLabElapsed">00:00</span><span id="soundLabTotal">05:00</span></div>
 
     <div class="soundlab-transport">
@@ -2727,10 +2709,10 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
     <div class="soundlab-continuity">
       <label for="soundLabDurationChoice">Listening time</label>
       <select id="soundLabDurationChoice" onchange="setSoundLabDuration(this.value)">
-        <option value="0" selected>Continuous · until I stop</option>
+        <option value="0" selected>Endless</option>
+        <option value="900">15 minutes</option>
         <option value="420">7 minutes</option>
         <option value="600">10 minutes</option>
-        <option value="900">15 minutes</option>
         <option value="1800">30 minutes</option>
         <option value="3600">60 minutes</option>
       </select>
@@ -2741,12 +2723,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
       <p id="soundLabQueueStatus" class="player-status" role="status">Next track plays automatically. Continuous listening uses successive recordings, not a single 60-minute master.</p>
     </div>
 
-    <div class="hub-note" id="hcBgListeningHint" style="margin-top:12px">
-      <b>Android background playback</b>
-      <p style="font-size:12px;line-height:1.6;margin:7px 0">Use the Play button before minimizing. The native player supports lock-screen controls when Android allows it. If streaming stops, try Save offline where available or a locally saved MP3/MP4 from Sound Lab. Google Drive embedded videos use a different player and may stop in the background.</p>
-      <p class="player-status" id="hcBgPlaybackStatus" role="status" aria-live="polite">Ready to test background playback.</p>
-    </div>
-    <div class="hub-note">Audio can continue while you move around HeartClear. Lock-screen controls are used where the browser supports them.</div>
+    <p id="hcBgPlaybackStatus" class="hc-sound-runtime-status" role="status" aria-live="polite"></p>
     <audio id="soundLabAudio" preload="metadata" playsinline></audio>
   </div>
 </section>
