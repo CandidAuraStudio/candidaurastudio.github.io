@@ -1440,7 +1440,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
 <section class="screen" id="intro">
   <div class="glass intro-card">
     <div class="intro-media">
-      <video id="introVideo" muted playsinline preload="metadata"></video>
+      <video id="introVideo" playsinline preload="auto"></video>
       <div class="intro-overlay">
         <div class="intro-copy">
           <div class="kicker">HC · HeartClear</div>
@@ -1449,7 +1449,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
         <button class="intro-skip" onclick="finishIntro()">Skip</button>
       </div>
     </div>
-    <p class="intro-note">A short visual first. Then the instructions.</p>
+    <p class="intro-note">The session begins here.</p>
   </div>
 </section>
 
@@ -2043,7 +2043,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v57</div>
+    <div class="app-version">HeartClear · prototype v62</div>
   </div>
 </section>
 
@@ -2229,10 +2229,14 @@ let natureSoundURL='';
 let natureSoundPromise=null;
 let natureCycleCount=0;
 let natureLastPosition=0;
+let naturePrefetchStarted=false;
 let natureAfterSeconds=180;
 try{
-  const configured=Number(localStorage.getItem('heartclearNatureAfterSeconds'));
-  if([0,120,180,300].includes(configured)) natureAfterSeconds=configured;
+  const savedNature=localStorage.getItem('heartclearNatureAfterSecondsV2');
+  if(savedNature!==null){
+    const configured=Number(savedNature);
+    if([0,120,180,300].includes(configured))natureAfterSeconds=configured;
+  }
 }catch(e){}
 
 const NATURE_AUDIO_BYTES=4321197;
@@ -2269,7 +2273,7 @@ function setNatureAfterSeconds(value){
   const next=Number(value);
   if(![0,120,180,300].includes(next))return;
   natureAfterSeconds=next;
-  try{localStorage.setItem('heartclearNatureAfterSeconds',String(next))}catch(e){}
+  try{localStorage.setItem('heartclearNatureAfterSecondsV2',String(next))}catch(e){}
   const sel=document.getElementById('natureAfterSeconds');
   if(sel)sel.value=String(next);
   const note=document.getElementById('natureAfterNote');
@@ -3355,6 +3359,11 @@ function setBookMediaSession(){
   }catch(e){}
 }
 
+const soundLabTracks={"soft":{"title":"Soft Hum","duration":300,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/786c6ede-1f00-4a77-ac39-08e26610fb43.mp3","desc":"5 min · soft tonal bed"},"horizon":{"title":"Horizon","duration":420,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/1e7ed74c-05be-4554-af16-152684e0bad5.mp3","desc":"7 min · slow ambient field"},"mantra":{"title":"Mantra Bed","duration":480,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/24c10e62-fbde-483b-bb36-5646c5715d2d.mp3","desc":"8 min · steady chant background"},"deep":{"title":"Deep Stillness","duration":1020,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/e13e7587-23c0-408a-9f0c-b75177ce8fbe.mp3","desc":"17 min · long quiet ambient"}};
+let currentSoundKey='soft';
+const soundLabAudio=document.getElementById('soundLabAudio');
+const soundLabSeek=document.getElementById('soundLabSeek');
+
 const adhkarAudio=document.getElementById('adhkarAudio');
 const adhkarSeek=document.getElementById('adhkarSeek');
 adhkarAudio.addEventListener('timeupdate',syncAdhkar);
@@ -3512,10 +3521,6 @@ async function togglePip(videoId){
   }catch(e){}
 }
 
-const soundLabTracks={"soft":{"title":"Soft Hum","duration":300,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/786c6ede-1f00-4a77-ac39-08e26610fb43.mp3","desc":"5 min · soft tonal bed"},"horizon":{"title":"Horizon","duration":420,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/1e7ed74c-05be-4554-af16-152684e0bad5.mp3","desc":"7 min · slow ambient field"},"mantra":{"title":"Mantra Bed","duration":480,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/24c10e62-fbde-483b-bb36-5646c5715d2d.mp3","desc":"8 min · steady chant background"},"deep":{"title":"Deep Stillness","duration":1020,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/e13e7587-23c0-408a-9f0c-b75177ce8fbe.mp3","desc":"17 min · long quiet ambient"}};
-let currentSoundKey='soft';
-const soundLabAudio=document.getElementById('soundLabAudio');
-const soundLabSeek=document.getElementById('soundLabSeek');
 
 function openSoundLab(){
   show('soundLab');
@@ -3887,7 +3892,6 @@ function setGreeting(){
 function renderSettings(){
   setGreeting();
   renderLocalContext();
-  renderInstallSetting();
   const reduced=document.body.classList.contains('reduce-motion');
   const sw=document.getElementById('reduceMotionSwitch'); if(sw)sw.classList.toggle('on',reduced);
   const ww=document.getElementById('wakeLockSwitch'); if(ww)ww.classList.toggle('on',wakeLockEnabled);
@@ -3938,7 +3942,7 @@ function choosePractice(seconds,url,kicker,title,introUrl,visualUrl){
   renderStep();
   preparePlayer();
   try{localStorage.setItem('sufiLastPractice',chosenKicker)}catch(e){}
-  showSessionReady();
+  startIntro();
 }
 
 function showSessionReady(){
@@ -3958,24 +3962,48 @@ function confirmSessionReady(){
   startIntro();
 }
 
+let introShouldPlay=false;
+
 function startIntro(){
   const v=document.getElementById('introVideo');
   document.getElementById('introTitle').textContent=chosenKicker;
   v.pause();
   v.src=chosenIntroUrl;
   v.currentTime=0;
+  v.muted=false;
+  v.volume=Math.max(.35,Math.min(1,Number(audio.volume)||.85));
+  introShouldPlay=!!chosenIntroUrl;
   show('intro');
+
   if(chosenIntroUrl){
-    v.play().catch(()=>{});
+    v.play().catch(()=>{
+      const note=document.querySelector('.intro-note');
+      if(note)note.textContent='Tap the video once to begin.';
+    });
   }else{
     finishIntro();
   }
 }
 
-function finishIntro(){
+async function finishIntro(){
   const v=document.getElementById('introVideo');
+  introShouldPlay=false;
   v.pause();
-  startPrep();
+  show('player');
+
+  if(audio.paused){
+    try{
+      await audio.play();
+      rememberActiveMedia('meditation');
+      syncPracticeVisual(true);
+      if(!sessionStartedAt)sessionStartedAt=Date.now();
+      resumeCard.classList.remove('show');
+      document.getElementById('playerNote').textContent='Playing';
+    }catch(e){
+      document.getElementById('playerNote').textContent='Tap Play to begin.';
+    }
+  }
+  sync();
 }
 
 function startPrep(){
@@ -4020,8 +4048,8 @@ function preparePlayer(){
   playbackPhase='meditation';
   audio.loop=false;
   audio.pause();
-  // Prefetch the closing sound while the guided recording plays.
-  if(natureAfterSeconds)loadNatureSound().catch(()=>{});
+  // Begin loading closing ambience after the guided audio starts.
+  naturePrefetchStarted=false;
   setNatureAfterSeconds(natureAfterSeconds);
   const pv=document.getElementById('practiceVisual');
   if(pv){
@@ -4319,6 +4347,9 @@ function completeSession(completed=false){
   const pv=document.getElementById('practiceVisual'); if(pv)pv.pause();
   recordSession(completed);
   clearLastSession();
+  // Do not keep the completed music recording as an unfinished meditation.
+  audio.removeAttribute('src');
+  audio.load();
 
   document.getElementById('completionSummary').textContent='You practiced for '+friendlyDuration(t)+'.';
   document.getElementById('completionPractice').textContent=chosenKicker;
@@ -4463,8 +4494,13 @@ function finish(){
 
 function sync(){
   if(playbackPhase==='nature'){syncNature();return;}
+  if(document.getElementById('completion').classList.contains('active'))return;
   const actualDuration=meditationActualDuration();
   let t=Math.min(actualDuration,audio.currentTime||0);
+  if(t>=6 && !naturePrefetchStarted && natureAfterSeconds && !audio.paused){
+    naturePrefetchStarted=true;
+    loadNatureSound().catch(()=>{});
+  }
 
   if(sleepStopAt>0 && t>=sleepStopAt){
     audio.pause();
@@ -4548,10 +4584,20 @@ setInterval(sync,500);
 const introVideo=document.getElementById('introVideo');
 introVideo.addEventListener('ended',finishIntro);
 introVideo.addEventListener('error',()=>{
-  document.querySelector('.intro-note').textContent='Intro could not load. Continue to the instructions.';
+  introShouldPlay=false;
+  const note=document.querySelector('.intro-note');
+  if(note)note.textContent='Video could not load. Opening the meditation player.';
+  finishIntro();
 });
 
-document.querySelector('.player-orb').addEventListener('keydown',e=>{
+function resumeIntroAfterScroll(){
+  if(currentScreenId!=='intro'||!introShouldPlay||document.hidden||introVideo.ended)return;
+  if(introVideo.paused)introVideo.play().catch(()=>{});
+}
+window.addEventListener('scroll',resumeIntroAfterScroll,{passive:true});
+window.addEventListener('touchend',resumeIntroAfterScroll,{passive:true});
+
+document.querySelector('#player .player-artwork').addEventListener('keydown',e=>{
   if(e.key==='Enter'||e.key===' '){e.preventDefault();togglePlay()}
 });
 document.addEventListener('visibilitychange',()=>{
