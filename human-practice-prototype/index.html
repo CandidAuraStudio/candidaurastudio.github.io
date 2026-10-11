@@ -1432,6 +1432,15 @@ body.reduce-motion .hc-quiet-disc{transition:none!important}
 .hc-private-media video,.hc-private-media audio{display:block;width:100%;max-width:100%;margin:12px 0}
 .hc-private-media[hidden],.hc-private-media video[hidden],.hc-private-media audio[hidden]{display:none!important}
 #quietTimer .btn:not(.secondary),#starterPath .btn:not(.secondary){background:#fff!important;color:#0b2230!important;border-color:#fff!important}
+
+/* Personal data controls stay legible and accessible without changing the core palette. */
+.hc-data-tools{padding:16px;border:1px solid rgba(255,255,255,.18);border-radius:16px;background:rgba(9,30,42,.38)}
+.hc-data-tools strong{display:block;font-size:14px}
+.hc-data-tools p{font-size:12px;color:#e1eaf0;line-height:1.6;margin:8px 0}
+.hc-data-tools .hc-data-buttons{display:flex;gap:8px;flex-wrap:wrap}
+.hc-data-tools .hc-data-buttons button{min-height:44px;padding:11px 14px;border-radius:11px;border:1px solid rgba(255,255,255,.32);background:#142f3c;color:#fff;font:inherit;font-size:13px;flex:1}
+.hc-data-tools .hc-data-buttons button:first-child{background:#fff;color:#081923;border-color:#fff}
+.hc-data-tools button:focus-visible{outline:2px solid white;outline-offset:3px}
 </style>
 </head>
 <body>
@@ -2462,7 +2471,17 @@ body.reduce-motion .hc-quiet-disc{transition:none!important}
         <div><strong>Install HeartClear</strong><small>Add HeartClear to this device for a full-screen app experience.</small></div>
         <button class="offline-action" onclick="showInstallSheet(true)">Install</button>
       </div>
-      <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
+      <div class="hc-data-tools">
+        <strong>Privacy &amp; your data</strong>
+        <p>No account or advertising. Practice history, mood check-ins, notes, favourites and listening positions are stored in this browser. Playback streams may contact the recording's host. Weather uses your location only if you enable it.</p>
+        <p>You control your local information. Export it before clearing or changing devices. Downloaded media is managed separately under Offline downloads; a voice recording saved to your device remains outside HeartClear's storage.</p>
+        <div class="hc-data-buttons">
+          <button onclick="hcExportPersonalData()" aria-label="Export personal HeartClear data as JSON">Export my data</button>
+          <button onclick="hcErasePersonalData()" aria-label="Erase my HeartClear personal data from this browser">Erase personal data</button>
+        </div>
+        <p id="hcDataStatus" role="status" aria-live="polite"></p>
+      </div>
+      <button class="danger-btn" onclick="clearLocalHistory()">Clear meditation history only</button>
     </div>
     <div class="app-version">HeartClear · Version 1.0.0</div>
   </div>
@@ -5272,6 +5291,44 @@ async function toggleWakeLock(){
     wakeLock=null;
   }
   renderSettings();
+}
+
+
+/* User-directed device-only data portability. This does not touch other apps on this domain. */
+function hcOwnStorageKey(key){
+  return typeof key==='string' && /^(heartclear|clearWithin|sufi)/.test(key);
+}
+function hcPersonalDataSnapshot(){
+  const result={};
+  for(let i=0;i<localStorage.length;i++){
+    const key=localStorage.key(i);
+    if(hcOwnStorageKey(key))result[key]=localStorage.getItem(key);
+  }
+  return result;
+}
+function hcExportPersonalData(){
+  const status=document.getElementById('hcDataStatus');
+  try{
+    const content={application:'HeartClear',format:'HeartClear Local Data Backup',schema_version:1,
+      exported_at:new Date().toISOString(),storage:hcPersonalDataSnapshot()};
+    const blob=new Blob([JSON.stringify(content,null,2)],{type:'application/json;charset=utf-8'});
+    const url=URL.createObjectURL(blob),link=document.createElement('a');
+    link.href=url;link.download='heartclear-data-'+new Date().toISOString().slice(0,10)+'.json';
+    document.body.appendChild(link);link.click();link.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),30000);
+    if(status)status.textContent='Backup prepared. Keep the file private; it may contain notes and listening history.';
+  }catch(e){if(status)status.textContent='Data export is unavailable in this browser. Check browser storage settings.'}
+}
+function hcErasePersonalData(){
+  if(!confirm('Erase HeartClear notes, practice history, moods, favourites, bookmarks and preferences from this browser? This cannot be undone. Your downloaded audio is managed separately.'))return;
+  if(!confirm('Confirm permanent removal of this browser’s HeartClear personal data?'))return;
+  const status=document.getElementById('hcDataStatus');
+  try{
+    const keys=Object.keys(localStorage).filter(hcOwnStorageKey);
+    keys.forEach(key=>localStorage.removeItem(key));
+    if(status)status.textContent='Personal data erased. Downloaded media has not been removed. The page will reload.';
+    setTimeout(()=>location.reload(),650);
+  }catch(e){if(status)status.textContent='Some data could not be erased. Check browser storage permissions.'}
 }
 
 function clearLocalHistory(){
