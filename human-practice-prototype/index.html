@@ -1758,6 +1758,9 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
 .hc-about-credits{margin:16px 0;border:1px solid rgba(220,234,240,.15);border-radius:14px;padding:13px 15px}
 .hc-about-credits summary{font-size:13px;cursor:pointer;min-height:29px;color:#e3edf0}
 .hc-about-credits p{font-size:12px;line-height:1.65;color:#b4c8d1}
+#soundLabPlayer .soundlab-transport .primary{background:#fff!important;color:#0c2331!important;border-color:#fff!important}
+#soundLabPlayer .soundlab-transport button{min-height:48px}
+#soundLabPlayer .soundlab-options button{min-height:44px;font-size:12px}
 </style>
 </head>
 <body>
@@ -5516,7 +5519,7 @@ soundLabAudio.addEventListener('loadedmetadata',()=>{
 const hcMixOptions=[{id:'rain',key:'rain',name:'Rain'},{id:'fire',key:'fire',name:'Fire'},
   {id:'birds',key:'birds',name:'Birds'},{id:'ocean',key:'ocean',name:'Ocean'},
   {id:'wind',key:'treewind',name:'Wind'},{id:'thunder',key:'thunder',name:'Thunder'}];
-let hcMixSelected={rain:.45,wind:.34},hcMixDecks=[],hcMixRunning=false,hcMixTimerId=null;
+let hcMixSelected={rain:.45,wind:.34},hcMixDecks=[],hcMixRunning=false,hcMixTimerId=null,hcMixFadeFactor=1;
 function hcMixMessage(message){const el=document.getElementById('hcMixStatus');if(el)el.textContent=message}
 function hcMixSelect(id,checked){
   if(!hcMixOptions.some(v=>v.id===id))return;
@@ -5536,7 +5539,8 @@ function hcMixVolume(id,value){
   if(deck)deck.level=v;
   hcMixSetDeckVolumes();
 }
-function hcMixSetDeckVolumes(fade=1){
+function hcMixSetDeckVolumes(fade=hcMixFadeFactor){
+  hcMixFadeFactor=fade;
   hcMixDecks.forEach(deck=>{
     const el=deck.audio,d=el.duration,p=el.currentTime||0;
     const edge=Number.isFinite(d)&&d>1?Math.min(1,p/.32,(d-p)/.32):1;
@@ -5578,7 +5582,7 @@ function hcRenderMixer(){
   }
 }
 function hcMixStop(showMessage=true){
-  hcMixRunning=false;
+  hcMixRunning=false;hcMixFadeFactor=1;
   hcMixDecks.forEach(({audio:el})=>{
     try{el.pause();el.removeAttribute('src');el.load()}catch(e){}
   });
@@ -5615,6 +5619,7 @@ async function hcMixToggle(){
   for(const el of [audio,adhkarAudio,soundLabAudio,bookAudioEl,fearAudio,humanSoundAudio,hcPrivateIslamAudio,hcPrivateIslamVideo]){
     if(el&&!el.paused)el.pause();
   }
+  hcMixFadeFactor=1;
   hcMixDecks=selected.map(x=>{
     const el=new Audio(soundLabTracks[x.key].url);
     el.preload='metadata';el.loop=true;el.playsInline=true;
@@ -5642,7 +5647,7 @@ function hcMixTick(){
     const left=soundLabListeningLimit-elapsed;
     if(left<=0){hcMixStop(false);hcMixMessage('Listening timer finished.');return}
     hcMixSetDeckVolumes(left<10?left/10:1);
-  }else hcMixSetDeckVolumes();
+  }else hcMixSetDeckVolumes(1);
 }
 for(const element of [audio,adhkarAudio,soundLabAudio,bookAudioEl,fearAudio,humanSoundAudio]){
   element.addEventListener('play',()=>{if(hcMixRunning)hcMixStop(false)});
@@ -5678,6 +5683,7 @@ function setSoundLabDuration(value){
   soundLabListeningSeconds=0;
   soundLabListeningLimit=Math.max(0,Number(value)||0);
   if(!soundLabAudio.paused||hcMixRunning)soundLabPlaybackStartedAt=Date.now();
+  soundLabAudio.volume=.55;hcMixFadeFactor=1;
   document.querySelectorAll('.hc-time-chips button').forEach(button=>{
     const active=Number(button.dataset.time)===soundLabListeningLimit;
     button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));
@@ -5724,6 +5730,7 @@ async function playNextSoundLab(userInitiated=false){
   document.getElementById('soundLabTitle').textContent=item.title;
   document.getElementById('soundLabDesc').textContent=item.desc;
   document.getElementById('soundLabTotal').textContent=fmt(item.duration);
+  hcSoundApplyLoop();
   setSoundLabMediaSession();
   updateOrganicFluteTools();
   try{
@@ -5852,6 +5859,7 @@ soundLabAudio.addEventListener('error',()=>{
 });
 function stopSoundLab(){
   soundLabClockCommit();soundLabListeningSeconds=0;
+  soundLabAudio.volume=.55;
   soundLabPlayRequested=false;
   soundLabAudio.pause();
   hcClearSoundBookmark();
@@ -5944,11 +5952,18 @@ soundLabAudio.addEventListener('ended',()=>{
   else {soundLabPlayRequested=false;const st=document.getElementById('soundLabStatus');if(st)st.textContent='Listening finished. Press Play or choose another sound.'}
 });
 soundLabAudio.addEventListener('timeupdate',()=>{
-  if(soundLabListeningLimit && soundLabPlaybackStartedAt &&
-     soundLabListeningSeconds+(Date.now()-soundLabPlaybackStartedAt)/1000>=soundLabListeningLimit){
+  const t=Number(soundLabAudio.currentTime)||0;
+  const d=Number(soundLabAudio.duration);
+  const edgeFade=soundLabAudio.loop&&Number.isFinite(d)&&d>1?
+    Math.max(0,Math.min(1,t/.27,(d-t)/.27)):1;
+  const elapsed=soundLabPlaybackStartedAt?soundLabListeningSeconds+(Date.now()-soundLabPlaybackStartedAt)/1000:soundLabListeningSeconds;
+  const remaining=soundLabListeningLimit?soundLabListeningLimit-elapsed:Infinity;
+  if(remaining<=0){
     stopSoundLab();
-    const st=document.getElementById('soundLabStatus');if(st)st.textContent='Your selected listening time is complete.';
+    const status=document.getElementById('soundLabStatus');if(status)status.textContent='Your listening timer is complete.';
+    return;
   }
+  soundLabAudio.volume=Math.max(0,Math.min(1,.55*edgeFade*(remaining<10?remaining/10:1)));
 });
 soundLabAudio.addEventListener('timeupdate',()=>{
   // Save at most every ~5 seconds for low-storage overhead, never on every frame.
