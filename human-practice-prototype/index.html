@@ -688,6 +688,22 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
 .prep-step h2{font-size:28px;margin-top:12px}
 .prep-step p{max-width:330px;margin:10px auto 0}
 
+
+/* Human Practice v38 */
+.human-hero{padding:22px 18px;border-radius:26px;background:linear-gradient(145deg,rgba(17,44,57,.82),rgba(5,17,27,.92));border:1px solid rgba(198,225,236,.09)}
+.human-hero h2{font-size:28px;margin-top:4px}
+.human-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:16px}
+.human-card{min-height:150px;border:1px solid rgba(198,225,236,.09);border-radius:22px;padding:16px;text-align:left;color:var(--ink);font:inherit;background:linear-gradient(155deg,rgba(16,39,52,.84),rgba(5,17,26,.90))}
+.human-symbol{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;border:1px solid rgba(211,231,237,.10);background:rgba(7,22,32,.65);color:#d4b274;font-size:17px;margin-bottom:17px}
+.human-card b{display:block;font-size:15px}.human-card small{display:block;color:#8298a3;font-size:10px;line-height:1.45;margin-top:4px}
+.human-list{display:grid;gap:10px;margin-top:16px}
+.human-item{width:100%;border:1px solid rgba(198,225,236,.08);border-radius:18px;padding:14px;text-align:left;background:rgba(5,18,27,.47);color:var(--ink);font:inherit;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center}
+.human-item b{display:block;font-size:14px}.human-item small{display:block;color:#8096a1;margin-top:4px;font-size:11px;line-height:1.45}
+.human-duration{color:#b99c68;font-size:11px}
+.human-session{text-align:center}.human-session-icon{width:92px;height:92px;border-radius:28px;margin:2px auto 20px;display:grid;place-items:center;border:1px solid rgba(202,228,236,.11);background:linear-gradient(145deg,rgba(22,53,67,.75),rgba(6,19,29,.84));color:#d5b477;font-size:30px}
+.human-session-note{margin-top:15px;padding:13px 14px;border-radius:16px;text-align:left;background:rgba(5,18,27,.43);border:1px solid rgba(198,225,236,.07);color:#95a9b3;font-size:12px;line-height:1.55}
+@media(max-width:360px){.human-grid{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -750,6 +766,7 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
       <button class="category-chip" onclick="filterPractices('short',this)">Short</button>
       <button class="category-chip" onclick="filterPractices('deep',this)">Deep</button>
       <button class="category-chip" onclick="filterPractices('sleep',this)">Sleep</button>
+      <button class="category-chip" onclick="filterPractices('human',this)">Human</button>
     </div>
   </header>
 
@@ -776,6 +793,11 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
       <span class="practice-art" aria-hidden="true"></span>
       <span class="practice-copy"><b>Deep Sleep</b><small>60 min · sleep practice</small></span>
       <span class="duration">60:00</span>
+    </button>
+    <button class="choice practice-card" data-kind="human" aria-label="Open Human Practice" onclick="show('human')">
+      <span class="practice-art" aria-hidden="true"></span>
+      <span class="practice-copy"><b>Human Practice</b><small>Passion · movement · observation · attention</small></span>
+      <span class="duration">Life</span>
     </button>
   </div>
   <p class="library-footnote"><span aria-hidden="true">✦</span><span>Choose a session to see a few gentle instructions first. The audio starts only when you press Play.</span></p>
@@ -860,6 +882,45 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
     </div>
     <button class="btn" id="nextBtn" onclick="nextStep()">Next</button>
     <button class="btn secondary" onclick="show('practices')" id="backBtn">Back</button>
+  </div>
+</section>
+
+<section class="screen" id="human">
+  <div class="human-hero">
+    <div class="kicker">Human Practice</div>
+    <h2>Practice life itself.</h2>
+    <p>Passion, movement and observation without needing a special identity or belief.</p>
+  </div>
+  <div class="human-grid">
+    <button class="human-card" onclick="openHumanCategory('passion')"><span class="human-symbol">♪</span><b>Passion</b><small>Music · dance · cooking · gardening · house reset</small></button>
+    <button class="human-card" onclick="openHumanCategory('move')"><span class="human-symbol">↗</span><b>Movement</b><small>Walking · hands & fingers · gentle mobility</small></button>
+    <button class="human-card" onclick="openHumanCategory('observe')"><span class="human-symbol">◉</span><b>Observation</b><small>Moon · sky · tree · horizon · one object</small></button>
+    <button class="human-card" onclick="openHumanCategory('attention')"><span class="human-symbol">◎</span><b>Attention</b><small>Listen · look · speak with intention · phone down</small></button>
+  </div>
+  <div class="hub-note">Progress here means consistency and attention—not a score of how “awakened” someone is.</div>
+</section>
+
+<section class="screen" id="humanCategory">
+  <div class="glass">
+    <button class="collection-back" onclick="show('human')">‹ Human Practice</button>
+    <div class="kicker">Human Practice</div>
+    <h2 id="humanCategoryTitle">Passion</h2>
+    <p id="humanCategoryDescription">Move through something you care about.</p>
+    <div class="human-list" id="humanPracticeList"></div>
+  </div>
+</section>
+
+<section class="screen" id="humanSession">
+  <div class="glass human-session">
+    <button class="collection-back" onclick="show('humanCategory')">‹ Back</button>
+    <div class="human-session-icon" id="humanSessionIcon">♪</div>
+    <div class="kicker" id="humanSessionCategory">Passion</div>
+    <h2 id="humanSessionTitle">Music Presence</h2>
+    <p id="humanSessionInstruction">Choose one piece of music and give it your full attention.</p>
+    <div class="clock" id="humanClock">10:00</div>
+    <div class="human-session-note" id="humanSessionNote">No multitasking. Notice rhythm, silence and what changes in your attention.</div>
+    <button class="btn" id="humanStartBtn" onclick="toggleHumanTimer()">Start</button>
+    <button class="btn secondary" onclick="completeHumanPractice()">Done</button>
   </div>
 </section>
 
@@ -1130,6 +1191,10 @@ let wakeLockEnabled=false;
 let prepIndex=0;
 let prepElapsed=0;
 let prepTimer=null;
+let currentHumanCategory='passion';
+let currentHumanPractice=null;
+let humanRemaining=0;
+let humanTimer=null;
 
 const audio=document.getElementById('audio');
 const seek=document.getElementById('seek');
@@ -1144,7 +1209,7 @@ function show(id){
   const target=document.getElementById(id);
   if(target) target.classList.add('active');
 
-  const immersive=['intro','prep','instructions','player','completion'].includes(id);
+  const immersive=['intro','prep','instructions','player','completion','humanSession'].includes(id);
   document.getElementById('bottomNav').classList.toggle('hidden',immersive);
   document.getElementById('appTopBar').classList.toggle('hidden',immersive);
 
@@ -1173,6 +1238,86 @@ function startSettleQuick(){
     '10-minute practice',
     'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/7fd8e8ee-cc5a-49c3-940b-6b4330a42c5e.mp4'
   );
+}
+
+const humanPracticeData={
+  passion:{title:'Passion',icon:'♪',description:'Give full attention to something you care about.',items:[
+    {title:'Music Presence',seconds:600,instruction:'Choose one piece of music and listen without scrolling.',note:'Notice rhythm, silence and what changes in your attention.'},
+    {title:'Dance Freely',seconds:600,instruction:'Play music and let the body move naturally.',note:'Keep the space clear and movements comfortable.'},
+    {title:'Cook With Attention',seconds:900,instruction:'Prepare something simple and stay with the sounds, textures and movements.',note:'Put the phone away unless you genuinely need the recipe.'},
+    {title:'Garden Slowly',seconds:900,instruction:'Water, repot, trim or tend to a plant with full attention.',note:'Notice texture, moisture and small changes.'},
+    {title:'House Reset',seconds:900,instruction:'Choose one small area and clean it slowly and completely.',note:'Use the movement as the practice, not as a race.'}
+  ]},
+  move:{title:'Movement',icon:'↗',description:'Simple movement to reconnect attention with the body.',items:[
+    {title:'Walking Presence',seconds:900,instruction:'Walk somewhere safe without rushing.',note:'Notice feet, balance, temperature and sound.'},
+    {title:'Hands & Fingers',seconds:300,instruction:'Slowly open, close, spread and rotate the fingers and wrists within a comfortable range.',note:'Keep the movement gentle.'},
+    {title:'Gentle Mobility',seconds:600,instruction:'Move the shoulders, arms, ankles and hips slowly within a comfortable range.',note:'This is awareness, not a workout challenge.'}
+  ]},
+  observe:{title:'Observation',icon:'◉',description:'Watch one real thing change over time.',items:[
+    {title:'Moon Observation',seconds:600,instruction:'Look at the moon from a safe place and notice shape, brightness and position.',note:'Return on different days and notice what changes.'},
+    {title:'Sky & Light',seconds:600,instruction:'Observe the sky, clouds, shadows or changing daylight.',note:'Do not stare directly at the sun. Watch the sky, horizon, reflections or shadows instead.'},
+    {title:'One Tree',seconds:600,instruction:'Choose one tree or plant and stay with it for ten minutes.',note:'Notice movement, colour, texture and light.'},
+    {title:'Beach / Horizon',seconds:900,instruction:'Sit or stand somewhere safe and observe the horizon, waves, wind and sound.',note:'Stay on safe ground and away from dangerous water or edges.'},
+    {title:'One Object',seconds:600,instruction:'Choose an ordinary object and look at it as if you had never seen it before.',note:'Notice shape, material, wear and shadow.'}
+  ]},
+  attention:{title:'Attention',icon:'◎',description:'Practice what enters through the ears and eyes, and what leaves through speech.',items:[
+    {title:'Listen Before Replying',seconds:600,instruction:'Focus on listening before preparing a response.',note:'Notice the urge to interrupt, solve or judge.'},
+    {title:'Phone Down',seconds:600,instruction:'Place the phone away and spend ten minutes without replacing it with another screen.',note:'Notice where attention goes when there is nothing to scroll.'},
+    {title:'Speak With Intention',seconds:600,instruction:'Before speaking, briefly notice whether the words are necessary, clear and respectful.',note:'This is awareness, not silence or self-censorship.'},
+    {title:'Sound Map',seconds:600,instruction:'Stay still and notice sounds near, far, continuous and changing.',note:'Let hearing come before explanation.'}
+  ]}
+};
+
+function openHumanCategory(kind){
+  currentHumanCategory=kind;
+  const data=humanPracticeData[kind]||humanPracticeData.passion;
+  document.getElementById('humanCategoryTitle').textContent=data.title;
+  document.getElementById('humanCategoryDescription').textContent=data.description;
+  document.getElementById('humanPracticeList').innerHTML=data.items.map((x,i)=>
+    '<button class="human-item" onclick="openHumanPractice(\''+kind+'\','+i+')"><span><b>'+escapeHtml(x.title)+'</b><small>'+escapeHtml(x.instruction)+'</small></span><span class="human-duration">'+fmt(x.seconds)+'</span></button>'
+  ).join('');
+  show('humanCategory');
+}
+
+function openHumanPractice(kind,index){
+  const data=humanPracticeData[kind]||humanPracticeData.passion;
+  currentHumanCategory=kind;
+  currentHumanPractice={...data.items[index],category:data.title,icon:data.icon};
+  humanRemaining=currentHumanPractice.seconds;
+  if(humanTimer){clearInterval(humanTimer);humanTimer=null}
+  document.getElementById('humanSessionIcon').textContent=currentHumanPractice.icon;
+  document.getElementById('humanSessionCategory').textContent=currentHumanPractice.category;
+  document.getElementById('humanSessionTitle').textContent=currentHumanPractice.title;
+  document.getElementById('humanSessionInstruction').textContent=currentHumanPractice.instruction;
+  document.getElementById('humanSessionNote').textContent=currentHumanPractice.note;
+  document.getElementById('humanClock').textContent=fmt(humanRemaining);
+  document.getElementById('humanStartBtn').textContent='Start';
+  show('humanSession');
+}
+
+function toggleHumanTimer(){
+  const btn=document.getElementById('humanStartBtn');
+  if(humanTimer){clearInterval(humanTimer);humanTimer=null;btn.textContent='Resume';return}
+  btn.textContent='Pause';
+  humanTimer=setInterval(()=>{
+    humanRemaining=Math.max(0,humanRemaining-1);
+    document.getElementById('humanClock').textContent=fmt(humanRemaining);
+    if(humanRemaining<=0){clearInterval(humanTimer);humanTimer=null;completeHumanPractice(true)}
+  },1000);
+}
+
+function completeHumanPractice(auto=false){
+  if(!currentHumanPractice)return;
+  if(humanTimer){clearInterval(humanTimer);humanTimer=null}
+  const used=auto?currentHumanPractice.seconds:Math.max(20,currentHumanPractice.seconds-humanRemaining);
+  const items=getHistory();
+  items.push({practice:currentHumanPractice.title,title:currentHumanPractice.category,category:currentHumanPractice.category,listenedSeconds:used,targetSeconds:currentHumanPractice.seconds,completed:auto,endedAt:Date.now(),reflection:''});
+  saveHistory(items);
+  document.getElementById('completionSummary').textContent='You practiced for '+friendlyDuration(used)+'.';
+  document.getElementById('completionPractice').textContent=currentHumanPractice.title;
+  completionHistoryIndex=items.length-1;
+  show('completion');
+  renderDashboard();
 }
 
 function openCollection(kind){
