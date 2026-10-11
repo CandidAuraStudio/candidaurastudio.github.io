@@ -710,6 +710,28 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
 .progress-title{font-size:14px;margin-top:5px}
 .progress-sub{font-size:11px;color:#7f949f;margin-top:4px}
 
+
+/* Daily note + meditation video visual v39 */
+.daily-note{
+  margin-top:14px;padding:14px 15px;border-radius:18px;
+  border:1px solid rgba(199,225,235,.08);
+  background:linear-gradient(145deg,rgba(15,37,49,.70),rgba(5,18,27,.70))
+}
+.daily-note .daily-label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#b89966}
+.daily-note b{display:block;font-size:13px;margin-top:5px}
+.daily-note p{font-size:11px;line-height:1.5;margin:6px 0 0;color:#8da2ad}
+.player-artwork{isolation:isolate}
+.practice-visual{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  opacity:.58;filter:saturate(.80) brightness(.70);pointer-events:none;z-index:0
+}
+.practice-visual-shade{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(4,12,18,.08),rgba(4,12,18,.20) 55%,rgba(4,12,18,.58))
+}
+.player-artwork:before,.player-artwork:after{z-index:2}
+.waveform{z-index:3}
+
 </style>
 </head>
 <body>
@@ -733,6 +755,12 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
     <h1>Take a moment.</h1>
     <p>Choose how much space you want to give yourself right now.</p>
     <div class="hero-orbit" aria-hidden="true"></div>
+  </div>
+
+  <div class="daily-note">
+    <div class="daily-label">Daily note · Sound & attention</div>
+    <b id="dailyNoteTitle">Voice is physical sound.</b>
+    <p id="dailyNoteText">The vocal folds create pressure waves in air. Meaning, rhythm and attention shape how that sound is experienced.</p>
   </div>
 
   <div class="home-dashboard">
@@ -1063,7 +1091,7 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v38</div>
+    <div class="app-version">HeartClear · prototype v39</div>
   </div>
 </section>
 
@@ -1115,6 +1143,8 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
     </div>
 
     <div class="player-artwork" onclick="togglePlay()" role="button" tabindex="0" aria-label="Play or pause">
+      <video id="practiceVisual" class="practice-visual" muted loop playsinline preload="metadata" src="https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/9955ee7b-4f1c-4206-8a4b-4b328d9c2a4d.mp4"></video>
+      <div class="practice-visual-shade"></div>
       <div class="waveform" id="waveform" aria-hidden="true">
         <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
       </div>
@@ -1231,6 +1261,11 @@ function show(id){
     document.querySelectorAll('.nav-item').forEach(btn=>btn.classList.toggle('active',btn.dataset.nav===id));
   }
 
+  const pv=document.getElementById('practiceVisual');
+  if(pv){
+    if(id==='player') pv.play().catch(()=>{});
+    else pv.pause();
+  }
   if(id==='home') renderDashboard();
   if(id==='history') renderHistory();
   if(id==='settings') renderSettings();
@@ -1402,7 +1437,28 @@ function filterPractices(kind,btn){
   });
 }
 
+const dailyNotes=[
+  {title:'Voice is physical sound.',text:'The vocal folds create pressure waves in air. Meaning, rhythm and attention shape how that sound is experienced.'},
+  {title:'Repetition gives attention one target.',text:'Repeating a phrase, prayer or sound can reduce constant switching between many different thoughts.'},
+  {title:'Sound and breath naturally meet.',text:'Speaking and chanting are usually carried on the exhale. Keep the breath comfortable rather than trying to make it longer.'},
+  {title:'Humming changes the exhale.',text:'Humming often makes an exhale longer because sound is carried out with the breath. There is no need to force volume or duration.'},
+  {title:'Meaning matters.',text:'A familiar prayer, mantra or recitation can combine memory, language, rhythm and attention. Different people may experience it differently.'},
+  {title:'Silence is part of sound practice.',text:'A short quiet period after recitation or music creates contrast and makes shifts in attention easier to notice.'},
+  {title:'Listening and reciting are different.',text:'Listening receives sound. Reciting coordinates hearing, voice, breath and attention at the same time.'},
+  {title:'No single sound guarantees calm.',text:'Context, familiarity, meaning, breathing and attention all influence how a sound practice feels.'}
+];
+
+function renderDailyNote(){
+  const day=Math.floor(Date.now()/86400000);
+  const n=dailyNotes[day%dailyNotes.length];
+  const t=document.getElementById('dailyNoteTitle');
+  const x=document.getElementById('dailyNoteText');
+  if(t)t.textContent=n.title;
+  if(x)x.textContent=n.text;
+}
+
 function setGreeting(){
+  renderDailyNote();
   const h=new Date().getHours();
   const g=h<12?'Good morning':h<18?'Good afternoon':'Good evening';
   const el=document.getElementById('timeGreeting'); if(el)el.textContent=g;
