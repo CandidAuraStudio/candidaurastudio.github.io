@@ -1286,10 +1286,21 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
 }
 
 
-/* Offline access + white media controls v68 */
+/* Offline access + white media controls v72 */
 .player-inline-actions{
   display:flex;justify-content:center;gap:9px;margin-top:12px;flex-wrap:wrap
 }
+.player-inline-actions .offline-action{min-width:160px;font-weight:800}
+.player-offline-caption{margin-top:10px;font-size:11px;color:#bfd0d8;text-align:center;line-height:1.5}
+.player-offline-caption.ready{color:#e8f7f1}
+.home-offline-shortcut{margin:10px 0 14px;width:100%;display:flex;align-items:center;gap:12px;min-height:68px;padding:13px 15px;text-align:left;border-radius:18px;background:rgba(5,18,27,.72);border:1px solid rgba(212,231,239,.19);color:#f7fafb;font:inherit}
+.home-offline-icon{width:39px;height:39px;flex:0 0 39px;display:grid;place-items:center;background:#ffffff;color:#07131b;border-radius:12px;font-size:21px;font-weight:800}
+.home-offline-copy{min-width:0;flex:1}.home-offline-copy strong{display:block;font-size:14px}.home-offline-copy small{display:block;color:#afc3cd;font-size:11px;margin-top:4px}.home-offline-open{font-size:21px;color:#ffffff}
+.bottom-nav{grid-template-columns:repeat(7,minmax(0,1fr));width:min(calc(100% - 12px),540px)}
+.bottom-nav .nav-item{font-size:8px;gap:4px;min-width:0;letter-spacing:-.02em}
+.bottom-nav .nav-item svg{width:19px;height:19px}
+@media(max-width:370px){.bottom-nav .nav-item{font-size:7.6px;gap:4px}.bottom-nav .nav-item svg{width:18px;height:18px}}
+.transport .primary{background:#ffffff!important;color:#07131b!important;border:1px solid #ffffff!important}
 .player-inline-actions .offline-action,
 .player-inline-actions .option-select{
   min-height:42px;padding:10px 13px;border-radius:13px
@@ -1299,6 +1310,8 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
 #adhkarPlayBtn,
 #soundLabPlayBtn,
 #fearPlayBtn,
+#naturePlayBtn,
+#bookMiniPlay,
 .global-mini-btn.primary,
 .quick-start{
   background:#ffffff!important;
@@ -1393,6 +1406,12 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
     <div class="hero-orbit" aria-hidden="true"></div>
   </div>
 
+  <button class="home-offline-shortcut" onclick="show('downloads')" aria-label="Open saved offline sessions and chapters">
+    <span class="home-offline-icon" aria-hidden="true">↓</span>
+    <span class="home-offline-copy"><strong>Offline downloads</strong><small id="homeOfflineMeta">Saved sessions and audiobook chapters</small></span>
+    <span class="home-offline-open" aria-hidden="true">›</span>
+  </button>
+
   <div class="daily-note">
     <div class="daily-label">Daily thought</div>
     <b id="dailyNoteTitle">Voice is physical sound.</b>
@@ -1434,7 +1453,6 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
     </div>
     <div class="quick-practice" style="margin-bottom:12px"><div><strong>Nature sounds</strong><small>Birds · fire · ocean · rain · thunder</small></div><button class="quick-start" onclick="openSoundLab()" aria-label="Open nature sounds">▶</button></div>
     <div class="quick-practice" style="margin-bottom:12px"><div><strong>OM chanting</strong><small>Long video · Hindu Insight</small></div><button class="quick-start" onclick="openOmVideo()" aria-label="Open OM video">▶</button></div>
-    <div class="quick-practice" style="margin-bottom:12px"><div><strong>Offline downloads</strong><small id="homeOfflineMeta">Saved sessions and audiobook chapters</small></div><button class="quick-start" onclick="show('downloads')" aria-label="Open offline downloads">↓</button></div>
     <div class="quick-practice">
       <div><strong>Deep Wake Up</strong><small>Morning · guided breath</small></div>
       <button class="quick-start" onclick="startSettleQuick()" aria-label="Start Settle">▶</button>
@@ -2146,7 +2164,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
     <button class="collection-back" onclick="show('home')">‹ Home</button>
     <div class="kicker">On this device</div>
     <h2>Offline downloads</h2>
-    <p>Open saved sessions without searching for them again. Meditation downloads still follow the normal HeartClear preparation and instruction flow.</p>
+    <p>To download: open Meditation, choose a session, follow preparation and instructions, then tap Download offline directly below the ±10-second player controls. Open saved sessions here anytime. Meditation sessions still begin with preparation and instructions, never a direct audio URL.</p>
     <div class="downloads-list" id="downloadsList"></div>
     <button class="btn secondary" id="clearDownloadsBtn" onclick="clearOfflineMedia()">Clear offline media</button>
   </div>
@@ -2184,7 +2202,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v71</div>
+    <div class="app-version">HeartClear · prototype v72</div>
   </div>
 </section>
 
@@ -2280,9 +2298,10 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       <button onclick="jump(10)" aria-label="Forward 10 seconds">+10s</button>
     </div>
     <div class="player-inline-actions">
-      <button class="offline-action" id="offlinePracticeBtn" onclick="togglePracticeOffline()">↓ Save offline</button>
+      <button class="offline-action" id="offlinePracticeBtn" onclick="togglePracticeOffline()" aria-label="Download meditation audio for offline listening">↓ Download offline</button>
       <button class="option-select" onclick="toggleOptions()">More options</button>
     </div>
+    <div class="player-offline-caption" id="practiceOfflineStatus" role="status" aria-live="polite">Save guided audio to this device for offline listening.</div>
 
     <div class="resume-card" id="resumeCard">
       <span id="resumeText">Continue where you left off?</span>
@@ -2377,6 +2396,9 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
   </button>
   <button class="nav-item" data-nav="library" onclick="navTo('library',this)" aria-label="Library">
     <svg viewBox="0 0 24 24"><path d="M5 4.5h5.5c1.2 0 1.5.5 1.5 1.6v13c0-1.3-.8-2.1-2-2.1H5Z"/><path d="M19 4.5h-5.5c-1.2 0-1.5.5-1.5 1.6v13c0-1.3.8-2.1 2-2.1H19Z"/></svg><span>Library</span>
+  </button>
+  <button class="nav-item" data-nav="downloads" onclick="navTo('downloads',this)" aria-label="Offline downloads">
+    <svg viewBox="0 0 24 24"><path d="M12 3v12m-4-4 4 4 4-4M4 17v4h16v-4"/></svg><span>Offline</span>
   </button>
 </nav>
 
@@ -2693,8 +2715,14 @@ async function refreshPracticeOfflineButton(){
   const btn=document.getElementById('offlinePracticeBtn');
   if(!btn)return;
   const saved=await cacheHas(chosenUrl);
-  btn.textContent=saved?'Remove offline':'Save offline';
+  btn.textContent=saved?'✓ Saved offline':'↓ Download offline';
+  btn.setAttribute('aria-label',saved?'Remove meditation audio downloaded to this device':'Download meditation audio for offline listening');
   btn.classList.toggle('saved',saved);
+  const status=document.getElementById('practiceOfflineStatus');
+  if(status){
+    status.classList.toggle('ready',saved);
+    status.textContent=saved?'Audio saved on this device. Preparation still comes first.':'Save guided audio to this device. Intro videos may need internet.';
+  }
 }
 
 async function togglePracticeOffline(){
@@ -2705,14 +2733,16 @@ async function togglePracticeOffline(){
     const saved=await cacheHas(chosenUrl);
     if(saved){
       await removeOfflineUrl(chosenUrl);
-      document.getElementById('playerNote').textContent='Offline copy removed.';
+      document.getElementById('playerNote').textContent='Offline download removed.';
     }else{
-      btn.textContent='Saving…';
+      btn.textContent='Downloading…';
+      const status=document.getElementById('practiceOfflineStatus');
+      if(status)status.textContent='Downloading guided audio. Keep HeartClear open until it finishes.';
       await saveOfflineUrl(chosenUrl);
       document.getElementById('playerNote').textContent='Saved for offline listening.';
     }
   }catch(e){
-    document.getElementById('playerNote').textContent='Could not save this file offline on this device.';
+    document.getElementById('playerNote').textContent='Offline download failed. Check connection and device storage.';
   }
   btn.disabled=false;
   await refreshPracticeOfflineButton();
@@ -2799,7 +2829,7 @@ function show(id){
   const context={home:'Home',practices:'Meditation',human:'Human Practice',humanCategory:'Human Practice',returnJourney:'Observation',fearPractice:'Fear',fearPlayer:'Fear',soundLab:'Sound Lab',soundLabPlayer:'Sound Lab',downloads:'Offline',library:'Library',collection:'Library',sacred:'Sacred Sound',sacredDetail:'Sacred Sound',history:'History',settings:'Settings'}[id]||'';
   const ctx=document.getElementById('topContext'); if(ctx)ctx.textContent=context;
 
-  if(['home','practices','soundLab','human','library','sacred'].includes(id)){
+  if(['home','practices','soundLab','human','library','sacred','downloads'].includes(id)){
     document.querySelectorAll('.nav-item').forEach(btn=>btn.classList.toggle('active',btn.dataset.nav===id));
   }
 
@@ -5097,7 +5127,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=72');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
