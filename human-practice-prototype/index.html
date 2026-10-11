@@ -2895,7 +2895,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear meditation history only</button>
     </div>
-    <div class="app-version">HeartClear · Version 1.0.5</div>
+    <div class="app-version">HeartClear · Version 1.1.0</div>
   </div>
 </section>
 
@@ -7287,7 +7287,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=90');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=91');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
