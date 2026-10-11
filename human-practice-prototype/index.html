@@ -3091,8 +3091,15 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
     <h3 id="hcHomeSheetTitle">Deep Sleep</h3>
     <p id="hcHomeSheetPurpose">A guided practice you can pause or stop at any time.</p>
     <p id="hcHomeSheetDuration">Duration · 60:00</p>
+    <p class="hc-sheet-observe" id="hcHomeSheetObserve">Notice what is happening around you.</p>
+    <p class="hc-sheet-safety" id="hcHomeSheetSafety">Breathe naturally. Stop if dizzy or uncomfortable; do not force or hold the breath.</p>
+    <label class="hc-sheet-sleep-label" for="hcHomeSheetSleep">Optional gentle stop</label>
+    <select id="hcHomeSheetSleep" class="hc-sheet-sleep" aria-label="Sleep timer">
+      <option value="0">At session end</option><option value="600">After 10 minutes</option><option value="1200">After 20 minutes</option><option value="1800">After 30 minutes</option>
+    </select>
     <div class="hc-sheet-actions">
       <button class="primary" onclick="beginHomeSheetPractice()">Begin</button>
+      <button class="secondary" id="hcHomeSheetResume" hidden onclick="hcBeginPracticeSheetResume()">Continue saved session</button>
       <button class="secondary" onclick="closeHomeSheets()">Not now</button>
     </div>
   </div>
@@ -3629,7 +3636,7 @@ function show(id){
   const ba=document.getElementById('bookAudioEl');
   updateBookMini(id);
   if(id==='home'){setGreeting();renderDashboard();updateHomeOfflineCount();renderHeartClearFavourites();hcRenderSoundResume();}
-  if(id==='practices')hcSyncDriveSections();
+  if(id==='practices'){filterPractices(hcPracticeActiveFilter);}
   if(id==='soundLab'){hcRenderSoundRows();hcRenderMixer()}
   if(id==='history') renderHistory();
   if(id==='downloads') renderDownloads();
@@ -6092,13 +6099,49 @@ function hcStartExistingGuidedSession(key){
   default:return show('practices');
  }
 }
-function filterPractices(kind,btn){
-  document.querySelectorAll('.category-chip').forEach(x=>x.classList.remove('active'));
-  if(btn)btn.classList.add('active');
-  document.querySelectorAll('.practice-card').forEach(card=>{
-    const match=kind==='all'||card.dataset.kind===kind||(kind==='deep'&&card.dataset.kind==='release');
-    card.classList.toggle('is-hidden',!match);
+
+let hcPracticeActiveFilter='all';
+function hcPracticeRefreshCards(){
+  const cards=[...document.querySelectorAll('#practices .practice-card')];
+  const hist=getHistory();
+  let last=null;
+  try{last=JSON.parse(localStorage.getItem('clearWithinLastSession')||'null')}catch(e){}
+  const favourites=getHeartClearFavourites();
+  const preferred=hcRecommendedForHour((typeof getDeviceLocalClock==='function'?getDeviceLocalClock():{hour:new Date().getHours()}).hour).title;
+  cards.forEach(card=>{
+    const title=card.querySelector('.practice-copy b')?.textContent?.trim()||'';
+    const marks=card.querySelector('.hc-practice-markers');if(!marks)return;
+    const tags=[];
+    if(title===preferred)tags.push('NOW');
+    const recent=hist.filter(e=>e.practice===title || e.title===title);
+    if(recent.some(e=>e.completed))tags.push('Played');
+    if(last&&last.kicker===title&&Number(last.time)>20&&Number(last.time)<Number(last.seconds)-20)tags.push('In progress · Continue');
+    if(favourites.some(v=>v.kind==='meditation'&&v.key===title))tags.push('Favourite');
+    marks.textContent='';
+    tags.forEach(t=>{
+      const b=document.createElement('span');b.className='hc-practice-tag'+(t==='NOW'?' is-now':'');b.textContent=t;marks.appendChild(b);
+    });
   });
+}
+
+function filterPractices(kind,btn){
+  hcPracticeActiveFilter=['all','short','deep','sleep','breath','human'].includes(kind)?kind:'all';
+  const cards=[...document.querySelectorAll('#practices .practice-card')];
+  function matches(card,tag){
+    const tags=(card.dataset.tags||'').split(/\s+/);
+    return tag==='all'||tags.includes(tag);
+  }
+  document.querySelectorAll('#practices [data-practice-filter]').forEach(button=>{
+    const current=button.dataset.practiceFilter;
+    const count=button.querySelector('.hc-filter-num');if(count)count.textContent=String(cards.filter(card=>matches(card,current)).length);
+    const active=current===hcPracticeActiveFilter;
+    button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));
+  });
+  cards.forEach(card=>card.classList.toggle('is-hidden',!matches(card,hcPracticeActiveFilter)));
+  document.querySelectorAll('#practices .hc-practice-group').forEach(group=>{
+    group.hidden=![...group.querySelectorAll('.practice-card')].some(card=>!card.classList.contains('is-hidden'));
+  });
+  hcPracticeRefreshCards();
 }
 
 const dailyNotes=[
@@ -6668,28 +6711,53 @@ function renderHomeStarterProgress(){
   el.textContent='Day '+(index+1)+' · '+duration+(saved.done.length===7?' · complete':'');
 }
 
+
 function openHomeSessionSheet(title){
   const card=hcFindPracticeCard(title);
-  if(!card){show('practices');return}
+  if(!card || !['wake','noon','evening','sleep'].includes(card.dataset.session)){show('practices');return}
   hcHomeSheetPractice=title;
   const meta=card.querySelector('.practice-copy small')?.textContent?.trim()||'Guided practice';
   const duration=card.querySelector('.duration')?.textContent?.trim()||'';
   const purposes={
-    'Deep Wake Up':'Begin the day with a guided practice before attention scatters.',
-    'Noon Reset':'Make a little space in the middle of the day without multitasking.',
-    'Evening Release':'Move from the day into a quieter evening.',
-    'Deep Sleep':'Prepare for rest with a slower night practice.'
+    'Deep Wake Up':'Begin the day with comfortable breath and attention.',
+    'Noon Reset':'A longer guided listening practice for the middle of your day.',
+    'Evening Release':'Notice the transition from activity into a quieter evening.',
+    'Deep Sleep':'Settle for the night with comfortable, unforced breathing.'
   };
-  const t=document.getElementById('hcHomeSheetTitle');if(t)t.textContent=title;
-  const p=document.getElementById('hcHomeSheetPurpose');if(p)p.textContent=purposes[title]||meta;
-  const d=document.getElementById('hcHomeSheetDuration');if(d)d.textContent=meta+(duration?' · '+duration:'');
-  document.getElementById('hcHomeSessionSheet')?.classList.add('show');
+  const observe={
+    'Deep Wake Up':'Notice the sounds of the room and the natural rhythm of breathing.',
+    'Noon Reset':'Notice movement, thoughts and the sensation of returning to the present.',
+    'Evening Release':'Notice your surroundings and the changing pace of the evening.',
+    'Deep Sleep':'Notice comfort and rest; you can pause or stop whenever needed.'
+  };
+  document.getElementById('hcHomeSheetTitle').textContent=title;
+  document.getElementById('hcHomeSheetPurpose').textContent=purposes[title]||meta;
+  document.getElementById('hcHomeSheetDuration').textContent=meta+(duration?' · '+duration:'');
+  document.getElementById('hcHomeSheetObserve').textContent='What to notice: '+(observe[title]||'Your surroundings.');
+  document.getElementById('hcHomeSheetSafety').textContent='Comfortable breathing only. Do not force your breath or use long holds; stop if dizzy or uncomfortable.';
+  document.getElementById('hcHomeSheetSleep').value='0';
+  const btn=document.querySelector('#hcHomeSessionSheet .hc-sheet-actions .primary');
+  if(btn)btn.textContent='Begin';
+  let last=null;
+  try{last=JSON.parse(localStorage.getItem('clearWithinLastSession')||'null')}catch(e){}
+  const canContinue=last&&last.kicker===title&&Number(last.time)>20&&Number(last.time)<Number(last.seconds)-20;
+  const hint=document.getElementById('hcHomeSheetObserve');
+  if(canContinue&&hint)hint.textContent+=' · Previous position: '+fmt(last.time)+'.';
+  const continueBtn=document.getElementById('hcHomeSheetResume');
+  if(continueBtn)continueBtn.hidden=!canContinue;
+  document.getElementById('hcHomeSessionSheet').classList.add('show');
 }
-
+function hcBeginPracticeSheetResume(){
+  closeHomeSheets();continueLastSession();
+}
 function beginHomeSheetPractice(){
   const card=hcFindPracticeCard(hcHomeSheetPractice);
+  const selectedSleep=document.getElementById('hcHomeSheetSleep')?.value||'0';
   closeHomeSheets();
-  if(card)card.click();else show('practices');
+  if(!card){show('practices');return}
+  hcStartExistingGuidedSession(card.dataset.session);
+  const sleep=document.getElementById('sleepTimer');if(sleep)sleep.value=selectedSleep;
+  setSleepTimer(selectedSleep);
 }
 
 function openHomeTimerSheet(mode='quiet',minutes=10){
@@ -6747,6 +6815,7 @@ function renderDashboard(){
   if(weekLine)weekLine.textContent=stats.sessions+' session'+(stats.sessions===1?'':'s')+' · '+stats.minutes+' min';
 
   renderLibraryResumeCard();
+  hcPracticeRefreshCards();
   const card=document.getElementById('homeResumeCard');
   if(!card)return;
   try{
