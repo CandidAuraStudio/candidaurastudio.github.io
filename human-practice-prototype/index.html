@@ -1296,7 +1296,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
 .home-offline-shortcut{margin:10px 0 14px;width:100%;display:flex;align-items:center;gap:12px;min-height:68px;padding:13px 15px;text-align:left;border-radius:18px;background:rgba(5,18,27,.72);border:1px solid rgba(212,231,239,.19);color:#f7fafb;font:inherit}
 .home-offline-icon{width:39px;height:39px;flex:0 0 39px;display:grid;place-items:center;background:#ffffff;color:#07131b;border-radius:12px;font-size:21px;font-weight:800}
 .home-offline-copy{min-width:0;flex:1}.home-offline-copy strong{display:block;font-size:14px}.home-offline-copy small{display:block;color:#afc3cd;font-size:11px;margin-top:4px}.home-offline-open{font-size:21px;color:#ffffff}
-.bottom-nav{grid-template-columns:repeat(7,minmax(0,1fr));width:min(calc(100% - 12px),540px)}
+.bottom-nav{grid-template-columns:repeat(6,minmax(0,1fr));width:min(calc(100% - 12px),540px)}
 .bottom-nav .nav-item{font-size:8px;gap:4px;min-width:0;letter-spacing:-.02em}
 .bottom-nav .nav-item svg{width:19px;height:19px}
 @media(max-width:370px){.bottom-nav .nav-item{font-size:7.6px;gap:4px}.bottom-nav .nav-item svg{width:18px;height:18px}}
@@ -1896,6 +1896,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
         <button onclick="openAdhkar('listen')">Listen</button>
         <button onclick="openAdhkar('recite')">Recite Along</button>
       </div>
+      <div class="hub-note" style="margin-top:12px">Quran Surahs 1–30 with spoken English translation: awaiting uploaded audio. This will be a separate Quran collection; Morning Adhkar is not English Quran translation.</div>
       
     </div>
 
@@ -1909,6 +1910,11 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       <button onclick="openOmVideo()" style="margin-top:8px">Play OM chanting video</button>
     </div>
 
+    <div class="chakra-feature" id="buddhistFeatured" style="display:none;margin-top:12px">
+      <b>Before chanting · Meaning and context</b>
+      <small>Identify the chant, its Buddhist tradition, language, pronunciation and translation, then listen comfortably. Properly attribute the original recording.</small>
+      <div class="hub-note">A verified Buddhist chanting recording has not yet been uploaded. A player will be added when it is available.</div>
+    </div>
     <div class="empty-shelf" style="margin-top:14px">
       <div class="empty-icon">♪</div>
       <strong id="sacredEmptyTitle">Sound practice</strong>
@@ -2202,7 +2208,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v73</div>
+    <div class="app-version">HeartClear · prototype v74</div>
   </div>
 </section>
 
@@ -2388,17 +2394,14 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
   <button class="nav-item" data-nav="soundLab" onclick="navTo('soundLab',this)" aria-label="Sound Lab">
     <svg viewBox="0 0 24 24"><path d="M2 12h2M6 9v6M10 5v14M14 8v8M18 3v18M22 10v4"/></svg><span>Sounds</span>
   </button>
-  <button class="nav-item" data-nav="human" onclick="navTo('human',this)" aria-label="Human Practice">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="6" r="2.5"/><path d="M12 9v6M7 11l5 2 5-2M9 21l3-6 3 6"/></svg><span>Human</span>
-  </button>
   <button class="nav-item" data-nav="sacred" onclick="navTo('sacred',this)" aria-label="Sacred">
     <svg viewBox="0 0 24 24"><path d="M4 12h2M8 8v8M12 5v14M16 8v8M20 12h-2"/></svg><span>Sacred</span>
   </button>
   <button class="nav-item" data-nav="library" onclick="navTo('library',this)" aria-label="Library">
     <svg viewBox="0 0 24 24"><path d="M5 4.5h5.5c1.2 0 1.5.5 1.5 1.6v13c0-1.3-.8-2.1-2-2.1H5Z"/><path d="M19 4.5h-5.5c-1.2 0-1.5.5-1.5 1.6v13c0-1.3.8-2.1 2-2.1H19Z"/></svg><span>Library</span>
   </button>
-  <button class="nav-item" data-nav="downloads" onclick="navTo('downloads',this)" aria-label="Offline downloads">
-    <svg viewBox="0 0 24 24"><path d="M12 3v12m-4-4 4 4 4-4M4 17v4h16v-4"/></svg><span>Offline</span>
+  <button class="nav-item" data-nav="human" onclick="navTo('human',this)" aria-label="Human Practice">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="6" r="2.5"/><path d="M12 9v6M7 11l5 2 5-2M9 21l3-6 3 6"/></svg><span>Human</span>
   </button>
 </nav>
 
@@ -3877,7 +3880,7 @@ function openSacred(kind){
       kicker:'Buddhist',
       title:'Chant & Mindful Sound',
       description:'Chanting and contemplative listening with clear tradition-specific context.',
-      meaning:'Explain the chant or contemplative phrase briefly before listening, repetition or silence.'
+      meaning:'Before chanting, identify the original Buddhist tradition, language and meaning of the chant. Listen naturally, and pause in silence. A verified chant recording is still needed.'
     },
     open:{
       kicker:'Open',
@@ -3896,15 +3899,17 @@ function openSacred(kind){
   if(featured) featured.classList.toggle('show',kind==='islamic');
   const hinduFeatured=document.getElementById('hinduFeatured');
   if(hinduFeatured) hinduFeatured.classList.toggle('show',kind==='hindu');
+  const buddhistFeatured=document.getElementById('buddhistFeatured');
+  if(buddhistFeatured)buddhistFeatured.style.display=kind==='buddhist'?'block':'none';
 
   const empty=document.getElementById('sacredEmptyTitle');
   const emptyText=document.getElementById('sacredEmptyText');
-  if(empty) empty.textContent=kind==='islamic'?'More listening':kind==='hindu'?'More mantra practice':'Sound practice';
+  if(empty) empty.textContent=kind==='islamic'?'More listening':kind==='hindu'?'More mantra practice':kind==='buddhist'?'Chant audio pending':'Sound practice';
   if(emptyText) emptyText.textContent=kind==='islamic'
     ?'Explore more remembrance, recitation and reflective listening.'
     :kind==='hindu'
       ?'Explore mantra, pronunciation and contemplative sound.'
-      :'Choose a sound practice and enter it with attention.';
+      :kind==='buddhist'?'Upload a Buddhist chant with its proper title and meaning to enable audio.':'Choose a sound practice and enter it with attention.';
   show('sacredDetail');
 }
 
