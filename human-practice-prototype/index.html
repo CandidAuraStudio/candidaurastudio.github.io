@@ -862,6 +862,33 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
   border-radius:12px;padding:8px 10px;font:inherit;font-size:12px
 }
 
+
+/* HeartClear navigation, sacred context and audiobook mini-player v43 */
+.book-mini{
+  position:fixed;left:14px;right:14px;bottom:calc(76px + env(safe-area-inset-bottom));
+  z-index:38;display:none;align-items:center;gap:11px;padding:10px 11px;
+  border:1px solid rgba(202,228,236,.10);border-radius:18px;
+  background:rgba(5,17,25,.95);backdrop-filter:blur(18px);
+  box-shadow:0 16px 50px rgba(0,0,0,.35)
+}
+.book-mini.show{display:flex}
+.book-mini-copy{min-width:0;flex:1}
+.book-mini-copy b{display:block;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.book-mini-copy small{display:block;color:#8096a1;font-size:10px;margin-top:2px}
+.book-mini button{
+  border:1px solid rgba(204,224,231,.10);background:rgba(17,40,51,.78);
+  color:#d8c192;border-radius:13px;min-width:42px;height:38px;font:inherit;font-size:12px
+}
+.book-mini .book-mini-close{min-width:34px;color:#8da0a8}
+.sacred-context{
+  margin-top:14px;padding:14px 15px;border-radius:18px;
+  border:1px solid rgba(198,225,236,.08);
+  background:linear-gradient(145deg,rgba(15,37,49,.65),rgba(5,18,27,.68))
+}
+.sacred-context b{display:block;font-size:13px}
+.sacred-context p{margin:5px 0 0;color:#8fa4ae;font-size:11px;line-height:1.5}
+.daily-source{display:block;margin-top:6px;color:#a98e64;font-size:9px;letter-spacing:.08em;text-transform:uppercase}
+
 </style>
 </head>
 <body>
@@ -888,15 +915,16 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
   </div>
 
   <div class="daily-note">
-    <div class="daily-label">Daily note · Sound & attention</div>
+    <div class="daily-label">Daily thought</div>
     <b id="dailyNoteTitle">Voice is physical sound.</b>
     <p id="dailyNoteText">The vocal folds create pressure waves in air. Meaning, rhythm and attention shape how that sound is experienced.</p>
+    <span class="daily-source" id="dailyNoteSource">Human attention</span>
   </div>
 
   <div class="home-dashboard">
     <div class="home-resume" id="homeResumeCard">
       <div class="eyebrow">Continue listening</div>
-      <strong id="homeResumeTitle">Settle</strong>
+      <strong id="homeResumeTitle">Deep Wake Up</strong>
       <small id="homeResumeMeta">Continue from 04:12</small>
       <button onclick="continueLastSession()">Continue session</button>
     </div>
@@ -910,7 +938,7 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
   <div class="home-section">
     <div class="section-head"><h3>Start now</h3><button onclick="show('practices')">View all</button></div>
     <div class="quick-practice">
-      <div><strong>Settle</strong><small>10 min · gentle practice</small></div>
+      <div><strong>Deep Wake Up</strong><small>Morning · guided breath</small></div>
       <button class="quick-start" onclick="startSettleQuick()" aria-label="Start Settle">▶</button>
     </div>
   </div>
@@ -927,9 +955,9 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
 
 <section class="screen practice-library" id="practices">
   <header class="library-intro">
-    <div class="library-label">Library</div>
-    <h2 id="practiceHeading">Find your practice</h2>
-    <p>Choose by time or by what you need.</p>
+    <div class="library-label">Meditation</div>
+    <h2 id="practiceHeading">Choose your time.</h2>
+    <p>Morning, noon, evening or night.</p>
     <div class="category-tabs">
       <button class="category-chip active" onclick="filterPractices('all',this)">All</button>
       <button class="category-chip" onclick="filterPractices('short',this)">Short</button>
@@ -940,27 +968,27 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
   </header>
 
   <div class="library-list" aria-label="Available guided practices">
-    <button class="choice practice-card" data-kind="short" aria-label="Start Settle, 10-minute practice" onclick="choosePractice(600,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/f4d262f6-56fe-40e3-84ea-930c11fe7c54.mp3','Settle','10-minute practice','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/7fd8e8ee-cc5a-49c3-940b-6b4330a42c5e.mp4','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/d10879c1-d600-400c-999e-3237ec672b86.mp4')">
+    <button class="choice practice-card" data-kind="short" aria-label="Start Deep Wake Up, 10-minute morning practice" onclick="choosePractice(600,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/f4d262f6-56fe-40e3-84ea-930c11fe7c54.mp3','Deep Wake Up','Morning · guided breath','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/7fd8e8ee-cc5a-49c3-940b-6b4330a42c5e.mp4','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/d10879c1-d600-400c-999e-3237ec672b86.mp4')">
       <span class="practice-art" aria-hidden="true"></span>
-      <span class="practice-copy"><b>Settle</b><small>10 min · gentle practice</small></span>
+      <span class="practice-copy"><b>Deep Wake Up</b><small>Morning · guided breath</small></span>
       <span class="duration">10:00</span>
     </button>
 
-    <button class="choice practice-card" data-kind="deep" aria-label="Start Deep, 40-minute practice" onclick="choosePractice(2400,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/b7f691a0-16a1-4449-b143-38e7b3be74df.mp3','Deep','40-minute practice','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/a71c8fd6-be58-4262-83ef-1469597b1630.mp4','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/40c72fc3-df5b-4dc9-a518-2ba3ab7f4ac3.mp4')">
+    <button class="choice practice-card" data-kind="deep" aria-label="Start Noon Reset, 40-minute practice" onclick="choosePractice(2400,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/b7f691a0-16a1-4449-b143-38e7b3be74df.mp3','Noon Reset','Noon · guided breath','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/a71c8fd6-be58-4262-83ef-1469597b1630.mp4','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/40c72fc3-df5b-4dc9-a518-2ba3ab7f4ac3.mp4')">
       <span class="practice-art" aria-hidden="true"></span>
-      <span class="practice-copy"><b>Deep</b><small>40 min · longer practice</small></span>
+      <span class="practice-copy"><b>Noon Reset</b><small>Noon · guided breath</small></span>
       <span class="duration">40:00</span>
     </button>
 
-    <button class="choice practice-card" data-kind="release" aria-label="Start Release, 60-minute practice" onclick="choosePractice(3600,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/93c0e1fe-0e8b-4e7e-9277-47edf8dd0b63.mp3','Release','60-minute practice','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/12095b12-f0ae-4859-9b9b-cf28c8224987.mp4','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/c1a8df3c-dabd-4b96-ac42-92f57d3f1ce1.mp4')">
+    <button class="choice practice-card" data-kind="release" aria-label="Start Evening Release, 60-minute practice" onclick="choosePractice(3600,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/93c0e1fe-0e8b-4e7e-9277-47edf8dd0b63.mp3','Evening Release','Evening · guided breath','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/12095b12-f0ae-4859-9b9b-cf28c8224987.mp4','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/c1a8df3c-dabd-4b96-ac42-92f57d3f1ce1.mp4')">
       <span class="practice-art" aria-hidden="true"></span>
-      <span class="practice-copy"><b>Release</b><small>60 min · extended practice</small></span>
+      <span class="practice-copy"><b>Evening Release</b><small>Evening · guided breath</small></span>
       <span class="duration">60:00</span>
     </button>
 
-    <button class="choice practice-card" data-kind="sleep" aria-label="Start Deep Sleep, 60-minute practice" onclick="choosePractice(3600,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/74f43c24-d734-4ace-b1d0-f1c3263cb299.mp3','Deep Sleep','60-minute sleep practice','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/e4717cb6-dae0-4bce-a4c3-f1ccab0fb9bf.mp4','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/c8bffc30-9905-4e18-8321-e6ecbb597947.mp4')">
+    <button class="choice practice-card" data-kind="sleep" aria-label="Start Deep Sleep, 60-minute night practice" onclick="choosePractice(3600,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/74f43c24-d734-4ace-b1d0-f1c3263cb299.mp3','Deep Sleep','Night · nose only','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/e4717cb6-dae0-4bce-a4c3-f1ccab0fb9bf.mp4','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/c8bffc30-9905-4e18-8321-e6ecbb597947.mp4')">
       <span class="practice-art" aria-hidden="true"></span>
-      <span class="practice-copy"><b>Deep Sleep</b><small>60 min · sleep practice</small></span>
+      <span class="practice-copy"><b>Deep Sleep</b><small>Night · nose only</small></span>
       <span class="duration">60:00</span>
     </button>
     <button class="choice practice-card" data-kind="human" aria-label="Open Human Practice" onclick="show('human')">
@@ -980,7 +1008,7 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
       <div class="intro-overlay">
         <div class="intro-copy">
           <div class="kicker">HC · HeartClear</div>
-          <h2 id="introTitle">Settle</h2>
+          <h2 id="introTitle">Deep Wake Up</h2>
         </div>
         <button class="intro-skip" onclick="finishIntro()">Skip</button>
       </div>
@@ -1185,11 +1213,9 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
     <h2 id="sacredTitle">Islamic</h2>
     <p id="sacredDescription">Dua, dhikr and contemplative listening.</p>
 
-    <div class="sacred-detail-principles">
-      <div class="principle-row"><b>1 · Meaning first</b><span id="sacredMeaning">Understand what is being recited or repeated before the sound practice begins.</span></div>
-      <div class="principle-row"><b>2 · Listen</b><span>Use an original, licensed or permissioned recording.</span></div>
-      <div class="principle-row"><b>3 · Breathe naturally</b><span>Keep the breath comfortable. No forcing, racing or long retention.</span></div>
-      <div class="principle-row"><b>4 · Sound, then silence</b><span>Repeat only if appropriate to the tradition, then leave a short quiet space.</span></div>
+    <div class="sacred-context">
+      <b id="sacredContextTitle">Before you begin</b>
+      <p id="sacredMeaning">Understand the meaning and context, then listen or recite naturally without forcing the breath.</p>
     </div>
 
     <div class="sacred-feature" id="islamicFeatured">
@@ -1366,7 +1392,7 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v42</div>
+    <div class="app-version">HeartClear · prototype v43</div>
   </div>
 </section>
 
@@ -1391,7 +1417,7 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
     <div class="kicker">Session complete</div>
     <h2>Stay for a moment.</h2>
     <p id="completionSummary">You practiced for 10 minutes.</p>
-    <div class="completion-time" id="completionPractice">Settle</div>
+    <div class="completion-time" id="completionPractice">Deep Wake Up</div>
 
     <div class="reflection-label">What do you notice now? <span style="color:#6f858f">Optional</span></div>
     <div class="reflections" id="reflectionChips">
@@ -1411,8 +1437,8 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
   <div class="glass player-card">
     <div class="player-top">
       <div class="player-heading">
-        <div class="kicker" id="sessionKicker">Settle</div>
-        <h2 id="sessionTitle">10-minute practice</h2>
+        <div class="kicker" id="sessionKicker">Deep Wake Up</div>
+        <h2 id="sessionTitle">Morning · guided breath</h2>
       </div>
       <button class="icon-btn" id="optionsBtn" onclick="toggleOptions()" aria-label="Player options">⋯</button>
     </div>
@@ -1472,18 +1498,27 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
   <audio id="audio" preload="auto" playsinline></audio>
 </section>
 
+<div class="book-mini" id="bookMini" aria-live="polite">
+  <div class="book-mini-copy" onclick="show('bookAudio')">
+    <b id="bookMiniTitle">Shadows of Truth · Chapter 1</b>
+    <small id="bookMiniMeta">English audiobook</small>
+  </div>
+  <button id="bookMiniPlay" onclick="toggleBookAudio()" aria-label="Play or pause audiobook">▶</button>
+  <button class="book-mini-close" onclick="stopBookAudio()" aria-label="Stop audiobook">×</button>
+</div>
+
 <nav class="bottom-nav" id="bottomNav" aria-label="Primary navigation">
   <button class="nav-item active" data-nav="home" onclick="navTo('home',this)" aria-label="Home">
     <svg viewBox="0 0 24 24"><path d="M3.5 10.4 12 3.7l8.5 6.7v9.1h-6v-5.7h-5v5.7h-6Z"/></svg><span>Home</span>
   </button>
-  <button class="nav-item" data-nav="practices" onclick="navTo('practices',this)" aria-label="Practice">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v9M7.5 12h9"/></svg><span>Practice</span>
+  <button class="nav-item" data-nav="practices" onclick="navTo('practices',this)" aria-label="Meditation">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v9M7.5 12h9"/></svg><span>Meditation</span>
+  </button>
+  <button class="nav-item" data-nav="sacred" onclick="navTo('sacred',this)" aria-label="Sacred">
+    <svg viewBox="0 0 24 24"><path d="M12 4v16M8.5 7.5c0-1.7 1.6-3 3.5-3s3.5 1.3 3.5 3-1.3 2.5-3.5 3-3.5 1.4-3.5 3.1 1.6 3 3.5 3 3.5-1.3 3.5-3"/></svg><span>Sacred</span>
   </button>
   <button class="nav-item" data-nav="library" onclick="navTo('library',this)" aria-label="Library">
     <svg viewBox="0 0 24 24"><path d="M5 4.5h5.5c1.2 0 1.5.5 1.5 1.6v13c0-1.3-.8-2.1-2-2.1H5Z"/><path d="M19 4.5h-5.5c-1.2 0-1.5.5-1.5 1.6v13c0-1.3.8-2.1 2-2.1H19Z"/></svg><span>Library</span>
-  </button>
-  <button class="nav-item" data-nav="sacred" onclick="navTo('sacred',this)" aria-label="Sacred Sound">
-    <svg viewBox="0 0 24 24"><path d="M12 4v16M8.5 7.5c0-1.7 1.6-3 3.5-3s3.5 1.3 3.5 3-1.3 2.5-3.5 3-3.5 1.4-3.5 3.1 1.6 3 3.5 3 3.5-1.3 3.5-3"/></svg><span>Sacred</span>
   </button>
 </nav>
 
@@ -1494,8 +1529,8 @@ let chosenSeconds=600;
 let chosenIntroUrl='';
 let chosenVisualUrl='';
 let chosenUrl='https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/f4d262f6-56fe-40e3-84ea-930c11fe7c54.mp3';
-let chosenKicker='Practice 01';
-let chosenTitle='10-minute practice';
+let chosenKicker='Deep Wake Up';
+let chosenTitle='Morning · guided breath';
 let stepIndex=0;
 let scrubbing=false;
 let sleepStopAt=0;
@@ -1541,7 +1576,7 @@ function show(id){
   document.getElementById('bottomNav').classList.toggle('hidden',immersive);
   document.getElementById('appTopBar').classList.toggle('hidden',immersive);
 
-  const context={home:'Home',practices:'Practice',library:'Library',collection:'Library',sacred:'Sacred Sound',sacredDetail:'Sacred Sound',history:'History',settings:'Settings'}[id]||'';
+  const context={home:'Home',practices:'Meditation',library:'Library',collection:'Library',sacred:'Sacred Sound',sacredDetail:'Sacred Sound',history:'History',settings:'Settings'}[id]||'';
   const ctx=document.getElementById('topContext'); if(ctx)ctx.textContent=context;
 
   if(['home','practices','library','sacred'].includes(id)){
@@ -1553,7 +1588,7 @@ function show(id){
   const av=document.getElementById('adhkarVideo');
   if(av && id!=='sacredSession') av.pause();
   const ba=document.getElementById('bookAudioEl');
-  if(ba && id!=='bookAudio' && !document.hidden) ba.pause();
+  updateBookMini(id);
   if(id==='home') renderDashboard();
   if(id==='history') renderHistory();
   if(id==='settings') renderSettings();
@@ -1568,8 +1603,8 @@ function startSettleQuick(){
   choosePractice(
     600,
     'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/f4d262f6-56fe-40e3-84ea-930c11fe7c54.mp3',
-    'Settle',
-    '10-minute practice',
+    'Deep Wake Up',
+    'Morning · guided breath',
     'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/7fd8e8ee-cc5a-49c3-940b-6b4330a42c5e.mp4',
     'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/d10879c1-d600-400c-999e-3237ec672b86.mp4'
   );
@@ -1733,6 +1768,28 @@ function openBookAudio(lang){
   }catch(e){}
   setBookMediaSession();
   show('bookAudio');
+  updateBookMini('bookAudio');
+}
+
+function updateBookMini(currentScreen){
+  const mini=document.getElementById('bookMini');
+  if(!mini || !bookAudioEl)return;
+  const hasSource=!!bookAudioEl.getAttribute('src');
+  const shouldShow=hasSource && currentScreen!=='bookAudio';
+  mini.classList.toggle('show',shouldShow);
+  const meta=document.getElementById('bookMiniMeta');
+  if(meta)meta.textContent=(currentBookAudioLang==='ta'?'Tamil':'English')+' · '+fmt(bookAudioEl.currentTime||0);
+  const b=document.getElementById('bookMiniPlay');
+  if(b)b.textContent=bookAudioEl.paused?'▶':'Ⅱ';
+}
+
+function stopBookAudio(){
+  if(!bookAudioEl)return;
+  bookAudioEl.pause();
+  bookAudioEl.currentTime=0;
+  bookAudioEl.removeAttribute('src');
+  bookAudioEl.load();
+  const mini=document.getElementById('bookMini'); if(mini)mini.classList.remove('show');
 }
 
 async function toggleBookAudio(){
@@ -1761,6 +1818,8 @@ function syncBookAudio(){
   document.getElementById('bookElapsed').textContent=fmt(t);
   document.getElementById('bookTotal').textContent=d?fmt(d):'00:00';
   document.getElementById('bookPlayBtn').textContent=bookAudioEl.paused?'Play':'Pause';
+  const mb=document.getElementById('bookMiniPlay'); if(mb)mb.textContent=bookAudioEl.paused?'▶':'Ⅱ';
+  const mm=document.getElementById('bookMiniMeta'); if(mm)mm.textContent=(currentBookAudioLang==='ta'?'Tamil':'English')+' · '+fmt(t);
   if(t>5)try{localStorage.setItem('heartclearBookPos:'+currentBookAudioLang,String(t))}catch(e){}
   if('mediaSession' in navigator && d>0){
     try{
@@ -1782,6 +1841,14 @@ function setBookMediaSession(){
     navigator.mediaSession.setActionHandler('pause',()=>bookAudioEl.pause());
     navigator.mediaSession.setActionHandler('seekbackward',details=>bookJump(-(details.seekOffset||30)));
     navigator.mediaSession.setActionHandler('seekforward',details=>bookJump(details.seekOffset||30));
+    try{
+      navigator.mediaSession.setActionHandler('seekto',details=>{
+        if(typeof details.seekTime==='number' && Number.isFinite(bookAudioEl.duration)){
+          bookAudioEl.currentTime=Math.max(0,Math.min(bookAudioEl.duration,details.seekTime));
+          syncBookAudio();
+        }
+      });
+    }catch(e){}
   }catch(e){}
 }
 
@@ -1863,6 +1930,8 @@ function openSacred(kind){
   document.getElementById('sacredTitle').textContent=data.title||'Sacred Sound';
   document.getElementById('sacredDescription').textContent=data.description||'';
   document.getElementById('sacredMeaning').textContent=data.meaning||'Understand the meaning before listening.';
+  const contextTitle=document.getElementById('sacredContextTitle');
+  if(contextTitle)contextTitle.textContent=kind==='islamic'?'Before listening or reciting':kind==='hindu'?'Before mantra practice':kind==='buddhist'?'Before chanting':'Before sound practice';
   const featured=document.getElementById('islamicFeatured');
   if(featured) featured.classList.toggle('show',kind==='islamic');
   const hinduFeatured=document.getElementById('hinduFeatured');
@@ -1883,6 +1952,7 @@ function openChakraGuide(){
 }
 
 function openAdhkar(mode){
+  if(bookAudioEl && !bookAudioEl.paused) bookAudioEl.pause();
   const v=document.getElementById('adhkarVideo');
   if(v){v.pause();v.currentTime=0}
   setAdhkarMode(mode||'listen');
@@ -1911,23 +1981,25 @@ function filterPractices(kind,btn){
 }
 
 const dailyNotes=[
-  {title:'Voice is physical sound.',text:'The vocal folds create pressure waves in air. Meaning, rhythm and attention shape how that sound is experienced.'},
-  {title:'Repetition gives attention one target.',text:'Repeating a phrase, prayer or sound can reduce constant switching between many different thoughts.'},
-  {title:'Sound and breath naturally meet.',text:'Speaking and chanting are usually carried on the exhale. Keep the breath comfortable rather than trying to make it longer.'},
-  {title:'Humming changes the exhale.',text:'Humming often makes an exhale longer because sound is carried out with the breath. There is no need to force volume or duration.'},
-  {title:'Meaning matters.',text:'A familiar prayer, mantra or recitation can combine memory, language, rhythm and attention. Different people may experience it differently.'},
-  {title:'Silence is part of sound practice.',text:'A short quiet period after recitation or music creates contrast and makes shifts in attention easier to notice.'},
-  {title:'Listening and reciting are different.',text:'Listening receives sound. Reciting coordinates hearing, voice, breath and attention at the same time.'},
-  {title:'No single sound guarantees calm.',text:'Context, familiarity, meaning, breathing and attention all influence how a sound practice feels.'}
-];
+  {title:'Notice before naming.',text:'For a few seconds, let sight, sound or sensation arrive before you explain it.',source:'Human attention'},
+  {title:'A repeated sound can become an anchor.',text:'Prayer, mantra, humming and ordinary words can all give attention one stable point. Meaning and context still matter.',source:'Sound & attention'},
+  {title:'Gratitude begins with what is already here.',text:'Before reaching for the next thing, notice one person, ability, place or ordinary object already supporting your day.',source:'Daily reflection'},
+  {title:'Watch one thing long enough to see change.',text:'The moon, a tree, the sky or a familiar street becomes different when you return to it across many days.',source:'Observation'},
+  {title:'Listening is an action.',text:'Try hearing someone fully before preparing your reply. Attention changes the quality of ordinary conversation.',source:'Human practice'},
+  {title:'Silence is not empty.',text:'After sound stops, notice what remains: body sensation, memory, thought, space and the urge to reach for stimulation.',source:'Contemplative practice'},
+  {title:'Traditions can share a human question without becoming identical.',text:'Prayer, mantra and philosophical reflection may use different language while still asking how attention, conduct and meaning shape a life.',source:'Comparative reflection'},
+  {title:'Do one ordinary thing completely.',text:'Walking, cooking, cleaning or making music can become practice when attention stays with the movement instead of rushing ahead.',source:'Human practice'}
+]
 
 function renderDailyNote(){
   const day=Math.floor(Date.now()/86400000);
   const n=dailyNotes[day%dailyNotes.length];
   const t=document.getElementById('dailyNoteTitle');
   const x=document.getElementById('dailyNoteText');
+  const s=document.getElementById('dailyNoteSource');
   if(t)t.textContent=n.title;
   if(x)x.textContent=n.text;
+  if(s)s.textContent=n.source||'HeartClear';
 }
 
 function setGreeting(){
@@ -1975,6 +2047,7 @@ function clearLocalHistory(){
 
 
 function choosePractice(seconds,url,kicker,title,introUrl,visualUrl){
+  if(bookAudioEl && !bookAudioEl.paused) bookAudioEl.pause();
   chosenSeconds=seconds;
   chosenUrl=url;
   chosenIntroUrl=introUrl || '';
