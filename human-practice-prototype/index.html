@@ -677,6 +677,17 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
 .principle-row span{display:block;color:#7f949f;font-size:11px;margin-top:4px;line-height:1.45}
 @media(max-width:360px){.sacred-grid{grid-template-columns:1fr}}
 
+
+/* HeartClear 60-second preparation v38 */
+.prep-card{text-align:center;padding:24px 20px}
+.prep-progress{height:4px;border-radius:999px;background:rgba(255,255,255,.07);overflow:hidden;margin:18px 0 22px}
+.prep-progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,#9e7747,#ddbd80);transition:width .5s linear}
+.prep-step{display:none;min-height:260px;align-items:center;justify-content:center;flex-direction:column}
+.prep-step.active{display:flex}
+.prep-count{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#a88d61}
+.prep-step h2{font-size:28px;margin-top:12px}
+.prep-step p{max-width:330px;margin:10px auto 0}
+
 </style>
 </head>
 <body>
@@ -784,6 +795,33 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
       </div>
     </div>
     <p class="intro-note">A short visual first. Then the instructions.</p>
+  </div>
+</section>
+
+<section class="screen" id="prep">
+  <div class="glass prep-card">
+    <div class="prep-progress"><span id="prepBar"></span></div>
+    <div class="prep-step active" data-prep="0">
+      <div class="prep-count">HeartClear · 1 of 4</div>
+      <h2>Welcome.</h2>
+      <p>Take a moment before the practice begins. Nothing needs to be achieved right now.</p>
+    </div>
+    <div class="prep-step" data-prep="1">
+      <div class="prep-count">HeartClear · 2 of 4</div>
+      <h2>Arrive in the body.</h2>
+      <p>Let the jaw, shoulders and hands soften. Choose a position that feels comfortable.</p>
+    </div>
+    <div class="prep-step" data-prep="2">
+      <div class="prep-count">HeartClear · 3 of 4</div>
+      <h2>Listen first.</h2>
+      <p>Notice the room, the body and the natural breath. There is no need to rush.</p>
+    </div>
+    <div class="prep-step" data-prep="3">
+      <div class="prep-count">HeartClear · 4 of 4</div>
+      <h2>Begin when ready.</h2>
+      <p>The next screen gives the short practice instructions.</p>
+    </div>
+    <button class="btn secondary" onclick="finishPrep()">Skip preparation</button>
   </div>
 </section>
 
@@ -1089,6 +1127,9 @@ let sessionRecorded=false;
 let completionHistoryIndex=-1;
 let wakeLock=null;
 let wakeLockEnabled=false;
+let prepIndex=0;
+let prepElapsed=0;
+let prepTimer=null;
 
 const audio=document.getElementById('audio');
 const seek=document.getElementById('seek');
@@ -1103,7 +1144,7 @@ function show(id){
   const target=document.getElementById(id);
   if(target) target.classList.add('active');
 
-  const immersive=['intro','instructions','player','completion'].includes(id);
+  const immersive=['intro','prep','instructions','player','completion'].includes(id);
   document.getElementById('bottomNav').classList.toggle('hidden',immersive);
   document.getElementById('appTopBar').classList.toggle('hidden',immersive);
 
@@ -1278,6 +1319,33 @@ function startIntro(){
 function finishIntro(){
   const v=document.getElementById('introVideo');
   v.pause();
+  startPrep();
+}
+
+function startPrep(){
+  if(prepTimer){clearInterval(prepTimer);prepTimer=null}
+  prepIndex=0;
+  prepElapsed=0;
+  renderPrep();
+  show('prep');
+  prepTimer=setInterval(()=>{
+    prepElapsed++;
+    const bar=document.getElementById('prepBar');
+    if(bar)bar.style.width=Math.min(100,(prepElapsed/60)*100)+'%';
+    const nextIndex=Math.min(3,Math.floor(prepElapsed/15));
+    if(nextIndex!==prepIndex){prepIndex=nextIndex;renderPrep()}
+    if(prepElapsed>=60)finishPrep();
+  },1000);
+}
+
+function renderPrep(){
+  document.querySelectorAll('.prep-step').forEach((x,i)=>x.classList.toggle('active',i===prepIndex));
+}
+
+function finishPrep(){
+  if(prepTimer){clearInterval(prepTimer);prepTimer=null}
+  const bar=document.getElementById('prepBar');
+  if(bar)bar.style.width='0%';
   show('instructions');
 }
 
