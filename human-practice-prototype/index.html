@@ -2208,7 +2208,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v74</div>
+    <div class="app-version">HeartClear · prototype v75</div>
   </div>
 </section>
 
@@ -2837,7 +2837,11 @@ function show(id){
   }
 
   const pv=document.getElementById('practiceVisual');
-  if(pv && id!=='player') pv.pause();
+  if(pv && id!=='player'){
+    const pipActive=document.pictureInPictureElement===pv;
+    if(pipActive) syncPracticeVisual(true);
+    else pv.pause();
+  }
   const av=document.getElementById('adhkarVisual');
   if(av && id!=='sacredSession') av.pause();
   const ba=document.getElementById('bookAudioEl');
@@ -3931,6 +3935,23 @@ async function togglePip(videoId){
   }catch(e){}
 }
 
+const practiceVisualForPip=document.getElementById('practiceVisual');
+if(practiceVisualForPip){
+  practiceVisualForPip.addEventListener('enterpictureinpicture',()=>{
+    if(!audio.paused)syncPracticeVisual(true);
+  });
+  practiceVisualForPip.addEventListener('leavepictureinpicture',()=>{
+    if(currentScreenId==='player')syncPracticeVisual(true);
+    else practiceVisualForPip.pause();
+  });
+}
+const adhkarVisualForPip=document.getElementById('adhkarVisual');
+if(adhkarVisualForPip){
+  adhkarVisualForPip.addEventListener('leavepictureinpicture',()=>{
+    if(currentScreenId!=='sacredSession')adhkarVisualForPip.pause();
+  });
+}
+
 
 function openSoundLab(){
   show('soundLab');
@@ -4859,7 +4880,8 @@ function fmt(sec){
 function syncPracticeVisual(force=false){
   const pv=document.getElementById('practiceVisual');
   if(!pv || !chosenVisualUrl)return;
-  if(document.hidden){
+  const pipActive=document.pictureInPictureElement===pv;
+  if(document.hidden && !pipActive){
     if(!pv.paused)pv.pause();
     return;
   }
@@ -5070,8 +5092,8 @@ document.addEventListener('visibilitychange',()=>{
   const pv=document.getElementById('practiceVisual');
   const av=document.getElementById('adhkarVisual');
   if(document.hidden){
-    if(pv && !pv.paused)pv.pause();
-    if(av && !av.paused)av.pause();
+    if(pv && !pv.paused && document.pictureInPictureElement!==pv)pv.pause();
+    if(av && !av.paused && document.pictureInPictureElement!==av)av.pause();
     if(audio.currentTime>20){
       try{localStorage.setItem('clearWithinResume:'+chosenKicker,String(audio.currentTime))}catch(e){}
       rememberLastSession(audio.currentTime);
