@@ -1419,6 +1419,11 @@ body.reduce-motion .hc-quiet-disc{transition:none!important}
 .hc-path-note{width:100%;min-height:90px;background:rgba(11,32,43,.7);border:1px solid rgba(255,255,255,.2);border-radius:12px;color:#fff;font:inherit;padding:12px}
 .hc-glossary details{border-top:1px solid rgba(255,255,255,.18);padding:12px 0;font-size:13px}
 .hc-glossary summary{cursor:pointer;min-height:35px;font-weight:650}
+
+.hc-private-media{margin-top:15px;padding:13px;border:1px solid rgba(255,255,255,.2);border-radius:16px;background:rgba(9,32,44,.33)}
+.hc-private-media input[type=file]{width:100%;max-width:100%;font-size:12px;color:#fff;margin-top:8px}
+.hc-private-media video,.hc-private-media audio{display:block;width:100%;max-width:100%;margin:12px 0}
+.hc-private-media[hidden],.hc-private-media video[hidden],.hc-private-media audio[hidden]{display:none!important}
 </style>
 </head>
 <body>
@@ -2085,6 +2090,16 @@ body.reduce-motion .hc-quiet-disc{transition:none!important}
         <button onclick="openAdhkar('recite')">Recite Along</button>
       </div>
       <div class="hub-note" style="margin-top:12px">Quran Surahs 1–30 with spoken English translation: awaiting uploaded audio. This will be a separate Quran collection; Morning Adhkar is not English Quran translation.</div>
+      <div class="hc-private-media">
+        <b style="display:block">Private Sufi-inspired listening</b>
+        <p style="font-size:12px;line-height:1.6">Choose your own audio or video file from this device to listen privately. Sufi-inspired music is not labelled Quran recitation or dhikr. HeartClear does not upload, distribute or permanently save the file.</p>
+        <label for="hcIslamPrivateFile" style="font-size:12px">Choose personal audio or video</label>
+        <input id="hcIslamPrivateFile" type="file" accept="audio/*,video/mp4,video/webm,video/quicktime" onchange="hcLoadPrivateIslamFile(this)" aria-label="Choose a personal Islamic or Sufi-style listening file">
+        <p id="hcIslamPrivateStatus" class="player-status" role="status">Select a local file to listen.</p>
+        <audio id="hcIslamPrivateAudio" controls playsinline preload="metadata" hidden></audio>
+        <video id="hcIslamPrivateVideo" controls playsinline preload="metadata" hidden></video>
+        <button class="btn secondary" onclick="hcStopPrivateIslamFile()" style="margin-top:8px">Close private file</button>
+      </div>
       
     </div>
 
@@ -3116,6 +3131,12 @@ function show(id){
 function getActiveMediaState(){
   const options=[
     {
+      key:'private-islam',el:hcPrivateIslamMedia,
+      title:hcPrivateIslamTitle,
+      meta:'Private listening · '+fmt(hcPrivateIslamMedia?.currentTime||0),
+      screen:'sacredDetail'
+    },
+    {
       key:'meditation',el:audio,
       title:playbackPhase==='nature'?'Nature sounds':chosenKicker||'Meditation',
       meta:playbackPhase==='nature'?'After meditation · '+fmt(audio.currentTime||0):'Meditation · '+fmt(audio.currentTime||0),
@@ -3366,6 +3387,49 @@ function hcStartPathActivity(){
    if(card)card.click();else show('practices');
  }else if(day.type==='human')openHumanCategory(day.category||'observe');
 }
+
+
+let hcPrivateIslamObjectUrl='',hcPrivateIslamTitle='Private Sufi listening',hcPrivateIslamMedia=null;
+const hcPrivateIslamAudio=document.getElementById('hcIslamPrivateAudio');
+const hcPrivateIslamVideo=document.getElementById('hcIslamPrivateVideo');
+function hcStopPrivateIslamFile(){
+  for(const el of [hcPrivateIslamAudio,hcPrivateIslamVideo]){el.pause();el.removeAttribute('src');el.load();el.hidden=true}
+  if(hcPrivateIslamObjectUrl){URL.revokeObjectURL(hcPrivateIslamObjectUrl);hcPrivateIslamObjectUrl=''}
+  hcPrivateIslamMedia=null;
+  const select=document.getElementById('hcIslamPrivateFile');if(select)select.value='';
+  const status=document.getElementById('hcIslamPrivateStatus');if(status)status.textContent='Private file closed. Nothing was uploaded.';
+  renderGlobalMini();
+}
+function hcLoadPrivateIslamFile(input){
+  const file=input?.files?.[0];if(!file)return;
+  hcStopPrivateIslamFile();
+  const isVideo=file.type.startsWith('video/')||/\.mp4$|\.mov$|\.webm$/i.test(file.name);
+  const el=isVideo?hcPrivateIslamVideo:hcPrivateIslamAudio;
+  hcPrivateIslamTitle=file.name.replace(/\.[a-z0-9]+$/i,'');
+  hcPrivateIslamObjectUrl=URL.createObjectURL(file);
+  hcPrivateIslamMedia=el;el.src=hcPrivateIslamObjectUrl;el.hidden=false;el.load();
+  const status=document.getElementById('hcIslamPrivateStatus');
+  if(status)status.textContent='Loaded locally: '+file.name+'. Press Play to listen. The file is not uploaded.';
+  for(const x of [audio,bookAudioEl,adhkarAudio,soundLabAudio,fearAudio,humanSoundAudio])if(x&&!x.paused)x.pause();
+}
+function hcPrivateIslamSession(){
+  if(!hcPrivateIslamMedia||!('mediaSession' in navigator))return;
+  try{
+    navigator.mediaSession.metadata=new MediaMetadata({title:hcPrivateIslamTitle,artist:'Personal file',album:'Private Sufi-inspired listening',artwork:hcArtwork()});
+    navigator.mediaSession.setActionHandler('play',()=>hcPrivateIslamMedia.play());
+    navigator.mediaSession.setActionHandler('pause',()=>hcPrivateIslamMedia.pause());
+  }catch(e){}
+}
+for(const el of [hcPrivateIslamAudio,hcPrivateIslamVideo]){
+  el.addEventListener('play',()=>{
+    for(const x of [audio,bookAudioEl,adhkarAudio,soundLabAudio,fearAudio,humanSoundAudio])if(x&&!x.paused)x.pause();
+    hcPrivateIslamMedia=el;hcPrivateIslamSession();rememberActiveMedia('private-islam');renderGlobalMini();
+  });
+  el.addEventListener('pause',renderGlobalMini);
+  el.addEventListener('timeupdate',renderGlobalMini);
+  el.addEventListener('ended',renderGlobalMini);
+}
+window.addEventListener('pagehide',()=>{if(hcPrivateIslamObjectUrl)hcStopPrivateIslamFile()});
 
 function rememberActiveMedia(key){
   try{localStorage.setItem('heartclearActiveMedia',key)}catch(e){}
