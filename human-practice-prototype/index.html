@@ -1748,6 +1748,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
 .hc-global-mini-progress{order:7;flex-basis:100%;height:3px;background:rgba(216,231,239,.16);border-radius:100px;overflow:hidden}
 .hc-global-mini-progress span{display:block;height:100%;background:#fff;width:0%;transition:width .2s linear}
 #globalMini .global-mini-btn.primary{background:#fff!important;color:#081923!important}
+#globalMini.is-mix .hc-mini-skip{display:none!important}
 @media(max-width:420px){.hc-sound-row{gap:7px;padding:11px 9px;grid-template-columns:34px minmax(0,1fr) auto auto}.hc-sound-row .hc-track-mark{width:34px;height:34px}.hc-sound-icon-btn{width:38px;height:38px}.hc-track-info{width:30px;height:30px}}
 @media(prefers-reduced-motion:reduce){.hc-global-mini-progress span{transition:none}}
 
@@ -3083,9 +3084,9 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
     <b id="globalMiniTitle">HeartClear</b>
     <small id="globalMiniMeta">00:00</small>
   </button>
-  <button class="global-mini-btn" onclick="globalJump(-10)" aria-label="Back 10 seconds">↶10</button>
+  <button class="global-mini-btn hc-mini-skip" onclick="globalJump(-10)" aria-label="Back 10 seconds">↶10</button>
   <button class="global-mini-btn primary" id="globalMiniPlay" onclick="toggleGlobalMedia()" aria-label="Pause or resume">Ⅱ</button>
-  <button class="global-mini-btn" onclick="globalJump(10)" aria-label="Forward 10 seconds">10↷</button>
+  <button class="global-mini-btn hc-mini-skip" onclick="globalJump(10)" aria-label="Forward 10 seconds">10↷</button>
   <button class="global-mini-btn global-mini-stop" onclick="stopGlobalMedia()" aria-label="Stop playback">×</button>
   <div class="hc-global-mini-progress" aria-hidden="true"><span id="hcGlobalMiniProgressFill"></span></div>
 </div>
@@ -3970,6 +3971,7 @@ function renderGlobalMini(){
   const sameScreen=currentScreenId===state.screen;
   const scrolledAway=window.scrollY>180;
   mini.classList.toggle('show',!sameScreen||scrolledAway);
+  mini.classList.toggle('is-mix',state.key==='mix');
 
   document.getElementById('globalMiniTitle').textContent=state.title;
   document.getElementById('globalMiniMeta').textContent=state.meta;
