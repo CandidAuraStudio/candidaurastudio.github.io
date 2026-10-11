@@ -2529,7 +2529,7 @@ button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible,te
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear meditation history only</button>
     </div>
-    <div class="app-version">HeartClear · Version 1.0.0</div>
+    <div class="app-version">HeartClear · Version 1.0.1</div>
   </div>
 </section>
 
@@ -5023,7 +5023,7 @@ function openSoundTrack(key){
 let soundLabPlayRequested=false;
 let soundLabFallbackActive=false;
 async function fallbackSoundLab(){
-  if(soundLabFallbackActive||currentSoundKey==='nature'||currentSoundKey==='organicBansuri')return;
+  if(soundLabFallbackActive||currentSoundKey==='nature'||currentSoundKey==='organicBansuri'||currentSoundKey==='personal')return;
   soundLabFallbackActive=true;
   const status=document.getElementById('soundLabStatus');
   if(status)status.textContent='This source failed. Loading the offline-capable Nature Weave backup…';
@@ -5048,7 +5048,10 @@ async function toggleSoundLab(){
       const st=document.getElementById('soundLabStatus');
       if(st)st.textContent='Playing · '+(soundLabTracks[currentSoundKey]||soundLabTracks.horizon).title;
     }catch(e){
-      if(currentSoundKey==='organicBansuri'){
+      if(currentSoundKey==='personal'){
+        const st=document.getElementById('soundLabStatus');
+        if(st)st.textContent='This audio format could not play. Try the downloaded MP3 instead.';
+      }else if(currentSoundKey==='organicBansuri'){
         const st=document.getElementById('soundLabStatus');
         if(st)st.textContent='Wikimedia stream unavailable. Try the original file via the source link.';
       }else await fallbackSoundLab();
@@ -6340,7 +6343,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=83');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=84');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
