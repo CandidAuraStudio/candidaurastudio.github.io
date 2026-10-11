@@ -704,6 +704,12 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
 .human-session-note{margin-top:15px;padding:13px 14px;border-radius:16px;text-align:left;background:rgba(5,18,27,.43);border:1px solid rgba(198,225,236,.07);color:#95a9b3;font-size:12px;line-height:1.55}
 @media(max-width:360px){.human-grid{grid-template-columns:1fr}}
 
+
+.progress-card{margin-top:13px;padding:14px 15px;border-radius:18px;border:1px solid rgba(198,225,236,.08);background:rgba(5,18,27,.45)}
+.progress-label{font-size:10px;color:#9e865f;text-transform:uppercase;letter-spacing:.11em}
+.progress-title{font-size:14px;margin-top:5px}
+.progress-sub{font-size:11px;color:#7f949f;margin-top:4px}
+
 </style>
 </head>
 <body>
@@ -736,6 +742,11 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
       <small id="homeResumeMeta">Continue from 04:12</small>
       <button onclick="continueLastSession()">Continue session</button>
     </div>
+    <div class="progress-card">
+      <div class="progress-label">Awareness practice</div>
+      <div class="progress-title" id="progressTitle">0 active days · 0 areas explored</div>
+      <div class="progress-sub">Progress reflects practice and observation, not a spiritual rank.</div>
+    </div>
   </div>
 
   <div class="home-section">
@@ -751,7 +762,7 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
     <div class="stats-strip">
       <div class="stat-tile"><b id="homeWeekSessions">0</b><span>sessions</span></div>
       <div class="stat-tile"><b id="homeWeekMinutes">0</b><span>minutes</span></div>
-      <div class="stat-tile"><b id="homeTotalSessions">0</b><span>all time</span></div>
+      <div class="stat-tile"><b id="homeTotalSessions">0</b><span>areas</span></div>
     </div>
   </div>
 </section>
@@ -1052,7 +1063,7 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v37</div>
+    <div class="app-version">HeartClear · prototype v38</div>
   </div>
 </section>
 
@@ -1595,7 +1606,9 @@ function last7DayStats(){
   const cutoff=Date.now()-(7*24*60*60*1000);
   const items=getHistory().filter(x=>Number(x.endedAt)>=cutoff);
   const seconds=items.reduce((sum,x)=>sum+(Number(x.listenedSeconds)||0),0);
-  return {sessions:items.length,minutes:Math.round(seconds/60)};
+  const days=new Set(items.map(x=>new Date(Number(x.endedAt)).toISOString().slice(0,10))).size;
+  const areas=new Set(items.map(x=>x.category||'Breath')).size;
+  return {sessions:items.length,minutes:Math.round(seconds/60),days,areas};
 }
 
 function renderDashboard(){
@@ -1605,7 +1618,9 @@ function renderDashboard(){
   if(s)s.textContent=stats.sessions;
   if(m)m.textContent=stats.minutes;
   const totalEl=document.getElementById('homeTotalSessions');
-  if(totalEl)totalEl.textContent=getHistory().length;
+  if(totalEl)totalEl.textContent=stats.areas;
+  const progress=document.getElementById('progressTitle');
+  if(progress)progress.textContent=stats.days+' active day'+(stats.days===1?'':'s')+' · '+stats.areas+' area'+(stats.areas===1?'':'s')+' explored';
 
   const card=document.getElementById('homeResumeCard');
   if(!card)return;
@@ -1699,6 +1714,7 @@ function recordSession(completed){
   const entry={
     practice:chosenKicker,
     title:chosenTitle,
+    category:'Breath',
     listenedSeconds:Math.round(t),
     targetSeconds:chosenSeconds,
     completed:!!completed,
