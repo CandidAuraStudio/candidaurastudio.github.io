@@ -1068,9 +1068,74 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
 .global-mini-stop{color:#9aaab1}
 .bottom-nav.hidden ~ .global-mini{bottom:calc(14px + env(safe-area-inset-bottom,0px))}
 
+
+/* Smart install flow v50 */
+.install-sheet{
+  position:fixed;inset:0;z-index:120;display:none;align-items:flex-end;justify-content:center;
+  background:rgba(1,7,12,.62);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  padding:16px
+}
+.install-sheet.show{display:flex}
+.install-card{
+  width:min(100%,480px);border-radius:26px;padding:20px;
+  background:linear-gradient(180deg,rgba(13,38,50,.98),rgba(5,18,27,.99));
+  border:1px solid rgba(205,229,237,.12);
+  box-shadow:0 24px 80px rgba(0,0,0,.55)
+}
+.install-head{display:flex;align-items:center;gap:12px}
+.install-logo{
+  width:54px;height:54px;border-radius:17px;display:grid;place-items:center;
+  background:linear-gradient(145deg,rgba(215,177,110,.18),rgba(22,52,66,.52));
+  border:1px solid rgba(218,184,124,.18);color:#d9bd85;font-weight:800;font-size:18px
+}
+.install-head b{display:block;font-size:17px}.install-head small{display:block;color:#8fa4ae;margin-top:3px}
+.install-steps{display:grid;gap:9px;margin-top:16px}
+.install-step{
+  display:grid;grid-template-columns:31px minmax(0,1fr);gap:10px;align-items:center;
+  padding:10px 11px;border-radius:14px;background:rgba(5,18,27,.55);
+  border:1px solid rgba(198,225,236,.07)
+}
+.install-step span:first-child{
+  width:29px;height:29px;border-radius:10px;display:grid;place-items:center;
+  background:rgba(20,48,61,.75);color:#d3b67f;font-size:11px
+}
+.install-step b{font-size:12px}.install-step small{display:block;color:#8298a3;font-size:10px;margin-top:2px}
+.install-actions{display:grid;grid-template-columns:1fr;gap:9px;margin-top:15px}
+.install-primary{
+  border:0;border-radius:16px;padding:14px;font:inherit;font-weight:800;
+  background:linear-gradient(180deg,#dfbd80,#b98349);color:#07131b
+}
+.install-secondary{
+  border:1px solid rgba(198,225,236,.10);border-radius:16px;padding:12px;font:inherit;
+  background:rgba(5,18,27,.50);color:#a9bac1
+}
+
 </style>
 </head>
 <body>
+<div class="install-sheet" id="installSheet" role="dialog" aria-modal="true" aria-labelledby="installTitle">
+  <div class="install-card">
+    <div class="install-head">
+      <div class="install-logo">HC</div>
+      <div>
+        <b id="installTitle">Install HeartClear</b>
+        <small id="installSubtitle">Use it like a normal app from your Home Screen.</small>
+      </div>
+    </div>
+
+    <div class="install-steps" id="iosInstallSteps" style="display:none">
+      <div class="install-step"><span>1</span><div><b>Open in Safari</b><small>HeartClear installs as a web app from Safari on iPhone.</small></div></div>
+      <div class="install-step"><span>2</span><div><b>Tap Share</b><small>Use the Share button in Safari.</small></div></div>
+      <div class="install-step"><span>3</span><div><b>Add to Home Screen</b><small>Turn on “Open as Web App”, then tap Add.</small></div></div>
+    </div>
+
+    <div class="install-actions">
+      <button class="install-primary" id="installPrimaryBtn" onclick="handleInstallAction()">Install HeartClear</button>
+      <button class="install-secondary" onclick="dismissInstallSheet()">Continue in browser</button>
+    </div>
+  </div>
+</div>
+
 <div class="app">
 <div class="app-shell-top" id="appTopBar">
   <div class="brand-lockup">
@@ -1709,11 +1774,12 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
         <button class="offline-action" id="localContextBtn" onclick="toggleLocalContext()">Use location</button>
       </div>
       <div class="setting-row">
-        <div><strong>Install app</strong><small>iPhone: Safari → Share → Add to Home Screen<br>Android: Chrome → Install app</small></div>
+        <div><strong>Install HeartClear</strong><small>Add HeartClear to this device for a full-screen app experience.</small></div>
+        <button class="offline-action" onclick="showInstallSheet(true)">Install</button>
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v49</div>
+    <div class="app-version">HeartClear · prototype v50</div>
   </div>
 </section>
 
@@ -1906,6 +1972,95 @@ try{
 }catch(e){}
 
 const MEDIA_CACHE='heartclear-media-v1';
+let deferredInstallPrompt=null;
+
+function isStandaloneApp(){
+  return window.matchMedia('(display-mode: standalone)').matches ||
+    window.navigator.standalone===true;
+}
+
+function isIOSDevice(){
+  return /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+    (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
+}
+
+function isSafariBrowser(){
+  const ua=navigator.userAgent||'';
+  return /Safari/i.test(ua) && !/CriOS|FxiOS|EdgiOS|OPiOS|DuckDuckGo/i.test(ua);
+}
+
+function showInstallSheet(force=false){
+  if(isStandaloneApp())return;
+  const sheet=document.getElementById('installSheet');
+  if(!sheet)return;
+
+  if(!force){
+    try{
+      if(sessionStorage.getItem('heartclearInstallSeen')==='1')return;
+      sessionStorage.setItem('heartclearInstallSeen','1');
+    }catch(e){}
+  }
+
+  const ios=isIOSDevice();
+  const iosSteps=document.getElementById('iosInstallSteps');
+  const button=document.getElementById('installPrimaryBtn');
+  const subtitle=document.getElementById('installSubtitle');
+
+  if(ios){
+    iosSteps.style.display='grid';
+    if(button)button.textContent=isSafariBrowser()?'Show install steps':'Open in Safari to install';
+    if(subtitle)subtitle.textContent='iPhone requires one final Add to Home Screen confirmation.';
+  }else{
+    iosSteps.style.display='none';
+    if(button)button.textContent=deferredInstallPrompt?'Install HeartClear':'Install / Add to Home Screen';
+    if(subtitle)subtitle.textContent='Add HeartClear to your Home Screen for a full-screen app experience.';
+  }
+
+  sheet.classList.add('show');
+}
+
+function dismissInstallSheet(){
+  const sheet=document.getElementById('installSheet');
+  if(sheet)sheet.classList.remove('show');
+}
+
+async function handleInstallAction(){
+  if(isStandaloneApp()){dismissInstallSheet();return}
+
+  if(deferredInstallPrompt){
+    try{
+      deferredInstallPrompt.prompt();
+      await deferredInstallPrompt.userChoice;
+    }catch(e){}
+    deferredInstallPrompt=null;
+    dismissInstallSheet();
+    return;
+  }
+
+  if(isIOSDevice()){
+    // iOS does not expose a web API that can press “Add to Home Screen” for the user.
+    const steps=document.getElementById('iosInstallSteps');
+    if(steps)steps.style.display='grid';
+    const button=document.getElementById('installPrimaryBtn');
+    if(button)button.textContent='Safari → Share → Add to Home Screen';
+    return;
+  }
+
+  const button=document.getElementById('installPrimaryBtn');
+  if(button)button.textContent='Browser menu → Install app';
+}
+
+window.addEventListener('beforeinstallprompt',event=>{
+  event.preventDefault();
+  deferredInstallPrompt=event;
+  if(!isStandaloneApp())setTimeout(()=>showInstallSheet(false),600);
+});
+
+window.addEventListener('appinstalled',()=>{
+  deferredInstallPrompt=null;
+  dismissInstallSheet();
+  try{localStorage.setItem('heartclearInstalled','1')}catch(e){}
+});
 
 async function cacheHas(url){
   if(!url || !('caches' in window))return false;
@@ -3597,6 +3752,15 @@ document.addEventListener('visibilitychange',async()=>{
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
 }
+
+window.addEventListener('load',()=>{
+  if(isStandaloneApp())return;
+  setTimeout(()=>{
+    if(isIOSDevice())showInstallSheet(false);
+    else if(!deferredInstallPrompt)showInstallSheet(false);
+  },1400);
+});
+const heartclearAutoInstallPrompt=true;
 </script>
 </body>
 </html>
