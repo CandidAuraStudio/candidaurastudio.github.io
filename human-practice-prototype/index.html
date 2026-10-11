@@ -2043,7 +2043,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v59</div>
+    <div class="app-version">HeartClear · prototype v60</div>
   </div>
 </section>
 
@@ -4323,6 +4323,9 @@ function completeSession(completed=false){
   const pv=document.getElementById('practiceVisual'); if(pv)pv.pause();
   recordSession(completed);
   clearLastSession();
+  // Do not keep the completed music recording as an unfinished meditation.
+  audio.removeAttribute('src');
+  audio.load();
 
   document.getElementById('completionSummary').textContent='You practiced for '+friendlyDuration(t)+'.';
   document.getElementById('completionPractice').textContent=chosenKicker;
@@ -4467,6 +4470,7 @@ function finish(){
 
 function sync(){
   if(playbackPhase==='nature'){syncNature();return;}
+  if(document.getElementById('completion').classList.contains('active'))return;
   const actualDuration=meditationActualDuration();
   let t=Math.min(actualDuration,audio.currentTime||0);
   if(t>=6 && !naturePrefetchStarted && natureAfterSeconds && !audio.paused){
