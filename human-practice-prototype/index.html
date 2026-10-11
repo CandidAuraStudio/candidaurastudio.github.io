@@ -3478,11 +3478,43 @@ function show(id){
   document.getElementById('bottomNav').classList.toggle('hidden',immersive);
   document.getElementById('appTopBar').classList.toggle('hidden',immersive);
 
-  const context={hcDriveMedia:'Drive Listening',home:'Home',practices:'Meditation',human:'Human Practice',humanCategory:'Human Practice',returnJourney:'Observation',fearPractice:'Fear',fearPlayer:'Fear',soundLab:'Sound Lab',soundLabPlayer:'Sound Lab',downloads:'Offline',library:'Library',collection:'Library',sacred:'Sacred Sound',sacredDetail:'Sacred Sound',history:'History',settings:'Settings'}[id]||'';
+  const context={
+    hcDriveMedia:'Drive Listening',
+    home:'Home',
+    practices:'Practice',
+    human:'Human Practice',
+    humanCategory:'Human Practice',
+    humanSession:'Human Practice',
+    returnJourney:'Observation',
+    fearPractice:'Sound Familiarity',
+    fearPlayer:'Sound Familiarity',
+    soundHub:'Sounds',
+    soundLab:'Sounds',
+    soundLabPlayer:'Sounds',
+    sacred:'Sacred Sound',
+    sacredDetail:'Sacred Sound',
+    sacredSession:'Sacred Sound',
+    downloads:'Offline',
+    library:'Library',
+    collection:'Library',
+    bookAudio:'Library',
+    bookReader:'Library',
+    history:'History',
+    settings:'Settings'
+  }[id]||'';
   const ctx=document.getElementById('topContext'); if(ctx)ctx.textContent=context;
 
-  if(['home','practices','soundLab','human','library','sacred','downloads'].includes(id)){
-    document.querySelectorAll('.nav-item').forEach(btn=>btn.classList.toggle('active',btn.dataset.nav===id));
+  const navMap={
+    home:'home',
+    practices:'practices',human:'practices',humanCategory:'practices',humanSession:'practices',returnJourney:'practices',
+    soundHub:'soundHub',soundLab:'soundHub',soundLabPlayer:'soundHub',fearPractice:'soundHub',fearPlayer:'soundHub',
+    sacred:'soundHub',sacredDetail:'soundHub',sacredSession:'soundHub',
+    library:'library',collection:'library',bookAudio:'library',bookReader:'library',downloads:'library',
+    settings:'settings',history:'settings'
+  };
+  const activeNav=navMap[id];
+  if(activeNav){
+    document.querySelectorAll('.nav-item').forEach(btn=>btn.classList.toggle('active',btn.dataset.nav===activeNav));
   }
 
   const pv=document.getElementById('practiceVisual');
