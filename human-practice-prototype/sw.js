@@ -1,4 +1,4 @@
-const APP_CACHE='heartclear-v81';
+const APP_CACHE='heartclear-v82';
 const MEDIA_CACHE='heartclear-media-v1';
 
 self.addEventListener('install',event=>{
@@ -7,6 +7,9 @@ self.addEventListener('install',event=>{
     try{
       const cache=await caches.open(APP_CACHE);
       await cache.add(new Request('./index.html',{cache:'reload'}));
+      // Optional install assets must never prevent the app shell from being cached.
+      await Promise.allSettled(['./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png']
+        .map(asset=>cache.add(new Request(asset,{cache:'reload'}))));
     }catch(e){}
     await self.skipWaiting();
   })());
@@ -62,6 +65,7 @@ async function cachedMediaResponse(request,cached){
 
 self.addEventListener('fetch',event=>{
   const request=event.request;
+  if(request.method!=='GET')return; // Never intercept unrelated writes or POSTs.
 
   if(request.mode==='navigate'){
     event.respondWith((async()=>{
