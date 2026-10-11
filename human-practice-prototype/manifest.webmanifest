@@ -1,6 +1,6 @@
 {
-  "name": "Clear Within",
-  "short_name": "Clear Within",
+  "name": "HeartClear",
+  "short_name": "HC",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
