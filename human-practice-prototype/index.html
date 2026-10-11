@@ -2079,7 +2079,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v64</div>
+    <div class="app-version">HeartClear · prototype v65</div>
   </div>
 </section>
 
@@ -2204,6 +2204,18 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
         </select>
       </div>
       <div class="option-row">
+        <div><label for="natureAfterTrack">Closing sound</label><small>Starts automatically after guided meditation.</small></div>
+        <select id="natureAfterTrack" class="option-select" onchange="setNatureAfterTrack(this.value)">
+          <option value="nature">Nature Weave</option>
+          <option value="birds">Birdsong</option>
+          <option value="fire">Fire Crackling</option>
+          <option value="rain">Rain</option>
+          <option value="ocean">Ocean</option>
+          <option value="storm">Storm</option>
+          <option value="thunder">Distant Thunder</option>
+        </select>
+      </div>
+      <div class="option-row">
         <div><label>Session</label><small>Start again from 00:00</small></div>
         <button class="option-select" onclick="restart()">Restart</button>
       </div>
@@ -2267,6 +2279,18 @@ let natureCycleCount=0;
 let natureLastPosition=0;
 let naturePrefetchStarted=false;
 let natureAfterSeconds=180;
+let natureAfterTrack='nature';
+try{
+  const savedNatureTrack=localStorage.getItem('heartclearNatureAfterTrack');
+  if(['nature','birds','fire','rain','ocean','storm','thunder'].includes(savedNatureTrack))natureAfterTrack=savedNatureTrack;
+}catch(e){}
+function setNatureAfterTrack(key){
+  const valid=['nature','birds','fire','rain','ocean','storm','thunder'];
+  natureAfterTrack=valid.includes(key)?key:'nature';
+  try{localStorage.setItem('heartclearNatureAfterTrack',natureAfterTrack)}catch(e){}
+  const control=document.getElementById('natureAfterTrack');
+  if(control)control.value=natureAfterTrack;
+}
 try{
   const savedNature=localStorage.getItem('heartclearNatureAfterSecondsV2');
   if(savedNature!==null){
@@ -2358,7 +2382,9 @@ function startAftercare(){
   show('aftercare');
   const status=document.getElementById('naturePlaybackStatus');
   if(status)status.textContent='Preparing nature sounds…';
-  if(natureSoundURL)beginNatureSound(natureSoundURL);
+  if(natureAfterTrack!=='nature' && soundLabTracks[natureAfterTrack]){
+    beginNatureSound(soundLabTracks[natureAfterTrack].url);
+  }else if(natureSoundURL)beginNatureSound(natureSoundURL);
   else loadNatureSound().then(beginNatureSound).catch(()=>{
     if(playbackPhase==='nature'){
       if(status)status.textContent='Nature audio is not available. Check the connection or finish.';
@@ -4123,6 +4149,7 @@ function preparePlayer(){
   // Begin loading closing ambience after the guided audio starts.
   naturePrefetchStarted=false;
   setNatureAfterSeconds(natureAfterSeconds);
+  setNatureAfterTrack(natureAfterTrack);
   const pv=document.getElementById('practiceVisual');
   if(pv){
     pv.pause();
@@ -4631,7 +4658,17 @@ audio.addEventListener('ended',()=>{
 });
 audio.addEventListener('loadedmetadata',sync);
 audio.addEventListener('error',()=>{
-  document.getElementById('playerNote').textContent='Audio could not load. Check the connection and try again.';
+  if(playbackPhase==='nature' && natureAfterTrack!=='nature'){
+    const status=document.getElementById('naturePlaybackStatus');
+    if(status)status.textContent='This sound is unavailable; switching to Nature Weave…';
+    natureAfterTrack='nature';
+    loadNatureSound().then(beginNatureSound).catch(()=>{
+      if(status)status.textContent='Nature mix could not load. Tap Finish listening.';
+    });
+  }else{
+    const target=document.getElementById(playbackPhase==='nature'?'naturePlaybackStatus':'playerNote');
+    if(target)target.textContent='Audio could not load. Check the connection and try again.';
+  }
 });
 seek.addEventListener('pointerdown',()=>scrubbing=true);
 seek.addEventListener('pointerup',()=>{scrubbing=false;audio.currentTime=Number(seek.value)||0;syncPracticeVisual(true);sync()});
