@@ -1245,6 +1245,42 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
   .audiobook-cover-v2{padding:11px 9px}.audiobook-cover-v2 strong{font-size:16px}
 }
 
+
+/* Audiobook control polish v66 */
+.audiobook-controls{
+  grid-template-columns:1fr 1.05fr 1fr;
+  align-items:center;
+}
+.audiobook-controls button{
+  min-height:56px;
+}
+.audiobook-controls .audiobook-skip{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  color:#f4f7f8;
+  font-size:13px;
+}
+.audiobook-controls .audiobook-skip .skip-spiral{
+  font-size:23px;
+  line-height:1;
+  color:#ffffff;
+}
+.audiobook-controls .audiobook-skip .skip-ten{
+  font-size:11px;
+  font-weight:700;
+  color:#ffffff;
+}
+.audiobook-controls .primary{
+  background:#ffffff!important;
+  color:#07131b!important;
+  border:1px solid rgba(255,255,255,.94)!important;
+  font-size:24px;
+  font-weight:800;
+  box-shadow:0 8px 28px rgba(255,255,255,.10);
+}
+
 </style>
 </head>
 <body>
@@ -1966,9 +2002,9 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
     <div class="audiobook-times"><span id="bookElapsed">00:00</span><span id="bookTotal">00:00</span></div>
 
     <div class="audiobook-controls">
-      <button onclick="bookJump(-30)" aria-label="Back 30 seconds">−30s</button>
-      <button class="primary" id="bookPlayBtn" onclick="toggleBookAudio()">Play</button>
-      <button onclick="bookJump(30)" aria-label="Forward 30 seconds">+30s</button>
+      <button class="audiobook-skip" onclick="bookJump(-10)" aria-label="Back 10 seconds"><span class="skip-spiral">↶</span><span class="skip-ten">10</span></button>
+      <button class="primary" id="bookPlayBtn" onclick="toggleBookAudio()" aria-label="Play audiobook">▶</button>
+      <button class="audiobook-skip" onclick="bookJump(10)" aria-label="Forward 10 seconds"><span class="skip-spiral">↷</span><span class="skip-ten">10</span></button>
     </div>
 
     <div class="audiobook-options">
@@ -2079,7 +2115,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v65</div>
+    <div class="app-version">HeartClear · prototype v66</div>
   </div>
 </section>
 
@@ -2247,9 +2283,9 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
     <b id="globalMiniTitle">HeartClear</b>
     <small id="globalMiniMeta">00:00</small>
   </button>
-  <button class="global-mini-btn" onclick="globalJump(-15)" aria-label="Back 15 seconds">−15</button>
+  <button class="global-mini-btn" onclick="globalJump(-10)" aria-label="Back 10 seconds">↶10</button>
   <button class="global-mini-btn primary" id="globalMiniPlay" onclick="toggleGlobalMedia()" aria-label="Pause or resume">Ⅱ</button>
-  <button class="global-mini-btn" onclick="globalJump(15)" aria-label="Forward 15 seconds">+15</button>
+  <button class="global-mini-btn" onclick="globalJump(10)" aria-label="Forward 10 seconds">10↷</button>
   <button class="global-mini-btn global-mini-stop" onclick="stopGlobalMedia()" aria-label="Stop playback">×</button>
 </div>
 
@@ -3310,7 +3346,8 @@ function openBookAudio(lang,chapter=1){
   document.getElementById('bookAudioLanguage').textContent=currentBookAudioLang==='ta'?'Tamil Audiobook':'English Audiobook';
   const chapterLabel=document.getElementById('bookAudioChapter');
   if(chapterLabel)chapterLabel.textContent='Chapter '+currentBookChapter+' · '+currentBookTitle();
-  document.getElementById('bookPlayBtn').textContent='Play';
+  document.getElementById('bookPlayBtn').textContent='▶';
+  document.getElementById('bookPlayBtn').setAttribute('aria-label','Play audiobook');
   renderBookPlayerChapterNav();
 
   try{
@@ -3375,7 +3412,8 @@ function syncBookAudio(){
   bookSeek.max=d||100;bookSeek.value=t;
   document.getElementById('bookElapsed').textContent=fmt(t);
   document.getElementById('bookTotal').textContent=d?fmt(d):'00:00';
-  document.getElementById('bookPlayBtn').textContent=bookAudioEl.paused?'Play':'Pause';
+  document.getElementById('bookPlayBtn').textContent=bookAudioEl.paused?'▶':'Ⅱ';
+  document.getElementById('bookPlayBtn').setAttribute('aria-label',bookAudioEl.paused?'Play audiobook':'Pause audiobook');
   const mb=document.getElementById('bookMiniPlay'); if(mb)mb.textContent=bookAudioEl.paused?'▶':'Ⅱ';
   const mm=document.getElementById('bookMiniMeta'); if(mm)mm.textContent=(currentBookAudioLang==='ta'?'Tamil':'English')+' · '+fmt(t);
   if(t>5)try{
@@ -3411,8 +3449,8 @@ function setBookMediaSession(){
     });
     navigator.mediaSession.setActionHandler('play',()=>{rememberActiveMedia('book');return bookAudioEl.play()});
     navigator.mediaSession.setActionHandler('pause',()=>{bookAudioEl.pause();renderGlobalMini()});
-    navigator.mediaSession.setActionHandler('seekbackward',details=>bookJump(-(details.seekOffset||30)));
-    navigator.mediaSession.setActionHandler('seekforward',details=>bookJump(details.seekOffset||30));
+    navigator.mediaSession.setActionHandler('seekbackward',details=>bookJump(-(details.seekOffset||10)));
+    navigator.mediaSession.setActionHandler('seekforward',details=>bookJump(details.seekOffset||10));
     try{
       navigator.mediaSession.setActionHandler('seekto',details=>{
         if(typeof details.seekTime==='number' && Number.isFinite(bookAudioEl.duration)){
