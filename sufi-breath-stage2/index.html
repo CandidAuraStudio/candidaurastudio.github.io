@@ -429,7 +429,7 @@ body{overscroll-behavior-y:none}
   bottom:calc(10px + var(--safe-bottom));
   width:min(calc(100% - 24px),496px);
   height:68px;border-radius:23px;
-  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:center;
+  display:grid;grid-template-columns:repeat(6,minmax(0,1fr));align-items:center;
   background:rgba(5,16,24,.90);
   border:1px solid rgba(196,224,235,.10);
   box-shadow:0 24px 70px rgba(0,0,0,.48),inset 0 1px 0 rgba(255,255,255,.025);
@@ -441,7 +441,9 @@ body{overscroll-behavior-y:none}
   gap:5px;font:inherit;font-size:10px
 }
 .nav-item svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.8}
-.bottom-nav .nav-item{min-width:0;font-size:9px;white-space:nowrap}
+.bottom-nav .nav-item{min-width:0;font-size:8.5px;white-space:nowrap}
+.bottom-nav .nav-item svg{width:19px;height:19px}
+@media(max-width:390px){.bottom-nav{width:calc(100% - 12px)}.bottom-nav .nav-item{font-size:8px;gap:4px}.bottom-nav .nav-item svg{width:18px;height:18px}}
 @media(max-width:370px){.bottom-nav .nav-item{font-size:8.5px;gap:4px}.bottom-nav .nav-item svg{width:19px;height:19px}}
 .nav-item.active{color:#dfbd80}
 .nav-item.active:after{
@@ -1284,10 +1286,21 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
 }
 
 
-/* Offline access + white media controls v68 */
+/* Offline access + white media controls v72 */
 .player-inline-actions{
   display:flex;justify-content:center;gap:9px;margin-top:12px;flex-wrap:wrap
 }
+.player-inline-actions .offline-action{min-width:160px;font-weight:800}
+.player-offline-caption{margin-top:10px;font-size:11px;color:#bfd0d8;text-align:center;line-height:1.5}
+.player-offline-caption.ready{color:#e8f7f1}
+.home-offline-shortcut{margin:10px 0 14px;width:100%;display:flex;align-items:center;gap:12px;min-height:68px;padding:13px 15px;text-align:left;border-radius:18px;background:rgba(5,18,27,.72);border:1px solid rgba(212,231,239,.19);color:#f7fafb;font:inherit}
+.home-offline-icon{width:39px;height:39px;flex:0 0 39px;display:grid;place-items:center;background:#ffffff;color:#07131b;border-radius:12px;font-size:21px;font-weight:800}
+.home-offline-copy{min-width:0;flex:1}.home-offline-copy strong{display:block;font-size:14px}.home-offline-copy small{display:block;color:#afc3cd;font-size:11px;margin-top:4px}.home-offline-open{font-size:21px;color:#ffffff}
+.bottom-nav{grid-template-columns:repeat(6,minmax(0,1fr));width:min(calc(100% - 12px),540px)}
+.bottom-nav .nav-item{font-size:8px;gap:4px;min-width:0;letter-spacing:-.02em}
+.bottom-nav .nav-item svg{width:19px;height:19px}
+@media(max-width:370px){.bottom-nav .nav-item{font-size:7.6px;gap:4px}.bottom-nav .nav-item svg{width:18px;height:18px}}
+.transport .primary{background:#ffffff!important;color:#07131b!important;border:1px solid #ffffff!important}
 .player-inline-actions .offline-action,
 .player-inline-actions .option-select{
   min-height:42px;padding:10px 13px;border-radius:13px
@@ -1297,6 +1310,8 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
 #adhkarPlayBtn,
 #soundLabPlayBtn,
 #fearPlayBtn,
+#naturePlayBtn,
+#bookMiniPlay,
 .global-mini-btn.primary,
 .quick-start{
   background:#ffffff!important;
@@ -1325,6 +1340,12 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
 .download-empty b{display:block;font-size:14px}
 .download-empty p{font-size:11px;margin:6px auto 0;max-width:300px}
 
+/* Human and Fear primary buttons: white, not gold */
+#fearPlayer .soundlab-transport .primary,
+#fearPlayer .btn:not(.secondary),#humanSession #humanStartBtn{
+  background:#fff!important;color:#07131b!important;border:1px solid #fff!important;
+  box-shadow:0 8px 28px rgba(255,255,255,.10)!important;
+}
 </style>
 </head>
 <body>
@@ -1385,6 +1406,12 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
     <div class="hero-orbit" aria-hidden="true"></div>
   </div>
 
+  <button class="home-offline-shortcut" onclick="show('downloads')" aria-label="Open saved offline sessions and chapters">
+    <span class="home-offline-icon" aria-hidden="true">↓</span>
+    <span class="home-offline-copy"><strong>Offline downloads</strong><small id="homeOfflineMeta">Saved sessions and audiobook chapters</small></span>
+    <span class="home-offline-open" aria-hidden="true">›</span>
+  </button>
+
   <div class="daily-note">
     <div class="daily-label">Daily thought</div>
     <b id="dailyNoteTitle">Voice is physical sound.</b>
@@ -1426,7 +1453,6 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
     </div>
     <div class="quick-practice" style="margin-bottom:12px"><div><strong>Nature sounds</strong><small>Birds · fire · ocean · rain · thunder</small></div><button class="quick-start" onclick="openSoundLab()" aria-label="Open nature sounds">▶</button></div>
     <div class="quick-practice" style="margin-bottom:12px"><div><strong>OM chanting</strong><small>Long video · Hindu Insight</small></div><button class="quick-start" onclick="openOmVideo()" aria-label="Open OM video">▶</button></div>
-    <div class="quick-practice" style="margin-bottom:12px"><div><strong>Offline downloads</strong><small id="homeOfflineMeta">Saved sessions and audiobook chapters</small></div><button class="quick-start" onclick="show('downloads')" aria-label="Open offline downloads">↓</button></div>
     <div class="quick-practice">
       <div><strong>Deep Wake Up</strong><small>Morning · guided breath</small></div>
       <button class="quick-start" onclick="startSettleQuick()" aria-label="Start Settle">▶</button>
@@ -1607,6 +1633,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
     <div class="kicker">Human Practice</div>
     <h2>Practice life itself.</h2>
     <p>Passion, movement and observation without needing a special identity or belief.</p>
+    <div class="hub-note">These are real-world activities with timers. Spoken guidance is not recorded yet. You can add optional background audio inside each activity.</div>
   </div>
   <div class="human-grid">
     <button class="human-card" onclick="openHumanCategory('passion')"><span class="human-symbol">♪</span><b>Passion</b><small>Music · dance · cooking · gardening · house reset</small></button>
@@ -1638,7 +1665,18 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
     <p id="humanSessionInstruction">Choose one piece of music and give it your full attention.</p>
     <div class="clock" id="humanClock">10:00</div>
     <div class="human-session-note" id="humanSessionNote">No multitasking. Notice rhythm, silence and what changes in your attention.</div>
-    <button class="btn" id="humanStartBtn" onclick="toggleHumanTimer()">Start</button>
+    <div class="option-row" style="margin:14px 0">
+      <div><label for="humanSoundChoice">Optional background sound</label><small>This is an activity timer, not voice guidance.</small></div>
+      <select class="option-select" id="humanSoundChoice" onchange="prepareHumanSound(this.value)">
+        <option value="nature">Nature Weave</option><option value="birds">Birdsong</option>
+        <option value="fire">Fire</option><option value="rain">Rain</option><option value="ocean">Ocean</option>
+        <option value="none">Silence</option>
+      </select>
+    </div>
+    <p class="player-status" role="status" id="humanSoundStatus">Preparing optional background sound…</p>
+    <button class="btn secondary" id="humanSoundBtn" onclick="toggleHumanSound()">Play background sound</button>
+    <button class="btn" id="humanStartBtn" onclick="toggleHumanTimer()">Start timer</button>
+    <audio id="humanSoundAudio" playsinline preload="none" loop></audio>
     <button class="btn secondary" onclick="completeHumanPractice()">Done</button>
   </div>
 </section>
@@ -1655,17 +1693,17 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
     <div class="fear-levels" id="fearLevels">
       <button class="fear-card" onclick="openFearTrack('ocean')">
         <span class="fear-level">1<br>Easy</span>
-        <span><b>Ocean Familiarity</b><small>5 min · steady ocean-like sound</small></span>
+        <span><b>Ocean Familiarity</b><small>2:46 · recorded sea waves</small></span>
         <span class="fear-count" id="fearCountOcean">0 times</span>
       </button>
       <button class="fear-card" onclick="openFearTrack('storm')">
         <span class="fear-level">2<br>Medium</span>
-        <span><b>Storm Familiarity</b><small>5 min · rain and low rumble</small></span>
+        <span><b>Storm Familiarity</b><small>2:37 · rain and thunder</small></span>
         <span class="fear-count" id="fearCountStorm">0 times</span>
       </button>
       <button class="fear-card" onclick="openFearTrack('thunder')">
         <span class="fear-level">3<br>Strong</span>
-        <span><b>Distant Thunder</b><small>6 min · slow distant thunder swells</small></span>
+        <span><b>Distant Thunder</b><small>0:42 · thunder recording</small></span>
         <span class="fear-count" id="fearCountThunder">0 times</span>
       </button>
     </div>
@@ -1709,6 +1747,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       <button onclick="fearJump(10)">+10s</button>
     </div>
 
+    <p class="player-status" role="status" id="fearAudioStatus">Press Play to start the recording.</p>
     <div class="fear-rating">
       <b>After listening, what is it now?</b>
       <div class="fear-rating-row" id="fearAfterRating">
@@ -1857,6 +1896,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
         <button onclick="openAdhkar('listen')">Listen</button>
         <button onclick="openAdhkar('recite')">Recite Along</button>
       </div>
+      <div class="hub-note" style="margin-top:12px">Quran Surahs 1–30 with spoken English translation: awaiting uploaded audio. This will be a separate Quran collection; Morning Adhkar is not English Quran translation.</div>
       
     </div>
 
@@ -1870,6 +1910,11 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       <button onclick="openOmVideo()" style="margin-top:8px">Play OM chanting video</button>
     </div>
 
+    <div class="chakra-feature" id="buddhistFeatured" style="display:none;margin-top:12px">
+      <b>Before chanting · Meaning and context</b>
+      <small>Identify the chant, its Buddhist tradition, language, pronunciation and translation, then listen comfortably. Properly attribute the original recording.</small>
+      <div class="hub-note">A verified Buddhist chanting recording has not yet been uploaded. A player will be added when it is available.</div>
+    </div>
     <div class="empty-shelf" style="margin-top:14px">
       <div class="empty-icon">♪</div>
       <strong id="sacredEmptyTitle">Sound practice</strong>
@@ -2083,9 +2128,9 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       <button class="soundlab-card" onclick="openSoundTrack('birds')"><span class="soundlab-icon">◉</span><span><b>Birdsong</b><small>Birds waking · 4 min</small></span><span class="soundlab-duration">4:06</span></button>
       <button class="soundlab-card" onclick="openSoundTrack('fire')"><span class="soundlab-icon">✦</span><span><b>Fire Crackling</b><small>Real fireplace · 1 min</small></span><span class="soundlab-duration">1:00</span></button>
       <button class="soundlab-card" onclick="openSoundTrack('rain')"><span class="soundlab-icon">··</span><span><b>Rain</b><small>Real rain · 1 min</small></span><span class="soundlab-duration">1:18</span></button>
-      <button class="soundlab-card" onclick="openSoundTrack('ocean')"><span class="soundlab-icon">≈</span><span><b>Ocean</b><small>Steady sea · 5 min</small></span><span class="soundlab-duration">5:00</span></button>
-      <button class="soundlab-card" onclick="openSoundTrack('storm')"><span class="soundlab-icon">◌</span><span><b>Storm</b><small>Rain and low rumble · 5 min</small></span><span class="soundlab-duration">5:00</span></button>
-      <button class="soundlab-card" onclick="openSoundTrack('thunder')"><span class="soundlab-icon">⌁</span><span><b>Distant Thunder</b><small>Low thunder · 6 min</small></span><span class="soundlab-duration">6:00</span></button>
+      <button class="soundlab-card" onclick="openSoundTrack('ocean')"><span class="soundlab-icon">≈</span><span><b>Ocean</b><small>Steady sea · 5 min</small></span><span class="soundlab-duration">2:46</span></button>
+      <button class="soundlab-card" onclick="openSoundTrack('storm')"><span class="soundlab-icon">◌</span><span><b>Storm</b><small>Rain and low rumble · 5 min</small></span><span class="soundlab-duration">2:37</span></button>
+      <button class="soundlab-card" onclick="openSoundTrack('thunder')"><span class="soundlab-icon">⌁</span><span><b>Distant Thunder</b><small>Low thunder · 6 min</small></span><span class="soundlab-duration">0:42</span></button>
     </div>
     <div class="hub-note">Nature Weave and the 2-minute Deep Sleep stillness preview are stored with HeartClear. Separate birds, fire and rain use credited CC0 field-recording links and require internet.</div>
     <div class="hub-note">Other Sound Lab beds are test sounds, not sacred recitations or medical-frequency claims.</div>
@@ -2125,7 +2170,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
     <button class="collection-back" onclick="show('home')">‹ Home</button>
     <div class="kicker">On this device</div>
     <h2>Offline downloads</h2>
-    <p>Open saved sessions without searching for them again. Meditation downloads still follow the normal HeartClear preparation and instruction flow.</p>
+    <p>To download: open Meditation, choose a session, follow preparation and instructions, then tap Download offline directly below the ±10-second player controls. Open saved sessions here anytime. Meditation sessions still begin with preparation and instructions, never a direct audio URL.</p>
     <div class="downloads-list" id="downloadsList"></div>
     <button class="btn secondary" id="clearDownloadsBtn" onclick="clearOfflineMedia()">Clear offline media</button>
   </div>
@@ -2163,7 +2208,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v68</div>
+    <div class="app-version">HeartClear · prototype v75</div>
   </div>
 </section>
 
@@ -2259,9 +2304,10 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       <button onclick="jump(10)" aria-label="Forward 10 seconds">+10s</button>
     </div>
     <div class="player-inline-actions">
-      <button class="offline-action" id="offlinePracticeBtn" onclick="togglePracticeOffline()">↓ Save offline</button>
+      <button class="offline-action" id="offlinePracticeBtn" onclick="togglePracticeOffline()" aria-label="Download meditation audio for offline listening">↓ Download offline</button>
       <button class="option-select" onclick="toggleOptions()">More options</button>
     </div>
+    <div class="player-offline-caption" id="practiceOfflineStatus" role="status" aria-live="polite">Save guided audio to this device for offline listening.</div>
 
     <div class="resume-card" id="resumeCard">
       <span id="resumeText">Continue where you left off?</span>
@@ -2353,6 +2399,9 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
   </button>
   <button class="nav-item" data-nav="library" onclick="navTo('library',this)" aria-label="Library">
     <svg viewBox="0 0 24 24"><path d="M5 4.5h5.5c1.2 0 1.5.5 1.5 1.6v13c0-1.3-.8-2.1-2-2.1H5Z"/><path d="M19 4.5h-5.5c-1.2 0-1.5.5-1.5 1.6v13c0-1.3.8-2.1 2-2.1H19Z"/></svg><span>Library</span>
+  </button>
+  <button class="nav-item" data-nav="human" onclick="navTo('human',this)" aria-label="Human Practice">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="6" r="2.5"/><path d="M12 9v6M7 11l5 2 5-2M9 21l3-6 3 6"/></svg><span>Human</span>
   </button>
 </nav>
 
@@ -2669,8 +2718,14 @@ async function refreshPracticeOfflineButton(){
   const btn=document.getElementById('offlinePracticeBtn');
   if(!btn)return;
   const saved=await cacheHas(chosenUrl);
-  btn.textContent=saved?'Remove offline':'Save offline';
+  btn.textContent=saved?'Remove download':'↓ Download offline';
+  btn.setAttribute('aria-label',saved?'Remove meditation audio downloaded to this device':'Download meditation audio for offline listening');
   btn.classList.toggle('saved',saved);
+  const status=document.getElementById('practiceOfflineStatus');
+  if(status){
+    status.classList.toggle('ready',saved);
+    status.textContent=saved?'Audio saved on this device. Preparation still comes first.':'Save guided audio to this device. Intro videos may need internet.';
+  }
 }
 
 async function togglePracticeOffline(){
@@ -2681,14 +2736,16 @@ async function togglePracticeOffline(){
     const saved=await cacheHas(chosenUrl);
     if(saved){
       await removeOfflineUrl(chosenUrl);
-      document.getElementById('playerNote').textContent='Offline copy removed.';
+      document.getElementById('playerNote').textContent='Offline download removed.';
     }else{
-      btn.textContent='Saving…';
+      btn.textContent='Downloading…';
+      const status=document.getElementById('practiceOfflineStatus');
+      if(status)status.textContent='Downloading guided audio. Keep HeartClear open until it finishes.';
       await saveOfflineUrl(chosenUrl);
       document.getElementById('playerNote').textContent='Saved for offline listening.';
     }
   }catch(e){
-    document.getElementById('playerNote').textContent='Could not save this file offline on this device.';
+    document.getElementById('playerNote').textContent='Offline download failed. Check connection and device storage.';
   }
   btn.disabled=false;
   await refreshPracticeOfflineButton();
@@ -2757,6 +2814,7 @@ async function clearOfflineMedia(){
 }
 
 function show(id){
+  if(id!=='humanSession'&&typeof humanSoundAudio!=='undefined'&&!humanSoundAudio.paused)humanSoundAudio.pause();
   currentScreenId=id;
   if(id!=='omVideo'){const frame=document.getElementById('omVideoFrame');if(frame&&frame.getAttribute('src')){frame.removeAttribute('src');frame.src='about:blank'}}
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
@@ -2774,12 +2832,16 @@ function show(id){
   const context={home:'Home',practices:'Meditation',human:'Human Practice',humanCategory:'Human Practice',returnJourney:'Observation',fearPractice:'Fear',fearPlayer:'Fear',soundLab:'Sound Lab',soundLabPlayer:'Sound Lab',downloads:'Offline',library:'Library',collection:'Library',sacred:'Sacred Sound',sacredDetail:'Sacred Sound',history:'History',settings:'Settings'}[id]||'';
   const ctx=document.getElementById('topContext'); if(ctx)ctx.textContent=context;
 
-  if(['home','practices','soundLab','library','sacred'].includes(id)){
+  if(['home','practices','soundLab','human','library','sacred','downloads'].includes(id)){
     document.querySelectorAll('.nav-item').forEach(btn=>btn.classList.toggle('active',btn.dataset.nav===id));
   }
 
   const pv=document.getElementById('practiceVisual');
-  if(pv && id!=='player') pv.pause();
+  if(pv && id!=='player'){
+    const pipActive=document.pictureInPictureElement===pv;
+    if(pipActive) syncPracticeVisual(true);
+    else pv.pause();
+  }
   const av=document.getElementById('adhkarVisual');
   if(av && id!=='sacredSession') av.pause();
   const ba=document.getElementById('bookAudioEl');
@@ -3014,7 +3076,7 @@ function saveReturnCheck(){
   renderDashboard();
 }
 
-const fearTracks={"ocean":{"title":"Ocean Familiarity","level":"Easy","duration":300,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/dc0963fc-8949-4f65-a869-ab254907c829.mp3","desc":"5 min · steady ocean-like sound"},"storm":{"title":"Storm Familiarity","level":"Medium","duration":300,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/917da907-9dbf-4003-86fb-b6806b417fec.mp3","desc":"5 min · rain and low rumble"},"thunder":{"title":"Distant Thunder","level":"Stronger","duration":360,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/42bb9812-af88-49c0-8680-f2da5c032680.mp3","desc":"6 min · slow distant thunder swells"}};
+const fearTracks={"ocean":{"title":"Ocean Familiarity","level":"Easy","duration":166,"url":"https://bigsoundbank.com/UPLOAD/mp3/0698.mp3","desc":"2:46 · recorded sea waves · begin at a comfortable volume"},"storm":{"title":"Storm Familiarity","level":"Medium","duration":157,"url":"https://bigsoundbank.com/UPLOAD/mp3/0740.mp3","desc":"2:37 · rain and thunder · begin quietly"},"thunder":{"title":"Distant Thunder","level":"Stronger","duration":42,"url":"https://bigsoundbank.com/UPLOAD/mp3/3181.mp3","desc":"0:42 · distant thunder recording · low volume"}};
 const fearAudio=document.getElementById('fearAudio');
 const fearSeek=document.getElementById('fearSeek');
 
@@ -3049,7 +3111,8 @@ function openFearTrack(key){
   if(typeof adhkarAudio!=='undefined'&&!adhkarAudio.paused)adhkarAudio.pause();
   if(typeof soundLabAudio!=='undefined'&&!soundLabAudio.paused)soundLabAudio.pause();
 
-  fearAudio.pause();
+  fearAudio.pause();fearAudio.removeAttribute('src');
+  fearFallbackActive=false;fearPlayRequested=false;
   fearAudio.src=t.url;
   fearAudio.currentTime=0;
   fearAudio.volume=.25;
@@ -3062,8 +3125,9 @@ function openFearTrack(key){
   document.getElementById('fearVolumeLabel').textContent='25%';
   document.querySelectorAll('#fearBeforeRating button,#fearAfterRating button').forEach(b=>b.classList.remove('active'));
 
-  setFearMediaSession();
-  show('fearPlayer');
+  const status=document.getElementById('fearAudioStatus');
+  if(status)status.textContent='Ready to listen · set a comfortable volume and press Play.';
+  setFearMediaSession();show('fearPlayer');
   syncFear();
 }
 
@@ -3081,12 +3145,32 @@ function setFearVolume(value){
   const label=document.getElementById('fearVolumeLabel');if(label)label.textContent=Math.round(v*100)+'%';
 }
 
+let fearFallbackActive=false;
+let fearPlayRequested=false;
+async function fallbackFearSound(){
+  if(fearFallbackActive)return;
+  fearFallbackActive=true;
+  const status=document.getElementById('fearAudioStatus');
+  if(status)status.textContent='Original audio unavailable. Loading Nature Weave as a backup…';
+  try{
+    const url=await loadNatureSound();
+    fearAudio.src=url;fearAudio.volume=Math.max(.1,Math.min(.6,Number(document.getElementById('fearVolume').value)/100));
+    document.getElementById('fearDescription').textContent='Nature Weave backup — the original sound did not load';
+    if(fearPlayRequested){
+      await fearAudio.play();rememberActiveMedia('fear');
+      if(status)status.textContent='Playing Nature Weave backup (not the original '+currentFearKey+' sound).';
+    }else if(status)status.textContent='Nature Weave backup is ready. Press Play.';
+  }catch(e){if(status)status.textContent='No audio is available. You can still finish the practice.'}
+}
 async function toggleFearAudio(){
   if(fearAudio.paused){
-    try{await fearAudio.play();rememberActiveMedia('fear')}catch(e){}
-  }else fearAudio.pause();
+    fearPlayRequested=true;
+    try{await fearAudio.play();rememberActiveMedia('fear')}
+    catch(e){await fallbackFearSound()}
+  }else{fearPlayRequested=false;fearAudio.pause()}
   syncFear();
 }
+fearAudio.addEventListener('error',()=>{if(!fearFallbackActive)fallbackFearSound()});
 
 function fearJump(delta){
   const t=fearTracks[currentFearKey]||fearTracks.ocean;
@@ -3130,7 +3214,7 @@ function setFearMediaSession(){
 }
 
 function finishFearPractice(){
-  fearAudio.pause();
+  fearPlayRequested=false;fearAudio.pause();
   const t=fearTracks[currentFearKey]||fearTracks.ocean;
   const stats=getFearStats();
   const existing=stats[currentFearKey]||{count:0};
@@ -3217,14 +3301,74 @@ function openHumanPractice(kind,index){
   document.getElementById('humanSessionInstruction').textContent=currentHumanPractice.instruction;
   document.getElementById('humanSessionNote').textContent=currentHumanPractice.note;
   document.getElementById('humanClock').textContent=fmt(humanRemaining);
-  document.getElementById('humanStartBtn').textContent='Start';
+  document.getElementById('humanStartBtn').textContent='Start timer';
   show('humanSession');
+  prepareHumanSound('nature');
 }
 
+const humanSoundAudio=document.getElementById('humanSoundAudio');
+let humanSoundChoice='nature';
+let humanSoundPrepareVersion=0;
+async function prepareHumanSound(key){
+  humanSoundChoice=['nature','birds','fire','rain','ocean','none'].includes(key)?key:'nature';
+  const version=++humanSoundPrepareVersion;
+  const sel=document.getElementById('humanSoundChoice');if(sel)sel.value=humanSoundChoice;
+  const status=document.getElementById('humanSoundStatus');
+  const btn=document.getElementById('humanSoundBtn');
+  humanSoundAudio.pause();humanSoundAudio.removeAttribute('src');humanSoundAudio.load();
+  if(humanSoundChoice==='none'){
+    if(status)status.textContent='Silent activity timer selected.';
+    if(btn){btn.disabled=true;btn.textContent='Sound off'}
+    return;
+  }
+  if(btn){btn.disabled=true;btn.textContent='Preparing sound…'}
+  if(status)status.textContent='Preparing '+humanSoundChoice+' sound…';
+  try{
+    const src=humanSoundChoice==='nature'?await loadNatureSound():soundLabTracks[humanSoundChoice].url;
+    if(version!==humanSoundPrepareVersion)return;
+    humanSoundAudio.src=src;humanSoundAudio.volume=.30;humanSoundAudio.loop=true;
+    if(btn){btn.disabled=false;btn.textContent='Play background sound'}
+    if(status)status.textContent='Background audio ready. Start timer or tap Play sound.';
+  }catch(e){
+    if(version!==humanSoundPrepareVersion)return;
+    if(status)status.textContent='Sound unavailable. You can still run the activity timer.';
+    if(btn){btn.disabled=false;btn.textContent='Retry sound'}
+  }
+}
+async function toggleHumanSound(){
+  const status=document.getElementById('humanSoundStatus');
+  if(humanSoundChoice==='none')return;
+  if(!humanSoundAudio.getAttribute('src')){await prepareHumanSound(humanSoundChoice);return}
+  try{
+    if(humanSoundAudio.paused)await humanSoundAudio.play();else humanSoundAudio.pause();
+    if(status)status.textContent=humanSoundAudio.paused?'Background sound paused.':'Background sound playing.';
+    document.getElementById('humanSoundBtn').textContent=humanSoundAudio.paused?'Play background sound':'Pause background sound';
+  }catch(e){
+    if(status)status.textContent='Sound could not play. Try Nature Weave or the silent timer.';
+  }
+}
+humanSoundAudio.addEventListener('error',()=>{
+  const status=document.getElementById('humanSoundStatus');
+  if(status)status.textContent='Sound did not load. Try Nature Weave or the silent timer.';
+});
 function toggleHumanTimer(){
   const btn=document.getElementById('humanStartBtn');
-  if(humanTimer){clearInterval(humanTimer);humanTimer=null;btn.textContent='Resume';return}
-  btn.textContent='Pause';
+  if(humanTimer){
+    clearInterval(humanTimer);humanTimer=null;btn.textContent='Resume timer';
+    humanSoundAudio.pause();
+    return;
+  }
+  btn.textContent='Pause timer';
+  if(humanSoundChoice!=='none'&&humanSoundAudio.getAttribute('src')&&humanSoundAudio.paused){
+    humanSoundAudio.play().then(()=>{
+      const status=document.getElementById('humanSoundStatus');
+      if(status)status.textContent='Background sound playing.';
+      document.getElementById('humanSoundBtn').textContent='Pause background sound';
+    }).catch(()=>{
+      const status=document.getElementById('humanSoundStatus');
+      if(status)status.textContent='Timer started. Tap Play background sound to hear audio.';
+    });
+  }
   humanTimer=setInterval(()=>{
     humanRemaining=Math.max(0,humanRemaining-1);
     document.getElementById('humanClock').textContent=fmt(humanRemaining);
@@ -3234,6 +3378,7 @@ function toggleHumanTimer(){
 
 function completeHumanPractice(auto=false){
   if(!currentHumanPractice)return;
+  humanSoundAudio.pause();
   if(humanTimer){clearInterval(humanTimer);humanTimer=null}
   const used=auto?currentHumanPractice.seconds:Math.max(20,currentHumanPractice.seconds-humanRemaining);
   const items=getHistory();
@@ -3619,7 +3764,7 @@ function setBookMediaSession(){
   }catch(e){}
 }
 
-const soundLabTracks={"soft":{"title":"Soft Hum","duration":300,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/786c6ede-1f00-4a77-ac39-08e26610fb43.mp3","desc":"5 min · soft tonal bed"},"horizon":{"title":"Horizon","duration":420,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/1e7ed74c-05be-4554-af16-152684e0bad5.mp3","desc":"7 min · slow ambient field"},"mantra":{"title":"Mantra Bed","duration":480,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/24c10e62-fbde-483b-bb36-5646c5715d2d.mp3","desc":"8 min · steady chant background"},"deep":{"title":"Deep Stillness","duration":1020,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/e13e7587-23c0-408a-9f0c-b75177ce8fbe.mp3","desc":"17 min · long quiet ambient"},"nature":{"title":"Nature Weave","duration":180,"url":"","desc":"3 min · birds, streams, ocean, wind and fire"},"birds":{"title":"Birdsong","duration":246,"url":"https://bigsoundbank.com/UPLOAD/mp3/0999.mp3","desc":"4 min · CC0 birds waking"},"fire":{"title":"Fire Crackling","duration":60,"url":"https://bigsoundbank.com/UPLOAD/mp3/0031.mp3","desc":"1 min · CC0 fireplace recording"},"rain":{"title":"Rain","duration":78,"url":"https://bigsoundbank.com/UPLOAD/mp3/1290.mp3","desc":"1 min · CC0 rain recording"},"ocean":{"title":"Ocean","duration":300,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/dc0963fc-8949-4f65-a869-ab254907c829.mp3","desc":"5 min · steady ocean-like sound"},"storm":{"title":"Storm","duration":300,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/917da907-9dbf-4003-86fb-b6806b417fec.mp3","desc":"5 min · rain and low rumble"},"thunder":{"title":"Distant Thunder","duration":360,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/42bb9812-af88-49c0-8680-f2da5c032680.mp3","desc":"6 min · slow thunder swells"},"stillness2":{"title":"Deep Sleep Stillness","duration":120,"url":"./media/HeartClear_DeepSleep_Stillness_2min_PREVIEW.mp3","desc":"2 min · gentle closing music"}};
+const soundLabTracks={"soft":{"title":"Soft Hum","duration":300,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/786c6ede-1f00-4a77-ac39-08e26610fb43.mp3","desc":"5 min · soft tonal bed"},"horizon":{"title":"Horizon","duration":420,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/1e7ed74c-05be-4554-af16-152684e0bad5.mp3","desc":"7 min · slow ambient field"},"mantra":{"title":"Mantra Bed","duration":480,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/24c10e62-fbde-483b-bb36-5646c5715d2d.mp3","desc":"8 min · steady chant background"},"deep":{"title":"Deep Stillness","duration":1020,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/e13e7587-23c0-408a-9f0c-b75177ce8fbe.mp3","desc":"17 min · long quiet ambient"},"nature":{"title":"Nature Weave","duration":180,"url":"","desc":"3 min · birds, streams, ocean, wind and fire"},"birds":{"title":"Birdsong","duration":246,"url":"https://bigsoundbank.com/UPLOAD/mp3/0999.mp3","desc":"4 min · CC0 birds waking"},"fire":{"title":"Fire Crackling","duration":60,"url":"https://bigsoundbank.com/UPLOAD/mp3/0031.mp3","desc":"1 min · CC0 fireplace recording"},"rain":{"title":"Rain","duration":78,"url":"https://bigsoundbank.com/UPLOAD/mp3/1290.mp3","desc":"1 min · CC0 rain recording"},"ocean":{"title":"Ocean","duration":166,"url":"https://bigsoundbank.com/UPLOAD/mp3/0698.mp3","desc":"2:46 · Atlantic sea waves, CC0 field recording"},"storm":{"title":"Storm","duration":157,"url":"https://bigsoundbank.com/UPLOAD/mp3/0740.mp3","desc":"2:37 · natural storm with rain and thunder, CC0"},"thunder":{"title":"Distant Thunder","duration":42,"url":"https://bigsoundbank.com/UPLOAD/mp3/3181.mp3","desc":"0:42 · one recorded thunderclap, CC0"},"stillness2":{"title":"Deep Sleep Stillness","duration":120,"url":"./media/HeartClear_DeepSleep_Stillness_2min_PREVIEW.mp3","desc":"2 min · gentle closing music"}};
 let currentSoundKey='soft';
 const soundLabAudio=document.getElementById('soundLabAudio');
 const soundLabSeek=document.getElementById('soundLabSeek');
@@ -3739,7 +3884,7 @@ function openSacred(kind){
       kicker:'Buddhist',
       title:'Chant & Mindful Sound',
       description:'Chanting and contemplative listening with clear tradition-specific context.',
-      meaning:'Explain the chant or contemplative phrase briefly before listening, repetition or silence.'
+      meaning:'Before chanting, identify the original Buddhist tradition, language and meaning of the chant. Listen naturally, and pause in silence. A verified chant recording is still needed.'
     },
     open:{
       kicker:'Open',
@@ -3758,15 +3903,17 @@ function openSacred(kind){
   if(featured) featured.classList.toggle('show',kind==='islamic');
   const hinduFeatured=document.getElementById('hinduFeatured');
   if(hinduFeatured) hinduFeatured.classList.toggle('show',kind==='hindu');
+  const buddhistFeatured=document.getElementById('buddhistFeatured');
+  if(buddhistFeatured)buddhistFeatured.style.display=kind==='buddhist'?'block':'none';
 
   const empty=document.getElementById('sacredEmptyTitle');
   const emptyText=document.getElementById('sacredEmptyText');
-  if(empty) empty.textContent=kind==='islamic'?'More listening':kind==='hindu'?'More mantra practice':'Sound practice';
+  if(empty) empty.textContent=kind==='islamic'?'More listening':kind==='hindu'?'More mantra practice':kind==='buddhist'?'Chant audio pending':'Sound practice';
   if(emptyText) emptyText.textContent=kind==='islamic'
     ?'Explore more remembrance, recitation and reflective listening.'
     :kind==='hindu'
       ?'Explore mantra, pronunciation and contemplative sound.'
-      :'Choose a sound practice and enter it with attention.';
+      :kind==='buddhist'?'Upload a Buddhist chant with its proper title and meaning to enable audio.':'Choose a sound practice and enter it with attention.';
   show('sacredDetail');
 }
 
@@ -3788,6 +3935,23 @@ async function togglePip(videoId){
   }catch(e){}
 }
 
+const practiceVisualForPip=document.getElementById('practiceVisual');
+if(practiceVisualForPip){
+  practiceVisualForPip.addEventListener('enterpictureinpicture',()=>{
+    if(!audio.paused)syncPracticeVisual(true);
+  });
+  practiceVisualForPip.addEventListener('leavepictureinpicture',()=>{
+    if(currentScreenId==='player')syncPracticeVisual(true);
+    else practiceVisualForPip.pause();
+  });
+}
+const adhkarVisualForPip=document.getElementById('adhkarVisual');
+if(adhkarVisualForPip){
+  adhkarVisualForPip.addEventListener('leavepictureinpicture',()=>{
+    if(currentScreenId!=='sacredSession')adhkarVisualForPip.pause();
+  });
+}
+
 
 function openSoundLab(){
   show('soundLab');
@@ -3801,6 +3965,7 @@ function openSoundTrack(key){
   if(bookAudioEl&&!bookAudioEl.paused)bookAudioEl.pause();
   if(!adhkarAudio.paused)adhkarAudio.pause();
 
+  soundLabPlayRequested=false;soundLabFallbackActive=false;
   soundLabAudio.pause();soundLabAudio.removeAttribute('src');soundLabAudio.load();
   soundLabAudio.loop=false;soundLabAudio.volume=.55;
   const status=document.getElementById('soundLabStatus'),btn=document.getElementById('soundLabPlayBtn');
@@ -3830,18 +3995,35 @@ function openSoundTrack(key){
   syncSoundLab();
 }
 
+let soundLabPlayRequested=false;
+let soundLabFallbackActive=false;
+async function fallbackSoundLab(){
+  if(soundLabFallbackActive||currentSoundKey==='nature')return;
+  soundLabFallbackActive=true;
+  const status=document.getElementById('soundLabStatus');
+  if(status)status.textContent='This source failed. Loading the offline-capable Nature Weave backup…';
+  try{
+    const src=await loadNatureSound();
+    currentSoundKey='nature';
+    soundLabAudio.src=src;soundLabAudio.volume=.45;soundLabAudio.load();
+    document.getElementById('soundLabTitle').textContent='Nature Weave (backup)';
+    document.getElementById('soundLabDesc').textContent='The requested recording was unavailable · nature mix instead';
+    document.getElementById('soundLabTotal').textContent='03:00';
+    if(soundLabPlayRequested){await soundLabAudio.play();rememberActiveMedia('soundlab')}
+    if(status)status.textContent=soundLabPlayRequested?'Playing Nature Weave backup.':'Nature Weave backup ready · press Play.';
+    setSoundLabMediaSession();
+  }catch(e){if(status)status.textContent='Audio unavailable. Try again with a connection.'}
+}
 async function toggleSoundLab(){
   if(soundLabAudio.paused){
+    soundLabPlayRequested=true;
     try{
       if(currentSoundKey==='nature'&&!soundLabAudio.getAttribute('src'))soundLabAudio.src=await loadNatureSound();
       await soundLabAudio.play();rememberActiveMedia('soundlab');
       const st=document.getElementById('soundLabStatus');
       if(st)st.textContent='Playing · '+(soundLabTracks[currentSoundKey]||soundLabTracks.soft).title;
-    }catch(e){
-      const st=document.getElementById('soundLabStatus');
-      if(st)st.textContent='This recording did not load. Try Nature Weave or reconnect.';
-    }
-  }else soundLabAudio.pause();
+    }catch(e){await fallbackSoundLab()}
+  }else{soundLabPlayRequested=false;soundLabAudio.pause()}
   syncSoundLab();
 }
 
@@ -3863,7 +4045,8 @@ function toggleSoundLoop(){
 
 soundLabAudio.addEventListener('error',()=>{
   const st=document.getElementById('soundLabStatus');
-  if(st)st.textContent='Recording unavailable. Try Nature Weave or reconnect.';
+  if(!soundLabFallbackActive&&currentSoundKey!=='nature')fallbackSoundLab();
+  else if(st)st.textContent='Sound unavailable. Please retry when connected.';
 });
 function stopSoundLab(){
   soundLabAudio.pause();
@@ -4697,7 +4880,8 @@ function fmt(sec){
 function syncPracticeVisual(force=false){
   const pv=document.getElementById('practiceVisual');
   if(!pv || !chosenVisualUrl)return;
-  if(document.hidden){
+  const pipActive=document.pictureInPictureElement===pv;
+  if(document.hidden && !pipActive){
     if(!pv.paused)pv.pause();
     return;
   }
@@ -4908,8 +5092,8 @@ document.addEventListener('visibilitychange',()=>{
   const pv=document.getElementById('practiceVisual');
   const av=document.getElementById('adhkarVisual');
   if(document.hidden){
-    if(pv && !pv.paused)pv.pause();
-    if(av && !av.paused)av.pause();
+    if(pv && !pv.paused && document.pictureInPictureElement!==pv)pv.pause();
+    if(av && !av.paused && document.pictureInPictureElement!==av)av.pause();
     if(audio.currentTime>20){
       try{localStorage.setItem('clearWithinResume:'+chosenKicker,String(audio.currentTime))}catch(e){}
       rememberLastSession(audio.currentTime);
@@ -4970,7 +5154,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=73');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
