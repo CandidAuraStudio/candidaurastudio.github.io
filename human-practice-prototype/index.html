@@ -1377,6 +1377,16 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
 .hc-voice-status{font-size:12px;line-height:1.5;margin-top:10px;color:#dfebf0}
 @media(max-width:390px){.hc-voice-box .voice-buttons button,.hc-voice-box .voice-buttons a{flex:1}}
 
+/* Feature pass: quiet, device-only favourites; preserve the existing HeartClear palette. */
+.hc-favourites{margin-top:16px}
+.hc-favourites[hidden]{display:none!important}
+.hc-fav-list{display:grid;gap:9px;margin-top:10px}
+.hc-fav-open{display:flex;align-items:center;justify-content:space-between;gap:14px;width:100%;min-height:48px;
+ padding:13px 15px;border-radius:15px;border:1px solid rgba(255,255,255,.17);background:rgba(9,31,42,.39);
+ color:#f7fbfd;font:inherit;text-align:left}
+.hc-fav-open small{color:#d7e5eb;font-size:11px;white-space:nowrap}
+.hc-fav-toggle{min-height:44px;white-space:nowrap}
+.hc-fav-toggle[aria-pressed="true"]{border-color:#fff;color:#fff}
 </style>
 </head>
 <body>
@@ -1493,6 +1503,11 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       <div><strong>Deep Wake Up</strong><small>Morning · guided breath</small></div>
       <button class="quick-start" onclick="startSettleQuick()" aria-label="Start Settle">▶</button>
     </div>
+  </div>
+
+  <div class="home-section hc-favourites" id="heartclearFavouritesSection" hidden>
+    <div class="section-head"><h3>Favourites</h3><small>Saved on this device</small></div>
+    <div class="hc-fav-list" id="heartclearFavouritesList" aria-label="Saved favourites"></div>
   </div>
 
   <div class="home-section">
@@ -2225,6 +2240,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
     <div class="player-status" id="soundLabStatus" role="status">Press Play to begin.</div>
     <div class="soundlab-options">
       <button id="soundLoopBtn" onclick="toggleSoundLoop()">Loop off</button>
+      <button class="hc-fav-toggle" id="soundLabFavouriteBtn" onclick="toggleHeartClearFavourite('soundlab',currentSoundKey)" aria-pressed="false" aria-label="Save or remove this sound from favourites">♡ Favourite</button>
       <button onclick="stopSoundLab()">Stop</button>
     </div>
     <div class="soundlab-continuity">
@@ -2390,6 +2406,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
     <div class="player-inline-actions">
       <button class="offline-action" id="offlinePracticeBtn" onclick="togglePracticeOffline()" aria-label="Download meditation audio for offline listening">↓ Download offline</button>
       <button class="offline-action" onclick="show('downloads')" aria-label="Open Offline downloads library">My Offline</button>
+            <button class="offline-action hc-fav-toggle" id="meditationFavouriteBtn" onclick="toggleHeartClearFavourite('meditation',chosenKicker)" aria-pressed="false" aria-label="Save or remove this meditation from favourites">♡ Favourite</button>
       <button class="option-select" onclick="toggleOptions()">More options</button>
     </div>
     <div class="player-offline-caption" id="practiceOfflineStatus" role="status" aria-live="polite">Save guided audio to this device for offline listening.</div>
@@ -2945,7 +2962,7 @@ function show(id){
   if(av && id!=='sacredSession') av.pause();
   const ba=document.getElementById('bookAudioEl');
   updateBookMini(id);
-  if(id==='home'){setGreeting();renderDashboard();updateHomeOfflineCount();}
+  if(id==='home'){setGreeting();renderDashboard();updateHomeOfflineCount();renderHeartClearFavourites();}
   if(id==='history') renderHistory();
   if(id==='downloads') renderDownloads();
   if(id==='settings') renderSettings();
@@ -2998,6 +3015,76 @@ function getActiveMediaState(){
     }catch(e){}
   }
   return active||null;
+}
+
+/* Local favourites contain stable identifiers only, never media URLs or user recordings. */
+const HC_FAVOURITES_KEY='heartclearFavouritesV1';
+function heartclearMeditationTitles(){
+  return [...document.querySelectorAll('#practices .practice-card')].map(card=>card.querySelector('.practice-copy b')?.textContent?.trim()||'');
+}
+function getHeartClearFavourites(){
+  try{
+    const saved=JSON.parse(localStorage.getItem(HC_FAVOURITES_KEY)||'[]');
+    if(!Array.isArray(saved))return[];
+    return saved.filter(x=>x&&typeof x.kind==='string'&&typeof x.key==='string'
+      &&((x.kind==='meditation'&&heartclearMeditationTitles().includes(x.key))
+        ||(x.kind==='soundlab'&&Object.prototype.hasOwnProperty.call(soundLabTracks,x.key))));
+  }catch(e){return[]}
+}
+function heartclearFavouriteLabel(kind,key){
+  if(kind==='soundlab')return soundLabTracks[key]?.title||key;
+  return key;
+}
+function updateHeartClearFavouriteButtons(){
+  const saved=getHeartClearFavourites();
+  [['meditationFavouriteBtn','meditation',chosenKicker],['soundLabFavouriteBtn','soundlab',currentSoundKey]].forEach(([id,kind,key])=>{
+    const el=document.getElementById(id);if(!el)return;
+    const active=saved.some(x=>x.kind===kind&&x.key===key);
+    el.textContent=active?'♥ Saved':'♡ Favourite';
+    el.setAttribute('aria-pressed',String(active));
+    el.setAttribute('aria-label',active?'Remove from favourites':'Add to favourites');
+  });
+}
+function renderHeartClearFavourites(){
+  const section=document.getElementById('heartclearFavouritesSection');
+  const list=document.getElementById('heartclearFavouritesList');
+  if(!section||!list)return;
+  const favourites=getHeartClearFavourites();
+  section.hidden=!favourites.length;
+  list.replaceChildren();
+  favourites.forEach(item=>{
+    const button=document.createElement('button');
+    button.type='button';
+    button.className='hc-fav-open';
+    const label=document.createElement('span');
+    label.textContent=heartclearFavouriteLabel(item.kind,item.key);
+    const type=document.createElement('small');
+    type.textContent=item.kind==='meditation'?'Meditation':'Sound Lab';
+    button.append(label,type);
+    button.addEventListener('click',()=>openHeartClearFavourite(item.kind,item.key));
+    list.appendChild(button);
+  });
+  updateHeartClearFavouriteButtons();
+}
+function toggleHeartClearFavourite(kind,key){
+  const valid=kind==='soundlab'?Object.prototype.hasOwnProperty.call(soundLabTracks,key)
+    :kind==='meditation'&&heartclearMeditationTitles().includes(key);
+  if(!valid)return;
+  const current=getHeartClearFavourites();
+  const existing=current.findIndex(x=>x.kind===kind&&x.key===key);
+  if(existing>=0)current.splice(existing,1);else current.push({kind,key});
+  try{localStorage.setItem(HC_FAVOURITES_KEY,JSON.stringify(current.slice(0,32)))}catch(e){}
+  renderHeartClearFavourites();
+}
+function openHeartClearFavourite(kind,key){
+  if(kind==='soundlab'&&Object.prototype.hasOwnProperty.call(soundLabTracks,key)){
+    openSoundTrack(key);return;
+  }
+  if(kind==='meditation'){
+    const card=[...document.querySelectorAll('#practices .practice-card')].find(x=>x.querySelector('.practice-copy b')?.textContent?.trim()===key);
+    if(card){card.click();return}
+    show('practices');
+  }
 }
 
 function rememberActiveMedia(key){
@@ -4253,6 +4340,7 @@ function openSoundTrack(key){
   setSoundLabMediaSession();
   show('soundLabPlayer');
   syncSoundLab();
+  updateHeartClearFavouriteButtons();
 }
 
 let soundLabPlayRequested=false;
@@ -4695,6 +4783,7 @@ function choosePractice(seconds,url,kicker,title,introUrl,visualUrl){
   stepIndex=0;
   renderStep();
   preparePlayer();
+  updateHeartClearFavouriteButtons();
   try{localStorage.setItem('sufiLastPractice',chosenKicker)}catch(e){}
   showSessionReady();
 }
@@ -5416,6 +5505,7 @@ try{
 setGreeting();
 renderLocalContext();
 renderDashboard();
+renderHeartClearFavourites();
 renderSettings();
 
 const greetingRefreshTimer=setInterval(setGreeting,60000);
