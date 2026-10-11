@@ -1410,6 +1410,15 @@ body.reduce-motion .hc-quiet-disc{transition:none!important}
 .hc-mood-svg{width:100%;max-width:460px;display:block;margin:auto;height:auto}
 .hc-personal-settings{display:grid;gap:8px;margin-top:10px}
 .hc-personal-settings input[type=time]{background:#102e3c;color:white;border:1px solid rgba(255,255,255,.35);border-radius:12px;padding:10px;min-height:44px;font:inherit}
+
+.hc-path-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin:12px 0}
+.hc-path-days button{min-height:44px;border-radius:11px;background:rgba(15,47,61,.4);border:1px solid rgba(255,255,255,.25);color:#fff;font:inherit;padding:7px 4px}
+.hc-path-days button[aria-pressed="true"]{background:#fff!important;color:#102332!important}
+.hc-path-days button[aria-label$="completed"]{border-color:#f8fbfc}
+.hc-path-lesson{line-height:1.65;font-size:14px;color:#e8f0f3}
+.hc-path-note{width:100%;min-height:90px;background:rgba(11,32,43,.7);border:1px solid rgba(255,255,255,.2);border-radius:12px;color:#fff;font:inherit;padding:12px}
+.hc-glossary details{border-top:1px solid rgba(255,255,255,.18);padding:12px 0;font-size:13px}
+.hc-glossary summary{cursor:pointer;min-height:35px;font-weight:650}
 </style>
 </head>
 <body>
@@ -1495,6 +1504,7 @@ body.reduce-motion .hc-quiet-disc{transition:none!important}
   </div>
 
   <div class="quick-practice" style="margin:14px 0"><div><strong>Quiet Timer &amp; Breathing</strong><small>Gentle bells, flexible time, unforced breathing</small></div><button class="quick-start" onclick="openQuietTimer()" aria-label="Open quiet timer and breath pacer">▶</button></div>
+  <div class="quick-practice" style="margin:14px 0"><div><strong>7-Day Starter</strong><small>Short, gentle practices with a purpose and reflection</small></div><button class="quick-start" onclick="hcOpenStarterPath()" aria-label="Open seven-day starter path">▶</button></div>
   <div class="home-dashboard">
     <div class="home-resume" id="homeResumeCard">
       <div class="eyebrow">Continue Meditation</div>
@@ -1594,6 +1604,38 @@ body.reduce-motion .hc-quiet-disc{transition:none!important}
   
 </section>
 
+<section class="screen" id="starterPath">
+  <div class="glass" style="padding:22px">
+    <button class="collection-back" onclick="show('home')">‹ Home</button>
+    <div class="kicker">HeartClear · Learn and practice</div>
+    <h2>7-Day Starter</h2>
+    <p>Seven gentle introductions to attention, listening and ordinary awareness. No streaks or grades. Repeat any day as often as you wish.</p>
+    <div class="hc-path-days" id="hcPathDayButtons" aria-label="Choose a day"></div>
+    <div class="hc-personal">
+      <div class="kicker" id="hcPathDayLabel">Day 1 of 7</div>
+      <h3 id="hcPathTitle">Arriving</h3>
+      <p class="hc-path-lesson" id="hcPathLesson">Notice where you are before doing anything else.</p>
+      <p id="hcPathPracticeText">A short and comfortable period of stillness.</p>
+      <button class="btn" onclick="hcStartPathActivity()">Open today's practice</button>
+      <p id="hcPathReflection">Reflection: What changed when you slowed down?</p>
+      <label for="hcPathNote" style="font-size:12px">Private note, optional</label>
+      <textarea class="hc-path-note" id="hcPathNote" maxlength="700" placeholder="One sentence is enough."></textarea>
+      <div class="hc-quiet-actions">
+        <button class="btn secondary" onclick="hcSavePathNote()">Save note</button>
+        <button class="btn secondary" onclick="hcMarkPathDay()">Mark day complete</button>
+      </div>
+      <p id="hcPathMessage" class="player-status" role="status"></p>
+    </div>
+    <div class="hc-personal hc-glossary">
+      <h3>Understanding: a short glossary</h3>
+      <details><summary>Attention</summary><p>Choosing what to notice now, and returning gently when attention wanders.</p></details>
+      <details><summary>Awareness</summary><p>Noticing sensations, surroundings and thoughts without needing to change them.</p></details>
+      <details><summary>Stillness</summary><p>Allowing a moment without rushing. You can practise stillness while sitting or during ordinary activity.</p></details>
+      <details><summary>Reflection</summary><p>Remembering what you noticed, without judging the experience as good or bad.</p></details>
+      <details><summary>Sound familiarity</summary><p>Listening at a comfortable level while keeping the choice to pause or stop. It is not a treatment or a challenge.</p></details>
+    </div>
+  </div>
+</section>
 <section class="screen" id="quietTimer">
   <div class="glass" style="padding:22px">
     <button class="collection-back" onclick="hcTimerStop(true);show('home')">‹ Home</button>
@@ -1633,6 +1675,10 @@ body.reduce-motion .hc-quiet-disc{transition:none!important}
     <div class="ready-kicker">Before you begin</div>
     <h2 class="ready-title">Protect this time.</h2>
     <p class="ready-copy" id="readySessionText">You are about to begin a HeartClear session.</p>
+    <div class="hc-personal" style="text-align:left;margin:14px 0">
+      <h3>Purpose of this practice</h3>
+      <p id="hcPurposeText">Make time for quiet attention without expecting a particular outcome.</p>
+    </div>
 
     <div class="ready-list">
       <div class="ready-row">
@@ -3256,6 +3302,69 @@ function hcDownloadReminder(){
   document.body.append(a);a.click();a.remove();
   setTimeout(()=>URL.revokeObjectURL(url),1000);
   status.textContent='Calendar file prepared. Open it to accept the reminder in your calendar app.';
+}
+
+
+const HC_PATH_KEY='heartclearStarterV1';
+const hcStarterDays=[
+ {title:'Arriving',lesson:'Notice your surroundings, the points where you meet the chair or floor, and what you can hear. You do not need to produce a special feeling.',practice:'Five minutes of quiet listening.',type:'timer',minutes:5,reflection:'What did you first notice?'},
+ {title:'A natural breath',lesson:'The breath changes throughout the day. Rather than controlling it, first notice how it moves at its ordinary pace.',practice:'A gentle two-minute breath pacer with no holds.',type:'breath',minutes:2,reflection:'Was it easy to return to comfortable breathing?'},
+ {title:'Listening to nature',lesson:'Allow different sounds to arrive and leave. There is no need to identify every bird, drop or wave.',practice:'Listen to a recorded natural sound.',type:'sound',key:'rain',reflection:'What sounds were nearer and what sounds felt farther away?'},
+ {title:'Attention returns',lesson:'It is normal for attention to move. The practice is the simple return to listening, not keeping a perfectly clear mind.',practice:'Listen to Deep Wake Up through the normal guided introduction.',type:'meditation',key:'Deep Wake Up',reflection:'What helped you return when attention drifted?'},
+ {title:'Stillness in activity',lesson:'Attention is also useful during movement. Let the next ordinary action be enough.',practice:'Try One Object in Human Practice.',type:'human',category:'observe',reflection:'What detail might you usually overlook?'},
+ {title:'Space and silence',lesson:'Listen for pauses between sounds. Silence does not need to feel a certain way.',practice:'Five minutes of quiet meditation, bells optional.',type:'timer',minutes:5,reflection:'Did you notice any quiet moments?'},
+ {title:'Your own practice',lesson:'Choose what felt useful from this week. You can begin again from any day. A practice is not a grade.',practice:'Ten minutes of your own comfortable stillness.',type:'timer',minutes:10,reflection:'Which practice would you like to return to?'}
+];
+let hcPathCurrentDay=0;
+function hcPathData(){
+ try{const data=JSON.parse(localStorage.getItem(HC_PATH_KEY)||'{}');return {done:Array.isArray(data.done)?data.done:[],notes:data.notes&&typeof data.notes==='object'?data.notes:{}}}catch(e){return {done:[],notes:{}}}
+}
+function hcPersistPath(data){try{localStorage.setItem(HC_PATH_KEY,JSON.stringify(data))}catch(e){}}
+function hcOpenStarterPath(){
+  const saved=hcPathData();
+  hcPathCurrentDay=Math.max(0,hcStarterDays.findIndex((d,i)=>!saved.done.includes(i)));
+  hcRenderPath();show('starterPath');
+}
+function hcChoosePathDay(index){hcPathCurrentDay=Math.max(0,Math.min(6,index));hcRenderPath()}
+function hcRenderPath(){
+  const day=hcStarterDays[hcPathCurrentDay],saved=hcPathData(),buttons=document.getElementById('hcPathDayButtons');
+  if(!buttons)return;
+  buttons.replaceChildren();
+  hcStarterDays.forEach((item,i)=>{
+    const b=document.createElement('button');b.type='button';b.textContent=String(i+1)+(saved.done.includes(i)?' ✓':'');
+    b.setAttribute('aria-label','Day '+(i+1)+(saved.done.includes(i)?' completed':''));
+    b.setAttribute('aria-pressed',String(i===hcPathCurrentDay));
+    b.addEventListener('click',()=>hcChoosePathDay(i));buttons.append(b);
+  });
+  document.getElementById('hcPathDayLabel').textContent='Day '+(hcPathCurrentDay+1)+' of 7';
+  document.getElementById('hcPathTitle').textContent=day.title;
+  document.getElementById('hcPathLesson').textContent=day.lesson;
+  document.getElementById('hcPathPracticeText').textContent=day.practice;
+  document.getElementById('hcPathReflection').textContent='Reflect: '+day.reflection;
+  document.getElementById('hcPathNote').value=saved.notes[String(hcPathCurrentDay)]||'';
+  document.getElementById('hcPathMessage').textContent=saved.done.includes(hcPathCurrentDay)?'You marked this day complete. Revisit it anytime.':'Choose the practice whenever you are ready.';
+}
+function hcSavePathNote(){
+ const data=hcPathData();data.notes[String(hcPathCurrentDay)]=document.getElementById('hcPathNote').value.slice(0,700);
+ hcPersistPath(data);document.getElementById('hcPathMessage').textContent='Your note is saved on this device.';
+}
+function hcMarkPathDay(){
+ const data=hcPathData();data.notes[String(hcPathCurrentDay)]=document.getElementById('hcPathNote').value.slice(0,700);
+ if(!data.done.includes(hcPathCurrentDay))data.done.push(hcPathCurrentDay);
+ hcPersistPath(data);hcRenderPath();
+}
+function hcStartPathActivity(){
+ const day=hcStarterDays[hcPathCurrentDay];
+ if(day.type==='timer'||day.type==='breath'){
+  openQuietTimer();
+  document.getElementById('hcTimerMode').value=day.type==='breath'?'breath':'quiet';
+  document.getElementById('hcTimerMinutes').value=String(day.minutes);
+  hcTimerModeChanged();document.getElementById('hcTimerClock').textContent=fmt(day.minutes*60);
+ }else if(day.type==='sound')openSoundTrack(day.key);
+ else if(day.type==='meditation'){
+   const card=hcMeditationCards().find(x=>x.querySelector('.practice-copy b')?.textContent?.trim()===day.key);
+   if(card)card.click();else show('practices');
+ }else if(day.type==='human')openHumanCategory(day.category||'observe');
 }
 
 function rememberActiveMedia(key){
@@ -5049,6 +5158,14 @@ function choosePractice(seconds,url,kicker,title,introUrl,visualUrl){
   hcMoodBefore='';hcMoodLogged=false;
   document.querySelectorAll('#hcMoodBefore button').forEach(b=>b.setAttribute('aria-pressed','false'));
   chosenKicker=kicker || 'Practice';
+  const purposes={
+    'Deep Wake Up':'Begin the day by returning attention to comfortable breath and surroundings.',
+    'Noon Reset':'Notice the middle of your day and give yourself time without multitasking.',
+    'Evening Release':'Practise listening and settling without needing to change how you feel.',
+    'Deep Sleep':'Make room for a quieter evening; you can pause or stop any time.'
+  };
+  const purpose=document.getElementById('hcPurposeText');
+  if(purpose)purpose.textContent=purposes[chosenKicker]||'Practise attention at your own pace.';
   chosenTitle=title || 'Breathing practice';
   stepIndex=0;
   renderStep();
