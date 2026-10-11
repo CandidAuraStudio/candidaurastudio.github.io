@@ -529,7 +529,12 @@ body{overscroll-behavior-y:none}
 .practice-card[data-kind="sleep"] .practice-art{background:linear-gradient(160deg,#182542,#070c18)}
 .practice-card.is-hidden{display:none!important}
 
+.practice-card-message{min-height:18px;margin:9px 2px 0;color:#f2bd9e;font-size:12px;line-height:1.45}
+
+
 .settings-list{display:grid;gap:10px;margin-top:18px}
+body.no-blur *,body.no-blur *:before,body.no-blur *:after{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+body.no-blur:before{filter:none!important}
 .setting-row{
   display:flex;align-items:center;justify-content:space-between;gap:14px;
   padding:15px 16px;border-radius:18px;border:1px solid rgba(198,225,236,.08);
@@ -569,6 +574,7 @@ body{overscroll-behavior-y:none}
   left:50%;top:50%;transform:translate(-50%,-50%);
   background:rgba(211,176,111,.08);border:1px solid rgba(218,184,123,.14)
 }
+.practice-visual-note{position:absolute;z-index:5;left:12px;right:12px;top:12px;margin:0;padding:8px 10px;border-radius:12px;background:rgba(3,12,18,.78);color:#f4e6cc;font-size:11px;line-height:1.35;text-align:center}
 .waveform{
   position:absolute;left:18px;right:18px;bottom:18px;height:44px;display:flex;gap:3px;align-items:center;justify-content:center
 }
@@ -1321,35 +1327,13 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
   </header>
 
   <div class="library-list" aria-label="Available guided practices">
-    <button class="choice practice-card" data-kind="short" aria-label="Start Deep Wake Up, 10-minute morning practice" onclick="choosePractice(600,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/f4d262f6-56fe-40e3-84ea-930c11fe7c54.mp3','Deep Wake Up','Morning · guided breath','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/7fd8e8ee-cc5a-49c3-940b-6b4330a42c5e.mp4','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/d10879c1-d600-400c-999e-3237ec672b86.mp4')">
-      <span class="practice-art" aria-hidden="true"></span>
-      <span class="practice-copy"><b>Deep Wake Up</b><small>Morning · guided breath</small></span>
-      <span class="duration">10:00</span>
-    </button>
-
-    <button class="choice practice-card" data-kind="deep" aria-label="Start Noon Reset, 40-minute practice" onclick="choosePractice(2400,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/b7f691a0-16a1-4449-b143-38e7b3be74df.mp3','Noon Reset','Noon · guided breath','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/a71c8fd6-be58-4262-83ef-1469597b1630.mp4','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/40c72fc3-df5b-4dc9-a518-2ba3ab7f4ac3.mp4')">
-      <span class="practice-art" aria-hidden="true"></span>
-      <span class="practice-copy"><b>Noon Reset</b><small>Noon · guided breath</small></span>
-      <span class="duration">40:00</span>
-    </button>
-
-    <button class="choice practice-card" data-kind="release" aria-label="Start Evening Release, 60-minute practice" onclick="choosePractice(3600,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/93c0e1fe-0e8b-4e7e-9277-47edf8dd0b63.mp3','Evening Release','Evening · guided breath','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/12095b12-f0ae-4859-9b9b-cf28c8224987.mp4','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/c1a8df3c-dabd-4b96-ac42-92f57d3f1ce1.mp4')">
-      <span class="practice-art" aria-hidden="true"></span>
-      <span class="practice-copy"><b>Evening Release</b><small>Evening · guided breath</small></span>
-      <span class="duration">60:00</span>
-    </button>
-
-    <button class="choice practice-card" data-kind="sleep" aria-label="Start Deep Sleep, 60-minute night practice" onclick="choosePractice(3600,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/74f43c24-d734-4ace-b1d0-f1c3263cb299.mp3','Deep Sleep','Night · nose only','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/e4717cb6-dae0-4bce-a4c3-f1ccab0fb9bf.mp4','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/c8bffc30-9905-4e18-8321-e6ecbb597947.mp4')">
-      <span class="practice-art" aria-hidden="true"></span>
-      <span class="practice-copy"><b>Deep Sleep</b><small>Night · nose only</small></span>
-      <span class="duration">60:00</span>
-    </button>
-    <button class="choice practice-card" data-kind="human" aria-label="Open Human Practice" onclick="show('human')">
+    <button class="choice practice-card" data-kind="human" data-special-practice="human" aria-label="Open Human Practice">
       <span class="practice-art" aria-hidden="true"></span>
       <span class="practice-copy"><b>Human Practice</b><small>Passion · movement · observation · attention</small></span>
       <span class="duration">Life</span>
     </button>
   </div>
+  <p class="practice-card-message" id="practiceCardMessage" role="status" aria-live="polite"></p>
   <p class="library-footnote"><span aria-hidden="true">✦</span><span>Choose a session to see a few gentle instructions first. The audio starts only when you press Play.</span></p>
   
 </section>
@@ -1946,7 +1930,15 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
     <div class="settings-list">
       <div class="setting-row">
         <div><strong>Reduce motion</strong><small>Turn off floating and breathing animations</small></div>
-        <button class="switch" id="reduceMotionSwitch" onclick="toggleReduceMotion()" aria-label="Toggle reduced motion"></button>
+        <button class="switch" id="reduceMotionSwitch" onclick="toggleReduceMotion()" aria-label="Toggle reduced motion" role="switch" aria-checked="false"></button>
+      </div>
+      <div class="setting-row">
+        <div><strong>Blur effects</strong><small>Turn off glass and background blur</small></div>
+        <button class="switch" id="blurSwitch" onclick="toggleBlur()" aria-label="Toggle blur effects" role="switch" aria-checked="true"></button>
+      </div>
+      <div class="setting-row">
+        <div><strong>Closing sound autoplay</strong><small>Start the available 2-minute stillness track after a practice</small></div>
+        <button class="switch" id="closingSoundAutoplaySwitch" onclick="toggleClosingSoundAutoplay()" aria-label="Toggle closing sound autoplay" role="switch" aria-checked="true"></button>
       </div>
       <div class="setting-row">
         <div><strong>Keep screen awake</strong><small>Useful while reading instructions or using the player</small></div>
@@ -1968,8 +1960,9 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
         <button class="offline-action" onclick="showInstallSheet(true)">Install</button>
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
+      <button class="offline-action" onclick="exportLocalData()">Export local practice data</button>
     </div>
-    <div class="app-version">HeartClear · prototype v56</div>
+    <div class="app-version">HeartClear · v57</div>
   </div>
 </section>
 
@@ -1997,8 +1990,10 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
     <div class="completion-time" id="completionPractice">Deep Wake Up</div>
     <div class="hub-note" style="margin:18px 0">
       <b style="display:block;margin-bottom:8px">Continue in stillness</b>
-      <p>After the guided practice, stay in a comfortable position and listen gently. Press Play to start the closing soundtrack.</p>
-      <audio class="heartclear-stillness-audio" controls playsinline preload="metadata" src="./media/HeartClear_DeepSleep_Stillness_2min_PREVIEW.mp3" style="width:100%;margin:10px 0;display:block"></audio>
+      <p>After the guided practice, stay in a comfortable position and listen gently. This available stillness track can start automatically or be started below.</p>
+      <audio id="closingAudio" class="heartclear-stillness-audio" controls playsinline preload="metadata" src="./media/HeartClear_DeepSleep_Stillness_2min_PREVIEW.mp3" style="width:100%;margin:10px 0;display:block"></audio>
+      <button id="closingSoundFallback" class="btn secondary" onclick="startClosingSound()" hidden>Play the closing sound</button>
+      <p id="closingSoundStatus" role="status" aria-live="polite" style="font-size:12px;margin-top:8px"></p>
       <div style="font-size:12px;margin-top:8px"><a href="./media/HeartClear_DeepSleep_Stillness_2min_PREVIEW.mp3" target="_blank" rel="noopener">Open 2-minute MP3 directly</a></div>
       <div style="font-size:12px;margin-top:8px">Longer previews: <a href="https://drive.google.com/file/d/17WzV9SRm0EHqe4vWSAadEZq27GpEZYNa/view" target="_blank" rel="noopener">3 min</a> · <a href="https://drive.google.com/file/d/1q9ljNUjNyrptWvubnKrz3sNsYqO4CDqy/view" target="_blank" rel="noopener">5 min</a> (open in Drive)</div>
     </div>
@@ -2031,6 +2026,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       <div class="player-visual-actions"><button class="pip-btn" id="practicePipBtn" onclick="event.stopPropagation();togglePip('practiceVisual')" aria-label="Open video in picture in picture">PiP</button></div>
       <video id="practiceVisual" class="practice-visual" muted playsinline preload="metadata"></video>
       <div class="practice-visual-shade"></div>
+      <p class="practice-visual-note" id="practiceVisualNote" role="status" aria-live="polite" hidden></p>
       <div class="waveform" id="waveform" aria-hidden="true">
         <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
       </div>
@@ -2173,6 +2169,109 @@ try{
 }catch(e){}
 
 const MEDIA_CACHE='heartclear-media-v1';
+
+const PRACTICES=[
+  {
+    id:'deep-wake-up',kind:'short',durationSeconds:600,kicker:'Deep Wake Up',
+    title:'Morning · guided breath',cardSummary:'10-minute morning practice',
+    audioUrl:'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/f4d262f6-56fe-40e3-84ea-930c11fe7c54.mp3',
+    introUrl:'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/7fd8e8ee-cc5a-49c3-940b-6b4330a42c5e.mp4',
+    visualUrl:'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/d10879c1-d600-400c-999e-3237ec672b86.mp4'
+  },
+  {
+    id:'noon-reset',kind:'deep',durationSeconds:2400,kicker:'Noon Reset',
+    title:'Noon · guided breath',cardSummary:'40-minute practice',
+    audioUrl:'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/b7f691a0-16a1-4449-b143-38e7b3be74df.mp3',
+    introUrl:'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/a71c8fd6-be58-4262-83ef-1469597b1630.mp4',
+    visualUrl:'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/40c72fc3-df5b-4dc9-a518-2ba3ab7f4ac3.mp4'
+  },
+  {
+    id:'evening-release',kind:'release',durationSeconds:3600,kicker:'Evening Release',
+    title:'Evening · guided breath',cardSummary:'60-minute practice',
+    audioUrl:'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/93c0e1fe-0e8b-4e7e-9277-47edf8dd0b63.mp3',
+    introUrl:'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/12095b12-f0ae-4859-9b9b-cf28c8224987.mp4',
+    visualUrl:'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/c1a8df3c-dabd-4b96-ac42-92f57d3f1ce1.mp4'
+  },
+  {
+    id:'deep-sleep',kind:'sleep',durationSeconds:3600,kicker:'Deep Sleep',
+    title:'Night · nose only',cardSummary:'60-minute night practice',
+    audioUrl:'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/74f43c24-d734-4ace-b1d0-f1c3263cb299.mp3',
+    introUrl:'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/e4717cb6-dae0-4bce-a4c3-f1ccab0fb9bf.mp4',
+    visualUrl:'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/c8bffc30-9905-4e18-8321-e6ecbb597947.mp4'
+  }
+];
+
+function renderPracticeLibrary(){
+  const list=document.querySelector('.library-list');
+  if(!list)return;
+  const humanCard=list.querySelector('[data-special-practice="human"]');
+  list.replaceChildren();
+  PRACTICES.forEach(practice=>{
+    const card=document.createElement('button');
+    card.type='button';
+    card.className='choice practice-card';
+    card.dataset.kind=practice.kind;
+    card.dataset.practiceId=practice.id;
+    card.setAttribute('aria-label','Start '+practice.kicker+', '+practice.cardSummary);
+
+    const art=document.createElement('span');
+    art.className='practice-art';
+    art.setAttribute('aria-hidden','true');
+    const copy=document.createElement('span');
+    copy.className='practice-copy';
+    const title=document.createElement('b');
+    title.textContent=practice.kicker;
+    const subtitle=document.createElement('small');
+    subtitle.textContent=practice.title;
+    copy.append(title,subtitle);
+    const duration=document.createElement('span');
+    duration.className='duration';
+    duration.textContent=fmt(practice.durationSeconds);
+    card.append(art,copy,duration);
+    list.appendChild(card);
+  });
+  if(humanCard)list.appendChild(humanCard);
+}
+
+function openPracticeById(id){
+  const practice=PRACTICES.find(item=>item.id===id);
+  if(!practice)return false;
+  choosePractice(
+    practice.durationSeconds,
+    practice.audioUrl,
+    practice.kicker,
+    practice.title,
+    practice.introUrl,
+    practice.visualUrl
+  );
+  return true;
+}
+
+function showPracticeCardMessage(message){
+  const el=document.getElementById('practiceCardMessage');
+  if(el)el.textContent=message||'';
+}
+
+function handlePracticeLibraryClick(event){
+  const card=event.target?.closest?.('[data-practice-id],[data-special-practice]');
+  if(!card)return;
+  try{
+    if(card.dataset.specialPractice==='human'){
+      show('human');
+      showPracticeCardMessage('');
+      return;
+    }
+    if(!openPracticeById(card.dataset.practiceId)){
+      showPracticeCardMessage('This practice is unavailable. Please refresh HeartClear and try again.');
+      return;
+    }
+    showPracticeCardMessage('');
+  }catch(error){
+    console.error('HeartClear could not open this practice:',error);
+    showPracticeCardMessage('This practice could not open. Please refresh HeartClear and try again.');
+  }
+}
+
 let deferredInstallPrompt=null;
 
 function isStandaloneApp(){
@@ -3590,7 +3689,11 @@ function renderSettings(){
   renderLocalContext();
   renderInstallSetting();
   const reduced=document.body.classList.contains('reduce-motion');
-  const sw=document.getElementById('reduceMotionSwitch'); if(sw)sw.classList.toggle('on',reduced);
+  const sw=document.getElementById('reduceMotionSwitch'); if(sw){sw.classList.toggle('on',reduced);sw.setAttribute('aria-checked',String(reduced))}
+  const blurOn=!document.body.classList.contains('no-blur');
+  const blurSw=document.getElementById('blurSwitch'); if(blurSw){blurSw.classList.toggle('on',blurOn);blurSw.setAttribute('aria-checked',String(blurOn))}
+  const closingOn=isClosingSoundAutoplayEnabled();
+  const closingSw=document.getElementById('closingSoundAutoplaySwitch'); if(closingSw){closingSw.classList.toggle('on',closingOn);closingSw.setAttribute('aria-checked',String(closingOn))}
   const ww=document.getElementById('wakeLockSwitch'); if(ww)ww.classList.toggle('on',wakeLockEnabled);
   updateOfflineStorageText();
 }
@@ -3600,6 +3703,67 @@ function toggleReduceMotion(){
   const on=document.body.classList.contains('reduce-motion');
   try{localStorage.setItem('clearWithinReducedMotion',on?'1':'0')}catch(e){}
   renderSettings();
+}
+
+function initBlurPreference(){
+  let enabled=true;
+  try{enabled=localStorage.getItem('heartclearBlur')!=='0'}catch(e){}
+  document.body.classList.toggle('no-blur',!enabled);
+}
+
+function toggleBlur(){
+  const enabled=document.body.classList.contains('no-blur');
+  document.body.classList.toggle('no-blur',!enabled);
+  try{localStorage.setItem('heartclearBlur',enabled?'1':'0')}catch(e){}
+  renderSettings();
+}
+
+function isClosingSoundAutoplayEnabled(){
+  try{return localStorage.getItem('heartclearClosingAutoplay')!=='0'}catch(e){return true}
+}
+
+function toggleClosingSoundAutoplay(){
+  try{localStorage.setItem('heartclearClosingAutoplay',isClosingSoundAutoplayEnabled()?'0':'1')}catch(e){}
+  renderSettings();
+}
+
+async function startClosingSound(){
+  const player=document.getElementById('closingAudio');
+  const fallback=document.getElementById('closingSoundFallback');
+  const status=document.getElementById('closingSoundStatus');
+  if(!player)return false;
+  try{
+    player.currentTime=0;
+    await player.play();
+    if(fallback)fallback.hidden=true;
+    if(status)status.textContent='Stillness sound is playing.';
+    return true;
+  }catch(error){
+    if(fallback)fallback.hidden=false;
+    if(status)status.textContent='Automatic playback was blocked. Tap Play to start the stillness sound.';
+    return false;
+  }
+}
+
+function exportLocalData(){
+  const preference=(key,fallback)=>{
+    try{const value=localStorage.getItem(key);return value===null?fallback:value}catch(e){return fallback}
+  };
+  const data={
+    app:'HeartClear',exportedAt:new Date().toISOString(),
+    history:getHistory(),
+    preferences:{
+      reducedMotion:preference('clearWithinReducedMotion','0')==='1',
+      blur:preference('heartclearBlur','1')!=='0',
+      closingSoundAutoplay:isClosingSoundAutoplayEnabled(),
+      keepScreenAwake:!!wakeLockEnabled
+    }
+  };
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const link=document.createElement('a');
+  link.href=url;link.download='heartclear-local-data.json';link.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 
 async function toggleWakeLock(){
@@ -3662,15 +3826,26 @@ function confirmSessionReady(){
 function startIntro(){
   const v=document.getElementById('introVideo');
   document.getElementById('introTitle').textContent=chosenKicker;
+  const note=document.querySelector('.intro-note');
+  const skip=document.querySelector('.intro-skip');
+  if(note)note.textContent='A short visual first. Then the instructions.';
+  if(skip)skip.textContent='Skip';
   v.pause();
   v.src=chosenIntroUrl;
   v.currentTime=0;
   show('intro');
   if(chosenIntroUrl){
-    v.play().catch(()=>{});
+    v.play().catch(()=>showIntroVideoFallback());
   }else{
     finishIntro();
   }
+}
+
+function showIntroVideoFallback(){
+  const note=document.querySelector('.intro-note');
+  const skip=document.querySelector('.intro-skip');
+  if(note)note.textContent='The video could not play. Continue to the instructions when ready.';
+  if(skip)skip.textContent='Continue without the video';
 }
 
 function finishIntro(){
@@ -3722,6 +3897,7 @@ function preparePlayer(){
   const pv=document.getElementById('practiceVisual');
   if(pv){
     pv.pause();
+    showPracticeVisualMessage('');
     pv.removeAttribute('src');
     pv.load();
     if(chosenVisualUrl){
@@ -3973,6 +4149,7 @@ function completeSession(completed=false){
   document.querySelectorAll('.reflection-chip').forEach(x=>x.classList.remove('selected'));
   show('completion');
   renderDashboard();
+  if(isClosingSoundAutoplayEnabled())startClosingSound();
 }
 
 function friendlyDuration(sec){
@@ -3995,6 +4172,8 @@ function saveReflection(value,el){
 }
 
 function doneCompletion(){
+  const closing=document.getElementById('closingAudio');
+  if(closing){closing.pause();closing.currentTime=0}
   audio.currentTime=0;
   sync();
   show('home');
@@ -4035,8 +4214,15 @@ function syncPracticeVisual(force=false){
       }
     }
     if(audio.paused) pv.pause();
-    else pv.play().catch(()=>{});
+    else pv.play().catch(()=>showPracticeVisualMessage('The practice video could not play. Your guided audio remains available.'));
   }catch(e){}
+}
+
+function showPracticeVisualMessage(message){
+  const note=document.getElementById('practiceVisualNote');
+  if(!note)return;
+  note.textContent=message||'';
+  note.hidden=!message;
 }
 
 async function togglePlay(){
@@ -4116,7 +4302,7 @@ function sync(){
       if(!pv.paused)pv.pause();
     }else if(playing){
       if(Math.abs((pv.currentTime||0)-t)>1.5) syncPracticeVisual(true);
-      else if(pv.paused) pv.play().catch(()=>{});
+      else if(pv.paused) pv.play().catch(()=>showPracticeVisualMessage('The practice video could not play. Your guided audio remains available.'));
     }else if(!pv.paused){
       pv.pause();
     }
@@ -4162,7 +4348,16 @@ setInterval(sync,500);
 const introVideo=document.getElementById('introVideo');
 introVideo.addEventListener('ended',finishIntro);
 introVideo.addEventListener('error',()=>{
-  document.querySelector('.intro-note').textContent='Intro could not load. Continue to the instructions.';
+  showIntroVideoFallback();
+});
+const practiceVisual=document.getElementById('practiceVisual');
+practiceVisual.addEventListener('error',()=>showPracticeVisualMessage('The practice video could not load. Your guided audio remains available.'));
+document.getElementById('closingAudio').addEventListener('play',()=>{
+  const fallback=document.getElementById('closingSoundFallback');if(fallback)fallback.hidden=true;
+  const status=document.getElementById('closingSoundStatus');if(status)status.textContent='Stillness sound is playing.';
+});
+document.getElementById('closingAudio').addEventListener('error',()=>{
+  const status=document.getElementById('closingSoundStatus');if(status)status.textContent='The stillness sound could not load. Check your connection and try again.';
 });
 
 document.querySelector('.player-orb').addEventListener('keydown',e=>{
@@ -4189,6 +4384,10 @@ document.addEventListener('visibilitychange',()=>{
 try{
   if(localStorage.getItem('clearWithinReducedMotion')==='1') document.body.classList.add('reduce-motion');
 }catch(e){}
+initBlurPreference();
+renderPracticeLibrary();
+const practiceLibrary=document.querySelector('.library-list');
+if(practiceLibrary)practiceLibrary.addEventListener('click',handlePracticeLibraryClick);
 setGreeting();
 renderLocalContext();
 renderDashboard();
