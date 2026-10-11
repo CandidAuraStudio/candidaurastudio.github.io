@@ -1197,6 +1197,54 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
 .book-shelf-head b{font-size:12px}
 .book-shelf-head span{color:#80939d;font-size:10px}
 
+
+/* Audiobook player + dual Home resume v57 */
+.home-resume .eyebrow{letter-spacing:.09em}
+.library-resume{
+  background:
+    radial-gradient(circle at 88% 12%,rgba(210,175,108,.13),transparent 34%),
+    linear-gradient(145deg,rgba(21,42,52,.88),rgba(7,19,27,.94))!important;
+  border-color:rgba(216,182,116,.15)!important;
+}
+.library-resume button{background:rgba(176,133,73,.14)!important;border-color:rgba(216,182,116,.18)!important;color:#dec28e!important}
+.audiobook-player-shell{padding:18px}
+.audiobook-identity{display:grid;grid-template-columns:112px minmax(0,1fr);gap:16px;align-items:center;margin-top:8px}
+.audiobook-cover-v2{
+  aspect-ratio:3/4;border-radius:17px;padding:14px 12px;display:flex;flex-direction:column;justify-content:space-between;
+  background:
+    radial-gradient(circle at 70% 16%,rgba(213,181,113,.20),transparent 23%),
+    linear-gradient(155deg,#183543,#07131d 64%,#102b38);
+  border:1px solid rgba(221,193,137,.17);box-shadow:0 20px 45px rgba(0,0,0,.32)
+}
+.audiobook-cover-v2 .cover-top{font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:#c6a56c}
+.audiobook-cover-v2 strong{font-size:19px;line-height:1.05;color:#eef3f4}
+.audiobook-cover-v2 .cover-bottom{font-size:9px;line-height:1.35;color:#8fa5af}
+.audiobook-copy .kicker{margin-bottom:5px}
+.audiobook-copy h2{font-size:24px;margin:0 0 8px}
+.audiobook-copy p{margin:0;color:#9eb0b8;font-size:12px;line-height:1.5}
+.audiobook-chapter-nav{
+  display:grid;grid-template-columns:44px minmax(0,1fr) 44px;gap:9px;align-items:center;margin:18px 0 12px
+}
+.audiobook-chapter-nav button,.audiobook-chapter-nav select{
+  height:44px;border-radius:13px;border:1px solid rgba(201,226,235,.10);
+  background:rgba(6,20,29,.68);color:#d9e3e6;font:inherit
+}
+.audiobook-chapter-nav select{width:100%;padding:0 10px;font-size:12px}
+.audiobook-chapter-nav button:disabled{opacity:.3}
+.audiobook-player-shell .audiobook-seek{margin-top:10px}
+.audiobook-player-shell .audiobook-controls{margin-top:14px}
+.audiobook-player-shell .audiobook-controls button{min-height:50px}
+.audiobook-player-shell .audiobook-controls .primary{font-size:14px}
+.audiobook-now{
+  margin-top:12px;padding:11px 12px;border-radius:14px;background:rgba(5,18,27,.42);
+  border:1px solid rgba(198,225,236,.07);color:#8da1aa;font-size:10px;line-height:1.5
+}
+.book-shelf .book-chapter small{max-width:210px;white-space:normal}
+@media(max-width:390px){
+  .audiobook-identity{grid-template-columns:92px minmax(0,1fr)}
+  .audiobook-cover-v2{padding:11px 9px}.audiobook-cover-v2 strong{font-size:16px}
+}
+
 </style>
 </head>
 <body>
@@ -1272,10 +1320,16 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
 
   <div class="home-dashboard">
     <div class="home-resume" id="homeResumeCard">
-      <div class="eyebrow">Continue listening</div>
+      <div class="eyebrow">Meditation · Continue</div>
       <strong id="homeResumeTitle">Deep Wake Up</strong>
       <small id="homeResumeMeta">Continue from 04:12</small>
       <button onclick="continueLastSession()">Continue session</button>
+    </div>
+    <div class="home-resume library-resume" id="homeLibraryResumeCard">
+      <div class="eyebrow">Library · Continue listening</div>
+      <strong id="homeLibraryResumeTitle">Shadows of Truth · Chapter 1</strong>
+      <small id="homeLibraryResumeMeta">English audiobook</small>
+      <button onclick="continueLastBook()">Resume audiobook</button>
     </div>
     <div class="progress-card">
       <div class="progress-label">Awareness practice</div>
@@ -1863,33 +1917,53 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
 </section>
 
 <section class="screen" id="bookAudio">
-  <div class="glass">
-    <button class="collection-back" onclick="show('collection')">‹ Library</button>
-    <div class="kicker" id="bookAudioLanguage">English Audiobook</div>
-    <h2>Shadows of Truth</h2>
-    <p id="bookAudioChapter">Chapter 1 · voice-only recording</p>
-    <div class="audiobook-art"><span>HC</span></div>
-    <input id="bookSeek" class="audiobook-seek" type="range" min="0" max="100" value="0" step="0.1">
-    <div class="audiobook-times"><span id="bookElapsed">00:00</span><span id="bookTotal">00:00</span></div>
-    <div class="audiobook-controls">
-      <button onclick="bookJump(-30)">−30s</button>
-      <button class="primary" id="bookPlayBtn" onclick="toggleBookAudio()">Play</button>
-      <button onclick="bookJump(30)">+30s</button>
+  <div class="glass audiobook-player-shell">
+    <button class="collection-back" onclick="show('collection')">‹ Audiobooks</button>
+
+    <div class="audiobook-identity">
+      <div class="audiobook-cover-v2" aria-label="Shadows of Truth cover">
+        <span class="cover-top">HeartClear Library</span>
+        <strong>Shadows<br>of Truth</strong>
+        <span class="cover-bottom">A Memoir of<br>Mind vs Body</span>
+      </div>
+      <div class="audiobook-copy">
+        <div class="kicker" id="bookAudioLanguage">English Audiobook</div>
+        <h2>Shadows of Truth</h2>
+        <p id="bookAudioChapter">Chapter 1 · The Boy Who Was Already Watching</p>
+      </div>
     </div>
+
+    <div class="audiobook-chapter-nav">
+      <button id="bookPrevChapterBtn" onclick="bookPrevChapter()" aria-label="Previous audiobook chapter">‹</button>
+      <select id="bookChapterSelect" onchange="bookSelectChapter(this.value)" aria-label="Choose audiobook chapter"></select>
+      <button id="bookNextChapterBtn" onclick="bookNextChapter()" aria-label="Next audiobook chapter">›</button>
+    </div>
+
+    <input id="bookSeek" class="audiobook-seek" type="range" min="0" max="100" value="0" step="0.1" aria-label="Audiobook position">
+    <div class="audiobook-times"><span id="bookElapsed">00:00</span><span id="bookTotal">00:00</span></div>
+
+    <div class="audiobook-controls">
+      <button onclick="bookJump(-30)" aria-label="Back 30 seconds">−30s</button>
+      <button class="primary" id="bookPlayBtn" onclick="toggleBookAudio()">Play</button>
+      <button onclick="bookJump(30)" aria-label="Forward 30 seconds">+30s</button>
+    </div>
+
     <div class="audiobook-options">
       <span style="font-size:11px;color:#8298a3">Playback speed</span>
-      <select id="bookSpeed" onchange="setBookSpeed(this.value)">
+      <select id="bookSpeed" onchange="setBookSpeed(this.value)" aria-label="Audiobook speed">
         <option value="0.75">0.75×</option>
         <option value="1" selected>1×</option>
         <option value="1.25">1.25×</option>
         <option value="1.5">1.5×</option>
       </select>
     </div>
+
     <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:12px">
       <span class="offline-status" id="bookOfflineStatus"><span class="offline-dot"></span><span>Online stream</span></span>
-      <button class="offline-action" id="bookOfflineBtn" onclick="toggleBookOffline()">Save offline</button>
+      <button class="offline-action" id="bookOfflineBtn" onclick="toggleBookOffline()">Save chapter offline</button>
     </div>
-    <div class="hub-note">Your position is saved automatically. Background playback and lock-screen controls are used where the browser supports them.</div>
+
+    <div class="audiobook-now" id="bookResumeNote">Your place in each chapter is saved automatically on this device.</div>
     <audio id="bookAudioEl" preload="auto" playsinline></audio>
   </div>
 </section>
@@ -1969,7 +2043,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v56</div>
+    <div class="app-version">HeartClear · prototype v57</div>
   </div>
 </section>
 
@@ -2014,6 +2088,20 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
 
     <button class="btn" onclick="doneCompletion()">Done</button>
     <button class="btn secondary" onclick="repeatPractice()">Practice again</button>
+  </div>
+</section>
+
+<section class="screen" id="aftercare">
+  <div class="glass center" style="max-width:440px;margin:auto;width:100%">
+    <div class="kicker">HeartClear · After meditation</div>
+    <h2>Stay a little longer.</h2>
+    <p>The guided practice is complete. Remain comfortable and listen to nature sounds.</p>
+    <div class="player-orb" aria-hidden="true"><div class="play-core">♪</div></div>
+    <div class="clock" id="natureElapsed">00:00</div>
+    <div class="progress-meta"><span>Nature sounds</span><span id="natureTotal">03:00</span></div>
+    <div class="player-status" id="naturePlaybackStatus" role="status">Nature starts automatically after meditation.</div>
+    <button class="btn" id="naturePlayBtn" onclick="togglePlay()">Pause</button>
+    <button class="btn secondary" onclick="finishNature()">Finish listening</button>
   </div>
 </section>
 
@@ -2071,6 +2159,15 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
         </select>
       </div>
       <div class="option-row">
+        <div><label for="natureAfterSeconds">After meditation</label><small>Nature starts as soon as the guided audio ends. No countdown.</small></div>
+        <select id="natureAfterSeconds" class="option-select" onchange="setNatureAfterSeconds(this.value)">
+          <option value="0">Off</option>
+          <option value="120">2 min</option>
+          <option value="180" selected>3 min</option>
+          <option value="300">5 min</option>
+        </select>
+      </div>
+      <div class="option-row">
         <div><label>Session</label><small>Start again from 00:00</small></div>
         <button class="option-select" onclick="restart()">Restart</button>
       </div>
@@ -2081,6 +2178,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
     </div>
 
     <div class="player-status" id="playerNote">Press Play when you are ready.</div>
+    <div class="player-status" id="natureAfterNote">Nature sounds start automatically when the guided audio ends · 3 min</div>
     <button class="btn secondary" onclick="finish()" id="finishBtn">Finish</button>
   </div>
   <div class="footer">HeartClear · audio starts only when you press Play</div>
@@ -2126,6 +2224,134 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
 
 <script>
 let chosenSeconds=600;
+let playbackPhase='meditation';
+let natureSoundURL='';
+let natureSoundPromise=null;
+let natureCycleCount=0;
+let natureLastPosition=0;
+let natureAfterSeconds=180;
+try{
+  const configured=Number(localStorage.getItem('heartclearNatureAfterSeconds'));
+  if([0,120,180,300].includes(configured)) natureAfterSeconds=configured;
+}catch(e){}
+
+const NATURE_AUDIO_BYTES=4321197;
+const NATURE_PART_URLS=Array.from({length:10},(_,i)=>'./media/nature-weave-v1.part'+String(i).padStart(2,'0'));
+function loadNatureSound(){
+  if(natureSoundURL)return Promise.resolve(natureSoundURL);
+  if(natureSoundPromise)return natureSoundPromise;
+  natureSoundPromise=(async()=>{
+    const buffers=await Promise.all(NATURE_PART_URLS.map(async path=>{
+      const response=await fetch(path);
+      if(!response.ok)throw new Error('Nature audio part unavailable: '+path);
+      const buffer=await response.arrayBuffer();
+      if(!buffer.byteLength)throw new Error('Empty nature audio part: '+path);
+      // Store the successful files for offline playback after the first load.
+      try{
+        if('caches' in window){
+          const cache=await caches.open('heartclear-media-v1');
+          await cache.put(path,new Response(buffer,{headers:{'Content-Type':'application/octet-stream'}}));
+        }
+      }catch(e){}
+      return buffer;
+    }));
+    const blob=new Blob(buffers,{type:'audio/mpeg'});
+    if(blob.size!==NATURE_AUDIO_BYTES)throw new Error('Incomplete nature audio');
+    natureSoundURL=URL.createObjectURL(blob);
+    return natureSoundURL;
+  })().catch(err=>{natureSoundPromise=null;throw err});
+  return natureSoundPromise;
+}
+function natureDurationLabel(){
+  return natureAfterSeconds===0?'Off':Math.round(natureAfterSeconds/60)+' min';
+}
+function setNatureAfterSeconds(value){
+  const next=Number(value);
+  if(![0,120,180,300].includes(next))return;
+  natureAfterSeconds=next;
+  try{localStorage.setItem('heartclearNatureAfterSeconds',String(next))}catch(e){}
+  const sel=document.getElementById('natureAfterSeconds');
+  if(sel)sel.value=String(next);
+  const note=document.getElementById('natureAfterNote');
+  if(note)note.textContent=next?'Nature sounds start automatically when the guided audio ends · '+natureDurationLabel():'Nature after meditation is off';
+}
+function meditationActualDuration(){
+  return Number.isFinite(audio.duration)&&audio.duration>10?audio.duration:chosenSeconds;
+}
+function beginNatureSound(url){
+  if(playbackPhase!=='nature')return;
+  audio.loop=true;
+  audio.src=url;
+  audio.currentTime=0;
+  audio.load();
+  const message=document.getElementById('naturePlaybackStatus');
+  if(message)message.textContent='Starting nature sounds…';
+  try{
+    if('mediaSession' in navigator){
+      navigator.mediaSession.metadata=new MediaMetadata({title:'Nature sounds',artist:'HeartClear',album:'After meditation',artwork:hcArtwork()});
+    }
+  }catch(e){}
+  // Reuse the same audio element the user started for the guided meditation.
+  // Some mobile browsers may still require a second tap; show a Play fallback.
+  const promise=audio.play();
+  if(promise&&promise.then)promise.then(()=>{
+    if(message&&playbackPhase==='nature')message.textContent='Nature sounds playing · remain comfortable';
+    syncNature();
+  }).catch(()=>{
+    if(message&&playbackPhase==='nature')message.textContent='Tap Play to continue with nature sounds.';
+    syncNature();
+  });
+}
+function startAftercare(){
+  if(playbackPhase!=='meditation')return;
+  if(!natureAfterSeconds){completeSession(true);return}
+  recordSession(true);
+  clearLastSession();
+  playbackPhase='nature';
+  natureCycleCount=0;
+  natureLastPosition=0;
+  const visual=document.getElementById('practiceVisual');
+  if(visual)visual.pause();
+  document.getElementById('natureTotal').textContent=fmt(natureAfterSeconds);
+  document.getElementById('natureElapsed').textContent='00:00';
+  document.getElementById('naturePlayBtn').textContent='Pause';
+  show('aftercare');
+  const status=document.getElementById('naturePlaybackStatus');
+  if(status)status.textContent='Preparing nature sounds…';
+  if(natureSoundURL)beginNatureSound(natureSoundURL);
+  else loadNatureSound().then(beginNatureSound).catch(()=>{
+    if(playbackPhase==='nature'){
+      if(status)status.textContent='Nature audio is not available. Check the connection or finish.';
+      document.getElementById('naturePlayBtn').textContent='Play';
+    }
+  });
+}
+function syncNature(){
+  if(playbackPhase!=='nature')return;
+  const position=Math.max(0,audio.currentTime||0);
+  const cycle=Number.isFinite(audio.duration)&&audio.duration>1?audio.duration:180;
+  if(position+1<natureLastPosition)natureCycleCount++;
+  natureLastPosition=position;
+  const elapsed=Math.min(natureAfterSeconds,natureCycleCount*cycle+position);
+  const remaining=Math.max(0,natureAfterSeconds-elapsed);
+  const elapsedEl=document.getElementById('natureElapsed');
+  if(elapsedEl)elapsedEl.textContent=fmt(elapsed);
+  const playBtn=document.getElementById('naturePlayBtn');
+  if(playBtn)playBtn.textContent=audio.paused?'Play':'Pause';
+  // Restore the user's chosen volume rather than repeatedly reducing it.
+  const targetVolume=Number(document.getElementById('volume').value);
+  audio.volume=Math.max(0,Math.min(1,targetVolume))*(remaining<6?Math.max(0,remaining/6):1);
+  if(elapsed>=natureAfterSeconds-.12){finishNature();}
+}
+function finishNature(){
+  if(playbackPhase!=='nature')return;
+  audio.pause();
+  audio.loop=false;
+  playbackPhase='meditation';
+  audio.volume=Number(document.getElementById('volume').value)||.85;
+  completeSession(true);
+}
+
 let chosenIntroUrl='';
 let chosenVisualUrl='';
 let chosenUrl='https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/f4d262f6-56fe-40e3-84ea-930c11fe7c54.mp3';
@@ -2380,7 +2606,7 @@ function show(id){
     if(!el.closest('.screen.active') && !el.paused)el.pause();
   });
 
-  const immersive=['sessionReady','intro','prep','instructions','player','completion','humanSession','sacredSession','bookAudio','bookReader','soundLabPlayer','fearPlayer'].includes(id);
+  const immersive=['sessionReady','intro','prep','instructions','player','aftercare','completion','humanSession','sacredSession','bookAudio','bookReader','soundLabPlayer','fearPlayer'].includes(id);
   document.getElementById('bottomNav').classList.toggle('hidden',immersive);
   document.getElementById('appTopBar').classList.toggle('hidden',immersive);
 
@@ -2409,9 +2635,9 @@ function getActiveMediaState(){
   const options=[
     {
       key:'meditation',el:audio,
-      title:chosenKicker||'Meditation',
-      meta:'Meditation · '+fmt(audio.currentTime||0),
-      screen:'player'
+      title:playbackPhase==='nature'?'Nature sounds':chosenKicker||'Meditation',
+      meta:playbackPhase==='nature'?'After meditation · '+fmt(audio.currentTime||0):'Meditation · '+fmt(audio.currentTime||0),
+      screen:playbackPhase==='nature'?'aftercare':'player'
     },
     {
       key:'adhkar',el:adhkarAudio,
@@ -2433,7 +2659,7 @@ function getActiveMediaState(){
     },
     {
       key:'book',el:bookAudioEl,
-      title:'Shadows of Truth · Chapter '+currentBookChapter,
+      title:'Shadows of Truth · Chapter '+currentBookChapter+' · '+currentBookTitle(),
       meta:(currentBookAudioLang==='ta'?'Tamil audiobook':'English audiobook')+' · '+fmt(bookAudioEl.currentTime||0),
       screen:'bookAudio'
     }
@@ -2500,6 +2726,7 @@ function globalJump(delta){
 function stopGlobalMedia(){
   const state=getActiveMediaState();
   if(!state)return;
+  if(state.key==='meditation'&&playbackPhase==='nature'){finishNature();return;}
   state.el.pause();
   try{state.el.currentTime=0}catch(e){}
   try{localStorage.removeItem('heartclearActiveMedia')}catch(e){}
@@ -2860,9 +3087,9 @@ const bookContent={
   ta:"புகைப்படங்கள் முதல் பகுதி டாஷ் தூதன் அத்தியாயம் ஒன்று. ஏற்கனவே கவனித்துக்கொண்டிருந்த சிறுவன். அமைதியாக அமரைக் கட்டுக்கொள்வதற்கு முன்பே நகரந்துகொண்டிருப்பதைத்தான் நான் அறிந்திருந்தேன். என் வாழ்க்கையின் ஆரம்பப் பகதியின் பிரும்பகதியில் நகர்வதை நான் உயிரோடி இருக்கிறேன் என்பதற்கான சான்றாக இருந்தது. எழுந்திர் வேலை செய், பயனம் செய், எதையாவது தூக்கு, சுமந்து ச நான் முயற்சி செய்தேன். சோம்பெரியாக இருக்க வில்லை. என் குடும்பமும் என் நாடும் ஒரு மூத்தமாகனாகை என்னிடம் எதிர்பார்த்ததை செய்துக்கொண்டிருந்தேன். ஆனால், அந்த உண்மையின் கீழே இன்னொரு உண்மை மறைந்திருந்தது. நான் மனதை விட உடலுக்கே அதிகமாக உன்ன வழித்துக்கொண்டிருந்தேன். ஒரு அதன் பெயரை நான் அறியவில்லை, இன்னும் 25 ஆண்டுகளுக்குப் பிறகுதான் அதற்கு நான் பேர்த்தருவேன். அந்தப் பெயர் வேறு நாட்டில் உள்ள ஒரு சிரியாறையில் வரும், அக்கறைப்பட்டின் தூசி சாலைகளில் நடந்த சிறுவனாக இருந்தபோது நான் இன்னும் கர்ப்பனைக்கூட செய்யாத இடத்தில் ஆனால் உள் சாட்சி ஆ என் பாட்டி என் முதல் ஆசிரியர்களில் ஒருவர் அவர் என்னை உட்கார வைத்து பாடம் கட்டிருக்க வில்லை நடந்து கொண்டைக் கட்டிருக்கொடுத்தார் நாங்கள் சேர்ந்து நடந்த அந்த சாலை இன்னும் நினைவில் இருக்கிறது. பரதான சாலை. பழைய பெட்ரோல் நிலைத்தை தாண்டி இடதுபக்கம் திரும்பும் வழி சாலைகள் இன்ன அந்த வழியில் மாடுகள் சுதந்திரமாகச் சென்றன. என் அற்றை வீட்டிற்கு நடந்து செல்லும்போது சில மரங்களிலிருந்து விழிந்த சிறுக் கூருமையான முட்டிகள் என் காலில் குற்றும் என் பாட்டினின்று அவற்றை ஒன்றொன்றாக எடுத்துவிடுவார். யாரும் கட்டுக்கொடுக்காமல் உடலிலேயே இருந்த அந்த உப அந்த சாலையில் தூசியின் வாசனை இரந்தது. பிற்பகலில் சூடான தாரின் வாசனை. வேலில் காயந்த மாட்டுசானத்தின் வாசனை. முழையிலிருந்த கடையிலிருந்து வந்த பொறித்தையின் வாசனை. இந்த எல்லாவற்றின் வழியாகை என் பாட்டி நடந்தார். பொறுமைக்கு கால்களிருந்தால் அதிப்படித்தான் நடந்திருக் யாரும் ஒரு வார்த்தை சொல்லுவதற்கு முன்பே வெட்கம் என் நெஞ்சில் விழுந்தது. எந்த அறிவரையும் தேவையில்லை. என் மனம் இன்னும் சொல்ல கட்டுக்கொள்ளாதது என் உடலியிருக்கனவே புரிந்துகொண்டது. குற்றமில்லாத ஒன்றைத் தூண்டாதே. ஆழமான பாடங்களைப் போதும் செய்வது போல, அந்த பாடம் விழக்கம என் பாட்டி வீட்டிருக்க, வீடுகளுக்கு நடிவில் ஒரு மாமரம் நின்றிருந்தது, அது அகலமானது, தாராலமானது, அதன் கிளைகள் குறையை நோக்கிப் பறவி இருந்தன, குழந்தைகள் ஏறுவதற்காக வேறு, அது வளர்ந்தது போல, என் தம்பினானும் அதில் ஏறி குறைக்கச் சென்று, ஆபத்தியென்பது வேறு யாருக்கோ நடக்கம ஓடுகள் பழையை வை தூசிப்படிந்தவை மேலிருந்து கீழை தெரிந்த சிறிய ஊர் யாரோ அண்ணியன் அனுப்பி அஞ்சல் அட்டைப் படம் போல தோன்றியது. ஒரு மதியம் என் பாட்டி அந்த மரத்தின் கீழை அமர்ந்து கூர்மையான இறும்புக் கட்டரால் பாக்கை வெட்டிக்கொண்டிருந்தார் என் தம்பியும் நானும் சகோதரகள அறிவை விட உடலில் ஆற்றல் அதிகமாக இருக்கும் வயது அது உள்க அவன குறைவானன் உடியில் நான் அந்தக் கட்டையிருந்தேன். அது அவன் முகத்தின் இடத்துப் பக்கத்திற்கு அறுகே பட்டது, ரத்தம் உடனே வந்தது என்ன அம்மா பயமும் கோபமும் கலந்த ஒரே மூச்சில் ஓடி வந்தார் நான் ஓடினேன் பலமணி நேரம் ஓ நான் என் உடலை சிரிதாகினேன் என் மூச்சை அமைதியாகினேன் நான் உளிந்திருந்த சிரியாயிடத்தை விடை என்னையே இன்னும் சிரிதாகிக் கொண்டேன். சிரியவனாகிவிட்டால் என் கை செய்ததைத் திரும்பப் பெறமுடியுமோ என்று குழந்தை என்னம் போல, உளிந்திருக்கும்போது ஒரு குழந்தைக் கற்றுக்கொள்வது வி ஆனால், அந்த சிறிய இடத்தில் உளிந்திருந்த சிறுவன் ஏதோ ஒன்றைப் பழகிக்கொண்டிருந்தான். பலா ஆண்டுகளுக்குப் பிறகு, இன்னொரு தீவில் உள்ள ஒரு சிறைக் கூடத்தில் வெளியார முடியாத ஆரைக்குள் உடலை எப்படி சிறியதாகக்குவதை என்பதை என உடல நினைவுகூரும். சிறைக்கு நீண்டகாளத்திற்கு முன் நான் இன்னும் குறையின் மேலிருந்தேன். உறைந்து கீழே அவர்களிடம் கத்திக்கொண்டிருந்தேன். அவன் விழுந்த இடையின் பழத்தால் அவர் தாழ்ந்துக் குணிந்து இருந்ததை இன்னும் பார்க்கிறேன். அவன் விழுந்த முழு இடையையும் தனது உடலால் சுமந்த வழை ஒரு தாயைப்பட்டி மனிதர்கள் பல விஷயங்களை சொல்ல காயமடிந்தவன் நான் அல்ல. சாட்சியாக இருந்தவன் நான். சில நேரங்களில் எல்லாவற்றிலும் நீந்த நினைவைக் சுமப்பது சாட்சியே என்பதை நான் பின்னர் கட்டிருக்கொண்டேன். இங்கே ஒரு சிறிய விஷயத்தைச் சேர்க்க விரும்பிகிறேன். ஏனெனில் இந்தப் புத்தகத்தின் மீதியெல்லாம் அதை நீங்கள் புரிந்துகொள்வதில்தான் நிற்கிறது. அந்தக்கந்து சிறிய ஆரம்பத்தரணங்கள், எடுக்கப்பட்ட முழு, உதைத்தமாடு, பரந்தகட்ட, விழந்த உடலைத்தான் தாங்கிய தாய், அவற்றில் ஒன் அந்த தரணங்களில் எதிலும் நான் மெதுவாக வடிவமைக்கப்பட்டு கொண்டிருந்தேன் என்பதை அப்போது புரிந்துகொள்ளவில்லை. இப்போது மட்டுமே 20 ஆண்டுகளுக்கும் மேலாகி மதிதரை கடலில் உள்ள ஒரு சிரிய தீவில் ஒரு மேசையிருக்கை அமர்ந்து எழுதும்போது என்ன நடந்துகொண்டிருந்தது என்பதை பார்க்க ம கட்டர் திரும்ப பெரமுடியாதன் உடியைக் கட்டுக்கொடுத்தது. என் அம்மாவின் முதித்தியாகத்தைக் கட்டுக்கொடுத்தது. உள் சாட்சி கட்டுக்கொண்டிருந்தது ஆனால் இன்னும் அமைதியாக அமரா அது கட்டைப்படுத்த படவில்லை அது பின்னர் தான் வரும் மிகவும் பின்னர் நான் இன்னும் கர்ப்பனை செய்யாத இடத்தில் நான் பேர்க்கூடக் கேட்டிராத ஒரு தீவில் நான் அங்கு வந்து செய்கிறேன் என்று அறியாத மனிதனுக்காக ஏற்கன"
 };
 const bookChapters={
-  en:[{"chapter":1,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/99885ce0-e839-4df7-b55f-13c6d13a4d12.mp3"},{"chapter":2,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/c2b27de3-80b8-4a83-8e61-5fd635aadbfc.mp3"},{"chapter":3,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/6bc2cc4d-11dc-4eb9-b64c-0f596dfdce66.mp3"},{"chapter":4,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/61e312a7-ea07-4a76-93ab-67c5af65bc49.mp3"},{"chapter":5,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/df5ce571-7858-491e-b082-c32580bf0e23.mp3"},{"chapter":6,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/782bea8f-cd53-4927-af60-9403d4bbe79f.mp3"},{"chapter":7,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/75b61536-4bb4-4164-bb39-d18da3f6dc40.mp3"},{"chapter":8,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/fcbff388-7c29-4d0c-b248-9b65164f1348.mp3"},{"chapter":9,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/a3b11948-7120-4139-b67f-f1eab27464bd.mp3"},{"chapter":10,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/18718f9c-6edb-4268-a83d-fa728cc49e06.mp3"}],
-  ta:[{chapter:1,url:'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/24785943-5ad9-4ba2-b5b6-c3c2e6449f36.mp3'}]
-};
+  en:[{"chapter":1,"title":"The Boy Who Was Already Watching","url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/99885ce0-e839-4df7-b55f-13c6d13a4d12.mp3"},{"chapter":2,"title":"The Boat, the Tsunami, and the Boy Who Watched","url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/c2b27de3-80b8-4a83-8e61-5fd635aadbfc.mp3"},{"chapter":3,"title":"The Messenger of Ampara","url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/6bc2cc4d-11dc-4eb9-b64c-0f596dfdce66.mp3"},{"chapter":4,"title":"The Man on the Bicycle","url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/61e312a7-ea07-4a76-93ab-67c5af65bc49.mp3"},{"chapter":5,"title":"If Someone Told Me Not to Do a Thing, I Would Ask Quietly Inside, Why?","url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/df5ce571-7858-491e-b082-c32580bf0e23.mp3"},{"chapter":6,"title":"The Surah on the Flight","url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/782bea8f-cd53-4927-af60-9403d4bbe79f.mp3"},{"chapter":7,"title":"The Fire in the Name","url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/75b61536-4bb4-4164-bb39-d18da3f6dc40.mp3"},{"chapter":8,"title":"The Things I Carried in Silence","url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/fcbff388-7c29-4d0c-b248-9b65164f1348.mp3"},{"chapter":9,"title":"The Stillness My Father Never Named","url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/a3b11948-7120-4139-b67f-f1eab27464bd.mp3"},{"chapter":10,"title":"You Cannot Divide Her Day by Eight","url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/18718f9c-6edb-4268-a83d-fa728cc49e06.mp3"}],
+  ta:[{chapter:1,title:'Chapter 1',url:'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/24785943-5ad9-4ba2-b5b6-c3c2e6449f36.mp3'}]
+}
 
 function currentBookEntry(){
   const list=bookChapters[currentBookAudioLang]||bookChapters.en;
@@ -2871,6 +3098,10 @@ function currentBookEntry(){
 
 function currentBookUrl(){
   return currentBookEntry()?.url||'';
+}
+
+function currentBookTitle(){
+  return currentBookEntry()?.title||('Chapter '+currentBookChapter);
 }
 
 function bookPositionKey(lang=currentBookAudioLang,chapter=currentBookChapter){
@@ -2944,7 +3175,7 @@ function renderBookShelf(lang){
     const n=String(item.chapter).padStart(2,'0');
     return '<button class="book-chapter" onclick="openBookAudio(\''+(isTamil?'ta':'en')+'\','+item.chapter+')">'+
       '<span class="book-chapter-num">'+n+'</span>'+
-      '<span><b>Chapter '+item.chapter+'</b><small>Voice-only audiobook</small></span>'+
+      '<span><b>Chapter '+item.chapter+'</b><small>'+escapeHtml(item.title||'Voice-only audiobook')+'</small></span>'+
       '<span class="book-chapter-action">'+action+'</span>'+
     '</button>';
   }).join('');
@@ -2963,11 +3194,45 @@ function renderBookShelf(lang){
 const bookAudioEl=document.getElementById('bookAudioEl');
 const bookSeek=document.getElementById('bookSeek');
 
+function renderBookPlayerChapterNav(){
+  const list=bookChapters[currentBookAudioLang]||[];
+  const select=document.getElementById('bookChapterSelect');
+  if(select){
+    select.innerHTML=list.map(x=>'<option value="'+x.chapter+'" '+(x.chapter===currentBookChapter?'selected':'')+'>Chapter '+x.chapter+' · '+escapeHtml(x.title||'')+'</option>').join('');
+  }
+  const index=list.findIndex(x=>x.chapter===currentBookChapter);
+  const prev=document.getElementById('bookPrevChapterBtn');
+  const next=document.getElementById('bookNextChapterBtn');
+  if(prev)prev.disabled=index<=0;
+  if(next)next.disabled=index<0||index>=list.length-1;
+}
+
+function bookSelectChapter(value){
+  openBookAudio(currentBookAudioLang,Number(value)||1);
+}
+
+function bookPrevChapter(){
+  const list=bookChapters[currentBookAudioLang]||[];
+  const index=list.findIndex(x=>x.chapter===currentBookChapter);
+  if(index>0)openBookAudio(currentBookAudioLang,list[index-1].chapter);
+}
+
+function bookNextChapter(){
+  const list=bookChapters[currentBookAudioLang]||[];
+  const index=list.findIndex(x=>x.chapter===currentBookChapter);
+  if(index>=0&&index<list.length-1)openBookAudio(currentBookAudioLang,list[index+1].chapter);
+}
+
 function openBookAudio(lang,chapter=1){
   currentBookAudioLang=lang==='ta'?'ta':'en';
   const available=bookChapters[currentBookAudioLang]||[];
   const requested=available.find(x=>x.chapter===Number(chapter))||available[0];
   currentBookChapter=requested?.chapter||1;
+
+  if(!audio.paused)audio.pause();
+  if(typeof adhkarAudio!=='undefined'&&!adhkarAudio.paused)adhkarAudio.pause();
+  if(typeof soundLabAudio!=='undefined'&&!soundLabAudio.paused)soundLabAudio.pause();
+  if(typeof fearAudio!=='undefined'&&!fearAudio.paused)fearAudio.pause();
 
   bookAudioEl.pause();
   bookAudioEl.src=requested?.url||'';
@@ -2975,8 +3240,9 @@ function openBookAudio(lang,chapter=1){
 
   document.getElementById('bookAudioLanguage').textContent=currentBookAudioLang==='ta'?'Tamil Audiobook':'English Audiobook';
   const chapterLabel=document.getElementById('bookAudioChapter');
-  if(chapterLabel)chapterLabel.textContent='Chapter '+currentBookChapter+' · voice-only recording';
+  if(chapterLabel)chapterLabel.textContent='Chapter '+currentBookChapter+' · '+currentBookTitle();
   document.getElementById('bookPlayBtn').textContent='Play';
+  renderBookPlayerChapterNav();
 
   try{
     const t=bookResumeSeconds(currentBookAudioLang,currentBookChapter);
@@ -3043,7 +3309,20 @@ function syncBookAudio(){
   document.getElementById('bookPlayBtn').textContent=bookAudioEl.paused?'Play':'Pause';
   const mb=document.getElementById('bookMiniPlay'); if(mb)mb.textContent=bookAudioEl.paused?'▶':'Ⅱ';
   const mm=document.getElementById('bookMiniMeta'); if(mm)mm.textContent=(currentBookAudioLang==='ta'?'Tamil':'English')+' · '+fmt(t);
-  if(t>5)try{localStorage.setItem(bookPositionKey(),String(t))}catch(e){}
+  if(t>5)try{
+    localStorage.setItem(bookPositionKey(),String(t));
+    localStorage.setItem('heartclearLastBook',JSON.stringify({
+      lang:currentBookAudioLang,
+      chapter:currentBookChapter,
+      title:currentBookTitle(),
+      time:t,
+      duration:d,
+      completed:false,
+      updatedAt:Date.now()
+    }));
+  }catch(e){}
+  const note=document.getElementById('bookResumeNote');
+  if(note && t>5)note.textContent='Position saved · Chapter '+currentBookChapter+' · '+fmt(t)+(d?' of '+fmt(d):'');
   if('mediaSession' in navigator && d>0){
     try{
       navigator.mediaSession.playbackState=bookAudioEl.paused?'paused':'playing';
@@ -3100,7 +3379,27 @@ attachGlobalMiniEvents(bookAudioEl,'book');
 
 bookAudioEl.addEventListener('timeupdate',syncBookAudio);
 bookAudioEl.addEventListener('play',syncBookAudio);
-bookAudioEl.addEventListener('pause',syncBookAudio);
+bookAudioEl.addEventListener('pause',()=>{syncBookAudio();renderDashboard()});
+bookAudioEl.addEventListener('ended',()=>{
+  const d=Number.isFinite(bookAudioEl.duration)?bookAudioEl.duration:0;
+  try{
+    localStorage.setItem(bookPositionKey(),'0');
+    localStorage.setItem('heartclearLastBook',JSON.stringify({
+      lang:currentBookAudioLang,
+      chapter:currentBookChapter,
+      title:currentBookTitle(),
+      time:d,
+      duration:d,
+      completed:true,
+      updatedAt:Date.now()
+    }));
+  }catch(e){}
+  const note=document.getElementById('bookResumeNote');
+  const list=bookChapters[currentBookAudioLang]||[];
+  const idx=list.findIndex(x=>x.chapter===currentBookChapter);
+  if(note)note.textContent=idx>=0&&idx<list.length-1?'Chapter complete · choose Next Chapter when ready.':'Chapter complete.';
+  renderDashboard();
+});
 bookAudioEl.addEventListener('loadedmetadata',()=>{
   try{
     const saved=Number(localStorage.getItem('heartclearBookSpeed')||1);
@@ -3718,7 +4017,12 @@ function nextStep(){
 }
 
 function preparePlayer(){
+  playbackPhase='meditation';
+  audio.loop=false;
   audio.pause();
+  // Prefetch the closing sound while the guided recording plays.
+  if(natureAfterSeconds)loadNatureSound().catch(()=>{});
+  setNatureAfterSeconds(natureAfterSeconds);
   const pv=document.getElementById('practiceVisual');
   if(pv){
     pv.pause();
@@ -3852,6 +4156,7 @@ function renderDashboard(){
   const progress=document.getElementById('progressTitle');
   if(progress)progress.textContent=stats.days+' active day'+(stats.days===1?'':'s')+' · '+stats.areas+' area'+(stats.areas===1?'':'s')+' explored';
 
+  renderLibraryResumeCard();
   const card=document.getElementById('homeResumeCard');
   if(!card)return;
   try{
@@ -3864,6 +4169,53 @@ function renderDashboard(){
       card.classList.remove('show');
     }
   }catch(e){card.classList.remove('show')}
+}
+
+function renderLibraryResumeCard(){
+  const card=document.getElementById('homeLibraryResumeCard');
+  if(!card)return;
+  try{
+    const last=JSON.parse(localStorage.getItem('heartclearLastBook')||'null');
+    if(!last){card.classList.remove('show');return}
+    const list=bookChapters[last.lang]||[];
+    let chapter=Number(last.chapter)||1;
+    let entry=list.find(x=>x.chapter===chapter);
+    let meta='';
+
+    if(last.completed){
+      const idx=list.findIndex(x=>x.chapter===chapter);
+      if(idx>=0&&idx<list.length-1){
+        entry=list[idx+1];
+        chapter=entry.chapter;
+        meta=(last.lang==='ta'?'Tamil':'English')+' · Next chapter';
+      }else{
+        card.classList.remove('show');return;
+      }
+    }else{
+      const time=Number(last.time)||0;
+      const duration=Number(last.duration)||0;
+      if(time<5){card.classList.remove('show');return}
+      meta=(last.lang==='ta'?'Tamil':'English')+' · '+fmt(time)+(duration?' of '+fmt(duration):'');
+    }
+
+    card.classList.add('show');
+    document.getElementById('homeLibraryResumeTitle').textContent='Shadows of Truth · Chapter '+chapter;
+    document.getElementById('homeLibraryResumeMeta').textContent=meta+' · '+(entry?.title||'Audiobook');
+  }catch(e){card.classList.remove('show')}
+}
+
+function continueLastBook(){
+  try{
+    const last=JSON.parse(localStorage.getItem('heartclearLastBook')||'null');
+    if(!last){openCollection('english');return}
+    const list=bookChapters[last.lang]||[];
+    let chapter=Number(last.chapter)||1;
+    if(last.completed){
+      const idx=list.findIndex(x=>x.chapter===chapter);
+      if(idx>=0&&idx<list.length-1)chapter=list[idx+1].chapter;
+    }
+    openBookAudio(last.lang||'en',chapter);
+  }catch(e){openCollection('english')}
 }
 
 function continueLastSession(){
@@ -4040,6 +4392,21 @@ function syncPracticeVisual(force=false){
 }
 
 async function togglePlay(){
+  if(playbackPhase==='nature'){
+    if(audio.paused){
+      try{
+        if(!audio.getAttribute('src')||!audio.getAttribute('src').startsWith('blob:')){
+          const url=await loadNatureSound();
+          beginNatureSound(url);
+        }else await audio.play();
+        rememberActiveMedia('meditation');
+      }catch(e){
+        document.getElementById('naturePlaybackStatus').textContent='Could not play nature audio. Check connection.';
+      }
+    }else audio.pause();
+    syncNature();
+    return;
+  }
   if(audio.paused){
     try{
       await audio.play();
@@ -4060,12 +4427,24 @@ async function togglePlay(){
 }
 
 function jump(delta){
-  audio.currentTime=Math.max(0,Math.min(chosenSeconds,(audio.currentTime||0)+delta));
+  if(playbackPhase==='nature'){
+    audio.currentTime=Math.max(0,Math.min(Number.isFinite(audio.duration)?audio.duration:180,(audio.currentTime||0)+delta));
+    syncNature();
+    return;
+  }
+  audio.currentTime=Math.max(0,Math.min(meditationActualDuration(),(audio.currentTime||0)+delta));
   syncPracticeVisual(true);
   sync();
 }
 
 function restart(){
+  if(playbackPhase==='nature'){
+    audio.currentTime=0;
+    natureCycleCount=0;
+    natureLastPosition=0;
+    syncNature();
+    return;
+  }
   audio.pause();
   audio.currentTime=0;
   const pv=document.getElementById('practiceVisual');
@@ -4078,11 +4457,14 @@ function restart(){
 }
 
 function finish(){
+  if(playbackPhase==='nature'){finishNature();return;}
   completeSession(false);
 }
 
 function sync(){
-  let t=Math.min(chosenSeconds,audio.currentTime||0);
+  if(playbackPhase==='nature'){syncNature();return;}
+  const actualDuration=meditationActualDuration();
+  let t=Math.min(actualDuration,audio.currentTime||0);
 
   if(sleepStopAt>0 && t>=sleepStopAt){
     audio.pause();
@@ -4091,11 +4473,8 @@ function sync(){
     document.getElementById('playerNote').textContent='Timer finished.';
   }
 
-  if(t>=chosenSeconds){
-    audio.pause();
-    t=chosenSeconds;
-    document.getElementById('playerNote').textContent='Session complete.';
-  }else if(t>20){
+  // Never stop an instructor early because a listed duration differs from the file.
+  if(t>20 && !audio.ended){
     try{localStorage.setItem('clearWithinResume:'+chosenKicker,String(t))}catch(e){}
     rememberLastSession(t);
   }
@@ -4103,11 +4482,11 @@ function sync(){
   if(!scrubbing) seek.value=t;
   document.getElementById('elapsed').textContent=fmt(t);
   document.getElementById('clock').textContent=fmt(t);
-  document.getElementById('total').textContent=fmt(chosenSeconds);
-  remainingEl.textContent='−'+fmt(Math.max(0,chosenSeconds-t));
+  document.getElementById('total').textContent=fmt(actualDuration);
+  remainingEl.textContent='−'+fmt(Math.max(0,actualDuration-t));
 
-  const playing=!audio.paused && t<chosenSeconds;
-  document.getElementById('playBtn').textContent=playing?'Pause':(t>=chosenSeconds?'Play again':'Play');
+  const playing=!audio.paused && !audio.ended;
+  document.getElementById('playBtn').textContent=playing?'Pause':(audio.ended?'Play again':'Play');
   playCore.textContent=playing?'❚❚':'▶';
   const wf=document.getElementById('waveform'); if(wf)wf.classList.toggle('playing',playing);
   const pv=document.getElementById('practiceVisual');
@@ -4137,7 +4516,12 @@ function sync(){
 audio.addEventListener('timeupdate',sync);
 audio.addEventListener('play',sync);
 audio.addEventListener('pause',sync);
-audio.addEventListener('ended',()=>{sync();completeSession(true)});
+audio.addEventListener('ended',()=>{
+  if(playbackPhase==='nature'){finishNature();return;}
+  sync();
+  startAftercare();
+});
+audio.addEventListener('loadedmetadata',sync);
 audio.addEventListener('error',()=>{
   document.getElementById('playerNote').textContent='Audio could not load. Check the connection and try again.';
 });
@@ -4148,7 +4532,8 @@ seek.addEventListener('input',()=>{
   document.getElementById('clock').textContent=fmt(Number(seek.value)||0);
 });
 volume.addEventListener('input',()=>{
-  audio.volume=Number(volume.value);
+  if(playbackPhase==='nature')syncNature();
+  else audio.volume=Number(volume.value);
   try{localStorage.setItem('sufiVolume',String(audio.volume))}catch(e){}
 });
 try{
@@ -4157,6 +4542,7 @@ try{
   if(Number.isFinite(saved) && saved>=0 && saved<=1){audio.volume=saved;volume.value=saved}
   else {audio.volume=.85;volume.value=.85}
 }catch(e){audio.volume=.85;volume.value=.85}
+setNatureAfterSeconds(natureAfterSeconds);
 setInterval(sync,500);
 
 const introVideo=document.getElementById('introVideo');
