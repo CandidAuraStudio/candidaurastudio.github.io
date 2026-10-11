@@ -7,7 +7,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="HeartClear">
-<link rel="manifest" href="./manifest.webmanifest">
+<link rel="manifest" href="./manifest.webmanifest?v=79-install-fix">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+<link rel="apple-touch-icon" href="./icon-192.png">
 <title>HC · HeartClear</title>
 <style>
 :root{
@@ -1116,6 +1118,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
 
 
 
+.install-card{max-height:calc(100dvh - 32px);overflow-y:auto}
 /* Fear Sound Familiarity v52 */
 .fear-hero{
   padding:20px 18px;border-radius:24px;
@@ -1397,6 +1400,11 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       <div class="install-step"><span>3</span><div><b>Add to Home Screen</b><small>Turn on “Open as Web App”, then tap Add.</small></div></div>
     </div>
 
+    <div class="install-steps" id="androidInstallSteps" style="display:none">
+      <div class="install-step"><span>1</span><div><b>Tap Chrome's three-dot menu (⋮)</b><small>At the top-right of Chrome, above HeartClear.</small></div></div>
+      <div class="install-step"><span>2</span><div><b>Choose Add to Home screen</b><small>Chrome may show Install app directly instead.</small></div></div>
+      <div class="install-step"><span>3</span><div><b>Confirm Install</b><small>HeartClear will appear in your Android app list.</small></div></div>
+    </div>
     <div class="install-actions">
       <button class="install-primary" id="installPrimaryBtn" onclick="handleInstallAction()">Install HeartClear</button>
       <button class="install-secondary" onclick="dismissInstallSheet()">Continue in browser</button>
@@ -2713,17 +2721,21 @@ function showInstallSheet(force=false){
 
   const ios=isIOSDevice();
   const iosSteps=document.getElementById('iosInstallSteps');
+  const androidSteps=document.getElementById('androidInstallSteps');
   const button=document.getElementById('installPrimaryBtn');
   const subtitle=document.getElementById('installSubtitle');
 
   if(ios){
     iosSteps.style.display='grid';
-    if(button)button.textContent=isSafariBrowser()?'Show install steps':'Open in Safari to install';
+    if(androidSteps)androidSteps.style.display='none';
+    if(button){button.style.display='block';button.textContent=isSafariBrowser()?'Show install steps':'Open in Safari to install';}
     if(subtitle)subtitle.textContent='iPhone requires one final Add to Home Screen confirmation.';
   }else{
     iosSteps.style.display='none';
-    if(button)button.textContent=deferredInstallPrompt?'Install HeartClear':'Install / Add to Home Screen';
-    if(subtitle)subtitle.textContent='Add HeartClear to your Home Screen for a full-screen app experience.';
+    const canPrompt=!!deferredInstallPrompt;
+    if(androidSteps)androidSteps.style.display=canPrompt?'none':'grid';
+    if(button){button.style.display=canPrompt?'block':'none';button.textContent='Install HeartClear';}
+    if(subtitle)subtitle.textContent=canPrompt?'Tap Install HeartClear to start installation.':'Use the three-dot menu in Chrome. The steps below are instructions, not a download button.';
   }
 
   sheet.classList.add('show');
@@ -2756,14 +2768,18 @@ async function handleInstallAction(){
     return;
   }
 
-  const button=document.getElementById('installPrimaryBtn');
-  if(button)button.textContent='Browser menu → Install app';
+  const steps=document.getElementById('androidInstallSteps');
+  if(steps)steps.style.display='grid';
 }
 
 window.addEventListener('beforeinstallprompt',event=>{
   event.preventDefault();
   deferredInstallPrompt=event;
-  if(!isStandaloneApp())setTimeout(()=>showInstallSheet(false),600);
+  if(!isStandaloneApp()){
+    const sheet=document.getElementById('installSheet');
+    if(sheet && sheet.classList.contains('show'))showInstallSheet(true);
+    else setTimeout(()=>showInstallSheet(false),600);
+  }
 });
 
 window.addEventListener('appinstalled',()=>{
