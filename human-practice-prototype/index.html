@@ -1283,6 +1283,48 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
   box-shadow:0 8px 28px rgba(255,255,255,.10);
 }
 
+
+/* Offline access + white media controls v68 */
+.player-inline-actions{
+  display:flex;justify-content:center;gap:9px;margin-top:12px;flex-wrap:wrap
+}
+.player-inline-actions .offline-action,
+.player-inline-actions .option-select{
+  min-height:42px;padding:10px 13px;border-radius:13px
+}
+#playBtn,
+#bookPlayBtn,
+#adhkarPlayBtn,
+#soundLabPlayBtn,
+#fearPlayBtn,
+.global-mini-btn.primary,
+.quick-start{
+  background:#ffffff!important;
+  color:#07131b!important;
+  border:1px solid rgba(255,255,255,.94)!important;
+  box-shadow:0 8px 28px rgba(255,255,255,.10)!important;
+}
+.downloads-list{display:grid;gap:10px;margin-top:16px}
+.download-item{
+  width:100%;display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:11px;align-items:center;
+  padding:13px 14px;border-radius:18px;border:1px solid rgba(198,225,236,.08);
+  background:rgba(5,18,27,.46);color:var(--ink);font:inherit;text-align:left
+}
+.download-item-icon{
+  width:42px;height:42px;border-radius:13px;display:grid;place-items:center;
+  background:linear-gradient(145deg,rgba(22,52,66,.78),rgba(7,20,30,.88));
+  border:1px solid rgba(202,227,235,.08);color:#d7bc89;font-size:15px
+}
+.download-item b{display:block;font-size:13px}
+.download-item small{display:block;color:#879aa4;font-size:10px;line-height:1.4;margin-top:3px}
+.download-open{color:#ffffff;font-size:11px}
+.download-empty{
+  margin-top:16px;padding:24px 16px;border-radius:20px;text-align:center;
+  border:1px dashed rgba(198,225,236,.12);background:rgba(5,18,27,.35)
+}
+.download-empty b{display:block;font-size:14px}
+.download-empty p{font-size:11px;margin:6px auto 0;max-width:300px}
+
 </style>
 </head>
 <body>
@@ -1384,6 +1426,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
     </div>
     <div class="quick-practice" style="margin-bottom:12px"><div><strong>Nature sounds</strong><small>Birds · fire · ocean · rain · thunder</small></div><button class="quick-start" onclick="openSoundLab()" aria-label="Open nature sounds">▶</button></div>
     <div class="quick-practice" style="margin-bottom:12px"><div><strong>OM chanting</strong><small>Long video · Hindu Insight</small></div><button class="quick-start" onclick="openOmVideo()" aria-label="Open OM video">▶</button></div>
+    <div class="quick-practice" style="margin-bottom:12px"><div><strong>Offline downloads</strong><small id="homeOfflineMeta">Saved sessions and audiobook chapters</small></div><button class="quick-start" onclick="show('downloads')" aria-label="Open offline downloads">↓</button></div>
     <div class="quick-practice">
       <div><strong>Deep Wake Up</strong><small>Morning · guided breath</small></div>
       <button class="quick-start" onclick="startSettleQuick()" aria-label="Start Settle">▶</button>
@@ -2077,6 +2120,17 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
   </div>
 </section>
 
+<section class="screen" id="downloads">
+  <div class="glass">
+    <button class="collection-back" onclick="show('home')">‹ Home</button>
+    <div class="kicker">On this device</div>
+    <h2>Offline downloads</h2>
+    <p>Open saved sessions without searching for them again. Meditation downloads still follow the normal HeartClear preparation and instruction flow.</p>
+    <div class="downloads-list" id="downloadsList"></div>
+    <button class="btn secondary" id="clearDownloadsBtn" onclick="clearOfflineMedia()">Clear offline media</button>
+  </div>
+</section>
+
 <section class="screen" id="settings">
   <div class="glass">
     <div class="kicker">HeartClear</div>
@@ -2094,7 +2148,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       </div>
       <div class="setting-row">
         <div><strong>Offline media</strong><small id="offlineStorageText">No saved media yet</small></div>
-        <button class="offline-action" onclick="clearOfflineMedia()">Clear</button>
+        <button class="offline-action" onclick="show('downloads')">View</button>
       </div>
       <div class="setting-row">
         <div><strong>Local time</strong><small id="deviceClockText">Checking device time…</small></div>
@@ -2109,7 +2163,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v67</div>
+    <div class="app-version">HeartClear · prototype v68</div>
   </div>
 </section>
 
@@ -2204,6 +2258,10 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       <button class="primary" id="playBtn" onclick="togglePlay()">Play</button>
       <button onclick="jump(10)" aria-label="Forward 10 seconds">+10s</button>
     </div>
+    <div class="player-inline-actions">
+      <button class="offline-action" id="offlinePracticeBtn" onclick="togglePracticeOffline()">↓ Save offline</button>
+      <button class="option-select" onclick="toggleOptions()">More options</button>
+    </div>
 
     <div class="resume-card" id="resumeCard">
       <span id="resumeText">Continue where you left off?</span>
@@ -2249,10 +2307,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
         <div><label>Session</label><small>Start again from 00:00</small></div>
         <button class="option-select" onclick="restart()">Restart</button>
       </div>
-      <div class="option-row">
-        <div><label>Offline</label><small>Save this meditation audio on this device</small></div>
-        <button class="offline-action" id="offlinePracticeBtn" onclick="togglePracticeOffline()">Save offline</button>
-      </div>
+
     </div>
 
     <div class="player-status" id="playerNote">Press Play when you are ready.</div>
@@ -2638,6 +2693,8 @@ async function togglePracticeOffline(){
   btn.disabled=false;
   await refreshPracticeOfflineButton();
   updateOfflineStorageText();
+  updateHomeOfflineCount();
+  if(currentScreenId==='downloads')renderDownloads();
 }
 
 async function refreshBookOfflineButton(){
@@ -2670,6 +2727,8 @@ async function toggleBookOffline(){
   btn.disabled=false;
   await refreshBookOfflineButton();
   updateOfflineStorageText();
+  updateHomeOfflineCount();
+  if(currentScreenId==='downloads')renderDownloads();
 }
 
 async function updateOfflineStorageText(){
@@ -2693,6 +2752,8 @@ async function clearOfflineMedia(){
   updateOfflineStorageText();
   refreshPracticeOfflineButton();
   refreshBookOfflineButton();
+  updateHomeOfflineCount();
+  if(currentScreenId==='downloads')renderDownloads();
 }
 
 function show(id){
@@ -2710,7 +2771,7 @@ function show(id){
   document.getElementById('bottomNav').classList.toggle('hidden',immersive);
   document.getElementById('appTopBar').classList.toggle('hidden',immersive);
 
-  const context={home:'Home',practices:'Meditation',human:'Human Practice',humanCategory:'Human Practice',returnJourney:'Observation',fearPractice:'Fear',fearPlayer:'Fear',soundLab:'Sound Lab',soundLabPlayer:'Sound Lab',library:'Library',collection:'Library',sacred:'Sacred Sound',sacredDetail:'Sacred Sound',history:'History',settings:'Settings'}[id]||'';
+  const context={home:'Home',practices:'Meditation',human:'Human Practice',humanCategory:'Human Practice',returnJourney:'Observation',fearPractice:'Fear',fearPlayer:'Fear',soundLab:'Sound Lab',soundLabPlayer:'Sound Lab',downloads:'Offline',library:'Library',collection:'Library',sacred:'Sacred Sound',sacredDetail:'Sacred Sound',history:'History',settings:'Settings'}[id]||'';
   const ctx=document.getElementById('topContext'); if(ctx)ctx.textContent=context;
 
   if(['home','practices','soundLab','library','sacred'].includes(id)){
@@ -2723,8 +2784,9 @@ function show(id){
   if(av && id!=='sacredSession') av.pause();
   const ba=document.getElementById('bookAudioEl');
   updateBookMini(id);
-  if(id==='home'){setGreeting();renderDashboard();}
+  if(id==='home'){setGreeting();renderDashboard();updateHomeOfflineCount();}
   if(id==='history') renderHistory();
+  if(id==='downloads') renderDownloads();
   if(id==='settings') renderSettings();
   if(id==='player'||id==='sacredSession')updatePipButtons();
   renderGlobalMini();
@@ -3191,6 +3253,104 @@ const bookContent={
 const bookChapters={
   en:[{"chapter":1,"title":"The Boy Who Was Already Watching","url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/99885ce0-e839-4df7-b55f-13c6d13a4d12.mp3"},{"chapter":2,"title":"The Boat, the Tsunami, and the Boy Who Watched","url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/c2b27de3-80b8-4a83-8e61-5fd635aadbfc.mp3"},{"chapter":3,"title":"The Messenger of Ampara","url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/6bc2cc4d-11dc-4eb9-b64c-0f596dfdce66.mp3"},{"chapter":4,"title":"The Man on the Bicycle","url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/61e312a7-ea07-4a76-93ab-67c5af65bc49.mp3"},{"chapter":5,"title":"If Someone Told Me Not to Do a Thing, I Would Ask Quietly Inside, Why?","url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/df5ce571-7858-491e-b082-c32580bf0e23.mp3"},{"chapter":6,"title":"The Surah on the Flight","url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/782bea8f-cd53-4927-af60-9403d4bbe79f.mp3"},{"chapter":7,"title":"The Fire in the Name","url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/75b61536-4bb4-4164-bb39-d18da3f6dc40.mp3"},{"chapter":8,"title":"The Things I Carried in Silence","url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/fcbff388-7c29-4d0c-b248-9b65164f1348.mp3"},{"chapter":9,"title":"The Stillness My Father Never Named","url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/a3b11948-7120-4139-b67f-f1eab27464bd.mp3"},{"chapter":10,"title":"You Cannot Divide Her Day by Eight","url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/18718f9c-6edb-4268-a83d-fa728cc49e06.mp3"}],
   ta:[{chapter:1,title:'Chapter 1',url:'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/24785943-5ad9-4ba2-b5b6-c3c2e6449f36.mp3'}]
+}
+
+const offlineMeditationCatalog={
+  wake:{
+    title:'Deep Wake Up',meta:'Morning · guided breath · 10 min',
+    seconds:600,
+    url:'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/f4d262f6-56fe-40e3-84ea-930c11fe7c54.mp3',
+    kicker:'Deep Wake Up',subtitle:'Morning · guided breath',
+    intro:'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/7fd8e8ee-cc5a-49c3-940b-6b4330a42c5e.mp4',
+    visual:'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/d10879c1-d600-400c-999e-3237ec672b86.mp4'
+  },
+  noon:{
+    title:'Noon Reset',meta:'Noon · guided breath · 40 min',
+    seconds:2400,
+    url:'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/b7f691a0-16a1-4449-b143-38e7b3be74df.mp3',
+    kicker:'Noon Reset',subtitle:'Noon · guided breath',
+    intro:'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/a71c8fd6-be58-4262-83ef-1469597b1630.mp4',
+    visual:'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/40c72fc3-df5b-4dc9-a518-2ba3ab7f4ac3.mp4'
+  },
+  evening:{
+    title:'Evening Release',meta:'Evening · guided breath · 60 min',
+    seconds:3600,
+    url:'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/93c0e1fe-0e8b-4e7e-9277-47edf8dd0b63.mp3',
+    kicker:'Evening Release',subtitle:'Evening · guided breath',
+    intro:'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/12095b12-f0ae-4859-9b9b-cf28c8224987.mp4',
+    visual:'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/c1a8df3c-dabd-4b96-ac42-92f57d3f1ce1.mp4'
+  },
+  sleep:{
+    title:'Deep Sleep',meta:'Night · nose only · 60 min',
+    seconds:3600,
+    url:'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/74f43c24-d734-4ace-b1d0-f1c3263cb299.mp3',
+    kicker:'Deep Sleep',subtitle:'Night · nose only',
+    intro:'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/e4717cb6-dae0-4bce-a4c3-f1ccab0fb9bf.mp4',
+    visual:'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/c8bffc30-9905-4e18-8321-e6ecbb597947.mp4'
+  }
+};
+
+function launchDownloadedMeditation(key){
+  const x=offlineMeditationCatalog[key];
+  if(!x)return;
+  choosePractice(x.seconds,x.url,x.kicker,x.subtitle,x.intro,x.visual);
+}
+
+async function offlineItems(){
+  const out=[];
+  for(const [key,x] of Object.entries(offlineMeditationCatalog)){
+    if(await cacheHas(x.url))out.push({kind:'meditation',key,title:x.title,meta:x.meta});
+  }
+  for(const [lang,list] of Object.entries(bookChapters)){
+    for(const chapter of list){
+      if(await cacheHas(chapter.url)){
+        out.push({
+          kind:'book',lang,chapter:chapter.chapter,
+          title:'Shadows of Truth · Chapter '+chapter.chapter,
+          meta:(lang==='ta'?'Tamil':'English')+' audiobook · '+(chapter.title||'')
+        });
+      }
+    }
+  }
+  return out;
+}
+
+async function updateHomeOfflineCount(){
+  const el=document.getElementById('homeOfflineMeta');
+  if(!el)return;
+  try{
+    const items=await offlineItems();
+    el.textContent=items.length
+      ?items.length+' saved item'+(items.length===1?'':'s')+' · tap to open'
+      :'No saved media yet · tap to view';
+  }catch(e){
+    el.textContent='Saved sessions and audiobook chapters';
+  }
+}
+
+async function renderDownloads(){
+  const list=document.getElementById('downloadsList');
+  if(!list)return;
+  list.innerHTML='<div class="download-empty"><b>Checking saved media…</b><p>HeartClear is reading the downloads stored on this device.</p></div>';
+  const items=await offlineItems();
+  if(!items.length){
+    list.innerHTML='<div class="download-empty"><b>No offline downloads yet</b><p>Open a meditation or audiobook chapter and tap Save offline beside the player controls.</p></div>';
+    updateHomeOfflineCount();
+    return;
+  }
+  list.innerHTML=items.map(item=>{
+    if(item.kind==='meditation'){
+      return '<button class="download-item" onclick="launchDownloadedMeditation(\''+item.key+'\')">'+
+        '<span class="download-item-icon">◌</span>'+
+        '<span><b>'+escapeHtml(item.title)+'</b><small>'+escapeHtml(item.meta)+'</small></span>'+
+        '<span class="download-open">Open ›</span></button>';
+    }
+    return '<button class="download-item" onclick="openBookAudio(\''+item.lang+'\','+item.chapter+')">'+
+      '<span class="download-item-icon">Aa</span>'+
+      '<span><b>'+escapeHtml(item.title)+'</b><small>'+escapeHtml(item.meta)+'</small></span>'+
+      '<span class="download-open">Open ›</span></button>';
+  }).join('');
+  updateHomeOfflineCount();
 }
 
 function currentBookEntry(){
@@ -4074,7 +4234,7 @@ function choosePractice(seconds,url,kicker,title,introUrl,visualUrl){
   renderStep();
   preparePlayer();
   try{localStorage.setItem('sufiLastPractice',chosenKicker)}catch(e){}
-  startIntro();
+  showSessionReady();
 }
 
 function showSessionReady(){
