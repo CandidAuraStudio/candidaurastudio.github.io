@@ -1498,6 +1498,170 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
   #player .player-artwork::before,#player .player-artwork::after,
   #practices .practice-card .practice-art::after{animation:none!important}
 }
+
+/* Home hierarchy correction — current branch */
+#home{--hc-home-gap:14px}
+.hc-home-greeting-row{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:2px 2px 4px
+}
+#home .home-greeting{
+  font-size:22px;font-weight:720;letter-spacing:-.02em;color:#edf3f5
+}
+.hc-home-primary{margin-top:10px}
+.hc-recommended-card,.hc-primary-resume{
+  position:relative;overflow:hidden;padding:19px;border-radius:24px;
+  border:1px solid rgba(210,229,236,.11);
+  background:
+    radial-gradient(circle at 92% 4%,rgba(220,183,116,.13),transparent 28%),
+    linear-gradient(145deg,rgba(18,43,56,.90),rgba(5,17,27,.94));
+  box-shadow:0 18px 44px rgba(0,0,0,.20)
+}
+.hc-recommended-card .eyebrow,.hc-primary-resume .eyebrow{
+  color:#c2a36e;font-size:10px;letter-spacing:.11em;text-transform:uppercase
+}
+.hc-recommended-card strong,.hc-primary-resume strong{
+  display:block;font-size:22px;margin-top:7px;color:#f1f5f6
+}
+.hc-recommended-card small,.hc-primary-resume small{
+  display:block;color:#a8b8bf;font-size:11px;line-height:1.45;margin-top:5px
+}
+.hc-home-primary-btn,.hc-primary-resume button{
+  margin-top:15px;width:100%;min-height:46px;border:0;border-radius:15px;
+  background:linear-gradient(180deg,#dfbd80,#b98349);color:#07131b;
+  font:inherit;font-weight:800
+}
+.hc-home-secondary-resumes{display:grid;gap:9px;margin-top:10px}
+#home .hc-secondary-resume{
+  padding:12px 13px;border-radius:16px;border:1px solid rgba(202,227,235,.08);
+  background:rgba(5,18,27,.45);box-shadow:none
+}
+#home .hc-secondary-resume .eyebrow{font-size:9px;color:#9d865f}
+#home .hc-secondary-resume strong{font-size:13px;margin-top:4px}
+#home .hc-secondary-resume small{font-size:10px;color:#96a8b0}
+#home .hc-secondary-resume button{
+  width:auto;margin-top:9px;padding:8px 11px;min-height:0;border-radius:11px;
+  border:1px solid rgba(202,227,235,.11);background:transparent;color:#d5e1e5;
+  font:inherit;font-size:10px;font-weight:650
+}
+.hc-quick-grid{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:var(--hc-home-gap)
+}
+.hc-quick-tile{
+  min-height:82px;padding:11px 8px;border-radius:17px;border:1px solid rgba(202,227,235,.09);
+  background:rgba(6,20,29,.52);color:#dce6ea;font:inherit;text-align:left
+}
+.hc-quick-tile span{
+  width:29px;height:29px;border-radius:10px;display:grid;place-items:center;
+  margin-bottom:9px;background:rgba(25,51,63,.70);color:#c9a96f;font-size:12px
+}
+.hc-quick-tile b{display:block;font-size:11px}
+.hc-quick-tile small{display:block;color:#91a4ad;font-size:9px;margin-top:3px;line-height:1.25}
+.hc-starter-card{
+  margin-top:var(--hc-home-gap);padding:15px 16px;border-radius:19px;
+  border:1px solid rgba(202,227,235,.08);background:rgba(5,18,27,.45);
+  display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px
+}
+.hc-starter-card .eyebrow{font-size:9px;color:#9d865f;text-transform:uppercase;letter-spacing:.1em}
+.hc-starter-card b{display:block;font-size:15px;margin-top:4px}
+.hc-starter-card small{display:block;color:#96a8b0;font-size:10px;margin-top:4px}
+.hc-starter-card button{
+  border:1px solid rgba(202,227,235,.11);background:transparent;color:#d7e1e5;
+  border-radius:12px;padding:10px 12px;font:inherit;font-size:10px
+}
+.hc-home-section{margin-top:18px}
+.hc-home-section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.hc-home-section-head h3{margin:0;font-size:15px}
+.hc-home-section-head button{
+  border:0;background:transparent;color:#a88d61;font:inherit;font-size:10px;padding:4px
+}
+.hc-sound-strip{
+  display:grid;grid-auto-flow:column;grid-auto-columns:minmax(150px,64%);
+  gap:9px;overflow-x:auto;scroll-snap-type:x proximity;padding-bottom:4px;
+  scrollbar-width:none
+}
+.hc-sound-strip::-webkit-scrollbar{display:none}
+.hc-sound-card{
+  scroll-snap-align:start;min-height:104px;padding:14px;border-radius:18px;
+  border:1px solid rgba(202,227,235,.08);
+  background:linear-gradient(150deg,rgba(16,39,51,.75),rgba(5,18,27,.68));
+  color:#e1eaed;font:inherit;text-align:left
+}
+.hc-sound-card span{display:block;color:#c8a96f;font-size:15px;margin-bottom:17px}
+.hc-sound-card b{display:block;font-size:13px}
+.hc-sound-card small{display:block;color:#96a8b0;font-size:10px;line-height:1.35;margin-top:4px}
+#home .hc-favourites{margin-top:18px}
+#home .hc-favourites .section-head small{display:none}
+.hc-daily-quiet{
+  margin-top:18px;padding:13px 14px;border-radius:17px;
+  border:1px solid rgba(202,227,235,.07);background:rgba(5,18,27,.36)
+}
+.hc-daily-tag{
+  color:#a98e64;font-size:9px;letter-spacing:.11em;text-transform:uppercase
+}
+.hc-daily-quiet b{display:block;font-size:13px;margin-top:5px}
+.hc-daily-quiet p{margin:5px 0 0;color:#a4b4bb;font-size:10px;line-height:1.45}
+.hc-week-line{
+  width:100%;margin-top:12px;padding:12px 13px;border-radius:15px;
+  border:1px solid rgba(202,227,235,.07);background:rgba(5,18,27,.35);
+  color:#dce6e9;font:inherit;display:flex;align-items:center;gap:10px;text-align:left
+}
+.hc-week-line b{font-size:11px}
+.hc-week-line span{margin-left:auto;color:#9aadb5;font-size:10px}
+.hc-week-line i{font-style:normal;color:#a88d61}
+.hc-library-offline-link{
+  display:inline-flex;margin-top:12px;border:0;background:transparent;color:#ae9466;
+  font:inherit;font-size:11px;padding:4px 0
+}
+.hc-home-sheet-backdrop{
+  position:fixed;inset:0;z-index:170;display:none;align-items:flex-end;
+  background:rgba(2,7,11,.62);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)
+}
+.hc-home-sheet-backdrop.show{display:flex}
+.hc-home-sheet{
+  width:100%;max-width:560px;margin:0 auto;padding:20px 17px calc(18px + env(safe-area-inset-bottom,0px));
+  border-radius:26px 26px 0 0;border:1px solid rgba(207,230,237,.12);
+  background:linear-gradient(160deg,rgba(15,36,47,.995),rgba(4,14,22,.995));
+  box-shadow:0 -24px 70px rgba(0,0,0,.45)
+}
+.hc-home-sheet .kicker{margin-bottom:5px}
+.hc-home-sheet h3{font-size:21px;margin:0}
+.hc-home-sheet p{font-size:11px;line-height:1.55;color:#a0b2ba}
+.hc-sheet-duration{display:flex;gap:8px;flex-wrap:wrap;margin:13px 0}
+.hc-sheet-duration button{
+  border:1px solid rgba(202,227,235,.10);background:rgba(7,22,31,.60);color:#a8bbc2;
+  border-radius:999px;padding:9px 12px;font:inherit;font-size:10px
+}
+.hc-sheet-duration button.active{
+  color:#e1c58f;border-color:rgba(215,181,116,.27);background:rgba(117,80,38,.16)
+}
+.hc-sheet-actions{display:grid;gap:8px;margin-top:14px}
+.hc-sheet-actions .primary{
+  min-height:46px;border:0;border-radius:15px;background:linear-gradient(180deg,#dfbd80,#b98349);
+  color:#07131b;font:inherit;font-weight:800
+}
+.hc-sheet-actions .secondary{
+  min-height:42px;border:1px solid rgba(202,227,235,.10);border-radius:14px;
+  background:transparent;color:#a8bbc2;font:inherit
+}
+.hc-sounds-hub-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.hc-sounds-hub-card{
+  min-height:145px;border-radius:21px;padding:16px;border:1px solid rgba(202,227,235,.09);
+  background:linear-gradient(150deg,rgba(16,40,52,.80),rgba(5,18,27,.85));
+  color:#e2eaed;font:inherit;text-align:left
+}
+.hc-sounds-hub-card span{display:block;font-size:18px;color:#caa96f;margin-bottom:24px}
+.hc-sounds-hub-card b{display:block;font-size:14px}
+.hc-sounds-hub-card small{display:block;color:#93a6af;font-size:10px;line-height:1.4;margin-top:5px}
+@media(min-width:760px){
+  #home{max-width:980px}
+  .hc-home-secondary-resumes{grid-template-columns:1fr 1fr}
+  .hc-quick-grid{gap:11px}
+  .hc-sound-strip{grid-auto-flow:initial;grid-template-columns:repeat(3,1fr);overflow:visible}
+  .hc-home-wide-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px;align-items:start}
+  .hc-sounds-hub-grid{grid-template-columns:repeat(3,1fr)}
+}
+
 </style>
 </head>
 <body>
@@ -1548,95 +1712,96 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
 </div>
 
 <section class="screen active" id="home">
-  <div class="home-hero">
+  <div class="hc-home-greeting-row">
     <div class="home-greeting" id="timeGreeting">Welcome</div>
-    <script>
-      // Set the greeting while the home screen loads, even if a later feature fails.
-      (function(){
-        const hour=new Date().getHours();
-        const greeting=hour>=5&&hour<12?'Good morning':hour>=12&&hour<17?'Good afternoon':hour>=17&&hour<21?'Good evening':'Good night';
-        document.getElementById('timeGreeting').textContent=greeting;
-      })();
-    </script>
-    <h1>Take a moment.</h1>
-    <p>Choose how much space you want to give yourself right now.</p>
-    <div class="hero-orbit" aria-hidden="true"></div>
   </div>
+  <script>
+    (function(){
+      const hour=new Date().getHours();
+      const greeting=hour>=5&&hour<12?'Good morning':hour>=12&&hour<17?'Good afternoon':hour>=17&&hour<21?'Good evening':'Good night';
+      const el=document.getElementById('timeGreeting');if(el)el.textContent=greeting;
+    })();
+  </script>
 
-  <button class="home-offline-shortcut" onclick="show('downloads')" aria-label="Open saved offline sessions and chapters">
-    <span class="home-offline-icon" aria-hidden="true">↓</span>
-    <span class="home-offline-copy"><strong>Offline downloads</strong><small id="homeOfflineMeta">Saved sessions and audiobook chapters</small></span>
-    <span class="home-offline-open" aria-hidden="true">›</span>
-  </button>
-
-  <div class="daily-note">
-    <div class="daily-label">Daily thought</div>
-    <b id="dailyNoteTitle">Voice is physical sound.</b>
-    <p id="dailyNoteText">The vocal folds create pressure waves in air. Meaning, rhythm and attention shape how that sound is experienced.</p>
-    <span class="daily-source" id="dailyNoteSource">Human attention</span>
-  </div>
-
-  <div class="local-context-card" id="localContextCard">
-    <b>Local context</b>
-    <span id="localContextMeta">Optional weather and daylight context</span>
-    <div class="context-weather"><span id="localContextWeather">—</span><span id="localContextLight">—</span></div>
-  </div>
-
-  <div class="quick-practice" style="margin:14px 0"><div><strong>Quiet Timer &amp; Breathing</strong><small>Gentle bells, flexible time, unforced breathing</small></div><button class="quick-start" onclick="openQuietTimer()" aria-label="Open quiet timer and breath pacer">▶</button></div>
-  <div class="quick-practice" style="margin:14px 0"><div><strong>7-Day Starter</strong><small>Short, gentle practices with a purpose and reflection</small></div><button class="quick-start" onclick="hcOpenStarterPath()" aria-label="Open seven-day starter path">▶</button></div>
-  <div class="home-dashboard">
-    <div class="home-resume" id="homeResumeCard">
-      <div class="eyebrow">Continue Meditation</div>
+  <div class="hc-home-primary">
+    <div class="home-resume hc-primary-resume" id="homeResumeCard">
+      <div class="eyebrow">Continue meditation</div>
       <strong id="homeResumeTitle">Deep Wake Up</strong>
-      <small id="homeResumeMeta">Continue from 04:12</small>
-      <button onclick="continueLastSession()">Continue session</button>
+      <small id="homeResumeMeta">Continue where you left off</small>
+      <button onclick="continueLastSession()">Continue</button>
     </div>
-    <div class="home-resume" id="hcSoundResumeCard" style="display:none">
-      <div class="eyebrow">Continue Sound Lab</div>
-      <strong id="hcSoundResumeTitle">Nature listening</strong>
-      <small id="hcSoundResumeMeta">Continue where you left off</small>
-      <button onclick="hcResumeSoundLab()" aria-label="Resume last Sound Lab recording">Continue sound</button>
+
+    <div class="hc-recommended-card" id="homeRecommendedCard">
+      <div class="eyebrow" id="homeRecommendedEyebrow">Recommended now</div>
+      <strong id="homeRecommendedTitle">Deep Sleep</strong>
+      <small id="homeRecommendedMeta">Night · guided practice</small>
+      <button class="hc-home-primary-btn" onclick="openHomeSessionSheet(hcHomeRecommendedTitle)">Begin</button>
     </div>
-    <div class="home-resume library-resume" id="homeLibraryResumeCard">
-      <div class="eyebrow">Continue Audiobook · Library</div>
+  </div>
+
+  <div class="hc-home-secondary-resumes">
+    <div class="home-resume library-resume hc-secondary-resume" id="homeLibraryResumeCard">
+      <div class="eyebrow">Continue audiobook</div>
       <strong id="homeLibraryResumeTitle">Shadows of Truth · Chapter 1</strong>
       <small id="homeLibraryResumeMeta">English audiobook</small>
-      <button onclick="continueLastBook()">Resume audiobook</button>
+      <button onclick="continueLastBook()">Resume</button>
     </div>
-    <div class="progress-card">
-      <div class="progress-label">Awareness practice</div>
-      <div class="progress-title" id="progressTitle">0 active days · 0 areas explored</div>
-      <div class="progress-sub">Progress reflects practice and observation, not a spiritual rank.</div>
+
+    <div class="home-resume hc-secondary-resume" id="hcSoundResumeCard" style="display:none">
+      <div class="eyebrow">Continue listening</div>
+      <strong id="hcSoundResumeTitle">Nature listening</strong>
+      <small id="hcSoundResumeMeta">Continue where you left off</small>
+      <button onclick="hcResumeSoundLab()" aria-label="Resume last listening session">Resume</button>
     </div>
   </div>
 
-  <div class="home-section">
-    <div class="section-head"><h3>Start now</h3><button onclick="show('practices')">View all</button></div>
-    <div class="quick-practice" style="display:block;margin-bottom:12px">
-      <div><strong>Closing music test</strong><small>2-minute Deep Sleep stillness · press Play to listen</small></div>
-      <audio class="heartclear-stillness-audio" controls playsinline preload="metadata" src="./media/HeartClear_DeepSleep_Stillness_2min_PREVIEW.mp3" style="width:100%;margin:10px 0;display:block"></audio>
+  <div class="hc-quick-grid" aria-label="Quick start">
+    <button class="hc-quick-tile" onclick="openHomeTimerSheet('quiet',3)">
+      <span>3</span><b>3-min calm</b><small>Quiet</small>
+    </button>
+    <button class="hc-quick-tile" onclick="openHomeTimerSheet('breath',5)">
+      <span>◌</span><b>Breath</b><small>Gentle pace</small>
+    </button>
+    <button class="hc-quick-tile" onclick="openHomeTimerSheet('quiet',10)">
+      <span>◷</span><b>Timer</b><small>Choose time</small>
+    </button>
+    <button class="hc-quick-tile" onclick="openHomeSessionSheet('Deep Sleep')">
+      <span>☾</span><b>Sleep</b><small>Night practice</small>
+    </button>
+  </div>
+
+  <div class="hc-starter-card">
+    <div>
+      <div class="eyebrow">7-Day Starter</div>
+      <b>Build a simple practice</b>
+      <small id="homeStarterMeta">Day 1 · 5 min</small>
     </div>
-    <div class="quick-practice" style="margin-bottom:12px"><div><strong>Nature sounds</strong><small>Birds · fire · ocean · rain · thunder</small></div><button class="quick-start" onclick="openSoundLab()" aria-label="Open nature sounds">▶</button></div>
-    <div class="quick-practice" style="margin-bottom:12px"><div><strong>OM chanting</strong><small>Long video · Hindu Insight</small></div><button class="quick-start" onclick="openOmVideo()" aria-label="Open OM video">▶</button></div>
-    <div class="quick-practice">
-      <div><strong>Deep Wake Up</strong><small>Morning · guided breath</small></div>
-      <button class="quick-start" onclick="startSettleQuick()" aria-label="Start Settle">▶</button>
+    <button onclick="hcOpenStarterPath()">Continue</button>
+  </div>
+
+  <div class="hc-home-section">
+    <div class="hc-home-section-head"><h3>Sounds to explore</h3><button onclick="show('soundHub')">View all</button></div>
+    <div class="hc-sound-strip">
+      <button class="hc-sound-card" onclick="openSoundLab()"><span>≈</span><b>Nature</b><small>Ocean · rain · birds · fire · thunder</small></button>
+      <button class="hc-sound-card" onclick="show('sacred')"><span>✦</span><b>Sacred sound</b><small>Dua · dhikr · mantra · chant</small></button>
+      <button class="hc-sound-card" onclick="openFearPractice()"><span>◉</span><b>Sound familiarity</b><small>Ocean · storm · distant thunder</small></button>
     </div>
   </div>
 
   <div class="home-section hc-favourites" id="heartclearFavouritesSection" hidden>
-    <div class="section-head"><h3>Favourites</h3><small>Saved on this device</small></div>
+    <div class="section-head"><h3>Favourites</h3></div>
     <div class="hc-fav-list" id="heartclearFavouritesList" aria-label="Saved favourites"></div>
   </div>
 
-  <div class="home-section">
-    <div class="section-head"><h3>This week</h3><button onclick="show('history')">History</button></div>
-    <div class="stats-strip">
-      <div class="stat-tile"><b id="homeWeekSessions">0</b><span>sessions</span></div>
-      <div class="stat-tile"><b id="homeWeekMinutes">0</b><span>minutes</span></div>
-      <div class="stat-tile"><b id="homeTotalSessions">0</b><span>areas</span></div>
-    </div>
+  <div class="hc-daily-quiet">
+    <div class="hc-daily-tag" id="dailyNoteSource">Observation</div>
+    <b id="dailyNoteTitle">Notice before naming.</b>
+    <p id="dailyNoteText">Let one sound, sight or sensation arrive before explaining it.</p>
   </div>
+
+  <button class="hc-week-line" onclick="show('history')" aria-label="Open this week's history">
+    <b>This week</b><span id="homeWeekLine">0 sessions · 0 min</span><i>›</i>
+  </button>
 </section>
 
 <section class="screen practice-library" id="practices">
@@ -1736,7 +1901,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
         <option value="quiet">Quiet meditation</option><option value="breath">Gentle breath pacer</option>
       </select></div>
       <div><label for="hcTimerMinutes">Duration</label><select id="hcTimerMinutes">
-        <option value="2">2 minutes</option><option value="5">5 minutes</option><option value="10" selected>10 minutes</option>
+        <option value="2">2 minutes</option><option value="3">3 minutes</option><option value="5">5 minutes</option><option value="10" selected>10 minutes</option>
         <option value="15">15 minutes</option><option value="20">20 minutes</option><option value="30">30 minutes</option>
       </select></div>
       <div id="hcTimerBreathOptions" hidden><label for="hcTimerBreathRatio">Breathing pace</label><select id="hcTimerBreathRatio">
@@ -2078,6 +2243,8 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
     <h2>Library</h2>
     <p>A quiet place for listening and reading.</p>
   </div>
+
+  <button class="hc-library-offline-link" onclick="show('downloads')">Offline downloads →</button>
 
   <div class="hub-grid">
     <button class="hub-card" onclick="openCollection('english')">
@@ -2425,6 +2592,19 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
   </div>
 </section>
 
+<section class="screen" id="soundHub">
+  <div class="glass">
+    <div class="kicker">Listen</div>
+    <h2>Sounds</h2>
+    <p>Nature, sacred listening and sound familiarity in one place.</p>
+    <div class="hc-sounds-hub-grid">
+      <button class="hc-sounds-hub-card" onclick="openSoundLab()"><span>≈</span><b>Nature & ambient</b><small>Birds, fire, rain, ocean, thunder and quiet sound beds.</small></button>
+      <button class="hc-sounds-hub-card" onclick="show('sacred')"><span>✦</span><b>Sacred sound</b><small>Islamic, Hindu and Buddhist listening kept in their own traditions.</small></button>
+      <button class="hc-sounds-hub-card" onclick="openFearPractice()"><span>◉</span><b>Sound familiarity</b><small>Gradual ocean, storm and distant-thunder practice.</small></button>
+    </div>
+  </div>
+</section>
+
 <section class="screen" id="soundLab">
   <div class="glass">
     <div class="kicker">Nature · Ambient · Stillness</div>
@@ -2568,7 +2748,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
       <div class="setting-row">
         <div style="width:100%">
           <strong>Listening with the screen off</strong>
-          <small>Use Play before minimizing HeartClear. Android and iPhone sometimes suspend web apps to save battery. If sound stops, reopen HeartClear and use Continue Sound Lab, Continue Meditation or Resume Audiobook. Lock-screen controls depend on the browser.</small>
+          <small>Use Play before minimizing HeartClear. Android and iPhone sometimes suspend web apps to save battery. If sound stops, reopen HeartClear and use Continue listening, Continue Meditation or Resume Audiobook. Lock-screen controls depend on the browser.</small>
         </div>
       </div>
       <div class="setting-row">
@@ -2804,24 +2984,55 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
   <button class="global-mini-btn global-mini-stop" onclick="stopGlobalMedia()" aria-label="Stop playback">×</button>
 </div>
 
+<div class="hc-home-sheet-backdrop" id="hcHomeSessionSheet" onclick="if(event.target===this)closeHomeSheets()">
+  <div class="hc-home-sheet">
+    <div class="kicker">HeartClear · Practice</div>
+    <h3 id="hcHomeSheetTitle">Deep Sleep</h3>
+    <p id="hcHomeSheetPurpose">A guided practice you can pause or stop at any time.</p>
+    <p id="hcHomeSheetDuration">Duration · 60:00</p>
+    <div class="hc-sheet-actions">
+      <button class="primary" onclick="beginHomeSheetPractice()">Begin</button>
+      <button class="secondary" onclick="closeHomeSheets()">Not now</button>
+    </div>
+  </div>
+</div>
+
+<div class="hc-home-sheet-backdrop" id="hcHomeTimerSheet" onclick="if(event.target===this)closeHomeSheets()">
+  <div class="hc-home-sheet">
+    <div class="kicker">Quiet Timer</div>
+    <h3 id="hcHomeTimerTitle">Choose time</h3>
+    <p id="hcHomeTimerPurpose">Silence, a soft bell, or a gentle breathing rhythm.</p>
+    <div class="hc-sheet-duration" id="hcHomeTimerDurations">
+      <button data-min="2" onclick="selectHomeTimerMinutes(2,this)">2 min</button>
+      <button data-min="3" onclick="selectHomeTimerMinutes(3,this)">3 min</button>
+      <button data-min="5" onclick="selectHomeTimerMinutes(5,this)">5 min</button>
+      <button data-min="10" onclick="selectHomeTimerMinutes(10,this)">10 min</button>
+      <button data-min="15" onclick="selectHomeTimerMinutes(15,this)">15 min</button>
+      <button data-min="20" onclick="selectHomeTimerMinutes(20,this)">20 min</button>
+      <button data-min="30" onclick="selectHomeTimerMinutes(30,this)">30 min</button>
+    </div>
+    <div class="hc-sheet-actions">
+      <button class="primary" onclick="beginHomeTimer()">Begin</button>
+      <button class="secondary" onclick="closeHomeSheets()">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <nav class="bottom-nav" id="bottomNav" aria-label="Primary navigation">
   <button class="nav-item active" data-nav="home" onclick="navTo('home',this)" aria-label="Home">
     <svg viewBox="0 0 24 24"><path d="M3.5 10.4 12 3.7l8.5 6.7v9.1h-6v-5.7h-5v5.7h-6Z"/></svg><span>Home</span>
   </button>
-  <button class="nav-item" data-nav="practices" onclick="navTo('practices',this)" aria-label="Meditation">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v9M7.5 12h9"/></svg><span>Meditation</span>
+  <button class="nav-item" data-nav="practices" onclick="navTo('practices',this)" aria-label="Practice">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v9M7.5 12h9"/></svg><span>Practice</span>
   </button>
-  <button class="nav-item" data-nav="soundLab" onclick="navTo('soundLab',this)" aria-label="Sound Lab">
-    <svg viewBox="0 0 24 24"><path d="M2 12h2M6 9v6M10 5v14M14 8v8M18 3v18M22 10v4"/></svg><span>Sounds</span>
-  </button>
-  <button class="nav-item" data-nav="sacred" onclick="navTo('sacred',this)" aria-label="Sacred">
-    <svg viewBox="0 0 24 24"><path d="M4 12h2M8 8v8M12 5v14M16 8v8M20 12h-2"/></svg><span>Sacred</span>
+  <button class="nav-item" data-nav="soundHub" onclick="navTo('soundHub',this)" aria-label="Sounds">
+    <svg viewBox="0 0 24 24"><path d="M3 12h2M7 8v8M11 4v16M15 7v10M19 10v4M21 12h-1"/></svg><span>Sounds</span>
   </button>
   <button class="nav-item" data-nav="library" onclick="navTo('library',this)" aria-label="Library">
     <svg viewBox="0 0 24 24"><path d="M5 4.5h5.5c1.2 0 1.5.5 1.5 1.6v13c0-1.3-.8-2.1-2-2.1H5Z"/><path d="M19 4.5h-5.5c-1.2 0-1.5.5-1.5 1.6v13c0-1.3.8-2.1 2-2.1H19Z"/></svg><span>Library</span>
   </button>
-  <button class="nav-item" data-nav="human" onclick="navTo('human',this)" aria-label="Human Practice">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="6" r="2.5"/><path d="M12 9v6M7 11l5 2 5-2M9 21l3-6 3 6"/></svg><span>Human</span>
+  <button class="nav-item" data-nav="settings" onclick="navTo('settings',this)" aria-label="More">
+    <svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/></svg><span>More</span>
   </button>
 </nav>
 
@@ -4960,7 +5171,7 @@ function hcRenderSoundResume(){
   box.style.display=last?'block':'none';
   if(last){
     document.getElementById('hcSoundResumeTitle').textContent=soundLabTracks[last.key].title;
-    document.getElementById('hcSoundResumeMeta').textContent='Continue at '+fmt(last.position)+' · saves on this device';
+    document.getElementById('hcSoundResumeMeta').textContent='Continue at '+fmt(last.position)+'';
   }
 }
 function hcResumeSoundLab(){
@@ -5983,6 +6194,112 @@ function last7DayStats(){
   return {sessions:items.length,minutes:Math.round(seconds/60),days,areas};
 }
 
+let hcHomeRecommendedTitle='Deep Sleep';
+let hcHomeSheetPractice='Deep Sleep';
+let hcHomeTimerMinutes=10;
+let hcHomeTimerMode='quiet';
+
+function hcFindPracticeCard(title){
+  return [...document.querySelectorAll('#practices .practice-card')].find(card=>
+    card.querySelector('.practice-copy b')?.textContent?.trim()===title
+  )||null;
+}
+
+function hcRecommendedForHour(hour){
+  if(hour>=5&&hour<12)return {title:'Deep Wake Up',meta:'Morning · guided breath'};
+  if(hour>=12&&hour<17)return {title:'Noon Reset',meta:'Afternoon · reset'};
+  if(hour>=17&&hour<21)return {title:'Evening Release',meta:'Evening · settle'};
+  return {title:'Deep Sleep',meta:'Night · sleep practice'};
+}
+
+function renderHomeRecommendation(){
+  const clock=typeof getDeviceLocalClock==='function'?getDeviceLocalClock():{hour:new Date().getHours()};
+  const rec=hcRecommendedForHour(clock.hour);
+  hcHomeRecommendedTitle=rec.title;
+  const title=document.getElementById('homeRecommendedTitle');
+  const meta=document.getElementById('homeRecommendedMeta');
+  const recCard=document.getElementById('homeRecommendedCard');
+  const resume=document.getElementById('homeResumeCard');
+  if(title)title.textContent=rec.title;
+  if(meta)meta.textContent=rec.meta;
+  if(recCard)recCard.hidden=!!(resume&&resume.classList.contains('show'));
+}
+
+function renderHomeStarterProgress(){
+  const el=document.getElementById('homeStarterMeta');
+  if(!el||typeof hcPathData!=='function'||!Array.isArray(hcStarterDays))return;
+  const saved=hcPathData();
+  let index=hcStarterDays.findIndex((d,i)=>!saved.done.includes(i));
+  if(index<0)index=6;
+  const day=hcStarterDays[index]||hcStarterDays[0];
+  const duration=day.minutes?day.minutes+' min':day.type==='meditation'?'guided':day.type==='sound'?'listening':'practice';
+  el.textContent='Day '+(index+1)+' · '+duration+(saved.done.length===7?' · complete':'');
+}
+
+function openHomeSessionSheet(title){
+  const card=hcFindPracticeCard(title);
+  if(!card){show('practices');return}
+  hcHomeSheetPractice=title;
+  const meta=card.querySelector('.practice-copy small')?.textContent?.trim()||'Guided practice';
+  const duration=card.querySelector('.duration')?.textContent?.trim()||'';
+  const purposes={
+    'Deep Wake Up':'Begin the day with a guided practice before attention scatters.',
+    'Noon Reset':'Make a little space in the middle of the day without multitasking.',
+    'Evening Release':'Move from the day into a quieter evening.',
+    'Deep Sleep':'Prepare for rest with a slower night practice.'
+  };
+  const t=document.getElementById('hcHomeSheetTitle');if(t)t.textContent=title;
+  const p=document.getElementById('hcHomeSheetPurpose');if(p)p.textContent=purposes[title]||meta;
+  const d=document.getElementById('hcHomeSheetDuration');if(d)d.textContent=meta+(duration?' · '+duration:'');
+  document.getElementById('hcHomeSessionSheet')?.classList.add('show');
+}
+
+function beginHomeSheetPractice(){
+  const card=hcFindPracticeCard(hcHomeSheetPractice);
+  closeHomeSheets();
+  if(card)card.click();else show('practices');
+}
+
+function openHomeTimerSheet(mode='quiet',minutes=10){
+  hcHomeTimerMode=mode==='breath'?'breath':'quiet';
+  hcHomeTimerMinutes=Number(minutes)||10;
+  const title=document.getElementById('hcHomeTimerTitle');
+  const purpose=document.getElementById('hcHomeTimerPurpose');
+  if(title)title.textContent=hcHomeTimerMode==='breath'?'Gentle breath':'Quiet Timer';
+  if(purpose)purpose.textContent=hcHomeTimerMode==='breath'
+    ?'A comfortable breathing rhythm with no holds.'
+    :'Silence with an optional soft opening and closing bell.';
+  document.querySelectorAll('#hcHomeTimerDurations button').forEach(b=>b.classList.toggle('active',Number(b.dataset.min)===hcHomeTimerMinutes));
+  document.getElementById('hcHomeTimerSheet')?.classList.add('show');
+}
+
+function selectHomeTimerMinutes(minutes,btn){
+  hcHomeTimerMinutes=Number(minutes)||10;
+  document.querySelectorAll('#hcHomeTimerDurations button').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+}
+
+function beginHomeTimer(){
+  closeHomeSheets();
+  openQuietTimer();
+  const minutes=document.getElementById('hcTimerMinutes');
+  if(minutes){
+    if(![...minutes.options].some(o=>Number(o.value)===hcHomeTimerMinutes)){
+      const option=document.createElement('option');option.value=String(hcHomeTimerMinutes);option.textContent=hcHomeTimerMinutes+' minutes';minutes.append(option);
+    }
+    minutes.value=String(hcHomeTimerMinutes);
+  }
+  const mode=document.getElementById('hcTimerMode');
+  if(mode)mode.value=hcHomeTimerMode;
+  hcTimerModeChanged();
+  const clock=document.getElementById('hcTimerClock');if(clock)clock.textContent=fmt(hcHomeTimerMinutes*60);
+}
+
+function closeHomeSheets(){
+  document.getElementById('hcHomeSessionSheet')?.classList.remove('show');
+  document.getElementById('hcHomeTimerSheet')?.classList.remove('show');
+}
+
 function renderDashboard(){
   renderLocalContext();
   const stats=last7DayStats();
@@ -5994,6 +6311,8 @@ function renderDashboard(){
   if(totalEl)totalEl.textContent=stats.areas;
   const progress=document.getElementById('progressTitle');
   if(progress)progress.textContent=stats.days+' active day'+(stats.days===1?'':'s')+' · '+stats.areas+' area'+(stats.areas===1?'':'s')+' explored';
+  const weekLine=document.getElementById('homeWeekLine');
+  if(weekLine)weekLine.textContent=stats.sessions+' session'+(stats.sessions===1?'':'s')+' · '+stats.minutes+' min';
 
   renderLibraryResumeCard();
   const card=document.getElementById('homeResumeCard');
@@ -6008,6 +6327,8 @@ function renderDashboard(){
       card.classList.remove('show');
     }
   }catch(e){card.classList.remove('show')}
+  renderHomeRecommendation();
+  renderHomeStarterProgress();
 }
 
 function renderLibraryResumeCard(){
