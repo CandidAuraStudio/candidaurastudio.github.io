@@ -2284,7 +2284,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v78</div>
+    <div class="app-version">HeartClear · prototype v79</div>
   </div>
 </section>
 
@@ -2895,6 +2895,8 @@ async function clearOfflineMedia(){
 }
 
 function show(id){
+  // Privacy: leave no live microphone behind when navigating away from voice practice.
+  if(id!=='humanSession' && typeof humanVoiceRecorder!=='undefined' && humanVoiceRecorder && humanVoiceRecorder.state==='recording')endHumanVoiceRecording();
   if(id!=='humanSession'&&typeof humanSoundAudio!=='undefined'&&!humanSoundAudio.paused)humanSoundAudio.pause();
   currentScreenId=id;
   if(id!=='omVideo'){const frame=document.getElementById('omVideoFrame');if(frame&&frame.getAttribute('src')){frame.removeAttribute('src');frame.src='about:blank'}}
@@ -4329,6 +4331,7 @@ function setSoundLabMediaSession(){
     });
     navigator.mediaSession.setActionHandler('play',()=>{rememberActiveMedia('soundlab');return soundLabAudio.play()});
     navigator.mediaSession.setActionHandler('pause',()=>{soundLabAudio.pause();renderGlobalMini()});
+    try{navigator.mediaSession.setActionHandler('nexttrack',()=>playNextSoundLab(true))}catch(e){}
     navigator.mediaSession.setActionHandler('seekbackward',details=>soundLabJump(-(details.seekOffset||15)));
     navigator.mediaSession.setActionHandler('seekforward',details=>soundLabJump(details.seekOffset||15));
     try{
@@ -5439,7 +5442,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=78');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=79');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
