@@ -1377,6 +1377,54 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
 .hc-voice-status{font-size:12px;line-height:1.5;margin-top:10px;color:#dfebf0}
 @media(max-width:390px){.hc-voice-box .voice-buttons button,.hc-voice-box .voice-buttons a{flex:1}}
 
+/* Feature pass: quiet, device-only favourites; preserve the existing HeartClear palette. */
+.hc-favourites{margin-top:16px}
+.hc-favourites[hidden]{display:none!important}
+.hc-fav-list{display:grid;gap:9px;margin-top:10px}
+.hc-fav-open{display:flex;align-items:center;justify-content:space-between;gap:14px;width:100%;min-height:48px;
+ padding:13px 15px;border-radius:15px;border:1px solid rgba(255,255,255,.17);background:rgba(9,31,42,.39);
+ color:#f7fbfd;font:inherit;text-align:left}
+.hc-fav-open small{color:#d7e5eb;font-size:11px;white-space:nowrap}
+.hc-fav-toggle{min-height:44px;white-space:nowrap}
+.hc-fav-toggle[aria-pressed="true"]{border-color:#fff;color:#fff}
+
+/* Lightweight quiet timer and gentle breath pacer */
+.hc-quiet-time{font-size:clamp(46px,14vw,72px);text-align:center;font-weight:300;letter-spacing:-.06em;font-variant-numeric:tabular-nums;margin:17px auto}
+.hc-quiet-disc{width:170px;height:170px;margin:20px auto;border:1px solid rgba(255,255,255,.5);border-radius:50%;
+ background:radial-gradient(circle,rgba(215,240,243,.26),rgba(10,29,42,.17));display:grid;place-items:center;
+ transform:scale(var(--hc-breath-scale,1));transition:transform var(--hc-breath-transition,1s) linear}
+body.reduce-motion .hc-quiet-disc{transition:none!important}
+.hc-quiet-disc span{font-size:13px;letter-spacing:.06em;text-transform:uppercase;text-align:center}
+.hc-quiet-actions{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.hc-quiet-actions button{flex:1;min-width:120px;min-height:48px}
+.hc-quiet-options{display:grid;gap:14px;margin:20px 0}
+.hc-quiet-options label{display:block;margin-bottom:7px;font-size:13px}
+.hc-quiet-options select{width:100%;min-height:44px;font:inherit;padding:9px;color:#fff;background:#112c3a;border-radius:11px;border:1px solid rgba(255,255,255,.25)}
+.hc-quiet-check{display:flex;align-items:center;gap:10px;font-size:13px}
+.hc-quiet-check input{width:20px;height:20px}
+
+.hc-mood-options{display:flex;flex-wrap:wrap;gap:8px;margin:9px 0 14px}
+.hc-mood-options button{border:1px solid rgba(255,255,255,.35);border-radius:12px;background:rgba(255,255,255,.08);color:#fff;padding:9px 12px;min-height:44px;font:inherit;font-size:13px}
+.hc-mood-options button[aria-pressed="true"]{background:#fff;color:#07131d;border-color:#fff}
+.hc-private-note{display:block;width:100%;min-height:76px;border-radius:12px;padding:12px;margin-top:12px;background:rgba(9,31,42,.48);color:#fff;font:inherit;border:1px solid rgba(255,255,255,.26)}
+.hc-mood-svg{width:100%;max-width:460px;display:block;margin:auto;height:auto}
+.hc-personal-settings{display:grid;gap:8px;margin-top:10px}
+.hc-personal-settings input[type=time]{background:#102e3c;color:white;border:1px solid rgba(255,255,255,.35);border-radius:12px;padding:10px;min-height:44px;font:inherit}
+
+.hc-path-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin:12px 0}
+.hc-path-days button{min-height:44px;border-radius:11px;background:rgba(15,47,61,.4);border:1px solid rgba(255,255,255,.25);color:#fff;font:inherit;padding:7px 4px}
+.hc-path-days button[aria-pressed="true"]{background:#fff!important;color:#102332!important}
+.hc-path-days button[aria-label$="completed"]{border-color:#f8fbfc}
+.hc-path-lesson{line-height:1.65;font-size:14px;color:#e8f0f3}
+.hc-path-note{width:100%;min-height:90px;background:rgba(11,32,43,.7);border:1px solid rgba(255,255,255,.2);border-radius:12px;color:#fff;font:inherit;padding:12px}
+.hc-glossary details{border-top:1px solid rgba(255,255,255,.18);padding:12px 0;font-size:13px}
+.hc-glossary summary{cursor:pointer;min-height:35px;font-weight:650}
+
+.hc-private-media{margin-top:15px;padding:13px;border:1px solid rgba(255,255,255,.2);border-radius:16px;background:rgba(9,32,44,.33)}
+.hc-private-media input[type=file]{width:100%;max-width:100%;font-size:12px;color:#fff;margin-top:8px}
+.hc-private-media video,.hc-private-media audio{display:block;width:100%;max-width:100%;margin:12px 0}
+.hc-private-media[hidden],.hc-private-media video[hidden],.hc-private-media audio[hidden]{display:none!important}
+#quietTimer .btn:not(.secondary),#starterPath .btn:not(.secondary){background:#fff!important;color:#0b2230!important;border-color:#fff!important}
 </style>
 </head>
 <body>
@@ -1461,6 +1509,8 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
     <div class="context-weather"><span id="localContextWeather">—</span><span id="localContextLight">—</span></div>
   </div>
 
+  <div class="quick-practice" style="margin:14px 0"><div><strong>Quiet Timer &amp; Breathing</strong><small>Gentle bells, flexible time, unforced breathing</small></div><button class="quick-start" onclick="openQuietTimer()" aria-label="Open quiet timer and breath pacer">▶</button></div>
+  <div class="quick-practice" style="margin:14px 0"><div><strong>7-Day Starter</strong><small>Short, gentle practices with a purpose and reflection</small></div><button class="quick-start" onclick="hcOpenStarterPath()" aria-label="Open seven-day starter path">▶</button></div>
   <div class="home-dashboard">
     <div class="home-resume" id="homeResumeCard">
       <div class="eyebrow">Continue Meditation</div>
@@ -1495,6 +1545,11 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
     </div>
   </div>
 
+  <div class="home-section hc-favourites" id="heartclearFavouritesSection" hidden>
+    <div class="section-head"><h3>Favourites</h3><small>Saved on this device</small></div>
+    <div class="hc-fav-list" id="heartclearFavouritesList" aria-label="Saved favourites"></div>
+  </div>
+
   <div class="home-section">
     <div class="section-head"><h3>This week</h3><button onclick="show('history')">History</button></div>
     <div class="stats-strip">
@@ -1519,6 +1574,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
     </div>
   </header>
 
+  <div class="quick-practice" style="margin-bottom:14px"><div><strong>Quiet Timer</strong><small>Silence, soft bells or gentle breath pacing</small></div><button class="quick-start" onclick="openQuietTimer()" aria-label="Open quiet timer">▶</button></div>
   <div class="library-list" aria-label="Available guided practices">
     <button class="choice practice-card" data-kind="short" aria-label="Start Deep Wake Up, 10-minute morning practice" onclick="choosePractice(600,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/f4d262f6-56fe-40e3-84ea-930c11fe7c54.mp3','Deep Wake Up','Morning · guided breath','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/7fd8e8ee-cc5a-49c3-940b-6b4330a42c5e.mp4','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/d10879c1-d600-400c-999e-3237ec672b86.mp4')">
       <span class="practice-art" aria-hidden="true"></span>
@@ -1554,12 +1610,81 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
   
 </section>
 
+<section class="screen" id="starterPath">
+  <div class="glass" style="padding:22px">
+    <button class="collection-back" onclick="show('home')">‹ Home</button>
+    <div class="kicker">HeartClear · Learn and practice</div>
+    <h2>7-Day Starter</h2>
+    <p>Seven gentle introductions to attention, listening and ordinary awareness. No streaks or grades. Repeat any day as often as you wish.</p>
+    <div class="hc-path-days" id="hcPathDayButtons" aria-label="Choose a day"></div>
+    <div class="hc-personal">
+      <div class="kicker" id="hcPathDayLabel">Day 1 of 7</div>
+      <h3 id="hcPathTitle">Arriving</h3>
+      <p class="hc-path-lesson" id="hcPathLesson">Notice where you are before doing anything else.</p>
+      <p id="hcPathPracticeText">A short and comfortable period of stillness.</p>
+      <button class="btn" onclick="hcStartPathActivity()">Open today's practice</button>
+      <p id="hcPathReflection">Reflection: What changed when you slowed down?</p>
+      <label for="hcPathNote" style="font-size:12px">Private note, optional</label>
+      <textarea class="hc-path-note" id="hcPathNote" maxlength="700" placeholder="One sentence is enough."></textarea>
+      <div class="hc-quiet-actions">
+        <button class="btn secondary" onclick="hcSavePathNote()">Save note</button>
+        <button class="btn secondary" onclick="hcMarkPathDay()">Mark day complete</button>
+      </div>
+      <p id="hcPathMessage" class="player-status" role="status"></p>
+    </div>
+    <div class="hc-personal hc-glossary">
+      <h3>Understanding: a short glossary</h3>
+      <details><summary>Attention</summary><p>Choosing what to notice now, and returning gently when attention wanders.</p></details>
+      <details><summary>Awareness</summary><p>Noticing sensations, surroundings and thoughts without needing to change them.</p></details>
+      <details><summary>Stillness</summary><p>Allowing a moment without rushing. You can practise stillness while sitting or during ordinary activity.</p></details>
+      <details><summary>Reflection</summary><p>Remembering what you noticed, without judging the experience as good or bad.</p></details>
+      <details><summary>Sound familiarity</summary><p>Listening at a comfortable level while keeping the choice to pause or stop. It is not a treatment or a challenge.</p></details>
+    </div>
+  </div>
+</section>
+<section class="screen" id="quietTimer">
+  <div class="glass" style="padding:22px">
+    <button class="collection-back" onclick="hcTimerStop(true);show('home')">‹ Home</button>
+    <div class="kicker">HeartClear · Personal Practice</div>
+    <h2>Quiet Timer</h2>
+    <p>Practice without a recording. Choose silence, a soft bell or a gentle breathing rhythm.</p>
+    <div class="hc-quiet-options">
+      <div><label for="hcTimerMode">Practice type</label><select id="hcTimerMode" onchange="hcTimerModeChanged()">
+        <option value="quiet">Quiet meditation</option><option value="breath">Gentle breath pacer</option>
+      </select></div>
+      <div><label for="hcTimerMinutes">Duration</label><select id="hcTimerMinutes">
+        <option value="2">2 minutes</option><option value="5">5 minutes</option><option value="10" selected>10 minutes</option>
+        <option value="15">15 minutes</option><option value="20">20 minutes</option><option value="30">30 minutes</option>
+      </select></div>
+      <div id="hcTimerBreathOptions" hidden><label for="hcTimerBreathRatio">Breathing pace</label><select id="hcTimerBreathRatio">
+        <option value="4,4">Easy · inhale 4, exhale 4</option><option value="3,4">Gentle · inhale 3, exhale 4</option>
+        <option value="4,6">Longer exhale · inhale 4, exhale 6</option>
+      </select><p style="font-size:12px">Breathe naturally. No holds are required. Stop or return to normal breathing whenever needed.</p></div>
+      <div class="hc-quiet-check"><input type="checkbox" id="hcTimerBell" checked><label for="hcTimerBell">Soft opening and closing bell</label></div>
+      <div><label for="hcTimerInterval">Optional interval bell</label><select id="hcTimerInterval">
+        <option value="0">Off</option><option value="5">Every 5 minutes</option><option value="10">Every 10 minutes</option>
+      </select></div>
+    </div>
+    <div class="hc-quiet-disc" id="hcTimerDisc" aria-hidden="true"><span id="hcTimerPhase">Stillness</span></div>
+    <div class="hc-quiet-time" id="hcTimerClock" aria-live="off">10:00</div>
+    <div class="hc-quiet-actions">
+      <button class="btn" id="hcTimerStart" onclick="hcTimerToggle()">Start</button>
+      <button class="btn secondary" onclick="hcTimerStop()">Stop</button>
+    </div>
+    <p class="player-status" id="hcTimerStatus" role="status" aria-live="polite">Ready when you are. Use a comfortable position.</p>
+    <p style="font-size:12px">Audio cues are synthesized locally, not recordings of physical singing bowls. No account or data upload.</p>
+  </div>
+</section>
 <section class="screen" id="sessionReady">
   <div class="glass session-ready-card">
     <div class="ready-icon">◌</div>
     <div class="ready-kicker">Before you begin</div>
     <h2 class="ready-title">Protect this time.</h2>
     <p class="ready-copy" id="readySessionText">You are about to begin a HeartClear session.</p>
+    <div class="hc-personal" style="text-align:left;margin:14px 0">
+      <h3>Purpose of this practice</h3>
+      <p id="hcPurposeText">Make time for quiet attention without expecting a particular outcome.</p>
+    </div>
 
     <div class="ready-list">
       <div class="ready-row">
@@ -1576,6 +1701,17 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       </div>
     </div>
 
+    <div class="hc-personal" style="text-align:left;margin:16px 0">
+      <h3>Before you begin <small style="font-size:12px;color:#d5e5ec">· optional</small></h3>
+      <p>How do you feel right now? A private check-in, not a score.</p>
+      <div class="hc-mood-options" id="hcMoodBefore">
+        <button onclick="hcChooseBeforeMood('Calm')" aria-pressed="false">Calm</button>
+        <button onclick="hcChooseBeforeMood('Clear')" aria-pressed="false">Clear</button>
+        <button onclick="hcChooseBeforeMood('Restless')" aria-pressed="false">Restless</button>
+        <button onclick="hcChooseBeforeMood('Tired')" aria-pressed="false">Tired</button>
+        <button onclick="hcChooseBeforeMood('Unsure')" aria-pressed="false">Unsure</button>
+      </div>
+    </div>
     <div class="ready-help" id="readyDeviceHelp">Android: swipe down for Quick Settings → Do Not Disturb. iPhone: Control Center → Focus → Do Not Disturb.</div>
 
     <button class="btn" onclick="confirmSessionReady()">Quiet mode is on · Continue</button>
@@ -1955,6 +2091,16 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
         <button onclick="openAdhkar('recite')">Recite Along</button>
       </div>
       <div class="hub-note" style="margin-top:12px">Quran Surahs 1–30 with spoken English translation: awaiting uploaded audio. This will be a separate Quran collection; Morning Adhkar is not English Quran translation.</div>
+      <div class="hc-private-media">
+        <b style="display:block">Private Sufi-inspired listening</b>
+        <p style="font-size:12px;line-height:1.6">Choose your own audio or video file from this device to listen privately. Sufi-inspired music is not labelled Quran recitation or dhikr. HeartClear does not upload, distribute or permanently save the file.</p>
+        <label for="hcIslamPrivateFile" style="font-size:12px">Choose personal audio or video</label>
+        <input id="hcIslamPrivateFile" type="file" accept="audio/*,video/mp4,video/webm,video/quicktime" onchange="hcLoadPrivateIslamFile(this)" aria-label="Choose a personal Islamic or Sufi-style listening file">
+        <p id="hcIslamPrivateStatus" class="player-status" role="status">Select a local file to listen.</p>
+        <audio id="hcIslamPrivateAudio" controls playsinline preload="metadata" hidden></audio>
+        <video id="hcIslamPrivateVideo" controls playsinline preload="metadata" hidden></video>
+        <button class="btn secondary" onclick="hcStopPrivateIslamFile()" style="margin-top:8px">Close private file</button>
+      </div>
       
     </div>
 
@@ -2225,6 +2371,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
     <div class="player-status" id="soundLabStatus" role="status">Press Play to begin.</div>
     <div class="soundlab-options">
       <button id="soundLoopBtn" onclick="toggleSoundLoop()">Loop off</button>
+      <button class="hc-fav-toggle" id="soundLabFavouriteBtn" onclick="toggleHeartClearFavourite('soundlab',currentSoundKey)" aria-pressed="false" aria-label="Save or remove this sound from favourites">♡ Favourite</button>
       <button onclick="stopSoundLab()">Stop</button>
     </div>
     <div class="soundlab-continuity">
@@ -2287,17 +2434,35 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
         <button class="offline-action" id="localContextBtn" onclick="toggleLocalContext()">Use location</button>
       </div>
       <div class="setting-row">
+        <div style="width:100%">
+          <strong>Optional practice reminder</strong>
+          <small>Add a daily reminder to your own calendar. No account or app notifications are needed.</small>
+          <div class="hc-personal-settings">
+            <label for="hcReminderTime">Local time</label>
+            <input type="time" id="hcReminderTime" value="20:00">
+            <button class="offline-action" onclick="hcDownloadReminder()">Add to calendar</button>
+            <small id="hcReminderStatus" role="status">Your calendar controls the notification.</small>
+          </div>
+        </div>
+      </div>
+      <div class="setting-row">
         <div><strong>Install HeartClear</strong><small>Add HeartClear to this device for a full-screen app experience.</small></div>
         <button class="offline-action" onclick="showInstallSheet(true)">Install</button>
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v79</div>
+    <div class="app-version">HeartClear · prototype v80</div>
   </div>
 </section>
 
 <section class="screen" id="history">
   <div class="glass">
+    <div class="hc-personal" style="margin-top:0">
+      <h3>Weekly check-ins</h3>
+      <p>Optional mood words before and after meditation. These are observations, not grades. Stored only here.</p>
+      <svg class="hc-mood-svg" id="hcMoodTrend" viewBox="0 0 360 215" role="img" aria-label="Before and after check-ins in the last seven days"></svg>
+      <p id="hcMoodTrendText" class="player-status">No paired check-ins yet.</p>
+    </div>
     <div class="kicker">On this device</div>
     <h2>Your history</h2>
     <p>Your practice history stays in this browser. No account is required.</p>
@@ -2335,6 +2500,13 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       <button class="reflection-chip" onclick="saveReflection('Nothing',this)">Nothing</button>
     </div>
 
+    <div class="hc-personal">
+      <h3>Private reflection <small style="font-size:12px">· optional</small></h3>
+      <label for="hcSessionNote" style="font-size:12px">One thing you noticed</label>
+      <textarea class="hc-private-note" id="hcSessionNote" maxlength="750" placeholder="Write a short note, or leave this empty."></textarea>
+      <button class="btn secondary" onclick="hcSavePrivateNote()" style="margin-top:10px">Save note on device</button>
+      <p id="hcNoteStatus" class="player-status" role="status"></p>
+    </div>
     <button class="btn" onclick="doneCompletion()">Done</button>
     <button class="btn secondary" onclick="repeatPractice()">Practice again</button>
   </div>
@@ -2390,6 +2562,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
     <div class="player-inline-actions">
       <button class="offline-action" id="offlinePracticeBtn" onclick="togglePracticeOffline()" aria-label="Download meditation audio for offline listening">↓ Download offline</button>
       <button class="offline-action" onclick="show('downloads')" aria-label="Open Offline downloads library">My Offline</button>
+            <button class="offline-action hc-fav-toggle" id="meditationFavouriteBtn" onclick="toggleHeartClearFavourite('meditation',chosenKicker)" aria-pressed="false" aria-label="Save or remove this meditation from favourites">♡ Favourite</button>
       <button class="option-select" onclick="toggleOptions()">More options</button>
     </div>
     <div class="player-offline-caption" id="practiceOfflineStatus" role="status" aria-live="polite">Save guided audio to this device for offline listening.</div>
@@ -2651,6 +2824,7 @@ let chosenTitle='Morning · guided breath';
 let stepIndex=0;
 let scrubbing=false;
 let sleepStopAt=0;
+let sleepTimerFadeActive=false;
 let savedResumeTime=0;
 let sessionStartedAt=0;
 let sessionRecorded=false;
@@ -2924,7 +3098,8 @@ function show(id){
     if(!el.closest('.screen.active') && !el.paused)el.pause();
   });
 
-  const immersive=['sessionReady','intro','prep','instructions','player','aftercare','completion','omVideo','humanSession','sacredSession','bookAudio','bookReader','soundLabPlayer','fearPlayer'].includes(id);
+  if(id!=='quietTimer' && hcTimerActive)hcTimerStop(true);
+  const immersive=['quietTimer','sessionReady','intro','prep','instructions','player','aftercare','completion','omVideo','humanSession','sacredSession','bookAudio','bookReader','soundLabPlayer','fearPlayer'].includes(id);
   document.getElementById('bottomNav').classList.toggle('hidden',immersive);
   document.getElementById('appTopBar').classList.toggle('hidden',immersive);
 
@@ -2945,7 +3120,7 @@ function show(id){
   if(av && id!=='sacredSession') av.pause();
   const ba=document.getElementById('bookAudioEl');
   updateBookMini(id);
-  if(id==='home'){setGreeting();renderDashboard();updateHomeOfflineCount();}
+  if(id==='home'){setGreeting();renderDashboard();updateHomeOfflineCount();renderHeartClearFavourites();}
   if(id==='history') renderHistory();
   if(id==='downloads') renderDownloads();
   if(id==='settings') renderSettings();
@@ -2956,6 +3131,12 @@ function show(id){
 
 function getActiveMediaState(){
   const options=[
+    {
+      key:'private-islam',el:hcPrivateIslamMedia,
+      title:hcPrivateIslamTitle,
+      meta:'Private listening · '+fmt(hcPrivateIslamMedia?.currentTime||0),
+      screen:'sacredDetail'
+    },
     {
       key:'meditation',el:audio,
       title:playbackPhase==='nature'?'Nature sounds':chosenKicker||'Meditation',
@@ -2999,6 +3180,257 @@ function getActiveMediaState(){
   }
   return active||null;
 }
+
+/* Local favourites contain stable identifiers only, never media URLs or user recordings. */
+const HC_FAVOURITES_KEY='heartclearFavouritesV1';
+function heartclearMeditationTitles(){
+  return [...document.querySelectorAll('#practices .practice-card')].map(card=>card.querySelector('.practice-copy b')?.textContent?.trim()||'');
+}
+function getHeartClearFavourites(){
+  try{
+    const saved=JSON.parse(localStorage.getItem(HC_FAVOURITES_KEY)||'[]');
+    if(!Array.isArray(saved))return[];
+    return saved.filter(x=>x&&typeof x.kind==='string'&&typeof x.key==='string'
+      &&((x.kind==='meditation'&&heartclearMeditationTitles().includes(x.key))
+        ||(x.kind==='soundlab'&&Object.prototype.hasOwnProperty.call(soundLabTracks,x.key))));
+  }catch(e){return[]}
+}
+function heartclearFavouriteLabel(kind,key){
+  if(kind==='soundlab')return soundLabTracks[key]?.title||key;
+  return key;
+}
+function updateHeartClearFavouriteButtons(){
+  const saved=getHeartClearFavourites();
+  [['meditationFavouriteBtn','meditation',chosenKicker],['soundLabFavouriteBtn','soundlab',currentSoundKey]].forEach(([id,kind,key])=>{
+    const el=document.getElementById(id);if(!el)return;
+    const active=saved.some(x=>x.kind===kind&&x.key===key);
+    el.textContent=active?'♥ Saved':'♡ Favourite';
+    el.setAttribute('aria-pressed',String(active));
+    el.setAttribute('aria-label',active?'Remove from favourites':'Add to favourites');
+  });
+}
+function renderHeartClearFavourites(){
+  const section=document.getElementById('heartclearFavouritesSection');
+  const list=document.getElementById('heartclearFavouritesList');
+  if(!section||!list)return;
+  const favourites=getHeartClearFavourites();
+  section.hidden=!favourites.length;
+  list.replaceChildren();
+  favourites.forEach(item=>{
+    const button=document.createElement('button');
+    button.type='button';
+    button.className='hc-fav-open';
+    const label=document.createElement('span');
+    label.textContent=heartclearFavouriteLabel(item.kind,item.key);
+    const type=document.createElement('small');
+    type.textContent=item.kind==='meditation'?'Meditation':'Sound Lab';
+    button.append(label,type);
+    button.addEventListener('click',()=>openHeartClearFavourite(item.kind,item.key));
+    list.appendChild(button);
+  });
+  updateHeartClearFavouriteButtons();
+}
+function toggleHeartClearFavourite(kind,key){
+  const valid=kind==='soundlab'?Object.prototype.hasOwnProperty.call(soundLabTracks,key)
+    :kind==='meditation'&&heartclearMeditationTitles().includes(key);
+  if(!valid)return;
+  const current=getHeartClearFavourites();
+  const existing=current.findIndex(x=>x.kind===kind&&x.key===key);
+  if(existing>=0)current.splice(existing,1);else current.push({kind,key});
+  try{localStorage.setItem(HC_FAVOURITES_KEY,JSON.stringify(current.slice(0,32)))}catch(e){}
+  renderHeartClearFavourites();
+}
+function openHeartClearFavourite(kind,key){
+  if(kind==='soundlab'&&Object.prototype.hasOwnProperty.call(soundLabTracks,key)){
+    openSoundTrack(key);return;
+  }
+  if(kind==='meditation'){
+    const card=[...document.querySelectorAll('#practices .practice-card')].find(x=>x.querySelector('.practice-copy b')?.textContent?.trim()===key);
+    if(card){card.click();return}
+    show('practices');
+  }
+}
+
+
+/* Private, optional check-ins: no mood scores, account or network. */
+let hcMoodBefore='',hcMoodLogged=false;
+const HC_MOOD_KEY='heartclearMoodPairsV1';
+function hcChooseBeforeMood(value){
+  hcMoodBefore=value;
+  document.querySelectorAll('#hcMoodBefore button').forEach(btn=>btn.setAttribute('aria-pressed',String(btn.textContent.trim()===value)));
+}
+function hcGetMoodPairs(){
+  try{const result=JSON.parse(localStorage.getItem(HC_MOOD_KEY)||'[]');return Array.isArray(result)?result:[]}catch(e){return[]}
+}
+function hcRecordMoodAfter(value){
+  if(hcMoodLogged||!hcMoodBefore)return;
+  const rows=hcGetMoodPairs();
+  rows.push({before:hcMoodBefore,after:value,date:Date.now(),meditation:chosenKicker});
+  try{localStorage.setItem(HC_MOOD_KEY,JSON.stringify(rows.slice(-120)))}catch(e){}
+  hcMoodLogged=true;
+}
+function hcRenderMoodTrend(){
+  const svg=document.getElementById('hcMoodTrend'),label=document.getElementById('hcMoodTrendText');
+  if(!svg||!label)return;
+  svg.replaceChildren();
+  const recent=hcGetMoodPairs().filter(x=>x.date>=Date.now()-7*86400000);
+  if(!recent.length){label.textContent='No paired check-ins in the past seven days.';return}
+  label.textContent=recent.length+' optional check-in'+(recent.length===1?'':'s')+' in the past week.';
+  const ns='http://www.w3.org/2000/svg',states=['Calm','Clear','Restless','Tired','Unsure'];
+  function elem(name,attrs,labelText){
+    const el=document.createElementNS(ns,name);Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,String(v)));
+    if(labelText!==undefined)el.textContent=labelText;svg.append(el);
+  }
+  const max=Math.max(1,...states.map(x=>Math.max(recent.filter(y=>y.before===x).length,recent.filter(y=>y.after===x).length)));
+  states.forEach((state,i)=>{
+    const y=12+i*37;
+    elem('text',{x:5,y:y+15,fill:'#f8fbfd','font-size':12},state);
+    const before=recent.filter(x=>x.before===state).length;
+    const after=recent.filter(x=>x.after===state).length;
+    elem('rect',{x:96,y,width:Math.round(before/max*200),height:11,rx:3,fill:'#9ab5c0'});
+    elem('rect',{x:96,y:y+14,width:Math.round(after/max*200),height:11,rx:3,fill:'#fff'});
+    elem('text',{x:305,y:y+11,fill:'#dbe7ec','font-size':11},String(before));
+    elem('text',{x:330,y:y+25,fill:'#fff','font-size':11},String(after));
+  });
+  elem('text',{x:94,y:206,fill:'#9ab5c0','font-size':10},'Grey: before');
+  elem('text',{x:215,y:206,fill:'#fff','font-size':10},'White: after');
+}
+function hcSavePrivateNote(){
+  const note=document.getElementById('hcSessionNote'),status=document.getElementById('hcNoteStatus');
+  if(!note||completionHistoryIndex<0){if(status)status.textContent='Complete a practice before saving a note.';return}
+  const history=getHistory();
+  if(history[completionHistoryIndex]){
+    history[completionHistoryIndex].privateNote=note.value.trim();
+    saveHistory(history);
+    if(status)status.textContent='Saved privately on this device.';
+  }else if(status)status.textContent='This session is no longer available to update.';
+}
+function hcDownloadReminder(){
+  const input=document.getElementById('hcReminderTime'),status=document.getElementById('hcReminderStatus');
+  const v=input?.value||'20:00',parts=v.split(':').map(Number);
+  if(parts.length!==2||parts[0]>23||parts[1]>59){status.textContent='Choose a valid reminder time.';return}
+  const d=new Date(),start=new Date(d.getFullYear(),d.getMonth(),d.getDate(),parts[0],parts[1]);
+  if(start<=d)start.setDate(start.getDate()+1);
+  const local=date=>[date.getFullYear(),String(date.getMonth()+1).padStart(2,'0'),String(date.getDate()).padStart(2,'0')].join('')+'T'+String(date.getHours()).padStart(2,'0')+String(date.getMinutes()).padStart(2,'0')+'00';
+  const uid='hc-reminder-'+Date.now()+'@heartclear.local';
+  const ics=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//HeartClear//Optional practice reminder//EN',
+   'BEGIN:VEVENT','UID:'+uid,'DTSTAMP:'+new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,''),
+   'DTSTART:'+local(start),'DURATION:PT10M','RRULE:FREQ=DAILY',
+   'SUMMARY:HeartClear quiet practice','DESCRIPTION:Optional time for your own practice. No obligation.',
+   'BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:HeartClear practice reminder','TRIGGER:PT0S','END:VALARM',
+   'END:VEVENT','END:VCALENDAR',''].join('\r\n');
+  const url=URL.createObjectURL(new Blob([ics],{type:'text/calendar;charset=utf-8'}));
+  const a=document.createElement('a');a.href=url;a.download='heartclear-optional-daily-reminder.ics';
+  document.body.append(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  status.textContent='Calendar file prepared. Open it to accept the reminder in your calendar app.';
+}
+
+
+const HC_PATH_KEY='heartclearStarterV1';
+const hcStarterDays=[
+ {title:'Arriving',lesson:'Notice your surroundings, the points where you meet the chair or floor, and what you can hear. You do not need to produce a special feeling.',practice:'Five minutes of quiet listening.',type:'timer',minutes:5,reflection:'What did you first notice?'},
+ {title:'A natural breath',lesson:'The breath changes throughout the day. Rather than controlling it, first notice how it moves at its ordinary pace.',practice:'A gentle two-minute breath pacer with no holds.',type:'breath',minutes:2,reflection:'Was it easy to return to comfortable breathing?'},
+ {title:'Listening to nature',lesson:'Allow different sounds to arrive and leave. There is no need to identify every bird, drop or wave.',practice:'Listen to a recorded natural sound.',type:'sound',key:'rain',reflection:'What sounds were nearer and what sounds felt farther away?'},
+ {title:'Attention returns',lesson:'It is normal for attention to move. The practice is the simple return to listening, not keeping a perfectly clear mind.',practice:'Listen to Deep Wake Up through the normal guided introduction.',type:'meditation',key:'Deep Wake Up',reflection:'What helped you return when attention drifted?'},
+ {title:'Stillness in activity',lesson:'Attention is also useful during movement. Let the next ordinary action be enough.',practice:'Try One Object in Human Practice.',type:'human',category:'observe',reflection:'What detail might you usually overlook?'},
+ {title:'Space and silence',lesson:'Listen for pauses between sounds. Silence does not need to feel a certain way.',practice:'Five minutes of quiet meditation, bells optional.',type:'timer',minutes:5,reflection:'Did you notice any quiet moments?'},
+ {title:'Your own practice',lesson:'Choose what felt useful from this week. You can begin again from any day. A practice is not a grade.',practice:'Ten minutes of your own comfortable stillness.',type:'timer',minutes:10,reflection:'Which practice would you like to return to?'}
+];
+let hcPathCurrentDay=0;
+function hcPathData(){
+ try{const data=JSON.parse(localStorage.getItem(HC_PATH_KEY)||'{}');return {done:Array.isArray(data.done)?data.done:[],notes:data.notes&&typeof data.notes==='object'?data.notes:{}}}catch(e){return {done:[],notes:{}}}
+}
+function hcPersistPath(data){try{localStorage.setItem(HC_PATH_KEY,JSON.stringify(data))}catch(e){}}
+function hcOpenStarterPath(){
+  const saved=hcPathData();
+  hcPathCurrentDay=Math.max(0,hcStarterDays.findIndex((d,i)=>!saved.done.includes(i)));
+  hcRenderPath();show('starterPath');
+}
+function hcChoosePathDay(index){hcPathCurrentDay=Math.max(0,Math.min(6,index));hcRenderPath()}
+function hcRenderPath(){
+  const day=hcStarterDays[hcPathCurrentDay],saved=hcPathData(),buttons=document.getElementById('hcPathDayButtons');
+  if(!buttons)return;
+  buttons.replaceChildren();
+  hcStarterDays.forEach((item,i)=>{
+    const b=document.createElement('button');b.type='button';b.textContent=String(i+1)+(saved.done.includes(i)?' ✓':'');
+    b.setAttribute('aria-label','Day '+(i+1)+(saved.done.includes(i)?' completed':''));
+    b.setAttribute('aria-pressed',String(i===hcPathCurrentDay));
+    b.addEventListener('click',()=>hcChoosePathDay(i));buttons.append(b);
+  });
+  document.getElementById('hcPathDayLabel').textContent='Day '+(hcPathCurrentDay+1)+' of 7';
+  document.getElementById('hcPathTitle').textContent=day.title;
+  document.getElementById('hcPathLesson').textContent=day.lesson;
+  document.getElementById('hcPathPracticeText').textContent=day.practice;
+  document.getElementById('hcPathReflection').textContent='Reflect: '+day.reflection;
+  document.getElementById('hcPathNote').value=saved.notes[String(hcPathCurrentDay)]||'';
+  document.getElementById('hcPathMessage').textContent=saved.done.includes(hcPathCurrentDay)?'You marked this day complete. Revisit it anytime.':'Choose the practice whenever you are ready.';
+}
+function hcSavePathNote(){
+ const data=hcPathData();data.notes[String(hcPathCurrentDay)]=document.getElementById('hcPathNote').value.slice(0,700);
+ hcPersistPath(data);document.getElementById('hcPathMessage').textContent='Your note is saved on this device.';
+}
+function hcMarkPathDay(){
+ const data=hcPathData();data.notes[String(hcPathCurrentDay)]=document.getElementById('hcPathNote').value.slice(0,700);
+ if(!data.done.includes(hcPathCurrentDay))data.done.push(hcPathCurrentDay);
+ hcPersistPath(data);hcRenderPath();
+}
+function hcStartPathActivity(){
+ const day=hcStarterDays[hcPathCurrentDay];
+ if(day.type==='timer'||day.type==='breath'){
+  openQuietTimer();
+  document.getElementById('hcTimerMode').value=day.type==='breath'?'breath':'quiet';
+  document.getElementById('hcTimerMinutes').value=String(day.minutes);
+  hcTimerModeChanged();document.getElementById('hcTimerClock').textContent=fmt(day.minutes*60);
+ }else if(day.type==='sound')openSoundTrack(day.key);
+ else if(day.type==='meditation'){
+   const card=hcMeditationCards().find(x=>x.querySelector('.practice-copy b')?.textContent?.trim()===day.key);
+   if(card)card.click();else show('practices');
+ }else if(day.type==='human')openHumanCategory(day.category||'observe');
+}
+
+
+let hcPrivateIslamObjectUrl='',hcPrivateIslamTitle='Private Sufi listening',hcPrivateIslamMedia=null;
+const hcPrivateIslamAudio=document.getElementById('hcIslamPrivateAudio');
+const hcPrivateIslamVideo=document.getElementById('hcIslamPrivateVideo');
+function hcStopPrivateIslamFile(){
+  for(const el of [hcPrivateIslamAudio,hcPrivateIslamVideo]){el.pause();el.removeAttribute('src');el.load();el.hidden=true}
+  if(hcPrivateIslamObjectUrl){URL.revokeObjectURL(hcPrivateIslamObjectUrl);hcPrivateIslamObjectUrl=''}
+  hcPrivateIslamMedia=null;
+  const select=document.getElementById('hcIslamPrivateFile');if(select)select.value='';
+  const status=document.getElementById('hcIslamPrivateStatus');if(status)status.textContent='Private file closed. Nothing was uploaded.';
+  renderGlobalMini();
+}
+function hcLoadPrivateIslamFile(input){
+  const file=input?.files?.[0];if(!file)return;
+  hcStopPrivateIslamFile();
+  const isVideo=file.type.startsWith('video/')||/\.mp4$|\.mov$|\.webm$/i.test(file.name);
+  const el=isVideo?hcPrivateIslamVideo:hcPrivateIslamAudio;
+  hcPrivateIslamTitle=file.name.replace(/\.[a-z0-9]+$/i,'');
+  hcPrivateIslamObjectUrl=URL.createObjectURL(file);
+  hcPrivateIslamMedia=el;el.src=hcPrivateIslamObjectUrl;el.hidden=false;el.load();
+  const status=document.getElementById('hcIslamPrivateStatus');
+  if(status)status.textContent='Loaded locally: '+file.name+'. Press Play to listen. The file is not uploaded.';
+  for(const x of [audio,bookAudioEl,adhkarAudio,soundLabAudio,fearAudio,humanSoundAudio])if(x&&!x.paused)x.pause();
+}
+function hcPrivateIslamSession(){
+  if(!hcPrivateIslamMedia||!('mediaSession' in navigator))return;
+  try{
+    navigator.mediaSession.metadata=new MediaMetadata({title:hcPrivateIslamTitle,artist:'Personal file',album:'Private Sufi-inspired listening',artwork:hcArtwork()});
+    navigator.mediaSession.setActionHandler('play',()=>hcPrivateIslamMedia.play());
+    navigator.mediaSession.setActionHandler('pause',()=>hcPrivateIslamMedia.pause());
+  }catch(e){}
+}
+for(const el of [hcPrivateIslamAudio,hcPrivateIslamVideo]){
+  el.addEventListener('play',()=>{
+    for(const x of [audio,bookAudioEl,adhkarAudio,soundLabAudio,fearAudio,humanSoundAudio])if(x&&!x.paused)x.pause();
+    hcPrivateIslamMedia=el;hcPrivateIslamSession();rememberActiveMedia('private-islam');renderGlobalMini();
+  });
+  el.addEventListener('pause',renderGlobalMini);
+  el.addEventListener('timeupdate',renderGlobalMini);
+  el.addEventListener('ended',renderGlobalMini);
+}
+window.addEventListener('pagehide',()=>{if(hcPrivateIslamObjectUrl)hcStopPrivateIslamFile()});
 
 function rememberActiveMedia(key){
   try{localStorage.setItem('heartclearActiveMedia',key)}catch(e){}
@@ -4153,6 +4585,102 @@ if(adhkarVisualForPip){
 }
 
 
+
+/* Standalone timer, no network, no forced breath holds, catches up after background suspension. */
+let hcTimerActive=false,hcTimerPaused=false,hcTimerRemaining=600,hcTimerDeadline=0,hcTimerHandle=null,hcTimerStarted=0,hcTimerLastBell=0;
+let hcToneContext=null;
+function openQuietTimer(){
+  hcTimerStop(true);
+  show('quietTimer');hcTimerModeChanged();
+  const minutes=Number(document.getElementById('hcTimerMinutes').value)||10;
+  document.getElementById('hcTimerClock').textContent=fmt(minutes*60);
+  document.getElementById('hcTimerStatus').textContent='Ready to begin. Press Start when comfortable.';
+}
+function hcTimerModeChanged(){
+  const mode=document.getElementById('hcTimerMode').value;
+  document.getElementById('hcTimerBreathOptions').hidden=mode!=='breath';
+  document.getElementById('hcTimerPhase').textContent=mode==='breath'?'Breathe naturally':'Stillness';
+}
+function hcBell(){
+  if(!document.getElementById('hcTimerBell')?.checked)return;
+  try{
+    const C=window.AudioContext||window.webkitAudioContext;
+    if(!C)return;
+    if(!hcToneContext)hcToneContext=new C();
+    if(hcToneContext.state==='suspended')hcToneContext.resume().catch(()=>{});
+    const now=hcToneContext.currentTime;
+    [440,660].forEach((freq,i)=>{
+      const o=hcToneContext.createOscillator(),g=hcToneContext.createGain();
+      o.type='sine';o.frequency.setValueAtTime(freq,now);
+      g.gain.setValueAtTime(.0001,now);
+      g.gain.exponentialRampToValueAtTime(i===0?.026:.011,now+.06);
+      g.gain.exponentialRampToValueAtTime(.0001,now+1.9);
+      o.connect(g);g.connect(hcToneContext.destination);o.start(now);o.stop(now+2);
+    });
+  }catch(e){}
+}
+function hcTimerStop(silent=false){
+  if(hcTimerHandle){clearInterval(hcTimerHandle);hcTimerHandle=null}
+  hcTimerActive=false;hcTimerPaused=false;hcTimerStarted=0;hcTimerLastBell=0;
+  const disc=document.getElementById('hcTimerDisc');if(disc){disc.style.setProperty('--hc-breath-scale','1');disc.style.setProperty('--hc-breath-transition','0s')}
+  const btn=document.getElementById('hcTimerStart');if(btn)btn.textContent='Start';
+  if(!silent){const status=document.getElementById('hcTimerStatus');if(status)status.textContent='Timer stopped. Your progress is not graded.'}
+}
+function hcTimerToggle(){
+  const btn=document.getElementById('hcTimerStart');
+  if(hcTimerActive&&!hcTimerPaused){
+    hcTimerRemaining=Math.max(0,(hcTimerDeadline-Date.now())/1000);
+    hcTimerPaused=true;btn.textContent='Resume';
+    const status=document.getElementById('hcTimerStatus');if(status)status.textContent='Paused.';
+    return;
+  }
+  if(hcTimerActive&&hcTimerPaused){
+    hcTimerPaused=false;hcTimerDeadline=Date.now()+hcTimerRemaining*1000;btn.textContent='Pause';
+    hcTimerTick();return;
+  }
+  const minutes=Math.max(1,Number(document.getElementById('hcTimerMinutes').value)||10);
+  hcTimerActive=true;hcTimerPaused=false;hcTimerRemaining=minutes*60;hcTimerStarted=Date.now();
+  hcTimerDeadline=hcTimerStarted+hcTimerRemaining*1000;hcTimerLastBell=0;
+  btn.textContent='Pause';
+  if(!audio.paused)audio.pause();
+  if(!soundLabAudio.paused)soundLabAudio.pause();
+  if(!fearAudio.paused)fearAudio.pause();
+  if(!bookAudioEl.paused)bookAudioEl.pause();
+  hcBell();
+  if(hcTimerHandle)clearInterval(hcTimerHandle);
+  hcTimerHandle=setInterval(hcTimerTick,240);
+  hcTimerTick();
+}
+function hcTimerTick(){
+  if(!hcTimerActive||hcTimerPaused)return;
+  const remain=Math.max(0,(hcTimerDeadline-Date.now())/1000);
+  const duration=(Number(document.getElementById('hcTimerMinutes').value)||10)*60;
+  const elapsed=Math.max(0,duration-remain);
+  document.getElementById('hcTimerClock').textContent=fmt(Math.ceil(remain));
+  const interval=Number(document.getElementById('hcTimerInterval').value)||0;
+  const segment=Math.floor(elapsed/(interval*60||Infinity));
+  if(interval>0&&segment>hcTimerLastBell &&remain>2){hcTimerLastBell=segment;hcBell()}
+  if(document.getElementById('hcTimerMode').value==='breath'){
+    const [inhale,exhale]=document.getElementById('hcTimerBreathRatio').value.split(',').map(Number);
+    const cycle=inhale+exhale;
+    const phase=elapsed%cycle;
+    const inhaling=phase<inhale;
+    const fraction=inhaling?phase/inhale:(phase-inhale)/exhale;
+    const scale=inhaling?(.87+.28*fraction):(1.15-.28*fraction);
+    const disc=document.getElementById('hcTimerDisc');
+    disc.style.setProperty('--hc-breath-scale',String(scale));
+    disc.style.setProperty('--hc-breath-transition','.22s');
+    document.getElementById('hcTimerPhase').textContent=inhaling?'Inhale gently':'Exhale naturally';
+  }
+  document.getElementById('hcTimerStatus').textContent='In progress · stop whenever you need to.';
+  if(remain<=0){
+    hcTimerStop(true);hcBell();
+    document.getElementById('hcTimerClock').textContent='00:00';
+    document.getElementById('hcTimerPhase').textContent='Finished';
+    document.getElementById('hcTimerStatus').textContent='Time complete. Return when ready.';
+  }
+}
+
 function openSoundLab(){
   show('soundLab');
 }
@@ -4253,6 +4781,7 @@ function openSoundTrack(key){
   setSoundLabMediaSession();
   show('soundLabPlayer');
   syncSoundLab();
+  updateHeartClearFavouriteButtons();
 }
 
 let soundLabPlayRequested=false;
@@ -4679,6 +5208,7 @@ function clearLocalHistory(){
       if(k.startsWith('clearWithinHistory')||k.startsWith('clearWithinResume:')||k==='clearWithinLastSession') localStorage.removeItem(k);
     });
   }catch(e){}
+  try{localStorage.removeItem(HC_MOOD_KEY)}catch(e){}
   renderDashboard();renderHistory();
 }
 
@@ -4690,11 +5220,22 @@ function choosePractice(seconds,url,kicker,title,introUrl,visualUrl){
   chosenUrl=url;
   chosenIntroUrl=introUrl || '';
   chosenVisualUrl=visualUrl || '';
+  hcMoodBefore='';hcMoodLogged=false;
+  document.querySelectorAll('#hcMoodBefore button').forEach(b=>b.setAttribute('aria-pressed','false'));
   chosenKicker=kicker || 'Practice';
+  const purposes={
+    'Deep Wake Up':'Begin the day by returning attention to comfortable breath and surroundings.',
+    'Noon Reset':'Notice the middle of your day and give yourself time without multitasking.',
+    'Evening Release':'Practise listening and settling without needing to change how you feel.',
+    'Deep Sleep':'Make room for a quieter evening; you can pause or stop any time.'
+  };
+  const purpose=document.getElementById('hcPurposeText');
+  if(purpose)purpose.textContent=purposes[chosenKicker]||'Practise attention at your own pace.';
   chosenTitle=title || 'Breathing practice';
   stepIndex=0;
   renderStep();
   preparePlayer();
+  updateHeartClearFavouriteButtons();
   try{localStorage.setItem('sufiLastPractice',chosenKicker)}catch(e){}
   showSessionReady();
 }
@@ -4725,7 +5266,8 @@ function applyPracticeVolume(){
 
 function updatePracticeSoundNotice(){
   const notice=document.getElementById('practiceSoundNotice');
-  if(notice)notice.hidden=!(audio.muted||audio.volume===0);
+  // Timed fade-to-zero is intentional, not a muted user preference.
+  if(notice)notice.hidden=!(audio.muted||Number(volume.value)===0);
 }
 
 function restorePracticeSound(){
@@ -4899,7 +5441,9 @@ function toggleOptions(){
 function setSleepTimer(value){
   const sec=Number(value)||0;
   sleepStopAt=sec>0 ? Math.min(chosenSeconds,(audio.currentTime||0)+sec) : 0;
-  document.getElementById('playerNote').textContent=sec>0 ? 'Will stop in '+fmt(sec)+'.' : 'Will stop at the end of the session.';
+  sleepTimerFadeActive=false;
+  applyPracticeVolume();
+  document.getElementById('playerNote').textContent=sec>0 ? 'Will fade out gently and stop in '+fmt(sec)+'.' : 'Will stop at the end of the session.';
 }
 
 function hcArtwork(){
@@ -5051,6 +5595,7 @@ function openHistory(){
 }
 
 function renderHistory(){
+  hcRenderMoodTrend();
   const items=getHistory().slice().reverse();
   const stats=last7DayStats();
   const a=document.getElementById('histWeekSessions');
@@ -5126,6 +5671,8 @@ function completeSession(completed=false){
   const t=completed?chosenSeconds:Math.max(0,Math.min(chosenSeconds,audio.currentTime||0));
   audio.pause();
   const pv=document.getElementById('practiceVisual'); if(pv)pv.pause();
+  sleepStopAt=0;sleepTimerFadeActive=false;
+  applyPracticeVolume();
   recordSession(completed);
   clearLastSession();
   // Do not keep the completed music recording as an unfinished meditation.
@@ -5135,6 +5682,8 @@ function completeSession(completed=false){
   document.getElementById('completionSummary').textContent='You practiced for '+friendlyDuration(t)+'.';
   document.getElementById('completionPractice').textContent=chosenKicker;
   document.querySelectorAll('.reflection-chip').forEach(x=>x.classList.remove('selected'));
+  const memo=document.getElementById('hcSessionNote');if(memo)memo.value='';
+  const msg=document.getElementById('hcNoteStatus');if(msg)msg.textContent='';
   show('completion');
   renderDashboard();
 }
@@ -5149,6 +5698,7 @@ function friendlyDuration(sec){
 }
 
 function saveReflection(value,el){
+  hcRecordMoodAfter(value);
   document.querySelectorAll('.reflection-chip').forEach(x=>x.classList.remove('selected'));
   if(el)el.classList.add('selected');
   const items=getHistory();
@@ -5263,6 +5813,8 @@ function restart(){
   const pv=document.getElementById('practiceVisual');
   if(pv){pv.pause();try{pv.currentTime=0}catch(e){}}
   sleepStopAt=0;
+  sleepTimerFadeActive=false;
+  applyPracticeVolume();
   document.getElementById('sleepTimer').value='0';
   try{localStorage.removeItem('clearWithinResume:'+chosenKicker)}catch(e){}
   document.getElementById('playerNote').textContent='Restarted. Press Play when ready.';
@@ -5284,12 +5836,27 @@ function sync(){
     loadNatureSound().catch(()=>{});
   }
 
-  if(sleepStopAt>0 && t>=sleepStopAt){
-    audio.pause();
-    sleepStopAt=0;
-    document.getElementById('sleepTimer').value='0';
-    document.getElementById('playerNote').textContent='Timer finished.';
+  if(sleepStopAt>0){
+    const left=sleepStopAt-t;
+    if(left<=0){
+      audio.pause();
+      sleepStopAt=0;
+      sleepTimerFadeActive=false;
+      applyPracticeVolume();
+      document.getElementById('sleepTimer').value='0';
+      document.getElementById('playerNote').textContent='Timer finished gently.';
+    }else if(left<=10 && !audio.paused){
+      // The last 10 seconds attenuate the audible level without modifying the saved slider value.
+      sleepTimerFadeActive=true;
+      const selected=Number(volume.value);
+      audio.volume=Math.max(0,Math.min(1,Number.isFinite(selected)?selected:.85))*Math.max(0,Math.min(1,left/10));
+    }else if(sleepTimerFadeActive){
+      sleepTimerFadeActive=false;
+      applyPracticeVolume();
+    }
   }
+
+
 
   // Never stop an instructor early because a listed duration differs from the file.
   if(t>20 && !audio.ended){
@@ -5352,7 +5919,10 @@ seek.addEventListener('input',()=>{
 });
 volume.addEventListener('input',()=>{
   if(playbackPhase==='nature')syncNature();
-  else audio.volume=Number(volume.value);
+  else if(sleepTimerFadeActive&&sleepStopAt>0){
+    const remaining=Math.max(0,sleepStopAt-(audio.currentTime||0));
+    audio.volume=Number(volume.value)*Math.min(1,remaining/10);
+  }else audio.volume=Number(volume.value);
   // Persist the selected level, not the temporary closing-fade attenuation.
   try{localStorage.setItem('sufiVolume',String(Number(volume.value)))}catch(e){}
 });
@@ -5416,6 +5986,7 @@ try{
 setGreeting();
 renderLocalContext();
 renderDashboard();
+renderHeartClearFavourites();
 renderSettings();
 
 const greetingRefreshTimer=setInterval(setGreeting,60000);
@@ -5458,7 +6029,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=79');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=80');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
