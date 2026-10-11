@@ -2043,7 +2043,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v57</div>
+    <div class="app-version">HeartClear · prototype v58</div>
   </div>
 </section>
 
@@ -2229,10 +2229,14 @@ let natureSoundURL='';
 let natureSoundPromise=null;
 let natureCycleCount=0;
 let natureLastPosition=0;
+let naturePrefetchStarted=false;
 let natureAfterSeconds=180;
 try{
-  const configured=Number(localStorage.getItem('heartclearNatureAfterSeconds'));
-  if([0,120,180,300].includes(configured)) natureAfterSeconds=configured;
+  const savedNature=localStorage.getItem('heartclearNatureAfterSeconds');
+  if(savedNature!==null){
+    const configured=Number(savedNature);
+    if([0,120,180,300].includes(configured))natureAfterSeconds=configured;
+  }
 }catch(e){}
 
 const NATURE_AUDIO_BYTES=4321197;
@@ -4020,8 +4024,8 @@ function preparePlayer(){
   playbackPhase='meditation';
   audio.loop=false;
   audio.pause();
-  // Prefetch the closing sound while the guided recording plays.
-  if(natureAfterSeconds)loadNatureSound().catch(()=>{});
+  // Begin loading closing ambience after the guided audio starts.
+  naturePrefetchStarted=false;
   setNatureAfterSeconds(natureAfterSeconds);
   const pv=document.getElementById('practiceVisual');
   if(pv){
@@ -4465,6 +4469,10 @@ function sync(){
   if(playbackPhase==='nature'){syncNature();return;}
   const actualDuration=meditationActualDuration();
   let t=Math.min(actualDuration,audio.currentTime||0);
+  if(t>=6 && !naturePrefetchStarted && natureAfterSeconds && !audio.paused){
+    naturePrefetchStarted=true;
+    loadNatureSound().catch(()=>{});
+  }
 
   if(sleepStopAt>0 && t>=sleepStopAt){
     audio.pause();
@@ -4551,7 +4559,7 @@ introVideo.addEventListener('error',()=>{
   document.querySelector('.intro-note').textContent='Intro could not load. Continue to the instructions.';
 });
 
-document.querySelector('.player-orb').addEventListener('keydown',e=>{
+document.querySelector('#player .player-artwork').addEventListener('keydown',e=>{
   if(e.key==='Enter'||e.key===' '){e.preventDefault();togglePlay()}
 });
 document.addEventListener('visibilitychange',()=>{
