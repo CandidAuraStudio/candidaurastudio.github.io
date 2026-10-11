@@ -918,6 +918,46 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
 .return-note{width:100%;min-height:86px;margin-top:12px;border-radius:15px;border:1px solid rgba(198,225,236,.10);background:#07151f;color:#e7eef1;padding:12px;font:inherit;font-size:12px;resize:vertical}
 .return-meta{display:flex;justify-content:space-between;gap:12px;margin-top:10px;color:#8298a3;font-size:10px}
 
+
+/* Session Ready + Local Context v46 */
+.session-ready-card{padding:24px 20px}
+.ready-icon{
+  width:92px;height:92px;border-radius:30px;margin:4px auto 20px;display:grid;place-items:center;
+  border:1px solid rgba(210,231,237,.12);
+  background:linear-gradient(145deg,rgba(20,50,65,.78),rgba(5,18,28,.88));
+  color:#d6b477;font-size:30px;box-shadow:0 24px 55px rgba(0,0,0,.22)
+}
+.ready-kicker{text-align:center;color:#b69865;font-size:10px;letter-spacing:.12em;text-transform:uppercase}
+.ready-title{text-align:center;font-size:28px;margin-top:7px}
+.ready-copy{text-align:center;max-width:350px;margin:8px auto 0;color:#91a5ae;font-size:12px;line-height:1.55}
+.ready-list{display:grid;gap:10px;margin-top:20px}
+.ready-row{
+  display:grid;grid-template-columns:36px minmax(0,1fr);gap:11px;align-items:start;
+  padding:13px 14px;border-radius:17px;border:1px solid rgba(198,225,236,.08);
+  background:rgba(5,18,27,.44)
+}
+.ready-row span:first-child{
+  width:32px;height:32px;border-radius:11px;display:grid;place-items:center;
+  background:rgba(18,43,55,.70);color:#c6aa78;font-size:12px
+}
+.ready-row b{display:block;font-size:12px}
+.ready-row small{display:block;color:#8096a1;font-size:10px;line-height:1.45;margin-top:3px}
+.ready-help{
+  margin-top:11px;padding:12px 13px;border-radius:15px;background:rgba(110,77,39,.10);
+  border:1px solid rgba(211,176,112,.12);color:#ad966e;font-size:10px;line-height:1.5
+}
+.local-context-card{
+  display:none;margin-top:12px;padding:13px 14px;border-radius:17px;
+  border:1px solid rgba(198,225,236,.08);background:rgba(5,18,27,.44)
+}
+.local-context-card.show{display:block}
+.local-context-card b{display:block;font-size:12px}
+.local-context-card span{display:block;color:#8298a3;font-size:10px;margin-top:3px}
+.context-weather{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  margin-top:8px;color:#d6bd8f;font-size:12px
+}
+
 </style>
 </head>
 <body>
@@ -948,6 +988,12 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
     <b id="dailyNoteTitle">Voice is physical sound.</b>
     <p id="dailyNoteText">The vocal folds create pressure waves in air. Meaning, rhythm and attention shape how that sound is experienced.</p>
     <span class="daily-source" id="dailyNoteSource">Human attention</span>
+  </div>
+
+  <div class="local-context-card" id="localContextCard">
+    <b>Local context</b>
+    <span id="localContextMeta">Optional weather and daylight context</span>
+    <div class="context-weather"><span id="localContextWeather">—</span><span id="localContextLight">—</span></div>
   </div>
 
   <div class="home-dashboard">
@@ -1028,6 +1074,35 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
   </div>
   <p class="library-footnote"><span aria-hidden="true">✦</span><span>Choose a session to see a few gentle instructions first. The audio starts only when you press Play.</span></p>
   
+</section>
+
+<section class="screen" id="sessionReady">
+  <div class="glass session-ready-card">
+    <div class="ready-icon">◌</div>
+    <div class="ready-kicker">Before you begin</div>
+    <h2 class="ready-title">Protect this time.</h2>
+    <p class="ready-copy" id="readySessionText">You are about to begin a HeartClear session.</p>
+
+    <div class="ready-list">
+      <div class="ready-row">
+        <span>1</span>
+        <div><b>Turn on Do Not Disturb or Silent</b><small>HeartClear cannot switch system Focus/DND automatically from the web app.</small></div>
+      </div>
+      <div class="ready-row">
+        <span>2</span>
+        <div><b>Settle somewhere safe</b><small>Do not begin a guided practice while driving, in water, or anywhere you need full attention for safety.</small></div>
+      </div>
+      <div class="ready-row">
+        <span>3</span>
+        <div><b>Then leave the phone alone</b><small>After playback starts, lock the screen or place the phone down. Background audio can continue where the browser allows it.</small></div>
+      </div>
+    </div>
+
+    <div class="ready-help" id="readyDeviceHelp">Android: swipe down for Quick Settings → Do Not Disturb. iPhone: Control Center → Focus → Do Not Disturb.</div>
+
+    <button class="btn" onclick="confirmSessionReady()">Quiet mode is on · Continue</button>
+    <button class="btn secondary" onclick="show('practices')">Not now</button>
+  </div>
 </section>
 
 <section class="screen" id="intro">
@@ -1453,12 +1528,16 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
         <div><strong>Offline media</strong><small id="offlineStorageText">No saved media yet</small></div>
         <button class="offline-action" onclick="clearOfflineMedia()">Clear</button>
       </div>
+      <div class="setting-row" id="localContextSetting">
+        <div><strong>Local context</strong><small id="localContextSettingText">Optional: use your location for current weather and daylight. HeartClear does not store exact coordinates.</small></div>
+        <button class="offline-action" id="localContextBtn" onclick="toggleLocalContext()">Use location</button>
+      </div>
       <div class="setting-row">
         <div><strong>Install app</strong><small>iPhone: Safari → Share → Add to Home Screen<br>Android: Chrome → Install app</small></div>
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v45</div>
+    <div class="app-version">HeartClear · prototype v46</div>
   </div>
 </section>
 
@@ -1751,7 +1830,7 @@ function show(id){
   const target=document.getElementById(id);
   if(target) target.classList.add('active');
 
-  const immersive=['intro','prep','instructions','player','completion','humanSession','sacredSession','bookAudio','bookReader'].includes(id);
+  const immersive=['sessionReady','intro','prep','instructions','player','completion','humanSession','sacredSession','bookAudio','bookReader'].includes(id);
   document.getElementById('bottomNav').classList.toggle('hidden',immersive);
   document.getElementById('appTopBar').classList.toggle('hidden',immersive);
 
@@ -2276,14 +2355,116 @@ function renderDailyNote(){
   if(s)s.textContent=n.source||'HeartClear';
 }
 
+function localWeatherLabel(code){
+  const map={
+    0:'Clear',1:'Mostly clear',2:'Partly cloudy',3:'Cloudy',
+    45:'Fog',48:'Fog',
+    51:'Light drizzle',53:'Drizzle',55:'Heavy drizzle',
+    61:'Light rain',63:'Rain',65:'Heavy rain',
+    71:'Light snow',73:'Snow',75:'Heavy snow',
+    80:'Rain showers',81:'Rain showers',82:'Heavy showers',
+    95:'Thunderstorm',96:'Thunderstorm',99:'Thunderstorm'
+  };
+  return map[Number(code)]||'Current conditions';
+}
+
+function hhmm(iso){
+  if(!iso)return '';
+  try{return new Date(iso).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}catch(e){return ''}
+}
+
+async function toggleLocalContext(){
+  const enabled=localStorage.getItem('heartclearLocalContext')==='1';
+  if(enabled){
+    localStorage.removeItem('heartclearLocalContext');
+    localStorage.removeItem('heartclearLocalWeather');
+    renderLocalContext();
+    renderSettings();
+    return;
+  }
+
+  if(!('geolocation' in navigator)){
+    const txt=document.getElementById('localContextSettingText');
+    if(txt)txt.textContent='Location is not available in this browser.';
+    return;
+  }
+
+  const btn=document.getElementById('localContextBtn');
+  if(btn){btn.disabled=true;btn.textContent='Locating…'}
+
+  navigator.geolocation.getCurrentPosition(async position=>{
+    try{
+      const lat=position.coords.latitude;
+      const lon=position.coords.longitude;
+      const url='https://api.open-meteo.com/v1/forecast?latitude='+encodeURIComponent(lat)+'&longitude='+encodeURIComponent(lon)+'&current=temperature_2m,weather_code,is_day&daily=sunrise,sunset&forecast_days=1&timezone=auto';
+      const r=await fetch(url,{cache:'no-store'});
+      if(!r.ok)throw new Error('weather');
+      const data=await r.json();
+
+      const weather={
+        temperature:Math.round(Number(data.current?.temperature_2m)),
+        code:Number(data.current?.weather_code),
+        isDay:Number(data.current?.is_day)===1,
+        sunrise:data.daily?.sunrise?.[0]||'',
+        sunset:data.daily?.sunset?.[0]||'',
+        savedAt:Date.now()
+      };
+
+      localStorage.setItem('heartclearLocalContext','1');
+      localStorage.setItem('heartclearLocalWeather',JSON.stringify(weather));
+      renderLocalContext();
+      renderSettings();
+    }catch(e){
+      const txt=document.getElementById('localContextSettingText');
+      if(txt)txt.textContent='Location worked, but weather could not be loaded.';
+    }
+    if(btn)btn.disabled=false;
+  },()=>{
+    const txt=document.getElementById('localContextSettingText');
+    if(txt)txt.textContent='Location was not allowed. HeartClear works normally without it.';
+    if(btn){btn.disabled=false;btn.textContent='Use location'}
+  },{enableHighAccuracy:false,timeout:10000,maximumAge:900000});
+}
+
+function renderLocalContext(){
+  const enabled=localStorage.getItem('heartclearLocalContext')==='1';
+  const card=document.getElementById('localContextCard');
+  const btn=document.getElementById('localContextBtn');
+  const settingText=document.getElementById('localContextSettingText');
+  if(btn){
+    btn.textContent=enabled?'Turn off':'Use location';
+    btn.classList.toggle('saved',enabled);
+  }
+  if(settingText){
+    settingText.textContent=enabled
+      ?'Enabled. Exact coordinates are not stored by HeartClear.'
+      :'Optional: use your location for current weather and daylight. HeartClear does not store exact coordinates.';
+  }
+  if(!card)return;
+  card.classList.toggle('show',enabled);
+  if(!enabled)return;
+
+  try{
+    const w=JSON.parse(localStorage.getItem('heartclearLocalWeather')||'null');
+    if(!w)return;
+    const weather=document.getElementById('localContextWeather');
+    const light=document.getElementById('localContextLight');
+    const meta=document.getElementById('localContextMeta');
+    if(weather)weather.textContent=(Number.isFinite(w.temperature)?w.temperature+'°C · ':'')+localWeatherLabel(w.code);
+    if(light)light.textContent=w.isDay?('Sunset '+hhmm(w.sunset)):('Sunrise '+hhmm(w.sunrise));
+    if(meta)meta.textContent='Weather/daylight from your permitted location';
+  }catch(e){}
+}
+
 function setGreeting(){
   renderDailyNote();
   const h=new Date().getHours();
-  const g=h<12?'Good morning':h<18?'Good afternoon':'Good evening';
+  const g=h>=5&&h<12?'Good morning':h>=12&&h<17?'Good afternoon':h>=17&&h<21?'Good evening':'Good night';
   const el=document.getElementById('timeGreeting'); if(el)el.textContent=g;
 }
 
 function renderSettings(){
+  renderLocalContext();
   const reduced=document.body.classList.contains('reduce-motion');
   const sw=document.getElementById('reduceMotionSwitch'); if(sw)sw.classList.toggle('on',reduced);
   const ww=document.getElementById('wakeLockSwitch'); if(ww)ww.classList.toggle('on',wakeLockEnabled);
@@ -2333,6 +2514,23 @@ function choosePractice(seconds,url,kicker,title,introUrl,visualUrl){
   renderStep();
   preparePlayer();
   try{localStorage.setItem('sufiLastPractice',chosenKicker)}catch(e){}
+  showSessionReady();
+}
+
+function showSessionReady(){
+  const t=document.getElementById('readySessionText');
+  if(t)t.textContent=chosenKicker+' · '+fmt(chosenSeconds)+' protected time.';
+  const help=document.getElementById('readyDeviceHelp');
+  if(help){
+    const ua=navigator.userAgent||'';
+    if(/Android/i.test(ua))help.textContent='Android: swipe down for Quick Settings → Do Not Disturb. Return to HeartClear when it is on.';
+    else if(/iPhone|iPad|iPod/i.test(ua))help.textContent='iPhone/iPad: open Control Center → Focus → Do Not Disturb. Return to HeartClear when it is on.';
+    else help.textContent='Turn on your device’s Do Not Disturb, Focus or Silent mode before continuing.';
+  }
+  show('sessionReady');
+}
+
+function confirmSessionReady(){
   startIntro();
 }
 
@@ -2511,6 +2709,7 @@ function last7DayStats(){
 }
 
 function renderDashboard(){
+  renderLocalContext();
   const stats=last7DayStats();
   const s=document.getElementById('homeWeekSessions');
   const m=document.getElementById('homeWeekMinutes');
@@ -2853,6 +3052,7 @@ try{
   if(localStorage.getItem('clearWithinReducedMotion')==='1') document.body.classList.add('reduce-motion');
 }catch(e){}
 setGreeting();
+renderLocalContext();
 renderDashboard();
 renderSettings();
 
