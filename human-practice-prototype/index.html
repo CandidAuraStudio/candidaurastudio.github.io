@@ -1440,7 +1440,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
 <section class="screen" id="intro">
   <div class="glass intro-card">
     <div class="intro-media">
-      <video id="introVideo" muted playsinline preload="metadata"></video>
+      <video id="introVideo" playsinline preload="auto"></video>
       <div class="intro-overlay">
         <div class="intro-copy">
           <div class="kicker">HC · HeartClear</div>
@@ -1449,7 +1449,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
         <button class="intro-skip" onclick="finishIntro()">Skip</button>
       </div>
     </div>
-    <p class="intro-note">A short visual first. Then the instructions.</p>
+    <p class="intro-note">The session begins here.</p>
   </div>
 </section>
 
@@ -2043,7 +2043,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v61</div>
+    <div class="app-version">HeartClear · prototype v62</div>
   </div>
 </section>
 
@@ -3942,7 +3942,7 @@ function choosePractice(seconds,url,kicker,title,introUrl,visualUrl){
   renderStep();
   preparePlayer();
   try{localStorage.setItem('sufiLastPractice',chosenKicker)}catch(e){}
-  showSessionReady();
+  startIntro();
 }
 
 function showSessionReady(){
@@ -3962,24 +3962,48 @@ function confirmSessionReady(){
   startIntro();
 }
 
+let introShouldPlay=false;
+
 function startIntro(){
   const v=document.getElementById('introVideo');
   document.getElementById('introTitle').textContent=chosenKicker;
   v.pause();
   v.src=chosenIntroUrl;
   v.currentTime=0;
+  v.muted=false;
+  v.volume=Math.max(.35,Math.min(1,Number(audio.volume)||.85));
+  introShouldPlay=!!chosenIntroUrl;
   show('intro');
+
   if(chosenIntroUrl){
-    v.play().catch(()=>{});
+    v.play().catch(()=>{
+      const note=document.querySelector('.intro-note');
+      if(note)note.textContent='Tap the video once to begin.';
+    });
   }else{
     finishIntro();
   }
 }
 
-function finishIntro(){
+async function finishIntro(){
   const v=document.getElementById('introVideo');
+  introShouldPlay=false;
   v.pause();
-  startPrep();
+  show('player');
+
+  if(audio.paused){
+    try{
+      await audio.play();
+      rememberActiveMedia('meditation');
+      syncPracticeVisual(true);
+      if(!sessionStartedAt)sessionStartedAt=Date.now();
+      resumeCard.classList.remove('show');
+      document.getElementById('playerNote').textContent='Playing';
+    }catch(e){
+      document.getElementById('playerNote').textContent='Tap Play to begin.';
+    }
+  }
+  sync();
 }
 
 function startPrep(){
@@ -4560,8 +4584,18 @@ setInterval(sync,500);
 const introVideo=document.getElementById('introVideo');
 introVideo.addEventListener('ended',finishIntro);
 introVideo.addEventListener('error',()=>{
-  document.querySelector('.intro-note').textContent='Intro could not load. Continue to the instructions.';
+  introShouldPlay=false;
+  const note=document.querySelector('.intro-note');
+  if(note)note.textContent='Video could not load. Opening the meditation player.';
+  finishIntro();
 });
+
+function resumeIntroAfterScroll(){
+  if(currentScreenId!=='intro'||!introShouldPlay||document.hidden||introVideo.ended)return;
+  if(introVideo.paused)introVideo.play().catch(()=>{});
+}
+window.addEventListener('scroll',resumeIntroAfterScroll,{passive:true});
+window.addEventListener('touchend',resumeIntroAfterScroll,{passive:true});
 
 document.querySelector('#player .player-artwork').addEventListener('keydown',e=>{
   if(e.key==='Enter'||e.key===' '){e.preventDefault();togglePlay()}
