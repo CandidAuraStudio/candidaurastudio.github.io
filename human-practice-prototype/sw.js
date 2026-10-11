@@ -1,4 +1,4 @@
-const APP_CACHE='heartclear-v79';
+const APP_CACHE='heartclear-v80';
 const MEDIA_CACHE='heartclear-media-v1';
 
 self.addEventListener('install',event=>{
@@ -37,9 +37,15 @@ async function cachedMediaResponse(request,cached){
     const start=Number(match[1]);
     const end=match[2] ? Math.min(Number(match[2]),buffer.byteLength-1) : buffer.byteLength-1;
 
-    if(start>=buffer.byteLength || end<start)return cached;
+    if(start>=buffer.byteLength || end<start){
+      return new Response(null,{status:416,statusText:'Range Not Satisfiable',
+        headers:{'Content-Range':`bytes */${buffer.byteLength}`,'Accept-Ranges':'bytes'}});
+    }
 
     const headers=new Headers(cached.headers);
+    // Cached response bytes are decoded, so remove representation headers incompatible with a byte slice.
+    headers.delete('Content-Encoding');
+    headers.delete('Transfer-Encoding');
     headers.set('Content-Range',`bytes ${start}-${end}/${buffer.byteLength}`);
     headers.set('Accept-Ranges','bytes');
     headers.set('Content-Length',String(end-start+1));
