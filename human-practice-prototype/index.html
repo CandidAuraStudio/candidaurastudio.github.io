@@ -732,6 +732,34 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
 .player-artwork:before,.player-artwork:after{z-index:2}
 .waveform{z-index:3}
 
+
+/* Islamic featured listening session v39 */
+.sacred-feature{
+  display:none;margin-top:14px;padding:15px;border-radius:20px;
+  border:1px solid rgba(212,178,115,.14);
+  background:linear-gradient(145deg,rgba(25,44,47,.72),rgba(6,18,26,.78))
+}
+.sacred-feature.show{display:block}
+.sacred-feature b{display:block;font-size:15px}
+.sacred-feature small{display:block;color:#8ca1aa;font-size:11px;line-height:1.5;margin-top:5px}
+.sacred-feature-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
+.sacred-feature-actions button{
+  border:1px solid rgba(212,178,115,.16);background:rgba(7,21,29,.62);
+  color:#d7c198;border-radius:14px;padding:11px;font:inherit;font-size:12px
+}
+.sacred-video{width:100%;border-radius:20px;background:#02070b;margin-top:16px}
+.mode-tabs{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:13px}
+.mode-tabs button{
+  border:1px solid rgba(198,225,236,.09);background:rgba(5,18,27,.50);color:#95a9b3;
+  border-radius:14px;padding:11px;font:inherit;font-size:12px
+}
+.mode-tabs button.active{color:#e0c38d;border-color:rgba(215,181,116,.25);background:rgba(118,80,37,.14)}
+.sacred-guidance{
+  margin-top:12px;padding:13px 14px;border-radius:16px;
+  border:1px solid rgba(198,225,236,.07);background:rgba(5,18,27,.44);
+  color:#91a5ae;font-size:12px;line-height:1.55
+}
+
 </style>
 </head>
 <body>
@@ -1062,12 +1090,44 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
       <div class="principle-row"><b>4 · Sound, then silence</b><span>Repeat only if appropriate to the tradition, then leave a short quiet space.</span></div>
     </div>
 
+    <div class="sacred-feature" id="islamicFeatured">
+      <b>Morning Adhkar · 28 min</b>
+      <small>Use it as a standalone listening session or after a gentle practice. Choose quiet listening or recite along at a comfortable voice and pace.</small>
+      <div class="sacred-feature-actions">
+        <button onclick="openAdhkar('listen')">Listen</button>
+        <button onclick="openAdhkar('recite')">Recite Along</button>
+      </div>
+      <span class="rights-pill">Pilot source · confirm media permission before public release</span>
+    </div>
+
     <div class="empty-shelf" style="margin-top:14px">
       <div class="empty-icon">♪</div>
       <strong id="sacredEmptyTitle">Sound sessions are ready to be added</strong>
       <p id="sacredEmptyText">We will add rights-cleared recordings and accurate text/meaning here.</p>
       <span class="rights-pill">Original / permissioned / licensed audio</span>
     </div>
+  </div>
+</section>
+
+<section class="screen" id="sacredSession">
+  <div class="glass">
+    <button class="collection-back" onclick="show('sacredDetail')">‹ Islamic</button>
+    <div class="kicker">Islamic · Sacred Sound</div>
+    <h2>Morning Adhkar</h2>
+    <p>28:18 · supplication and remembrance</p>
+
+    <video id="adhkarVideo" class="sacred-video" controls playsinline preload="metadata" src="https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/4d1904e8-d767-49f3-935b-dda2b31c3082.mp4"></video>
+
+    <div class="mode-tabs">
+      <button id="listenModeBtn" class="active" onclick="setAdhkarMode('listen')">Listen</button>
+      <button id="reciteModeBtn" onclick="setAdhkarMode('recite')">Recite Along</button>
+    </div>
+
+    <div class="sacred-guidance" id="adhkarGuidance">
+      Listen quietly. You can close your eyes if you are somewhere safe, or simply let the recitation hold your attention.
+    </div>
+
+    <div class="hub-note">Sound is physical vibration, but HeartClear does not claim that one recitation or frequency automatically changes the nervous system. Meaning, rhythm, familiarity, breathing and attention can all shape the experience.</div>
   </div>
 </section>
 
@@ -1250,7 +1310,7 @@ function show(id){
   const target=document.getElementById(id);
   if(target) target.classList.add('active');
 
-  const immersive=['intro','prep','instructions','player','completion','humanSession'].includes(id);
+  const immersive=['intro','prep','instructions','player','completion','humanSession','sacredSession'].includes(id);
   document.getElementById('bottomNav').classList.toggle('hidden',immersive);
   document.getElementById('appTopBar').classList.toggle('hidden',immersive);
 
@@ -1266,6 +1326,8 @@ function show(id){
     if(id==='player') pv.play().catch(()=>{});
     else pv.pause();
   }
+  const av=document.getElementById('adhkarVideo');
+  if(av && id!=='sacredSession') av.pause();
   if(id==='home') renderDashboard();
   if(id==='history') renderHistory();
   if(id==='settings') renderSettings();
@@ -1425,7 +1487,32 @@ function openSacred(kind){
   document.getElementById('sacredTitle').textContent=data.title||'Sacred Sound';
   document.getElementById('sacredDescription').textContent=data.description||'';
   document.getElementById('sacredMeaning').textContent=data.meaning||'Understand the meaning before listening.';
+  const featured=document.getElementById('islamicFeatured');
+  if(featured) featured.classList.toggle('show',kind==='islamic');
+  const empty=document.getElementById('sacredEmptyTitle');
+  const emptyText=document.getElementById('sacredEmptyText');
+  if(empty) empty.textContent=kind==='islamic'?'More sessions can be added':'Sound sessions are ready to be added';
+  if(emptyText) emptyText.textContent=kind==='islamic'?'Add more rights-cleared dua, dhikr or Quranic listening here.':'We will add rights-cleared recordings and accurate text/meaning here.';
   show('sacredDetail');
+}
+
+function openAdhkar(mode){
+  const v=document.getElementById('adhkarVideo');
+  if(v){v.pause();v.currentTime=0}
+  setAdhkarMode(mode||'listen');
+  show('sacredSession');
+}
+
+function setAdhkarMode(mode){
+  const listen=document.getElementById('listenModeBtn');
+  const recite=document.getElementById('reciteModeBtn');
+  if(listen)listen.classList.toggle('active',mode==='listen');
+  if(recite)recite.classList.toggle('active',mode==='recite');
+  const g=document.getElementById('adhkarGuidance');
+  if(!g)return;
+  g.textContent=mode==='recite'
+    ? 'Recite along only at a comfortable voice and pace. Do not force loudness, breath length or breath holding. Pause whenever you need to.'
+    : 'Listen quietly. You can close your eyes if you are somewhere safe, or simply let the recitation hold your attention.';
 }
 
 function filterPractices(kind,btn){
