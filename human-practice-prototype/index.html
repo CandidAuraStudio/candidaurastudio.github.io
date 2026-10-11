@@ -1441,6 +1441,17 @@ body.reduce-motion .hc-quiet-disc{transition:none!important}
 .hc-data-tools .hc-data-buttons button{min-height:44px;padding:11px 14px;border-radius:11px;border:1px solid rgba(255,255,255,.32);background:#142f3c;color:#fff;font:inherit;font-size:13px;flex:1}
 .hc-data-tools .hc-data-buttons button:first-child{background:#fff;color:#081923;border-color:#fff}
 .hc-data-tools button:focus-visible{outline:2px solid white;outline-offset:3px}
+
+/* Final mobile accessibility refinements. Preserve all six navigation destinations. */
+.bottom-nav .nav-item{font-size:10px!important;font-weight:600;line-height:1.15;min-height:50px;padding:5px 1px;letter-spacing:0}
+.bottom-nav .nav-item svg{width:20px;height:20px}
+@media(max-width:360px){.bottom-nav .nav-item{font-size:9px!important}.bottom-nav .nav-item svg{width:19px;height:19px}}
+button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible,
+[role="button"]:focus-visible{outline:2px solid #fff!important;outline-offset:3px!important}
+#soundLabPlayBtn,#playBtn,#finishBtn,#bookPlayBtn,#adhkarPlayBtn,#fearPlayBtn,#naturePlayBtn{min-height:44px}
+@media(prefers-reduced-motion:reduce){
+  body *,body *::before,body *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
 </style>
 </head>
 <body>
@@ -2443,6 +2454,12 @@ body.reduce-motion .hc-quiet-disc{transition:none!important}
       <div class="setting-row">
         <div><strong>Keep screen awake</strong><small>Useful while reading instructions or using the player</small></div>
         <button class="switch" id="wakeLockSwitch" onclick="toggleWakeLock()" aria-label="Toggle keep screen awake"></button>
+      </div>
+      <div class="setting-row">
+        <div style="width:100%">
+          <strong>Listening with the screen off</strong>
+          <small>Use Play before minimizing HeartClear. Android and iPhone sometimes suspend web apps to save battery. If sound stops, reopen HeartClear and use Continue Sound Lab, Continue Meditation or Resume Audiobook. Lock-screen controls depend on the browser.</small>
+        </div>
       </div>
       <div class="setting-row">
         <div><strong>Offline media</strong><small id="offlineStorageText">No saved media yet</small></div>
