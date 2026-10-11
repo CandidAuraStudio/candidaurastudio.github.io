@@ -1326,7 +1326,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
     </button>
   </div>
 
-  <div class="hub-note">“Free online” does not automatically mean free to redistribute. This library will only publish material you own, have permission to use, or that has a suitable public/open licence.</div>
+  <div class="hub-note">Choose something to read or listen to and continue without leaving HeartClear.</div>
 </section>
 
 <section class="screen" id="collection">
@@ -1341,8 +1341,8 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       <div class="empty-shelf">
         <div class="empty-icon">◌</div>
         <strong>Ready for your first title</strong>
-        <p>Add your own recording or a title with clear permission/licensing.</p>
-        <span class="rights-pill">Rights-cleared content only</span>
+        <p>Your listening and reading titles will appear here.</p>
+        
       </div>
     </div>
   </div>
@@ -2311,8 +2311,8 @@ function openCollection(kind){
     books:{
       kicker:'Reading',
       title:'Free Books',
-      description:'Public-domain and properly open-licensed reading only.',
-      empty:'Add your first rights-cleared free book here.'
+      description:'A simple reading shelf inside HeartClear.',
+      empty:'Your first free reading title will appear here.'
     }
   }[kind]||{};
   document.getElementById('collectionKicker').textContent=data.kicker||'Library';
@@ -2321,7 +2321,7 @@ function openCollection(kind){
   const list=document.getElementById('collectionList');
   if(kind==='english') list.innerHTML=renderBookCard('en');
   else if(kind==='tamil') list.innerHTML=renderBookCard('ta');
-  else list.innerHTML='<div class="empty-shelf"><div class="empty-icon">◌</div><strong>'+escapeHtml(data.empty||'Ready for content')+'</strong><p>More reading titles will appear here.</p><span class="rights-pill">Rights-cleared content only</span></div>';
+  else list.innerHTML='<div class="empty-shelf"><div class="empty-icon">◌</div><strong>'+escapeHtml(data.empty||'Ready for content')+'</strong><p>More reading titles will appear here.</p></div>';
   show('collection');
 }
 
