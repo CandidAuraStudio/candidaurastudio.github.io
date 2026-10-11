@@ -1306,6 +1306,11 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
   min-height:42px;padding:10px 13px;border-radius:13px
 }
 #playBtn,
+#finishBtn,
+#fearPlayer .btn:not(.secondary),
+#humanSession #humanStartBtn,
+#completion .btn:not(.secondary),
+#aftercare .btn:not(.secondary),
 #bookPlayBtn,
 #adhkarPlayBtn,
 #soundLabPlayBtn,
@@ -1427,13 +1432,13 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
 
   <div class="home-dashboard">
     <div class="home-resume" id="homeResumeCard">
-      <div class="eyebrow">Meditation · Continue</div>
+      <div class="eyebrow">Continue Meditation</div>
       <strong id="homeResumeTitle">Deep Wake Up</strong>
       <small id="homeResumeMeta">Continue from 04:12</small>
       <button onclick="continueLastSession()">Continue session</button>
     </div>
     <div class="home-resume library-resume" id="homeLibraryResumeCard">
-      <div class="eyebrow">Library · Continue listening</div>
+      <div class="eyebrow">Continue Audiobook · Library</div>
       <strong id="homeLibraryResumeTitle">Shadows of Truth · Chapter 1</strong>
       <small id="homeLibraryResumeMeta">English audiobook</small>
       <button onclick="continueLastBook()">Resume audiobook</button>
@@ -2101,6 +2106,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
     <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:12px">
       <span class="offline-status" id="bookOfflineStatus"><span class="offline-dot"></span><span>Online stream</span></span>
       <button class="offline-action" id="bookOfflineBtn" onclick="toggleBookOffline()">Save chapter offline</button>
+      <button class="offline-action" onclick="show('downloads')" aria-label="Open Offline downloads library">My Offline</button>
     </div>
 
     <div class="audiobook-now" id="bookResumeNote">Your place in each chapter is saved automatically on this device.</div>
@@ -2208,7 +2214,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v75</div>
+    <div class="app-version">HeartClear · prototype v76</div>
   </div>
 </section>
 
@@ -2305,6 +2311,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
     </div>
     <div class="player-inline-actions">
       <button class="offline-action" id="offlinePracticeBtn" onclick="togglePracticeOffline()" aria-label="Download meditation audio for offline listening">↓ Download offline</button>
+      <button class="offline-action" onclick="show('downloads')" aria-label="Open Offline downloads library">My Offline</button>
       <button class="option-select" onclick="toggleOptions()">More options</button>
     </div>
     <div class="player-offline-caption" id="practiceOfflineStatus" role="status" aria-live="polite">Save guided audio to this device for offline listening.</div>
@@ -2805,6 +2812,7 @@ async function updateOfflineStorageText(){
 
 async function clearOfflineMedia(){
   if(!('caches' in window))return;
+  if(!confirm('Remove downloaded audio and video from this device? Your history and listening positions will stay saved.'))return;
   try{await caches.delete(MEDIA_CACHE)}catch(e){}
   updateOfflineStorageText();
   refreshPracticeOfflineButton();
@@ -2944,7 +2952,6 @@ function globalJump(delta){
   else if(state.key==='adhkar')syncAdhkar();
   else if(state.key==='soundlab')syncSoundLab();
   else if(state.key==='fear')syncFear();
-  else if(state.key==='fear')syncFear();
   else if(state.key==='book')syncBookAudio();
   renderGlobalMini();
 }
@@ -2953,6 +2960,13 @@ function stopGlobalMedia(){
   const state=getActiveMediaState();
   if(!state)return;
   if(state.key==='meditation'&&playbackPhase==='nature'){finishNature();return;}
+  if(state.key==='book'){
+    stopBookAudio();
+    try{localStorage.removeItem('heartclearActiveMedia')}catch(e){}
+    renderDashboard();
+    document.getElementById('globalMini').classList.remove('show');
+    return;
+  }
   state.el.pause();
   try{state.el.currentTime=0}catch(e){}
   try{localStorage.removeItem('heartclearActiveMedia')}catch(e){}
@@ -3562,9 +3576,13 @@ function changeReaderFont(delta){
 
 function bookResumeSeconds(lang,chapter){
   try{
-    const direct=Number(localStorage.getItem(bookPositionKey(lang,chapter))||0);
-    if(direct>0)return direct;
-    // Migrate the old Chapter 1 resume key.
+    const raw=localStorage.getItem(bookPositionKey(lang,chapter));
+    // Explicit zero marks a finished chapter; do not resurrect an older bookmark.
+    if(raw!==null){
+      const direct=Number(raw);
+      return Number.isFinite(direct)&&direct>0?direct:0;
+    }
+    // Migrate the old Chapter 1 resume key only if no chapter-specific key exists.
     if(chapter===1){
       const old=Number(localStorage.getItem('heartclearBookPos:'+lang)||0);
       if(old>0)return old;
@@ -3578,7 +3596,7 @@ function renderBookShelf(lang){
   const items=bookChapters[isTamil?'ta':'en'];
   const chapterRows=items.map(item=>{
     const saved=bookResumeSeconds(isTamil?'ta':'en',item.chapter);
-    const action=saved>5?'Resume '+fmt(saved):'Listen';
+    const action=saved>0?'Resume '+fmt(saved):'Listen';
     const n=String(item.chapter).padStart(2,'0');
     return '<button class="book-chapter" onclick="openBookAudio(\''+(isTamil?'ta':'en')+'\','+item.chapter+')">'+
       '<span class="book-chapter-num">'+n+'</span>'+
@@ -3600,6 +3618,29 @@ function renderBookShelf(lang){
 
 const bookAudioEl=document.getElementById('bookAudioEl');
 const bookSeek=document.getElementById('bookSeek');
+let bookRestorePending=null;
+let bookRestoringMetadata=false;
+let bookChapterCompleted=false;
+function saveBookBookmark(){
+  // Keep the full fractional-second position, even when the user pauses early.
+  // The current book identity must still refer to the source being saved.
+  if(bookRestoringMetadata||bookChapterCompleted||!bookAudioEl.getAttribute('src'))return;
+  const t=Number(bookAudioEl.currentTime);
+  if(!Number.isFinite(t)||t<=0)return;
+  const d=Number.isFinite(bookAudioEl.duration)&&bookAudioEl.duration>0?bookAudioEl.duration:0;
+  try{
+    localStorage.setItem(bookPositionKey(),String(t));
+    localStorage.setItem('heartclearLastBook',JSON.stringify({
+      lang:currentBookAudioLang,
+      chapter:currentBookChapter,
+      title:currentBookTitle(),
+      time:t,
+      duration:d,
+      completed:false,
+      updatedAt:Date.now()
+    }));
+  }catch(e){}
+}
 
 function renderBookPlayerChapterNav(){
   const list=bookChapters[currentBookAudioLang]||[];
@@ -3631,6 +3672,13 @@ function bookNextChapter(){
 }
 
 function openBookAudio(lang,chapter=1){
+  // Save the previous chapter BEFORE changing language or chapter identity.
+  // Otherwise a quick chapter switch can write a previous track's position
+  // under the new chapter and erase the correct bookmark.
+  if(bookAudioEl.getAttribute('src')){
+    saveBookBookmark();
+    bookAudioEl.pause();
+  }
   currentBookAudioLang=lang==='ta'?'ta':'en';
   const available=bookChapters[currentBookAudioLang]||[];
   const requested=available.find(x=>x.chapter===Number(chapter))||available[0];
@@ -3642,6 +3690,9 @@ function openBookAudio(lang,chapter=1){
   if(typeof fearAudio!=='undefined'&&!fearAudio.paused)fearAudio.pause();
 
   bookAudioEl.pause();
+  bookChapterCompleted=false;
+  bookRestorePending=bookResumeSeconds(currentBookAudioLang,currentBookChapter);
+  bookRestoringMetadata=true;
   bookAudioEl.src=requested?.url||'';
   bookAudioEl.load();
 
@@ -3652,14 +3703,8 @@ function openBookAudio(lang,chapter=1){
   document.getElementById('bookPlayBtn').setAttribute('aria-label','Play audiobook');
   renderBookPlayerChapterNav();
 
-  try{
-    const t=bookResumeSeconds(currentBookAudioLang,currentBookChapter);
-    if(t>0) bookAudioEl.addEventListener('loadedmetadata',()=>{
-      bookAudioEl.currentTime=Math.min(t,Math.max(0,bookAudioEl.duration-1));
-      syncBookAudio();
-    },{once:true});
-  }catch(e){}
-
+  // A single metadata listener restores whichever chapter is CURRENT.
+  // Never accumulate old one-time callbacks that can seek the wrong chapter.
   setBookMediaSession();
   show('bookAudio');
   updateBookMini('bookAudio');
@@ -3682,8 +3727,9 @@ function updateBookMini(currentScreen){
 
 function stopBookAudio(){
   if(!bookAudioEl)return;
+  saveBookBookmark();
   bookAudioEl.pause();
-  bookAudioEl.currentTime=0;
+  // Stop playback without deleting the last listening position.
   bookAudioEl.removeAttribute('src');
   bookAudioEl.load();
   const mini=document.getElementById('bookMini'); if(mini)mini.classList.remove('show');
@@ -3718,20 +3764,10 @@ function syncBookAudio(){
   document.getElementById('bookPlayBtn').setAttribute('aria-label',bookAudioEl.paused?'Play audiobook':'Pause audiobook');
   const mb=document.getElementById('bookMiniPlay'); if(mb)mb.textContent=bookAudioEl.paused?'▶':'Ⅱ';
   const mm=document.getElementById('bookMiniMeta'); if(mm)mm.textContent=(currentBookAudioLang==='ta'?'Tamil':'English')+' · '+fmt(t);
-  if(t>5)try{
-    localStorage.setItem(bookPositionKey(),String(t));
-    localStorage.setItem('heartclearLastBook',JSON.stringify({
-      lang:currentBookAudioLang,
-      chapter:currentBookChapter,
-      title:currentBookTitle(),
-      time:t,
-      duration:d,
-      completed:false,
-      updatedAt:Date.now()
-    }));
-  }catch(e){}
+  saveBookBookmark();
   const note=document.getElementById('bookResumeNote');
-  if(note && t>5)note.textContent='Position saved · Chapter '+currentBookChapter+' · '+fmt(t)+(d?' of '+fmt(d):'');
+  if(note && t>0 && !bookRestoringMetadata && !bookChapterCompleted)
+    note.textContent='Position saved · Chapter '+currentBookChapter+' · '+fmt(t)+(d?' of '+fmt(d):'');
   if('mediaSession' in navigator && d>0){
     try{
       navigator.mediaSession.playbackState=bookAudioEl.paused?'paused':'playing';
@@ -3795,6 +3831,9 @@ bookAudioEl.addEventListener('timeupdate',syncBookAudio);
 bookAudioEl.addEventListener('play',syncBookAudio);
 bookAudioEl.addEventListener('pause',()=>{syncBookAudio();renderDashboard()});
 bookAudioEl.addEventListener('ended',()=>{
+  bookChapterCompleted=true;
+  bookRestorePending=null;
+  bookRestoringMetadata=false;
   const d=Number.isFinite(bookAudioEl.duration)?bookAudioEl.duration:0;
   try{
     localStorage.setItem(bookPositionKey(),'0');
@@ -3815,6 +3854,13 @@ bookAudioEl.addEventListener('ended',()=>{
   renderDashboard();
 });
 bookAudioEl.addEventListener('loadedmetadata',()=>{
+  // Apply the position before the normal sync/save handler can overwrite it.
+  const resume=bookRestorePending;
+  bookRestorePending=null;
+  if(Number.isFinite(resume)&&resume>0&&Number.isFinite(bookAudioEl.duration)&&bookAudioEl.duration>0){
+    try{bookAudioEl.currentTime=Math.min(resume,Math.max(0,bookAudioEl.duration-.25))}catch(e){}
+  }
+  bookRestoringMetadata=false;
   try{
     const saved=Number(localStorage.getItem('heartclearBookSpeed')||1);
     bookAudioEl.playbackRate=saved;
@@ -3826,6 +3872,9 @@ bookSeek.addEventListener('input',()=>{
   if(Number.isFinite(bookAudioEl.duration))bookAudioEl.currentTime=Number(bookSeek.value)||0;
   syncBookAudio();
 });
+// Persist exact location on backgrounding or closing, even between timeupdate events.
+window.addEventListener('pagehide',saveBookBookmark);
+document.addEventListener('visibilitychange',()=>{if(document.hidden)saveBookBookmark()});
 
 function openCollection(kind){
   const data={
@@ -4394,7 +4443,7 @@ async function toggleWakeLock(){
 }
 
 function clearLocalHistory(){
-  if(!confirm('Clear practice history and saved resume positions on this device?'))return;
+  if(!confirm('Clear meditation practice history and meditation resume positions? Your audiobook listening positions will stay saved.'))return;
   try{
     Object.keys(localStorage).forEach(k=>{
       if(k.startsWith('clearWithinHistory')||k.startsWith('clearWithinResume:')||k==='clearWithinLastSession') localStorage.removeItem(k);
@@ -4698,7 +4747,7 @@ function renderLibraryResumeCard(){
     }else{
       const time=Number(last.time)||0;
       const duration=Number(last.duration)||0;
-      if(time<5){card.classList.remove('show');return}
+      if(time<=0){card.classList.remove('show');return}
       meta=(last.lang==='ta'?'Tamil':'English')+' · '+fmt(time)+(duration?' of '+fmt(duration):'');
     }
 
@@ -5154,7 +5203,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=73');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=76');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
