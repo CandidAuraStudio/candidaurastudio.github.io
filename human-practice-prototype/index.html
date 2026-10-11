@@ -1694,6 +1694,82 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
 .bottom-nav .nav-item{font-size:12px!important;min-height:54px!important;gap:4px!important}
 .bottom-nav .nav-item svg{width:21px;height:21px}
 @media(max-width:359px){.bottom-nav .nav-item{font-size:11px!important}}
+
+/* Sounds 1.1 — same surfaces, spacing, typography and movement as Home. */
+#soundLab{justify-content:flex-start;padding-bottom:110px}
+.hc-sounds-header{padding:13px 2px 1px}
+.hc-sounds-header .kicker,.hc-sounds-list-head .kicker,.hc-mix-card .kicker,.hc-credit-card .kicker{font-size:10px;letter-spacing:.12em;color:#cba96d}
+.hc-sounds-header h2{font-size:29px;letter-spacing:-.035em;margin:8px 0 5px}
+.hc-sounds-header p{font-size:13px;line-height:1.45;color:#b7c9d1;margin:0}
+.hc-sound-filters{display:flex;gap:7px;overflow-x:auto;padding:16px 0 12px;scrollbar-width:none}
+.hc-sound-filters::-webkit-scrollbar{display:none}
+.hc-sound-filters button{flex:0 0 auto;min-height:43px;padding:9px 15px;border:1px solid rgba(201,224,233,.18);background:rgba(9,27,38,.46);border-radius:999px;color:#d6e4e9;font:inherit;font-size:12px}
+.hc-sound-filters button.active{background:#fff;color:#112736;border-color:#fff;font-weight:700}
+.hc-mix-card{margin:2px 0 20px;padding:19px;border:1px solid rgba(202,227,235,.12);border-radius:23px;background:linear-gradient(150deg,rgba(17,41,54,.82),rgba(5,18,27,.88))}
+.hc-mix-heading{display:flex;justify-content:space-between;gap:12px;align-items:center}
+.hc-mix-heading h3{margin:7px 0 3px;font-size:20px}
+.hc-mix-heading p{color:#b5c5cd;font-size:12px;margin:0;line-height:1.4}
+.hc-mix-symbol{width:42px;height:42px;border-radius:50%;background:rgba(214,186,125,.12);color:#d9b980;display:grid;place-items:center;flex:none}
+.hc-mix-symbol svg{width:23px;height:23px}
+.hc-mix-layers{display:grid;gap:9px;margin:15px 0 9px}
+.hc-mix-layer{display:grid;grid-template-columns:minmax(85px,1fr) 1.2fr;align-items:center;gap:10px;min-height:50px;border:1px solid rgba(204,229,237,.1);background:rgba(7,23,33,.5);border-radius:13px;padding:9px 12px}
+.hc-mix-layer label{display:flex;align-items:center;gap:8px;font-size:12px;min-width:0}
+.hc-mix-layer input[type=checkbox]{width:18px;height:18px;accent-color:#d7b275}
+.hc-mix-layer input[type=range]{width:100%;accent-color:#d7b275}
+.hc-mix-layer input[type=range]:disabled{opacity:.3}
+.hc-mix-status{font-size:12px;line-height:1.5;color:#b7c7d0;min-height:19px;margin:10px 0 13px}
+.hc-mix-actions{display:flex;gap:9px}
+.hc-mix-actions button{min-height:46px;border-radius:13px;padding:10px 14px;font:inherit;font-weight:700}
+.hc-mix-start{background:linear-gradient(180deg,#e7c386,#c69354);color:#081923;border:0;flex:1}
+.hc-mix-stop{background:transparent;color:white;border:1px solid rgba(210,230,237,.22)}
+.hc-mix-recent{margin-top:12px;display:flex;align-items:center;gap:9px}
+.hc-mix-recent button{font:inherit;font-size:11px;color:#f1f5f6;border:1px solid rgba(210,231,240,.2);background:rgba(22,46,56,.5);border-radius:11px;padding:9px}
+.hc-sounds-list-head{display:flex;justify-content:space-between;align-items:center;margin:2px 2px 10px}
+.hc-sounds-list-head span{font-size:11px;color:#9fb2bb}
+.hc-sound-track-list{display:grid;gap:9px}
+.hc-sound-row{display:grid;grid-template-columns:40px minmax(0,1fr) auto auto;align-items:center;gap:10px;min-height:79px;padding:12px 13px;border:1px solid rgba(205,230,237,.11);border-radius:18px;background:rgba(6,20,29,.61)}
+.hc-sound-row .hc-track-mark{width:39px;height:39px;border-radius:12px;background:rgba(31,59,74,.52);color:#d5b67d;display:grid;place-items:center}
+.hc-track-mark svg{width:22px;height:22px;stroke:currentColor}
+.hc-sound-name{display:block;font-size:13px;font-weight:700;line-height:1.35}
+.hc-sound-sub{display:block;font-size:11px;color:#afc0c8;line-height:1.35;margin-top:3px}
+.hc-sound-length{font-size:11px;color:#cbb083;border:1px solid rgba(203,171,110,.16);padding:5px 6px;border-radius:9px;white-space:nowrap}
+.hc-sound-icon-btn{width:40px;height:40px;display:grid;place-items:center;flex:none;border-radius:50%;background:#fff;border:1px solid white;color:#0e2330}
+.hc-sound-icon-btn svg{width:17px;height:17px}
+.hc-track-info{width:32px;height:32px;flex:none;background:transparent;border:1px solid rgba(210,231,240,.25);border-radius:50%;color:#d0e0e6;font-size:13px}
+.hc-sound-row .hc-track-actions{display:flex;align-items:center;gap:6px}
+.hc-credit-backdrop[hidden]{display:none!important}
+.hc-credit-backdrop{position:fixed;z-index:165;inset:0;display:flex;align-items:flex-end;background:rgba(1,8,14,.73);padding:0 12px}
+.hc-credit-card{position:relative;width:100%;max-width:500px;margin:0 auto;background:#102936;border:1px solid rgba(215,235,243,.2);border-radius:22px 22px 0 0;padding:25px 21px calc(25px + env(safe-area-inset-bottom,0px))}
+.hc-credit-card h3{font-size:22px;margin:9px 0}
+.hc-credit-card p{font-size:13px;line-height:1.7;color:#d9e7ed;white-space:pre-line}
+.hc-credit-card a{display:block;color:#d7b376;font-size:13px;margin-top:18px;overflow-wrap:anywhere}
+.hc-credit-close{position:absolute;right:14px;top:12px;background:transparent;border:0;color:white;font-size:26px;min-width:44px;min-height:44px}
+#globalMini{flex-wrap:wrap}
+.hc-global-mini-progress{order:7;flex-basis:100%;height:3px;background:rgba(216,231,239,.16);border-radius:100px;overflow:hidden}
+.hc-global-mini-progress span{display:block;height:100%;background:#fff;width:0%;transition:width .2s linear}
+#globalMini .global-mini-btn.primary{background:#fff!important;color:#081923!important}
+#globalMini.is-mix .hc-mini-skip{display:none!important}
+@media(max-width:420px){.hc-sound-row{gap:7px;padding:11px 9px;grid-template-columns:34px minmax(0,1fr) auto auto}.hc-sound-row .hc-track-mark{width:34px;height:34px}.hc-sound-icon-btn{width:38px;height:38px}.hc-track-info{width:30px;height:30px}}
+@media(prefers-reduced-motion:reduce){.hc-global-mini-progress span{transition:none}}
+
+.hc-time-chips{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}
+.hc-time-chips button{flex:1;min-width:65px;min-height:43px;padding:8px 10px;border:1px solid rgba(218,232,240,.2);border-radius:999px;background:rgba(14,36,47,.55);color:#e0e9ed;font:inherit;font-size:11px}
+.hc-time-chips button.active{background:#fff;color:#0b2230;border-color:#fff;font-weight:750}
+.hc-time-select-accessible{position:absolute!important;width:1px!important;height:1px!important;clip-path:inset(50%)!important;overflow:hidden!important}
+.hc-about-credits{margin:16px 0;border:1px solid rgba(220,234,240,.15);border-radius:14px;padding:13px 15px}
+.hc-about-credits summary{font-size:13px;cursor:pointer;min-height:29px;color:#e3edf0}
+.hc-about-credits p{font-size:12px;line-height:1.65;color:#b4c8d1}
+#soundLabPlayer .soundlab-transport .primary{background:#fff!important;color:#0c2331!important;border-color:#fff!important}
+#soundLabPlayer .soundlab-transport button{min-height:48px}
+#soundLabPlayer .soundlab-options button{min-height:44px;font-size:12px}
+
+.hc-sound-routes{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:15px 0 3px}
+.hc-sound-routes button{display:flex;align-items:center;gap:10px;text-align:left;padding:12px 11px;border:1px solid rgba(207,230,238,.12);border-radius:17px;background:rgba(8,23,34,.55);color:#ecf3f5;font:inherit;min-height:67px}
+.hc-sound-routes button b{display:block;font-size:12px}
+.hc-sound-routes button small{display:block;color:#a5b7bf;font-size:10px;margin-top:4px}
+.hc-route-icon{width:28px;height:28px;border-radius:10px;display:grid;place-items:center;color:#d5b77d;background:rgba(38,65,77,.45);flex:none}
+.hc-route-icon svg{width:18px;height:18px}
+@media(max-width:349px){.hc-sound-routes button{gap:7px;padding:10px 7px}}
 </style>
 </head>
 <body>
@@ -1780,7 +1856,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
     </div>
 
     <div class="home-resume hc-secondary-resume" id="hcSoundResumeCard" style="display:none">
-      <div class="eyebrow">Continue listening</div>
+      <div class="eyebrow">Continue Sounds</div>
       <strong id="hcSoundResumeTitle">Nature listening</strong>
       <small id="hcSoundResumeMeta">Continue where you left off</small>
       <button onclick="hcResumeSoundLab()" aria-label="Resume last listening session">Resume</button>
@@ -1812,7 +1888,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
   </div>
 
   <div class="hc-home-section">
-    <div class="hc-home-section-head"><h3>Sounds to explore</h3><button onclick="show('soundHub')">View all</button></div>
+    <div class="hc-home-section-head"><h3>Sounds to explore</h3><button onclick="openSoundLab()">View all</button></div>
     <div class="hc-sound-strip">
       <button class="hc-sound-card" onclick="openSoundLab()"><span>≈</span><b>Nature</b><small>Ocean · rain · birds · fire · thunder</small></button>
       <button class="hc-sound-card" onclick="show('sacred')"><span>✦</span><b>Sacred sound</b><small>Dua · dhikr · mantra · chant</small></button>
@@ -2638,70 +2714,62 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
 </section>
 
 <section class="screen" id="soundLab">
-  <div class="glass">
-    <div class="kicker">Nature · Ambient · Stillness</div>
-    <h2>Sound Lab</h2>
-    <p>Everyday nature, ambience and quiet music—independent of religious traditions.</p>
-    <div class="hub-note" style="margin-top:12px">Birds · fire · rain · ocean · thunder · ambient beds · closing music</div>
-    <div class="hc-personal-audio">
-      <h3>My Nature Recordings</h3>
-      <p>Listen to the HeartClear 7-, 10- and 15-minute mixes or other audio saved on your device, directly in Sound Lab. No upload, account, payment or public sharing.</p>
-      <label for="hcPersonalNatureFile">Choose saved audio or downloaded MP4 for audio-only listening</label>
-      <input id="hcPersonalNatureFile" type="file" accept="audio/*,video/mp4,.mp3,.m4a,.wav,.ogg,.flac,.opus,.aac,.mp4" onchange="hcLoadPersonalNature(this)">
-      <p id="hcPersonalNatureStatus" role="status" aria-live="polite">Choose a file; Sound Lab will open its normal player.</p>
-      <button onclick="hcClearPersonalNature()">Close personal recording</button>
-    </div>
-    <h3 style="font-size:17px;margin:20px 0 12px">Ambient &amp; Stillness</h3>
-    <div class="soundlab-grid">
-      <button class="soundlab-card" onclick="openSoundTrack('horizon')"><span class="soundlab-icon">≈</span><span><b>Horizon</b><small>7 min · slow ambient field</small></span><span class="soundlab-duration">7:00</span></button>
-      <button class="soundlab-card" onclick="openSoundTrack('stillness2')"><span class="soundlab-icon">◌</span><span><b>Deep Sleep Stillness</b><small>2 min · closing music</small></span><span class="soundlab-duration">2:00</span></button>
-      <button class="soundlab-card" onclick="openSoundTrack('deep')"><span class="soundlab-icon">○</span><span><b>Deep Stillness</b><small>17 min · long quiet ambient</small></span><span class="soundlab-duration">17:00</span></button>
-    </div>
-    <h3 style="font-size:19px;margin:22px 0 10px">Organic Flute · Original Recordings</h3>
-    <p>Traditional acoustic flute performances, separate from religious chanting.</p>
-    <div class="soundlab-grid">
-      <button class="soundlab-card" onclick="openSoundTrack('organicBansuri')"><span class="soundlab-icon">♫</span><span><b>Natural Bansuri · Nepal</b><small>7:54 · Learnerktm · CC0 recording</small></span><span class="soundlab-duration">7:54</span></button>
-    </div>
-    <div class="hub-note">Original uploader's CC0 flute recording from Wikimedia Commons. The app uses Wikimedia's MP3 listening copy of the original OGG; no AI flute or WAV mastering is claimed. <a href="https://commons.wikimedia.org/wiki/File:%E0%A4%AC%E0%A4%BE%E0%A4%81%E0%A4%B8%E0%A5%81%E0%A4%B0%E0%A5%80%E0%A4%95%E0%A5%8B_%E0%A4%A7%E0%A5%81%E0%A4%A8_Basuri.ogg" target="_blank" rel="noopener noreferrer" style="color:#d6bd86">Recording, creator and licence ↗</a></div>
-
-    <h3 style="font-size:18px;margin:22px 0 10px">Instrumental, Raga &amp; Ambient Videos · From Drive</h3>
-    <div id="hcGeneralDriveCards" class="soundlab-grid"></div>
-    <div class="hub-note">These user-uploaded videos stream through Google Drive. They are not remixed or redistributed by HeartClear.</div>
-    <h3 style="font-size:20px;margin:20px 0 10px">Nature Sounds</h3>
-    <p>Choose a sound, then press Play at a comfortable volume.</p>
-    <div class="soundlab-grid">
-      <button class="soundlab-card" onclick="openSoundTrack('nature')"><span class="soundlab-icon">≈</span><span><b>Nature Weave</b><small>Birds · fire · coast · forest · 3 min</small></span><span class="soundlab-duration">3:00</span></button>
-      <button class="soundlab-card" onclick="openSoundTrack('birds')"><span class="soundlab-icon">◉</span><span><b>Birdsong</b><small>Birds waking · 4 min</small></span><span class="soundlab-duration">4:06</span></button>
-      <button class="soundlab-card" onclick="openSoundTrack('fire')"><span class="soundlab-icon">✦</span><span><b>Fire Crackling</b><small>Real fireplace · 1 min</small></span><span class="soundlab-duration">1:00</span></button>
-      <button class="soundlab-card" onclick="openSoundTrack('rain')"><span class="soundlab-icon">··</span><span><b>Rain</b><small>Real rain · 1 min</small></span><span class="soundlab-duration">1:18</span></button>
-      <button class="soundlab-card" onclick="openSoundTrack('ocean')"><span class="soundlab-icon">≈</span><span><b>Ocean</b><small>Steady sea · 5 min</small></span><span class="soundlab-duration">2:46</span></button>
-      <button class="soundlab-card" onclick="openSoundTrack('storm')"><span class="soundlab-icon">◌</span><span><b>Storm</b><small>Rain and low rumble · 5 min</small></span><span class="soundlab-duration">2:37</span></button>
-      <button class="soundlab-card" onclick="openSoundTrack('thunder')"><span class="soundlab-icon">⌁</span><span><b>Distant Thunder</b><small>Low thunder · 6 min</small></span><span class="soundlab-duration">0:42</span></button>
-    </div>
-    <h3 style="font-size:18px;margin:22px 0 10px">More real nature recordings</h3>
-    <div class="soundlab-grid">
-      <button class="soundlab-card" onclick="openSoundTrack('foreststream')"><span class="soundlab-icon">≈</span><span><b>Forest Stream</b><small>5:01 · flowing brook and birds</small></span><span class="soundlab-duration">5:01</span></button>
-      <button class="soundlab-card" onclick="openSoundTrack('treewind')"><span class="soundlab-icon">◌</span><span><b>Wind in a Tree</b><small>1:56 · leaves and distant birds</small></span><span class="soundlab-duration">1:56</span></button>
-      <button class="soundlab-card" onclick="openSoundTrack('windfield')"><span class="soundlab-icon">〰</span><span><b>Wind in a Field</b><small>3:25 · wind across a cornfield</small></span><span class="soundlab-duration">3:25</span></button>
-      <button class="soundlab-card" onclick="openSoundTrack('nightforest')"><span class="soundlab-icon">◐</span><span><b>Forest After Rain</b><small>0:30 · nighttime ambience</small></span><span class="soundlab-duration">0:30</span></button>
-      <button class="soundlab-card" onclick="openSoundTrack('countryside')"><span class="soundlab-icon">✺</span><span><b>Countryside</b><small>1:52 · real birds, wind and insects</small></span><span class="soundlab-duration">1:52</span></button>
-      <button class="soundlab-card" onclick="openSoundTrack('frogswater')"><span class="soundlab-icon">≈</span><span><b>Frogs &amp; Waterfall</b><small>2:30 · frogs and distant falling water</small></span><span class="soundlab-duration">2:30</span></button>
-    </div>
-    <div class="hub-note">These extra tracks are real CC0 field recordings documented in HeartClear Nature Audio on Drive. They stream from their source site; they are not the new mastered v2 previews and need internet. Continuous Play can keep the listening experience going past the end of each source.</div>
-    <div class="hub-note">Nature Weave and the 2-minute Deep Sleep stillness preview are stored with HeartClear. Other nature recordings require internet unless separately downloaded.</div>
-    <div class="hub-note">Ambient music and nature recordings are for comfortable listening, without frequency-based or medical claims.</div>
+  <header class="hc-sounds-header">
+    <div class="kicker">YOUR LISTENING SPACE</div>
+    <h2>Sounds</h2>
+    <p>Nature, calm music and your own mixes.</p>
+  </header>
+  <div class="hc-sound-routes" aria-label="Other listening collections">
+    <button onclick="show('sacred')"><span class="hc-route-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3v18M3 12h18M6 6l12 12M18 6 6 18"/></svg></span><span><b>Sacred listening</b><small>Traditions and prayer</small></span></button>
+    <button onclick="openFearPractice()"><span class="hc-route-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></span><span><b>Sound familiarity</b><small>Listen at your pace</small></span></button>
   </div>
+  <div class="hc-sound-filters" id="hcSoundFilters" aria-label="Filter sounds">
+    <button class="active" data-filter="all" onclick="hcFilterSounds('all')" aria-pressed="true">All</button>
+    <button data-filter="nature" onclick="hcFilterSounds('nature')" aria-pressed="false">Nature</button>
+    <button data-filter="ambient" onclick="hcFilterSounds('ambient')" aria-pressed="false">Ambient</button>
+    <button data-filter="flute" onclick="hcFilterSounds('flute')" aria-pressed="false">Flute</button>
+    <button data-filter="mixes" onclick="hcFilterSounds('mixes')" aria-pressed="false">Mixes</button>
+    <button data-filter="favourites" onclick="hcFilterSounds('favourites')" aria-pressed="false">Favourites</button>
+  </div>
+  <section class="hc-mix-card" id="hcMixCard" aria-label="Make your own sound mix">
+    <div class="kicker">CREATE A SOUND</div>
+    <div class="hc-mix-heading"><div><h3>Mix your own</h3><p>Combine up to three nature sounds.</p></div><span class="hc-mix-symbol" aria-hidden="true">
+       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 7h16M4 12h16M4 17h16"/><circle cx="9" cy="7" r="2.1" fill="#142e3e"/><circle cx="16" cy="12" r="2.1" fill="#142e3e"/><circle cx="11" cy="17" r="2.1" fill="#142e3e"/></svg>
+    </span></div>
+    <div id="hcMixLayers" class="hc-mix-layers"></div>
+    <p id="hcMixStatus" class="hc-mix-status" role="status" aria-live="polite">Choose one to three layers, then start.</p>
+    <div class="hc-time-chips" id="hcMixTimerChips" aria-label="Mix listening timer">
+      <button class="active" data-time="0" onclick="hcSelectSoundsTimer(0)">Endless</button>
+      <button data-time="900" onclick="hcSelectSoundsTimer(900)">15 min</button>
+      <button data-time="1800" onclick="hcSelectSoundsTimer(1800)">30 min</button>
+      <button data-time="3600" onclick="hcSelectSoundsTimer(3600)">60 min</button>
+    </div>
+    <div class="hc-mix-actions"><button class="hc-mix-start" id="hcMixPlayBtn" onclick="hcMixToggle()">Start mix</button><button class="hc-mix-stop" onclick="hcMixStop()">Stop</button></div>
+    <div id="hcMixRecent" class="hc-mix-recent" hidden></div>
+  </section>
+  <div class="hc-sounds-list-head"><div class="kicker">LISTEN</div><span id="hcSoundCount"></span></div>
+  <div id="hcSoundTrackList" class="hc-sound-track-list" aria-label="Available sounds"></div>
 </section>
+
+<div id="hcSoundCreditSheet" class="hc-credit-backdrop" role="dialog" aria-modal="true" aria-label="Recording information" hidden onclick="if(event.target===this)hcHideSoundCredits()">
+  <div class="hc-credit-card">
+    <button class="hc-credit-close" onclick="hcHideSoundCredits()" aria-label="Close recording information">×</button>
+    <div class="kicker">RECORDING INFORMATION</div>
+    <h3 id="hcSoundCreditTitle">Track</h3>
+    <p id="hcSoundCreditInfo"></p>
+    <a id="hcSoundCreditSource" target="_blank" rel="noopener noreferrer">Open source details ↗</a>
+  </div>
+</div>
 
 <section class="screen" id="soundLabPlayer">
   <div class="glass soundlab-player">
-    <button class="collection-back" onclick="show('soundLab')">‹ Sound Lab</button>
+    <button class="collection-back" onclick="show('soundLab')">‹ Sounds</button>
     <div class="soundlab-orb"></div>
-    <div class="kicker">HeartClear · Sound Lab</div>
+    <div class="kicker">HeartClear · Sounds</div>
     <h2 id="soundLabTitle">Horizon</h2>
     <p id="soundLabDesc">7 min · slow ambient field</p>
 
-    <input id="soundLabSeek" class="seek" type="range" min="0" max="300" value="0" step="0.1" aria-label="Sound Lab position">
+    <input id="soundLabSeek" class="seek" type="range" min="0" max="300" value="0" step="0.1" aria-label="Sounds position">
     <div class="adhkar-times"><span id="soundLabElapsed">00:00</span><span id="soundLabTotal">05:00</span></div>
 
     <div class="soundlab-transport">
@@ -2716,8 +2784,8 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
         <button class="offline-action" id="fluteOfflineBtn" onclick="toggleFluteOffline()">↓ Save flute offline</button>
         <button class="offline-action" onclick="show('downloads')">My Offline</button>
       </div>
-      <p id="fluteOfflineStatus" class="player-status" role="status">Free CC0 audio streamed from Wikimedia Commons. Offline save is subject to your browser and source availability.</p>
-      <a href="https://commons.wikimedia.org/wiki/File:%E0%A4%AC%E0%A4%BE%E0%A4%81%E0%A4%B8%E0%A5%81%E0%A4%B0%E0%A5%80%E0%A4%95%E0%A5%8B_%E0%A4%A7%E0%A5%81%E0%A4%A8_Basuri.ogg" target="_blank" rel="noopener noreferrer" style="display:block;color:#d6bd86;font-size:12px;margin-top:8px">Original recording, performer and licence ↗</a>
+      <p id="fluteOfflineStatus" class="player-status" role="status">Save to listen offline where supported. Source credits are in the track information sheet.</p>
+
     </div>
     <div class="soundlab-options">
       <button id="soundLoopBtn" onclick="toggleSoundLoop()">Loop off</button>
@@ -2726,11 +2794,17 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
     </div>
     <div class="soundlab-continuity">
       <label for="soundLabDurationChoice">Listening time</label>
-      <select id="soundLabDurationChoice" onchange="setSoundLabDuration(this.value)">
-        <option value="0" selected>Continuous · until I stop</option>
+      <div class="hc-time-chips" id="hcSoundTimerChips" aria-label="Listening timer">
+        <button data-time="0" class="active" onclick="hcSelectSoundsTimer(0)">Endless</button>
+        <button data-time="900" onclick="hcSelectSoundsTimer(900)">15 min</button>
+        <button data-time="1800" onclick="hcSelectSoundsTimer(1800)">30 min</button>
+        <button data-time="3600" onclick="hcSelectSoundsTimer(3600)">60 min</button>
+      </div>
+      <select id="soundLabDurationChoice" onchange="setSoundLabDuration(this.value)" class="hc-time-select-accessible">
+        <option value="0" selected>Endless</option>
+        <option value="900">15 minutes</option>
         <option value="420">7 minutes</option>
         <option value="600">10 minutes</option>
-        <option value="900">15 minutes</option>
         <option value="1800">30 minutes</option>
         <option value="3600">60 minutes</option>
       </select>
@@ -2741,12 +2815,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
       <p id="soundLabQueueStatus" class="player-status" role="status">Next track plays automatically. Continuous listening uses successive recordings, not a single 60-minute master.</p>
     </div>
 
-    <div class="hub-note" id="hcBgListeningHint" style="margin-top:12px">
-      <b>Android background playback</b>
-      <p style="font-size:12px;line-height:1.6;margin:7px 0">Use the Play button before minimizing. The native player supports lock-screen controls when Android allows it. If streaming stops, try Save offline where available or a locally saved MP3/MP4 from Sound Lab. Google Drive embedded videos use a different player and may stop in the background.</p>
-      <p class="player-status" id="hcBgPlaybackStatus" role="status" aria-live="polite">Ready to test background playback.</p>
-    </div>
-    <div class="hub-note">Audio can continue while you move around HeartClear. Lock-screen controls are used where the browser supports them.</div>
+    <p id="hcBgPlaybackStatus" class="hc-sound-runtime-status" role="status" aria-live="polite"></p>
     <audio id="soundLabAudio" preload="metadata" playsinline></audio>
   </div>
 </section>
@@ -2806,6 +2875,11 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
           </div>
         </div>
       </div>
+      <details class="hc-about-credits">
+        <summary>About · Credits &amp; listening information</summary>
+        <p>HeartClear's nature collection includes credited CC0 field recordings originally linked from BigSoundBank and an acoustic bansuri recording from Wikimedia Commons. Tap the information icon next to any sound for the source link, listed creator and licence. Some existing ambient recordings use a separate media host; their distribution rights are not confirmed by this information panel.</p>
+        <p>Listening is for enjoyment and relaxation, not medical treatment. Mobile browsers can suspend playback when an app is closed or the screen is locked. Downloaded media may work offline where available.</p>
+      </details>
       <div class="setting-row">
         <div><strong>Install HeartClear</strong><small>Add HeartClear to this device for a full-screen app experience.</small></div>
         <button class="offline-action" onclick="showInstallSheet(true)">Install</button>
@@ -2822,7 +2896,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear meditation history only</button>
     </div>
-    <div class="app-version">HeartClear · Version 1.0.5</div>
+    <div class="app-version">HeartClear · Version 1.1.0</div>
   </div>
 </section>
 
@@ -3010,10 +3084,11 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
     <b id="globalMiniTitle">HeartClear</b>
     <small id="globalMiniMeta">00:00</small>
   </button>
-  <button class="global-mini-btn" onclick="globalJump(-10)" aria-label="Back 10 seconds">↶10</button>
+  <button class="global-mini-btn hc-mini-skip" onclick="globalJump(-10)" aria-label="Back 10 seconds">↶10</button>
   <button class="global-mini-btn primary" id="globalMiniPlay" onclick="toggleGlobalMedia()" aria-label="Pause or resume">Ⅱ</button>
-  <button class="global-mini-btn" onclick="globalJump(10)" aria-label="Forward 10 seconds">10↷</button>
+  <button class="global-mini-btn hc-mini-skip" onclick="globalJump(10)" aria-label="Forward 10 seconds">10↷</button>
   <button class="global-mini-btn global-mini-stop" onclick="stopGlobalMedia()" aria-label="Stop playback">×</button>
+  <div class="hc-global-mini-progress" aria-hidden="true"><span id="hcGlobalMiniProgressFill"></span></div>
 </div>
 
 <div class="hc-home-sheet-backdrop" id="hcHomeSessionSheet" onclick="if(event.target===this)closeHomeSheets()">
@@ -3057,7 +3132,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
   <button class="nav-item" data-nav="practices" onclick="navTo('practices',this)" aria-label="Practice">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v9M7.5 12h9"/></svg><span>Practice</span>
   </button>
-  <button class="nav-item" data-nav="soundHub" onclick="navTo('soundHub',this)" aria-label="Sounds">
+  <button class="nav-item" data-nav="soundHub" onclick="navTo('soundLab',this)" aria-label="Sounds">
     <svg viewBox="0 0 24 24"><path d="M3 12h2M7 8v8M11 4v16M15 7v10M19 10v4M21 12h-1"/></svg><span>Sounds</span>
   </button>
   <button class="nav-item" data-nav="library" onclick="navTo('library',this)" aria-label="Library">
@@ -3560,7 +3635,8 @@ function show(id){
   const ba=document.getElementById('bookAudioEl');
   updateBookMini(id);
   if(id==='home'){setGreeting();renderDashboard();updateHomeOfflineCount();renderHeartClearFavourites();hcRenderSoundResume();}
-  if(id==='practices'||id==='soundLab')hcSyncDriveSections();
+  if(id==='practices')hcSyncDriveSections();
+  if(id==='soundLab'){hcRenderSoundRows();hcRenderMixer()}
   if(id==='history') renderHistory();
   if(id==='downloads') renderDownloads();
   if(id==='settings') renderSettings();
@@ -3590,9 +3666,13 @@ function getActiveMediaState(){
       screen:'sacredSession'
     },
     {
+      key:'mix',el:hcMixDecks[0]?.audio||null,
+      title:'My nature mix',meta:'Sounds · '+Object.keys(hcMixSelected).length+' layers',screen:'soundLab'
+    },
+    {
       key:'soundlab',el:soundLabAudio,
       title:(soundLabTracks[currentSoundKey]||soundLabTracks.horizon).title,
-      meta:'Sound Lab · '+fmt(soundLabAudio.currentTime||0),
+      meta:'Sounds · '+fmt(soundLabAudio.currentTime||0),
       screen:'soundLabPlayer'
     },
     {
@@ -3663,7 +3743,7 @@ function renderHeartClearFavourites(){
     const label=document.createElement('span');
     label.textContent=heartclearFavouriteLabel(item.kind,item.key);
     const type=document.createElement('small');
-    type.textContent=item.kind==='meditation'?'Meditation':'Sound Lab';
+    type.textContent=item.kind==='meditation'?'Meditation':'Sounds';
     button.append(label,type);
     button.addEventListener('click',()=>openHeartClearFavourite(item.kind,item.key));
     list.appendChild(button);
@@ -3679,6 +3759,7 @@ function toggleHeartClearFavourite(kind,key){
   if(existing>=0)current.splice(existing,1);else current.push({kind,key});
   try{localStorage.setItem(HC_FAVOURITES_KEY,JSON.stringify(current.slice(0,32)))}catch(e){}
   renderHeartClearFavourites();
+  if(hcSoundsCurrentFilter==='favourites')hcRenderSoundRows();
 }
 function openHeartClearFavourite(kind,key){
   if(kind==='soundlab'&&Object.prototype.hasOwnProperty.call(soundLabTracks,key)){
@@ -3880,7 +3961,7 @@ function renderGlobalMini(){
   const mini=document.getElementById('globalMini');
   if(!mini)return;
   const state=getActiveMediaState();
-  if(!state){
+  if(!state || (!state.key?.includes('mix') && state.el.paused && (Number(state.el.currentTime)||0)<.5)){
     mini.classList.remove('show');
     return;
   }
@@ -3890,15 +3971,23 @@ function renderGlobalMini(){
   const sameScreen=currentScreenId===state.screen;
   const scrolledAway=window.scrollY>180;
   mini.classList.toggle('show',!sameScreen||scrolledAway);
+  mini.classList.toggle('is-mix',state.key==='mix');
 
   document.getElementById('globalMiniTitle').textContent=state.title;
   document.getElementById('globalMiniMeta').textContent=state.meta;
   document.getElementById('globalMiniPlay').textContent=state.el.paused?'▶':'Ⅱ';
+  const progress=document.getElementById('hcGlobalMiniProgressFill');
+  if(progress){
+    const duration=Number(state.el.duration),pos=Number(state.el.currentTime)||0;
+    progress.style.width=state.key==='mix'||!Number.isFinite(duration)||duration<=0?'0%':
+      (Math.max(0,Math.min(100,pos/duration*100)).toFixed(2)+'%');
+  }
 }
 
 async function toggleGlobalMedia(){
   const state=getActiveMediaState();
   if(!state)return;
+  if(state.key==='mix'){await hcMixToggle();return}
   try{
     if(state.el.paused)await state.el.play();
     else state.el.pause();
@@ -3909,6 +3998,7 @@ async function toggleGlobalMedia(){
 function globalJump(delta){
   const state=getActiveMediaState();
   if(!state)return;
+  if(state.key==='mix')return;
   const d=Number.isFinite(state.el.duration)?state.el.duration:Infinity;
   state.el.currentTime=Math.max(0,Math.min(d,(state.el.currentTime||0)+delta));
   if(state.key==='meditation')sync();
@@ -3922,6 +4012,7 @@ function globalJump(delta){
 function stopGlobalMedia(){
   const state=getActiveMediaState();
   if(!state)return;
+  if(state.key==='mix'){hcMixStop();return}
   if(state.key==='meditation'&&playbackPhase==='nature'){finishNature();return;}
   if(state.key==='book'){
     stopBookAudio();
@@ -5332,12 +5423,272 @@ function hcClearPersonalNature(){
   show('soundLab');
 }
 
+
+/* Sounds 1.1 library: catalogue entries are source pointers, never embedded third-party media. */
+const hcSoundSections={
+  ambient:['horizon','stillness2','deep'],
+  flute:['organicBansuri'],
+  mixes:['nature'],
+  nature:['birds','fire','rain','ocean','storm','thunder','foreststream','treewind','windfield','nightforest','countryside','frogswater']
+};
+const hcSoundListKeys=[...hcSoundSections.mixes,...hcSoundSections.nature,...hcSoundSections.ambient,...hcSoundSections.flute];
+let hcSoundsCurrentFilter='all';
+const hcSoundDurations=Object.create(null);
+function hcSoundCategory(key){
+  return Object.keys(hcSoundSections).find(category=>hcSoundSections[category].includes(key))||'ambient';
+}
+function hcSoundCaption(key){
+  const titles={
+    horizon:'Soft ambient',stillness2:'Gentle closing music',deep:'Long-form ambience',organicBansuri:'Acoustic flute',
+    nature:'Nature blend',birds:'Morning birds',fire:'Crackling fireplace',rain:'Natural rainfall',ocean:'Ocean waves',
+    storm:'Rain and thunder',thunder:'A distant thunderclap',foreststream:'Forest stream',treewind:'Wind in leaves',
+    windfield:'Open field',nightforest:'Night woodland',countryside:'Rural ambience',frogswater:'Frogs and water'
+  };
+  return titles[key]||'Nature recording';
+}
+function hcTrackDuration(key){
+  const raw=hcSoundDurations[key]||soundLabTracks[key]?.duration||0;
+  return fmt(Math.max(0,Math.round(raw)));
+}
+function hcSoundSvg(kind){
+  // A single line icon family rather than unrelated decorative Unicode glyphs.
+  const p=kind==='flute'?'<path d="M5 18 19 5M8 15l2 2M12 11l2 2M16 7l2 2"/>'
+    :kind==='ambient'?'<path d="M3 10h2l2-5 4 13 3-9 2 4h5"/>'
+    :kind==='mixes'?'<path d="M4 7h16M4 12h16M4 17h16"/><path d="M9 5v4M15 10v4M11 15v4"/>'
+    :'<path d="M2 14c3-5 5 5 8 0s5-5 8 0 4 0 4 0M2 19c3-5 5 5 8 0s5-5 8 0 4 0 4 0"/>';
+  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+p+'</svg>';
+}
+function hcRenderSoundRows(){
+  const list=document.getElementById('hcSoundTrackList');if(!list)return;
+  list.replaceChildren();
+  const favs=getHeartClearFavourites();
+  const visible=hcSoundListKeys.filter(key=>{
+    if(hcSoundsCurrentFilter==='all')return true;
+    if(hcSoundsCurrentFilter==='favourites')return favs.some(v=>v.kind==='soundlab'&&v.key===key);
+    return hcSoundCategory(key)===hcSoundsCurrentFilter;
+  });
+  const count=document.getElementById('hcSoundCount');
+  if(count)count.textContent=visible.length+' recordings';
+  if(!visible.length){const empty=document.createElement('p');empty.className='hc-mix-status';empty.textContent='No recordings in this category yet.';list.append(empty)}
+  visible.forEach(key=>{
+    const track=soundLabTracks[key];if(!track)return;
+    const row=document.createElement('div');row.className='hc-sound-row';
+    const symbol=document.createElement('span');symbol.className='hc-track-mark';
+    symbol.innerHTML=hcSoundSvg(hcSoundCategory(key));
+    const words=document.createElement('div');
+    const title=document.createElement('b');title.className='hc-sound-name';title.textContent=track.title;
+    const caption=document.createElement('small');caption.className='hc-sound-sub';caption.textContent=hcSoundCaption(key);
+    words.append(title,caption);
+    const duration=document.createElement('span');duration.className='hc-sound-length';duration.textContent=hcTrackDuration(key);duration.dataset.trackDuration=key;
+    const actions=document.createElement('div');actions.className='hc-track-actions';
+    const info=document.createElement('button');info.type='button';info.className='hc-track-info';info.textContent='i';info.setAttribute('aria-label','Recording information for '+track.title);info.onclick=()=>hcShowSoundCredits(key);
+    const play=document.createElement('button');play.type='button';play.className='hc-sound-icon-btn';
+    play.innerHTML='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
+    play.setAttribute('aria-label','Open '+track.title);play.onclick=()=>openSoundTrack(key);
+    actions.append(info,play);row.append(symbol,words,duration,actions);list.append(row);
+  });
+}
+function hcFilterSounds(filter){
+  if(!['all','nature','ambient','flute','mixes','favourites'].includes(filter))filter='all';
+  hcSoundsCurrentFilter=filter;
+  document.querySelectorAll('#hcSoundFilters [data-filter]').forEach(button=>{
+    const yes=button.dataset.filter===filter;
+    button.classList.toggle('active',yes);button.setAttribute('aria-pressed',String(yes));
+  });
+  const card=document.getElementById('hcMixCard');
+  if(card)card.hidden=filter==='favourites'||filter==='flute'||filter==='ambient';
+  hcRenderSoundRows();
+}
+function hcShowSoundCredits(key){
+  const t=soundLabTracks[key];if(!t)return;
+  const external=t.url.startsWith('https://bigsoundbank.com/');
+  const original=t.sourcePage||t.url;
+  const kind=external?'BigSoundBank recording':t.sourcePage?'Wikimedia Commons recording':t.url.startsWith('./')||!t.url?'Included with HeartClear':'Existing HeartClear audio host';
+  const rights=external?'CC0, as identified in the original HeartClear catalogue':
+    t.license?t.license:'Rights and creator information not yet verified in this listing';
+  document.getElementById('hcSoundCreditTitle').textContent=t.title;
+  document.getElementById('hcSoundCreditInfo').textContent='Source: '+kind+
+    '\nCreator: '+(t.creator||'Not specified in this catalogue')+
+    '\nLicence: '+rights+'\nLength: '+hcTrackDuration(key);
+  const link=document.getElementById('hcSoundCreditSource');
+  link.hidden=!original;link.href=original||'#';link.textContent='View recording source ↗';
+  document.getElementById('hcSoundCreditSheet').hidden=false;
+}
+function hcHideSoundCredits(){document.getElementById('hcSoundCreditSheet').hidden=true}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')hcHideSoundCredits()});
+soundLabAudio.addEventListener('loadedmetadata',()=>{
+  const d=soundLabAudio.duration;
+  if(Number.isFinite(d)&&d>0&&currentSoundKey!=='personal'){
+    hcSoundDurations[currentSoundKey]=d;
+    soundLabTracks[currentSoundKey].duration=d;
+    if(hcSoundLoopSetting==='auto')hcSoundApplyLoop();
+    document.querySelectorAll('[data-track-duration]').forEach(el=>{
+      if(el.dataset.trackDuration===currentSoundKey)el.textContent=hcTrackDuration(currentSoundKey);
+    });
+  }
+});
+
+
+/* Three-layer HTMLAudio mixer: retains actual field recordings, works without audio WebAudio CORS. */
+const hcMixOptions=[{id:'rain',key:'rain',name:'Rain'},{id:'fire',key:'fire',name:'Fire'},
+  {id:'birds',key:'birds',name:'Birds'},{id:'ocean',key:'ocean',name:'Ocean'},
+  {id:'wind',key:'treewind',name:'Wind'},{id:'thunder',key:'thunder',name:'Thunder'}];
+let hcMixSelected={rain:.45,wind:.34},hcMixDecks=[],hcMixRunning=false,hcMixStarting=false,hcMixTimerId=null,hcMixFadeFactor=1;
+function hcMixMessage(message){const el=document.getElementById('hcMixStatus');if(el)el.textContent=message}
+function hcMixSelect(id,checked){
+  if(!hcMixOptions.some(v=>v.id===id))return;
+  if(checked&&Object.keys(hcMixSelected).length>=3&&!Object.hasOwn(hcMixSelected,id)){
+    hcMixMessage('Choose a maximum of three layers.');hcRenderMixer();return;
+  }
+  if(checked)hcMixSelected[id]=hcMixSelected[id]??.45;
+  else delete hcMixSelected[id];
+  hcMixStop(false);hcRenderMixer();
+  hcMixMessage(Object.keys(hcMixSelected).length+' layer'+(Object.keys(hcMixSelected).length===1?'':'s')+' selected.');
+}
+function hcMixVolume(id,value){
+  const v=Math.min(1,Math.max(0,Number(value)||0));
+  if(!Object.hasOwn(hcMixSelected,id))return;
+  hcMixSelected[id]=v;
+  const deck=hcMixDecks.find(x=>x.id===id);
+  if(deck)deck.level=v;
+  hcMixSetDeckVolumes();
+}
+function hcMixSetDeckVolumes(fade=hcMixFadeFactor){
+  hcMixFadeFactor=fade;
+  hcMixDecks.forEach(deck=>{
+    const el=deck.audio,d=el.duration,p=el.currentTime||0;
+    const edge=Number.isFinite(d)&&d>1?Math.min(1,p/.32,(d-p)/.32):1;
+    // A short gain envelope around loop boundaries suppresses hard clicks.
+    el.volume=Math.max(0,Math.min(.82,deck.level*.48*fade*Math.max(0,edge)));
+  });
+}
+function hcRenderMixer(){
+  const root=document.getElementById('hcMixLayers');if(!root)return;
+  root.replaceChildren();
+  hcMixOptions.forEach(({id,name})=>{
+    const row=document.createElement('div');row.className='hc-mix-layer';
+    const label=document.createElement('label');
+    const check=document.createElement('input');check.type='checkbox';check.checked=Object.hasOwn(hcMixSelected,id);
+    check.setAttribute('aria-label','Include '+name+' in my mix');
+    check.onchange=()=>hcMixSelect(id,check.checked);
+    const t=document.createElement('span');t.textContent=name;label.append(check,t);
+    const slider=document.createElement('input');slider.type='range';slider.min='0';slider.max='100';slider.step='1';
+    slider.value=String(Math.round((hcMixSelected[id]??.45)*100));slider.disabled=!check.checked;
+    slider.setAttribute('aria-label',name+' volume');
+    slider.oninput=()=>hcMixVolume(id,slider.value/100);
+    row.append(label,slider);root.append(row);
+  });
+  const b=document.getElementById('hcMixPlayBtn');
+  if(b){b.textContent=hcMixRunning?'Pause mix':hcMixDecks.length?'Resume mix':'Start mix';b.disabled=hcMixStarting}
+  const recent=document.getElementById('hcMixRecent');if(!recent)return;
+  let saved=null;try{saved=JSON.parse(localStorage.getItem('heartclearRecentMixV1')||'null')}catch(e){}
+  recent.replaceChildren();recent.hidden=!saved||!Array.isArray(saved.layers);
+  if(!recent.hidden){
+    const button=document.createElement('button');button.type='button';button.textContent='Restore last mix';
+    button.onclick=()=>{
+      hcMixStop(false);
+      hcMixSelected={};
+      saved.layers.filter(x=>hcMixOptions.some(o=>o.id===x.id)).slice(0,3)
+        .forEach(x=>hcMixSelected[x.id]=Math.max(0,Math.min(1,Number(x.volume)||.4)));
+      hcRenderMixer();hcMixMessage('Last mix restored. Press Start mix.');
+    };
+    recent.append(button);
+  }
+}
+function hcMixStop(showMessage=true){
+  hcMixRunning=false;hcMixStarting=false;hcMixFadeFactor=1;
+  hcMixDecks.forEach(({audio:el})=>{
+    try{el.pause();el.removeAttribute('src');el.load()}catch(e){}
+  });
+  hcMixDecks=[];
+  if(hcMixTimerId){clearInterval(hcMixTimerId);hcMixTimerId=null}
+  soundLabClockCommit();
+  const btn=document.getElementById('hcMixPlayBtn');if(btn)btn.textContent='Start mix';
+  if(showMessage)hcMixMessage('Mix stopped.');
+  try{if(localStorage.getItem('heartclearActiveMedia')==='mix')localStorage.removeItem('heartclearActiveMedia')}catch(e){}
+  renderGlobalMini();
+}
+function hcMixPause(){
+  if(!hcMixRunning)return;
+  hcMixDecks.forEach(x=>x.audio.pause());
+  hcMixRunning=false;
+  soundLabClockCommit();
+  const b=document.getElementById('hcMixPlayBtn');if(b)b.textContent='Resume mix';
+  hcMixMessage('Mix paused.');
+  renderGlobalMini();
+}
+async function hcMixToggle(){
+  if(hcMixStarting)return;
+  if(hcMixRunning){hcMixPause();return}
+  if(hcMixDecks.length){
+    try{
+      await Promise.all(hcMixDecks.map(x=>x.audio.play()));
+      hcMixRunning=true;soundLabPlaybackStartedAt=Date.now();
+      document.getElementById('hcMixPlayBtn').textContent='Pause mix';
+      hcMixMessage('Mix playing.');rememberActiveMedia('mix');renderGlobalMini();
+    }catch(e){hcMixStop();hcMixMessage('Unable to resume all layers. Check the connection.')}
+    return;
+  }
+  const selected=hcMixOptions.filter(x=>Object.hasOwn(hcMixSelected,x.id));
+  if(selected.length<1||selected.length>3){hcMixMessage('Select one, two or three sounds first.');return}
+  for(const el of [audio,adhkarAudio,soundLabAudio,bookAudioEl,fearAudio,humanSoundAudio,hcPrivateIslamAudio,hcPrivateIslamVideo]){
+    if(el&&!el.paused)el.pause();
+  }
+  hcMixStarting=true;hcMixFadeFactor=1;
+  const startButton=document.getElementById('hcMixPlayBtn');
+  if(startButton){startButton.disabled=true;startButton.textContent='Preparing…'}
+  hcMixMessage('Preparing selected recordings…');
+  hcMixDecks=selected.map(x=>{
+    const el=new Audio(soundLabTracks[x.key].url);
+    el.preload='metadata';el.loop=true;el.playsInline=true;
+    const deck={id:x.id,audio:el,level:hcMixSelected[x.id]};
+    el.addEventListener('timeupdate',()=>hcMixSetDeckVolumes());
+    el.addEventListener('error',()=>hcMixMessage('One recording failed to load; check your connection.'));
+    return deck;
+  });
+  hcMixSetDeckVolumes();
+  try{
+    await Promise.all(hcMixDecks.map(x=>x.audio.play()));
+    hcMixRunning=true;
+    soundLabListeningSeconds=0;soundLabPlaybackStartedAt=Date.now();
+    const layers=selected.map(x=>({id:x.id,volume:hcMixSelected[x.id]}));
+    try{localStorage.setItem('heartclearRecentMixV1',JSON.stringify({layers,updatedAt:Date.now()}))}catch(e){}
+    const btn=document.getElementById('hcMixPlayBtn');if(btn)btn.textContent='Pause mix';
+    hcMixMessage(selected.map(x=>x.name).join(' + ')+' · playing');
+    rememberActiveMedia('mix');hcMixTimerId=setInterval(hcMixTick,350);renderGlobalMini();
+  }catch(e){hcMixStop(false);hcMixMessage('Could not start all layers. Check your internet connection.')}
+  finally{hcMixStarting=false;if(startButton)startButton.disabled=false}
+}
+function hcMixTick(){
+  if(!hcMixRunning)return;
+  const elapsed=soundLabListeningSeconds+(Date.now()-soundLabPlaybackStartedAt)/1000;
+  if(soundLabListeningLimit>0){
+    const left=soundLabListeningLimit-elapsed;
+    if(left<=0){hcMixStop(false);hcMixMessage('Listening timer finished.');return}
+    hcMixSetDeckVolumes(left<10?left/10:1);
+  }else hcMixSetDeckVolumes(1);
+}
+for(const element of [audio,adhkarAudio,soundLabAudio,bookAudioEl,fearAudio,humanSoundAudio]){
+  element.addEventListener('play',()=>{if(hcMixRunning)hcMixStop(false)});
+}
+
 function openSoundLab(){
-  hcSyncDriveSections();
+  hcRenderSoundRows();
+  hcRenderMixer();
   show('soundLab');
 }
 
 let soundLabAutoNext=true;
+let hcSoundLoopSetting='auto';
+try{hcSoundLoopSetting=localStorage.getItem('heartclearSoundLoopV2')||'auto'}catch(e){}
+function hcSoundApplyLoop(){
+  const track=soundLabTracks[currentSoundKey]||soundLabTracks.horizon;
+  soundLabAudio.loop=hcSoundLoopSetting==='on'||(hcSoundLoopSetting==='auto'&&(track.duration||0)<300);
+  const button=document.getElementById('soundLoopBtn');
+  if(button){button.textContent=soundLabAudio.loop?'Loop on':'Loop off';button.classList.toggle('active',soundLabAudio.loop)}
+  updateSoundLabQueueStatus();
+}
+
 let soundLabListeningSeconds=0;
 let soundLabListeningLimit=0;
 let soundLabPlaybackStartedAt=0;
@@ -5350,8 +5701,17 @@ function setSoundLabDuration(value){
   soundLabClockCommit();
   soundLabListeningSeconds=0;
   soundLabListeningLimit=Math.max(0,Number(value)||0);
-  if(!soundLabAudio.paused)soundLabPlaybackStartedAt=Date.now();
+  if(!soundLabAudio.paused||hcMixRunning)soundLabPlaybackStartedAt=Date.now();
+  soundLabAudio.volume=.55;hcMixFadeFactor=1;
+  document.querySelectorAll('.hc-time-chips button').forEach(button=>{
+    const active=Number(button.dataset.time)===soundLabListeningLimit;
+    button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));
+  });
   updateSoundLabQueueStatus();
+}
+function hcSelectSoundsTimer(seconds){
+  const sel=document.getElementById('soundLabDurationChoice');if(sel)sel.value=String(seconds);
+  setSoundLabDuration(seconds);
 }
 function toggleSoundLabAutoNext(){
   soundLabAutoNext=!soundLabAutoNext;
@@ -5362,8 +5722,9 @@ function toggleSoundLabAutoNext(){
 }
 function updateSoundLabQueueStatus(){
   const btn=document.getElementById('soundLabAutoNextBtn'),msg=document.getElementById('soundLabQueueStatus');
-  if(btn){btn.textContent='Auto-play next: '+(soundLabAutoNext?'On':'Off');btn.setAttribute('aria-pressed',String(soundLabAutoNext))}
-  if(msg)msg.textContent=(soundLabAutoNext?'Next real recording plays when this one ends.':'This track stops when it ends.')+(soundLabListeningLimit?' Listening target: '+Math.round(soundLabListeningLimit/60)+' min.':' Continuous until you stop.');
+  if(btn){btn.textContent='Next track: '+(soundLabAutoNext?'On':'Off');btn.setAttribute('aria-pressed',String(soundLabAutoNext))}
+  if(msg)msg.textContent=(soundLabAudio.loop?'This recording loops continuously.':soundLabAutoNext?'Another sound plays when this one ends.':'The recording stops when it ends.')+
+    (soundLabListeningLimit?' Timer: '+Math.round(soundLabListeningLimit/60)+' min.':' Endless listening.');
 }
 async function playNextSoundLab(userInitiated=false){
   if(currentSoundKey==='personal'){
@@ -5388,6 +5749,7 @@ async function playNextSoundLab(userInitiated=false){
   document.getElementById('soundLabTitle').textContent=item.title;
   document.getElementById('soundLabDesc').textContent=item.desc;
   document.getElementById('soundLabTotal').textContent=fmt(item.duration);
+  hcSoundApplyLoop();
   setSoundLabMediaSession();
   updateOrganicFluteTools();
   try{
@@ -5435,8 +5797,7 @@ function openSoundTrack(key){
   document.getElementById('soundLabTitle').textContent=t.title;
   document.getElementById('soundLabDesc').textContent=t.desc;
   document.getElementById('soundLabTotal').textContent=fmt(t.duration);
-  document.getElementById('soundLoopBtn').textContent='Loop off';
-  document.getElementById('soundLoopBtn').classList.remove('active');
+  hcSoundApplyLoop();
   const timeChoice=document.getElementById('soundLabDurationChoice');
   soundLabListeningLimit=timeChoice?Math.max(0,Number(timeChoice.value)||0):0;
   updateSoundLabQueueStatus();
@@ -5501,14 +5862,9 @@ function soundLabJump(delta){
 }
 
 function toggleSoundLoop(){
-  soundLabAudio.loop=!soundLabAudio.loop;
-  if(soundLabAudio.loop){soundLabAutoNext=false;try{localStorage.setItem('heartclearAutoNext','0')}catch(e){}}
-  updateSoundLabQueueStatus();
-  const b=document.getElementById('soundLoopBtn');
-  if(b){
-    b.textContent=soundLabAudio.loop?'Loop on':'Loop off';
-    b.classList.toggle('active',soundLabAudio.loop);
-  }
+  hcSoundLoopSetting=soundLabAudio.loop?'off':'on';
+  try{localStorage.setItem('heartclearSoundLoopV2',hcSoundLoopSetting)}catch(e){}
+  hcSoundApplyLoop();
 }
 
 soundLabAudio.addEventListener('error',()=>{
@@ -5522,6 +5878,7 @@ soundLabAudio.addEventListener('error',()=>{
 });
 function stopSoundLab(){
   soundLabClockCommit();soundLabListeningSeconds=0;
+  soundLabAudio.volume=.55;
   soundLabPlayRequested=false;
   soundLabAudio.pause();
   hcClearSoundBookmark();
@@ -5553,7 +5910,7 @@ function setSoundLabMediaSession(){
     navigator.mediaSession.metadata=new MediaMetadata({
       title:t.title,
       artist:'HeartClear',
-      album:'Sound Lab',
+      album:'Sounds',
       artwork:hcArtwork()
     });
     navigator.mediaSession.setActionHandler('play',()=>{rememberActiveMedia('soundlab');return soundLabAudio.play()});
@@ -5614,11 +5971,18 @@ soundLabAudio.addEventListener('ended',()=>{
   else {soundLabPlayRequested=false;const st=document.getElementById('soundLabStatus');if(st)st.textContent='Listening finished. Press Play or choose another sound.'}
 });
 soundLabAudio.addEventListener('timeupdate',()=>{
-  if(soundLabListeningLimit && soundLabPlaybackStartedAt &&
-     soundLabListeningSeconds+(Date.now()-soundLabPlaybackStartedAt)/1000>=soundLabListeningLimit){
+  const t=Number(soundLabAudio.currentTime)||0;
+  const d=Number(soundLabAudio.duration);
+  const edgeFade=soundLabAudio.loop&&Number.isFinite(d)&&d>1?
+    Math.max(0,Math.min(1,t/.27,(d-t)/.27)):1;
+  const elapsed=soundLabPlaybackStartedAt?soundLabListeningSeconds+(Date.now()-soundLabPlaybackStartedAt)/1000:soundLabListeningSeconds;
+  const remaining=soundLabListeningLimit?soundLabListeningLimit-elapsed:Infinity;
+  if(remaining<=0){
     stopSoundLab();
-    const st=document.getElementById('soundLabStatus');if(st)st.textContent='Your selected listening time is complete.';
+    const status=document.getElementById('soundLabStatus');if(status)status.textContent='Your listening timer is complete.';
+    return;
   }
+  soundLabAudio.volume=Math.max(0,Math.min(1,.55*edgeFade*(remaining<10?remaining/10:1)));
 });
 soundLabAudio.addEventListener('timeupdate',()=>{
   // Save at most every ~5 seconds for low-storage overhead, never on every frame.
@@ -6925,7 +7289,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=90');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=91');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
