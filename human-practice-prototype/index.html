@@ -1387,6 +1387,21 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
 .hc-fav-open small{color:#d7e5eb;font-size:11px;white-space:nowrap}
 .hc-fav-toggle{min-height:44px;white-space:nowrap}
 .hc-fav-toggle[aria-pressed="true"]{border-color:#fff;color:#fff}
+
+/* Lightweight quiet timer and gentle breath pacer */
+.hc-quiet-time{font-size:clamp(46px,14vw,72px);text-align:center;font-weight:300;letter-spacing:-.06em;font-variant-numeric:tabular-nums;margin:17px auto}
+.hc-quiet-disc{width:170px;height:170px;margin:20px auto;border:1px solid rgba(255,255,255,.5);border-radius:50%;
+ background:radial-gradient(circle,rgba(215,240,243,.26),rgba(10,29,42,.17));display:grid;place-items:center;
+ transform:scale(var(--hc-breath-scale,1));transition:transform var(--hc-breath-transition,1s) linear}
+body.reduce-motion .hc-quiet-disc{transition:none!important}
+.hc-quiet-disc span{font-size:13px;letter-spacing:.06em;text-transform:uppercase;text-align:center}
+.hc-quiet-actions{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.hc-quiet-actions button{flex:1;min-width:120px;min-height:48px}
+.hc-quiet-options{display:grid;gap:14px;margin:20px 0}
+.hc-quiet-options label{display:block;margin-bottom:7px;font-size:13px}
+.hc-quiet-options select{width:100%;min-height:44px;font:inherit;padding:9px;color:#fff;background:#112c3a;border-radius:11px;border:1px solid rgba(255,255,255,.25)}
+.hc-quiet-check{display:flex;align-items:center;gap:10px;font-size:13px}
+.hc-quiet-check input{width:20px;height:20px}
 </style>
 </head>
 <body>
@@ -1471,6 +1486,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
     <div class="context-weather"><span id="localContextWeather">—</span><span id="localContextLight">—</span></div>
   </div>
 
+  <div class="quick-practice" style="margin:14px 0"><div><strong>Quiet Timer &amp; Breathing</strong><small>Gentle bells, flexible time, unforced breathing</small></div><button class="quick-start" onclick="openQuietTimer()" aria-label="Open quiet timer and breath pacer">▶</button></div>
   <div class="home-dashboard">
     <div class="home-resume" id="homeResumeCard">
       <div class="eyebrow">Continue Meditation</div>
@@ -1534,6 +1550,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
     </div>
   </header>
 
+  <div class="quick-practice" style="margin-bottom:14px"><div><strong>Quiet Timer</strong><small>Silence, soft bells or gentle breath pacing</small></div><button class="quick-start" onclick="openQuietTimer()" aria-label="Open quiet timer">▶</button></div>
   <div class="library-list" aria-label="Available guided practices">
     <button class="choice practice-card" data-kind="short" aria-label="Start Deep Wake Up, 10-minute morning practice" onclick="choosePractice(600,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/f4d262f6-56fe-40e3-84ea-930c11fe7c54.mp3','Deep Wake Up','Morning · guided breath','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/7fd8e8ee-cc5a-49c3-940b-6b4330a42c5e.mp4','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/d10879c1-d600-400c-999e-3237ec672b86.mp4')">
       <span class="practice-art" aria-hidden="true"></span>
@@ -1569,6 +1586,39 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
   
 </section>
 
+<section class="screen" id="quietTimer">
+  <div class="glass" style="padding:22px">
+    <button class="collection-back" onclick="hcTimerStop(true);show('home')">‹ Home</button>
+    <div class="kicker">HeartClear · Personal Practice</div>
+    <h2>Quiet Timer</h2>
+    <p>Practice without a recording. Choose silence, a soft bell or a gentle breathing rhythm.</p>
+    <div class="hc-quiet-options">
+      <div><label for="hcTimerMode">Practice type</label><select id="hcTimerMode" onchange="hcTimerModeChanged()">
+        <option value="quiet">Quiet meditation</option><option value="breath">Gentle breath pacer</option>
+      </select></div>
+      <div><label for="hcTimerMinutes">Duration</label><select id="hcTimerMinutes">
+        <option value="2">2 minutes</option><option value="5">5 minutes</option><option value="10" selected>10 minutes</option>
+        <option value="15">15 minutes</option><option value="20">20 minutes</option><option value="30">30 minutes</option>
+      </select></div>
+      <div id="hcTimerBreathOptions" hidden><label for="hcTimerBreathRatio">Breathing pace</label><select id="hcTimerBreathRatio">
+        <option value="4,4">Easy · inhale 4, exhale 4</option><option value="3,4">Gentle · inhale 3, exhale 4</option>
+        <option value="4,6">Longer exhale · inhale 4, exhale 6</option>
+      </select><p style="font-size:12px">Breathe naturally. No holds are required. Stop or return to normal breathing whenever needed.</p></div>
+      <div class="hc-quiet-check"><input type="checkbox" id="hcTimerBell" checked><label for="hcTimerBell">Soft opening and closing bell</label></div>
+      <div><label for="hcTimerInterval">Optional interval bell</label><select id="hcTimerInterval">
+        <option value="0">Off</option><option value="5">Every 5 minutes</option><option value="10">Every 10 minutes</option>
+      </select></div>
+    </div>
+    <div class="hc-quiet-disc" id="hcTimerDisc" aria-hidden="true"><span id="hcTimerPhase">Stillness</span></div>
+    <div class="hc-quiet-time" id="hcTimerClock" aria-live="off">10:00</div>
+    <div class="hc-quiet-actions">
+      <button class="btn" id="hcTimerStart" onclick="hcTimerToggle()">Start</button>
+      <button class="btn secondary" onclick="hcTimerStop()">Stop</button>
+    </div>
+    <p class="player-status" id="hcTimerStatus" role="status" aria-live="polite">Ready when you are. Use a comfortable position.</p>
+    <p style="font-size:12px">Audio cues are synthesized locally, not recordings of physical singing bowls. No account or data upload.</p>
+  </div>
+</section>
 <section class="screen" id="sessionReady">
   <div class="glass session-ready-card">
     <div class="ready-icon">◌</div>
@@ -2942,7 +2992,8 @@ function show(id){
     if(!el.closest('.screen.active') && !el.paused)el.pause();
   });
 
-  const immersive=['sessionReady','intro','prep','instructions','player','aftercare','completion','omVideo','humanSession','sacredSession','bookAudio','bookReader','soundLabPlayer','fearPlayer'].includes(id);
+  if(id!=='quietTimer' && hcTimerActive)hcTimerStop(true);
+  const immersive=['quietTimer','sessionReady','intro','prep','instructions','player','aftercare','completion','omVideo','humanSession','sacredSession','bookAudio','bookReader','soundLabPlayer','fearPlayer'].includes(id);
   document.getElementById('bottomNav').classList.toggle('hidden',immersive);
   document.getElementById('appTopBar').classList.toggle('hidden',immersive);
 
@@ -4240,6 +4291,102 @@ if(adhkarVisualForPip){
   });
 }
 
+
+
+/* Standalone timer, no network, no forced breath holds, catches up after background suspension. */
+let hcTimerActive=false,hcTimerPaused=false,hcTimerRemaining=600,hcTimerDeadline=0,hcTimerHandle=null,hcTimerStarted=0,hcTimerLastBell=0;
+let hcToneContext=null;
+function openQuietTimer(){
+  hcTimerStop(true);
+  show('quietTimer');hcTimerModeChanged();
+  const minutes=Number(document.getElementById('hcTimerMinutes').value)||10;
+  document.getElementById('hcTimerClock').textContent=fmt(minutes*60);
+  document.getElementById('hcTimerStatus').textContent='Ready to begin. Press Start when comfortable.';
+}
+function hcTimerModeChanged(){
+  const mode=document.getElementById('hcTimerMode').value;
+  document.getElementById('hcTimerBreathOptions').hidden=mode!=='breath';
+  document.getElementById('hcTimerPhase').textContent=mode==='breath'?'Breathe naturally':'Stillness';
+}
+function hcBell(){
+  if(!document.getElementById('hcTimerBell')?.checked)return;
+  try{
+    const C=window.AudioContext||window.webkitAudioContext;
+    if(!C)return;
+    if(!hcToneContext)hcToneContext=new C();
+    if(hcToneContext.state==='suspended')hcToneContext.resume().catch(()=>{});
+    const now=hcToneContext.currentTime;
+    [440,660].forEach((freq,i)=>{
+      const o=hcToneContext.createOscillator(),g=hcToneContext.createGain();
+      o.type='sine';o.frequency.setValueAtTime(freq,now);
+      g.gain.setValueAtTime(.0001,now);
+      g.gain.exponentialRampToValueAtTime(i===0?.026:.011,now+.06);
+      g.gain.exponentialRampToValueAtTime(.0001,now+1.9);
+      o.connect(g);g.connect(hcToneContext.destination);o.start(now);o.stop(now+2);
+    });
+  }catch(e){}
+}
+function hcTimerStop(silent=false){
+  if(hcTimerHandle){clearInterval(hcTimerHandle);hcTimerHandle=null}
+  hcTimerActive=false;hcTimerPaused=false;hcTimerStarted=0;hcTimerLastBell=0;
+  const disc=document.getElementById('hcTimerDisc');if(disc){disc.style.setProperty('--hc-breath-scale','1');disc.style.setProperty('--hc-breath-transition','0s')}
+  const btn=document.getElementById('hcTimerStart');if(btn)btn.textContent='Start';
+  if(!silent){const status=document.getElementById('hcTimerStatus');if(status)status.textContent='Timer stopped. Your progress is not graded.'}
+}
+function hcTimerToggle(){
+  const btn=document.getElementById('hcTimerStart');
+  if(hcTimerActive&&!hcTimerPaused){
+    hcTimerRemaining=Math.max(0,(hcTimerDeadline-Date.now())/1000);
+    hcTimerPaused=true;btn.textContent='Resume';
+    const status=document.getElementById('hcTimerStatus');if(status)status.textContent='Paused.';
+    return;
+  }
+  if(hcTimerActive&&hcTimerPaused){
+    hcTimerPaused=false;hcTimerDeadline=Date.now()+hcTimerRemaining*1000;btn.textContent='Pause';
+    hcTimerTick();return;
+  }
+  const minutes=Math.max(1,Number(document.getElementById('hcTimerMinutes').value)||10);
+  hcTimerActive=true;hcTimerPaused=false;hcTimerRemaining=minutes*60;hcTimerStarted=Date.now();
+  hcTimerDeadline=hcTimerStarted+hcTimerRemaining*1000;hcTimerLastBell=0;
+  btn.textContent='Pause';
+  if(!audio.paused)audio.pause();
+  if(!soundLabAudio.paused)soundLabAudio.pause();
+  if(!fearAudio.paused)fearAudio.pause();
+  if(!bookAudioEl.paused)bookAudioEl.pause();
+  hcBell();
+  if(hcTimerHandle)clearInterval(hcTimerHandle);
+  hcTimerHandle=setInterval(hcTimerTick,240);
+  hcTimerTick();
+}
+function hcTimerTick(){
+  if(!hcTimerActive||hcTimerPaused)return;
+  const remain=Math.max(0,(hcTimerDeadline-Date.now())/1000);
+  const duration=(Number(document.getElementById('hcTimerMinutes').value)||10)*60;
+  const elapsed=Math.max(0,duration-remain);
+  document.getElementById('hcTimerClock').textContent=fmt(Math.ceil(remain));
+  const interval=Number(document.getElementById('hcTimerInterval').value)||0;
+  const segment=Math.floor(elapsed/(interval*60||Infinity));
+  if(interval>0&&segment>hcTimerLastBell &&remain>2){hcTimerLastBell=segment;hcBell()}
+  if(document.getElementById('hcTimerMode').value==='breath'){
+    const [inhale,exhale]=document.getElementById('hcTimerBreathRatio').value.split(',').map(Number);
+    const cycle=inhale+exhale;
+    const phase=elapsed%cycle;
+    const inhaling=phase<inhale;
+    const fraction=inhaling?phase/inhale:(phase-inhale)/exhale;
+    const scale=inhaling?(.87+.28*fraction):(1.15-.28*fraction);
+    const disc=document.getElementById('hcTimerDisc');
+    disc.style.setProperty('--hc-breath-scale',String(scale));
+    disc.style.setProperty('--hc-breath-transition','.22s');
+    document.getElementById('hcTimerPhase').textContent=inhaling?'Inhale gently':'Exhale naturally';
+  }
+  document.getElementById('hcTimerStatus').textContent='In progress · stop whenever you need to.';
+  if(remain<=0){
+    hcTimerStop(true);hcBell();
+    document.getElementById('hcTimerClock').textContent='00:00';
+    document.getElementById('hcTimerPhase').textContent='Finished';
+    document.getElementById('hcTimerStatus').textContent='Time complete. Return when ready.';
+  }
+}
 
 function openSoundLab(){
   show('soundLab');
