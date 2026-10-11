@@ -2358,6 +2358,12 @@ button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible,te
       <button class="soundlab-card" onclick="openSoundTrack('stillness2')"><span class="soundlab-icon">◌</span><span><b>Deep Sleep Stillness</b><small>2 min · closing music</small></span><span class="soundlab-duration">2:00</span></button>
       <button class="soundlab-card" onclick="openSoundTrack('deep')"><span class="soundlab-icon">○</span><span><b>Deep Stillness</b><small>17 min · long quiet ambient</small></span><span class="soundlab-duration">17:00</span></button>
     </div>
+    <h3 style="font-size:19px;margin:22px 0 10px">Organic Flute · Original Recordings</h3>
+    <p>Traditional acoustic flute performances, separate from religious chanting.</p>
+    <div class="soundlab-grid">
+      <button class="soundlab-card" onclick="openSoundTrack('organicBansuri')"><span class="soundlab-icon">♫</span><span><b>Natural Bansuri · Nepal</b><small>7:54 · Learnerktm · CC0 recording</small></span><span class="soundlab-duration">7:54</span></button>
+    </div>
+    <div class="hub-note">Original uploader's CC0 flute recording from Wikimedia Commons. The app uses Wikimedia's MP3 listening copy of the original OGG; no AI flute or WAV mastering is claimed. <a href="https://commons.wikimedia.org/wiki/File:%E0%A4%AC%E0%A4%BE%E0%A4%81%E0%A4%B8%E0%A5%81%E0%A4%B0%E0%A5%80%E0%A4%95%E0%A5%8B_%E0%A4%A7%E0%A5%81%E0%A4%A8_Basuri.ogg" target="_blank" rel="noopener noreferrer" style="color:#d6bd86">Recording, creator and licence ↗</a></div>
     <h3 style="font-size:20px;margin:20px 0 10px">Nature Sounds</h3>
     <p>Choose a sound, then press Play at a comfortable volume.</p>
     <div class="soundlab-grid">
@@ -2402,6 +2408,14 @@ button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible,te
     </div>
 
     <div class="player-status" id="soundLabStatus" role="status">Press Play to begin.</div>
+    <div id="soundLabFluteTools" style="display:none;margin:12px 0;padding:13px;border:1px solid rgba(198,225,236,.14);border-radius:16px">
+      <div class="soundlab-options">
+        <button class="offline-action" id="fluteOfflineBtn" onclick="toggleFluteOffline()">↓ Save flute offline</button>
+        <button class="offline-action" onclick="show('downloads')">My Offline</button>
+      </div>
+      <p id="fluteOfflineStatus" class="player-status" role="status">Free CC0 audio streamed from Wikimedia Commons. Offline save is subject to your browser and source availability.</p>
+      <a href="https://commons.wikimedia.org/wiki/File:%E0%A4%AC%E0%A4%BE%E0%A4%81%E0%A4%B8%E0%A5%81%E0%A4%B0%E0%A5%80%E0%A4%95%E0%A5%8B_%E0%A4%A7%E0%A5%81%E0%A4%A8_Basuri.ogg" target="_blank" rel="noopener noreferrer" style="display:block;color:#d6bd86;font-size:12px;margin-top:8px">Original recording, performer and licence ↗</a>
+    </div>
     <div class="soundlab-options">
       <button id="soundLoopBtn" onclick="toggleSoundLoop()">Loop off</button>
       <button class="hc-fav-toggle" id="soundLabFavouriteBtn" onclick="toggleHeartClearFavourite('soundlab',currentSoundKey)" aria-pressed="false" aria-label="Save or remove this sound from favourites">♡ Favourite</button>
@@ -3129,6 +3143,7 @@ async function clearOfflineMedia(){
   updateOfflineStorageText();
   refreshPracticeOfflineButton();
   refreshBookOfflineButton();
+  refreshFluteOfflineButton();
   updateHomeOfflineCount();
   if(currentScreenId==='downloads')renderDownloads();
 }
@@ -4103,6 +4118,7 @@ async function offlineItems(){
       }
     }
   }
+  if(await cacheHas(soundLabTracks.organicBansuri.url))out.push({kind:'soundlab',key:'organicBansuri',title:soundLabTracks.organicBansuri.title,meta:'Organic Flute · 7:54 · CC0'});
   return out;
 }
 
@@ -4133,6 +4149,12 @@ async function renderDownloads(){
     if(item.kind==='meditation'){
       return '<button class="download-item" onclick="launchDownloadedMeditation(\''+item.key+'\')">'+
         '<span class="download-item-icon">◌</span>'+
+        '<span><b>'+escapeHtml(item.title)+'</b><small>'+escapeHtml(item.meta)+'</small></span>'+
+        '<span class="download-open">Open ›</span></button>';
+    }
+    if(item.kind==='soundlab'){
+      return '<button class="download-item" onclick="openSoundTrack(\'organicBansuri\')">'+
+        '<span class="download-item-icon">♫</span>'+
         '<span><b>'+escapeHtml(item.title)+'</b><small>'+escapeHtml(item.meta)+'</small></span>'+
         '<span class="download-open">Open ›</span></button>';
     }
@@ -4432,7 +4454,7 @@ function setBookMediaSession(){
   }catch(e){}
 }
 
-const soundLabTracks={"horizon":{"title":"Horizon","duration":420,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/1e7ed74c-05be-4554-af16-152684e0bad5.mp3","desc":"7 min · slow ambient field"},"mantra":{"title":"Mantra Bed","duration":480,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/24c10e62-fbde-483b-bb36-5646c5715d2d.mp3","desc":"8 min · steady chant background"},"deep":{"title":"Deep Stillness","duration":1020,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/e13e7587-23c0-408a-9f0c-b75177ce8fbe.mp3","desc":"17 min · long quiet ambient"},"nature":{"title":"Nature Weave","duration":180,"url":"","desc":"3 min · birds, streams, ocean, wind and fire"},"birds":{"title":"Birdsong","duration":246,"url":"https://bigsoundbank.com/UPLOAD/mp3/0999.mp3","desc":"4 min · CC0 birds waking"},"fire":{"title":"Fire Crackling","duration":60,"url":"https://bigsoundbank.com/UPLOAD/mp3/0031.mp3","desc":"1 min · CC0 fireplace recording"},"rain":{"title":"Rain","duration":78,"url":"https://bigsoundbank.com/UPLOAD/mp3/1290.mp3","desc":"1 min · CC0 rain recording"},"ocean":{"title":"Ocean","duration":166,"url":"https://bigsoundbank.com/UPLOAD/mp3/0698.mp3","desc":"2:46 · Atlantic sea waves, CC0 field recording"},"storm":{"title":"Storm","duration":157,"url":"https://bigsoundbank.com/UPLOAD/mp3/0740.mp3","desc":"2:37 · natural storm with rain and thunder, CC0"},"thunder":{"title":"Distant Thunder","duration":42,"url":"https://bigsoundbank.com/UPLOAD/mp3/3181.mp3","desc":"0:42 · one recorded thunderclap, CC0"},"stillness2":{"title":"Deep Sleep Stillness","duration":120,"url":"./media/HeartClear_DeepSleep_Stillness_2min_PREVIEW.mp3","desc":"2 min · gentle closing music"},"foreststream":{"title":"Forest Stream","duration":301,"url":"https://bigsoundbank.com/UPLOAD/mp3/2713.mp3","desc":"5:01 · real stream, blackbird and forest · CC0"},"treewind":{"title":"Wind in a Tree","duration":116,"url":"https://bigsoundbank.com/UPLOAD/mp3/0659.mp3","desc":"1:56 · wind in a tree and birds · CC0"},"windfield":{"title":"Wind in a Field","duration":205,"url":"https://bigsoundbank.com/UPLOAD/mp3/1097.mp3","desc":"3:25 · wind in a cornfield · CC0"},"nightforest":{"title":"Forest After Rain","duration":30,"url":"https://bigsoundbank.com/UPLOAD/mp3/0555.mp3","desc":"0:30 · night ambience after rain · CC0"},"countryside":{"title":"Countryside","duration":112,"url":"https://bigsoundbank.com/UPLOAD/mp3/0097.mp3","desc":"1:52 · wind, birds and insects · CC0"},"frogswater":{"title":"Frogs & Waterfall","duration":150,"url":"https://bigsoundbank.com/UPLOAD/mp3/0998.mp3","desc":"2:30 · frogs, distant waterfall · CC0"}};
+const soundLabTracks={"organicBansuri":{"title":"Natural Bansuri · Nepal","duration":474,"url":"https://upload.wikimedia.org/wikipedia/commons/transcoded/5/50/%E0%A4%AC%E0%A4%BE%E0%A4%81%E0%A4%B8%E0%A5%81%E0%A4%B0%E0%A5%80%E0%A4%95%E0%A5%8B_%E0%A4%A7%E0%A5%81%E0%A4%A8_Basuri.ogg/%E0%A4%AC%E0%A4%BE%E0%A4%81%E0%A4%B8%E0%A5%81%E0%A4%B0%E0%A5%80%E0%A4%95%E0%A5%8B_%E0%A4%A7%E0%A5%81%E0%A4%A8_Basuri.ogg.mp3","originalUrl":"https://upload.wikimedia.org/wikipedia/commons/5/50/%E0%A4%AC%E0%A4%BE%E0%A4%81%E0%A4%B8%E0%A5%81%E0%A4%B0%E0%A5%80%E0%A4%95%E0%A5%8B_%E0%A4%A7%E0%A5%81%E0%A4%A8_Basuri.ogg","sourcePage":"https://commons.wikimedia.org/wiki/File:%E0%A4%AC%E0%A4%BE%E0%A4%81%E0%A4%B8%E0%A5%81%E0%A4%B0%E0%A5%80%E0%A4%95%E0%A5%8B_%E0%A4%A7%E0%A5%81%E0%A4%A8_Basuri.ogg","creator":"Learnerktm","license":"CC0 1.0","desc":"7:54 · community bansuri performance (Nepal, 2014) · CC0"},"horizon":{"title":"Horizon","duration":420,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/1e7ed74c-05be-4554-af16-152684e0bad5.mp3","desc":"7 min · slow ambient field"},"mantra":{"title":"Mantra Bed","duration":480,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/24c10e62-fbde-483b-bb36-5646c5715d2d.mp3","desc":"8 min · steady chant background"},"deep":{"title":"Deep Stillness","duration":1020,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/e13e7587-23c0-408a-9f0c-b75177ce8fbe.mp3","desc":"17 min · long quiet ambient"},"nature":{"title":"Nature Weave","duration":180,"url":"","desc":"3 min · birds, streams, ocean, wind and fire"},"birds":{"title":"Birdsong","duration":246,"url":"https://bigsoundbank.com/UPLOAD/mp3/0999.mp3","desc":"4 min · CC0 birds waking"},"fire":{"title":"Fire Crackling","duration":60,"url":"https://bigsoundbank.com/UPLOAD/mp3/0031.mp3","desc":"1 min · CC0 fireplace recording"},"rain":{"title":"Rain","duration":78,"url":"https://bigsoundbank.com/UPLOAD/mp3/1290.mp3","desc":"1 min · CC0 rain recording"},"ocean":{"title":"Ocean","duration":166,"url":"https://bigsoundbank.com/UPLOAD/mp3/0698.mp3","desc":"2:46 · Atlantic sea waves, CC0 field recording"},"storm":{"title":"Storm","duration":157,"url":"https://bigsoundbank.com/UPLOAD/mp3/0740.mp3","desc":"2:37 · natural storm with rain and thunder, CC0"},"thunder":{"title":"Distant Thunder","duration":42,"url":"https://bigsoundbank.com/UPLOAD/mp3/3181.mp3","desc":"0:42 · one recorded thunderclap, CC0"},"stillness2":{"title":"Deep Sleep Stillness","duration":120,"url":"./media/HeartClear_DeepSleep_Stillness_2min_PREVIEW.mp3","desc":"2 min · gentle closing music"},"foreststream":{"title":"Forest Stream","duration":301,"url":"https://bigsoundbank.com/UPLOAD/mp3/2713.mp3","desc":"5:01 · real stream, blackbird and forest · CC0"},"treewind":{"title":"Wind in a Tree","duration":116,"url":"https://bigsoundbank.com/UPLOAD/mp3/0659.mp3","desc":"1:56 · wind in a tree and birds · CC0"},"windfield":{"title":"Wind in a Field","duration":205,"url":"https://bigsoundbank.com/UPLOAD/mp3/1097.mp3","desc":"3:25 · wind in a cornfield · CC0"},"nightforest":{"title":"Forest After Rain","duration":30,"url":"https://bigsoundbank.com/UPLOAD/mp3/0555.mp3","desc":"0:30 · night ambience after rain · CC0"},"countryside":{"title":"Countryside","duration":112,"url":"https://bigsoundbank.com/UPLOAD/mp3/0097.mp3","desc":"1:52 · wind, birds and insects · CC0"},"frogswater":{"title":"Frogs & Waterfall","duration":150,"url":"https://bigsoundbank.com/UPLOAD/mp3/0998.mp3","desc":"2:30 · frogs, distant waterfall · CC0"}};
 let currentSoundKey='horizon';
 const soundLabAudio=document.getElementById('soundLabAudio');
 const soundLabSeek=document.getElementById('soundLabSeek');
@@ -4780,6 +4802,49 @@ function hcResumeSoundLab(){
   const st=document.getElementById('soundLabStatus');if(st)st.textContent='Position restored. Press Play to continue listening.';
 }
 
+function updateOrganicFluteTools(){
+  const row=document.getElementById('soundLabFluteTools');
+  if(!row)return;
+  const active=currentSoundKey==='organicBansuri';
+  row.style.display=active?'block':'none';
+  if(active)refreshFluteOfflineButton();
+}
+async function refreshFluteOfflineButton(){
+  const btn=document.getElementById('fluteOfflineBtn');
+  if(!btn)return;
+  const has=await cacheHas(soundLabTracks.organicBansuri.url);
+  btn.textContent=has?'Remove saved flute':'↓ Save flute offline';
+  btn.classList.toggle('saved',has);
+  const status=document.getElementById('fluteOfflineStatus');
+  if(status && !btn.disabled)status.textContent=has?'Saved on this device. Open My Offline to listen again.':
+    'This source is streamed from Wikimedia. Offline saving depends on network permissions and available space.';
+}
+async function toggleFluteOffline(){
+  if(currentSoundKey!=='organicBansuri')return;
+  const t=soundLabTracks.organicBansuri;
+  const btn=document.getElementById('fluteOfflineBtn');
+  const status=document.getElementById('fluteOfflineStatus');
+  if(!btn)return;
+  btn.disabled=true;
+  try{
+    if(await cacheHas(t.url)){
+      await removeOfflineUrl(t.url);
+      if(status)status.textContent='Saved flute removed.';
+    }else{
+      btn.textContent='Downloading…';
+      if(status)status.textContent='Saving the complete recording to this device. Keep HeartClear open.';
+      await saveOfflineUrl(t.url);
+      if(status)status.textContent='Saved. The download stays on this device.';
+    }
+  }catch(e){
+    if(status)status.textContent='Offline save is unavailable from this host or browser. Online listening and the source link remain available.';
+  }finally{
+    btn.disabled=false;
+    await refreshFluteOfflineButton();
+    updateOfflineStorageText();updateHomeOfflineCount();
+  }
+}
+
 function openSoundLab(){
   show('soundLab');
 }
@@ -4788,7 +4853,7 @@ let soundLabAutoNext=true;
 let soundLabListeningSeconds=0;
 let soundLabListeningLimit=0;
 let soundLabPlaybackStartedAt=0;
-const soundLabQueue=['nature','rain','foreststream','ocean','birds','windfield','treewind','countryside','fire','nightforest','frogswater','storm','thunder','horizon','stillness2','deep'];
+const soundLabQueue=['organicBansuri','nature','rain','foreststream','ocean','birds','windfield','treewind','countryside','fire','nightforest','frogswater','storm','thunder','horizon','stillness2','deep'];
 try{const saved=localStorage.getItem('heartclearAutoNext');if(saved!==null)soundLabAutoNext=saved==='1'}catch(e){}
 function soundLabClockCommit(){
   if(soundLabPlaybackStartedAt){soundLabListeningSeconds+=(Date.now()-soundLabPlaybackStartedAt)/1000;soundLabPlaybackStartedAt=0}
@@ -4831,6 +4896,7 @@ async function playNextSoundLab(userInitiated=false){
   document.getElementById('soundLabDesc').textContent=item.desc;
   document.getElementById('soundLabTotal').textContent=fmt(item.duration);
   setSoundLabMediaSession();
+  updateOrganicFluteTools();
   try{
     await soundLabAudio.play();
     soundLabPlayRequested=true;rememberActiveMedia('soundlab');
@@ -4879,6 +4945,7 @@ function openSoundTrack(key){
   updateSoundLabQueueStatus();
 
   setSoundLabMediaSession();
+  updateOrganicFluteTools();
   show('soundLabPlayer');
   syncSoundLab();
   updateHeartClearFavouriteButtons();
@@ -4887,7 +4954,7 @@ function openSoundTrack(key){
 let soundLabPlayRequested=false;
 let soundLabFallbackActive=false;
 async function fallbackSoundLab(){
-  if(soundLabFallbackActive||currentSoundKey==='nature')return;
+  if(soundLabFallbackActive||currentSoundKey==='nature'||currentSoundKey==='organicBansuri')return;
   soundLabFallbackActive=true;
   const status=document.getElementById('soundLabStatus');
   if(status)status.textContent='This source failed. Loading the offline-capable Nature Weave backup…';
@@ -4911,7 +4978,12 @@ async function toggleSoundLab(){
       await soundLabAudio.play();rememberActiveMedia('soundlab');
       const st=document.getElementById('soundLabStatus');
       if(st)st.textContent='Playing · '+(soundLabTracks[currentSoundKey]||soundLabTracks.horizon).title;
-    }catch(e){await fallbackSoundLab()}
+    }catch(e){
+      if(currentSoundKey==='organicBansuri'){
+        const st=document.getElementById('soundLabStatus');
+        if(st)st.textContent='Wikimedia stream unavailable. Try the original file via the source link.';
+      }else await fallbackSoundLab();
+    }
   }else{soundLabPlayRequested=false;soundLabAudio.pause()}
   syncSoundLab();
 }
@@ -4936,7 +5008,9 @@ function toggleSoundLoop(){
 
 soundLabAudio.addEventListener('error',()=>{
   const st=document.getElementById('soundLabStatus');
-  if(!soundLabFallbackActive&&currentSoundKey!=='nature')fallbackSoundLab();
+  if(currentSoundKey==='organicBansuri'){
+    if(st)st.textContent='Original recording could not load. Use the source link below.';
+  }else if(!soundLabFallbackActive&&currentSoundKey!=='nature')fallbackSoundLab();
   else if(st)st.textContent='Sound unavailable. Please retry when connected.';
 });
 function stopSoundLab(){
@@ -6190,7 +6264,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=82');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=83');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
