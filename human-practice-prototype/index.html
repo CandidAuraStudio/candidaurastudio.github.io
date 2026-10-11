@@ -904,6 +904,20 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
 }
 .offline-action.saved{border-color:rgba(213,177,111,.25);background:rgba(118,80,37,.15);color:#e1c58f}
 
+
+/* 30-Day Return observation journey v45 */
+.return-hero{padding:20px 18px;border-radius:24px;border:1px solid rgba(198,225,236,.08);background:linear-gradient(145deg,rgba(16,39,52,.78),rgba(5,17,27,.88))}
+.return-subjects{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:14px}
+.return-subjects button{border:1px solid rgba(198,225,236,.09);background:rgba(5,18,27,.50);color:#c8d6dc;border-radius:16px;padding:13px;font:inherit;font-size:12px}
+.return-subjects button.active{border-color:rgba(213,177,111,.26);background:rgba(116,79,37,.14);color:#e0c38c}
+.return-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin-top:16px}
+.return-day{aspect-ratio:1;border-radius:50%;display:grid;place-items:center;font-size:9px;color:#647b86;border:1px solid rgba(198,225,236,.07);background:rgba(5,18,27,.40)}
+.return-day.done{color:#07131b;background:#c8a66d;border-color:#c8a66d}
+.return-today{margin-top:16px;padding:14px;border-radius:18px;border:1px solid rgba(198,225,236,.08);background:rgba(5,18,27,.45)}
+.return-today b{display:block;font-size:13px}.return-today p{font-size:11px;line-height:1.5;margin:5px 0 0}
+.return-note{width:100%;min-height:86px;margin-top:12px;border-radius:15px;border:1px solid rgba(198,225,236,.10);background:#07151f;color:#e7eef1;padding:12px;font:inherit;font-size:12px;resize:vertical}
+.return-meta{display:flex;justify-content:space-between;gap:12px;margin-top:10px;color:#8298a3;font-size:10px}
+
 </style>
 </head>
 <body>
@@ -1133,6 +1147,35 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
     <div class="human-session-note" id="humanSessionNote">No multitasking. Notice rhythm, silence and what changes in your attention.</div>
     <button class="btn" id="humanStartBtn" onclick="toggleHumanTimer()">Start</button>
     <button class="btn secondary" onclick="completeHumanPractice()">Done</button>
+  </div>
+</section>
+
+<section class="screen" id="returnJourney">
+  <div class="glass">
+    <button class="collection-back" onclick="openHumanCategory('observe')">‹ Observation</button>
+    <div class="return-hero">
+      <div class="kicker">Human Practice · Observation</div>
+      <h2>30-Day Return</h2>
+      <p>Choose one ordinary thing. Return to it across 30 different days. Notice what changed before searching for an explanation.</p>
+    </div>
+
+    <div class="return-subjects" id="returnSubjects">
+      <button data-subject="Moon" onclick="chooseReturnSubject('Moon',this)">Moon</button>
+      <button data-subject="Sky" onclick="chooseReturnSubject('Sky',this)">Sky / light</button>
+      <button data-subject="Tree" onclick="chooseReturnSubject('Tree',this)">One tree</button>
+      <button data-subject="Place" onclick="chooseReturnSubject('Place',this)">One place</button>
+      <button data-subject="Object" onclick="chooseReturnSubject('Object',this)">One object</button>
+    </div>
+
+    <div class="return-grid" id="returnGrid"></div>
+
+    <div class="return-today">
+      <b id="returnPromptTitle">Choose what you will return to.</b>
+      <p id="returnPrompt">The same subject matters more than finding something impressive.</p>
+      <textarea class="return-note" id="returnNote" maxlength="240" placeholder="One short thing you noticed today…"></textarea>
+      <button class="btn" id="returnSaveBtn" onclick="saveReturnCheck()">Mark today observed</button>
+      <div class="return-meta"><span id="returnCount">0 / 30 days</span><span>stored only on this device</span></div>
+    </div>
   </div>
 </section>
 
@@ -1415,7 +1458,7 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v44</div>
+    <div class="app-version">HeartClear · prototype v45</div>
   </div>
 </section>
 
@@ -1712,7 +1755,7 @@ function show(id){
   document.getElementById('bottomNav').classList.toggle('hidden',immersive);
   document.getElementById('appTopBar').classList.toggle('hidden',immersive);
 
-  const context={home:'Home',practices:'Meditation',library:'Library',collection:'Library',sacred:'Sacred Sound',sacredDetail:'Sacred Sound',history:'History',settings:'Settings'}[id]||'';
+  const context={home:'Home',practices:'Meditation',human:'Human Practice',humanCategory:'Human Practice',returnJourney:'Observation',library:'Library',collection:'Library',sacred:'Sacred Sound',sacredDetail:'Sacred Sound',history:'History',settings:'Settings'}[id]||'';
   const ctx=document.getElementById('topContext'); if(ctx)ctx.textContent=context;
 
   if(['home','practices','library','sacred'].includes(id)){
@@ -1746,6 +1789,99 @@ function startSettleQuick(){
   );
 }
 
+const returnPrompts=[
+  ['Look for change.','What is different from the last time you looked?'],
+  ['Notice position.','Where is it in relation to buildings, horizon, branches, light or shadow?'],
+  ['Notice texture.','What detail becomes visible when you stay longer?'],
+  ['Notice movement.','What is moving, and what appears still?'],
+  ['Notice light.','How does light change the shape, colour or edge you see?'],
+  ['Notice your assumption.','What did you expect to see before you actually looked?'],
+  ['Notice one new detail.','Find one thing you genuinely did not notice before.']
+];
+
+function getReturnJourney(){
+  try{
+    const j=JSON.parse(localStorage.getItem('heartclearReturnJourney')||'null');
+    return j&&typeof j==='object'?j:{subject:'',checks:[]};
+  }catch(e){return{subject:'',checks:[]}}
+}
+
+function saveReturnJourney(j){
+  try{localStorage.setItem('heartclearReturnJourney',JSON.stringify(j))}catch(e){}
+}
+
+function localDayKey(){
+  const d=new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+
+function openReturnJourney(){
+  renderReturnJourney();
+  show('returnJourney');
+}
+
+function chooseReturnSubject(subject,btn){
+  const j=getReturnJourney();
+  if(j.subject && j.subject!==subject && j.checks.length){
+    if(!confirm('Change the observation subject? Existing 30-Day Return notes will be cleared.'))return;
+    j.checks=[];
+  }
+  j.subject=subject;
+  if(!j.startedAt)j.startedAt=Date.now();
+  saveReturnJourney(j);
+  renderReturnJourney();
+}
+
+function renderReturnJourney(){
+  const j=getReturnJourney();
+  document.querySelectorAll('#returnSubjects button').forEach(b=>b.classList.toggle('active',b.dataset.subject===j.subject));
+  const grid=document.getElementById('returnGrid');
+  if(grid)grid.innerHTML=Array.from({length:30},(_,i)=>'<div class="return-day '+(i<j.checks.length?'done':'')+'">'+(i+1)+'</div>').join('');
+
+  const today=localDayKey();
+  const existing=j.checks.find(x=>x.date===today);
+  const prompt=returnPrompts[j.checks.length%returnPrompts.length];
+  const title=document.getElementById('returnPromptTitle');
+  const text=document.getElementById('returnPrompt');
+  const note=document.getElementById('returnNote');
+  const btn=document.getElementById('returnSaveBtn');
+  const count=document.getElementById('returnCount');
+
+  if(title)title.textContent=j.subject?(j.subject+' · Day '+Math.min(30,j.checks.length+1)):'Choose what you will return to.';
+  if(text)text.textContent=j.subject?prompt[1]:'The same subject matters more than finding something impressive.';
+  if(note){note.value=existing?.note||'';note.disabled=!j.subject||!!existing}
+  if(btn){
+    btn.disabled=!j.subject||!!existing||j.checks.length>=30;
+    btn.textContent=j.checks.length>=30?'30 days completed':existing?'Today observed':'Mark today observed';
+  }
+  if(count)count.textContent=Math.min(30,j.checks.length)+' / 30 days';
+}
+
+function saveReturnCheck(){
+  const j=getReturnJourney();
+  if(!j.subject||j.checks.length>=30)return;
+  const today=localDayKey();
+  if(j.checks.some(x=>x.date===today))return;
+  const note=(document.getElementById('returnNote').value||'').trim();
+  j.checks.push({date:today,note:note.slice(0,240)});
+  saveReturnJourney(j);
+
+  const items=getHistory();
+  items.push({
+    practice:'30-Day Return · '+j.subject,
+    title:'Observation',
+    category:'Observation',
+    listenedSeconds:0,
+    targetSeconds:0,
+    completed:true,
+    endedAt:Date.now(),
+    reflection:note
+  });
+  saveHistory(items);
+  renderReturnJourney();
+  renderDashboard();
+}
+
 const humanPracticeData={
   passion:{title:'Passion',icon:'♪',description:'Give full attention to something you care about.',items:[
     {title:'Music Presence',seconds:600,instruction:'Choose one piece of music and listen without scrolling.',note:'Notice rhythm, silence and what changes in your attention.'},
@@ -1760,6 +1896,7 @@ const humanPracticeData={
     {title:'Gentle Mobility',seconds:600,instruction:'Move the shoulders, arms, ankles and hips slowly within a comfortable range.',note:'This is awareness, not a workout challenge.'}
   ]},
   observe:{title:'Observation',icon:'◉',description:'Watch one real thing change over time.',items:[
+    {title:'30-Day Return',journey:true,seconds:0,instruction:'Return to the same moon, sky, tree, place or object across 30 different days.',note:'One short observation each day is enough.'},
     {title:'Moon Observation',seconds:600,instruction:'Look at the moon from a safe place and notice shape, brightness and position.',note:'Return on different days and notice what changes.'},
     {title:'Sky & Light',seconds:600,instruction:'Observe the sky, clouds, shadows or changing daylight.',note:'Do not stare directly at the sun. Watch the sky, horizon, reflections or shadows instead.'},
     {title:'One Tree',seconds:600,instruction:'Choose one tree or plant and stay with it for ten minutes.',note:'Notice movement, colour, texture and light.'},
@@ -1780,7 +1917,7 @@ function openHumanCategory(kind){
   document.getElementById('humanCategoryTitle').textContent=data.title;
   document.getElementById('humanCategoryDescription').textContent=data.description;
   document.getElementById('humanPracticeList').innerHTML=data.items.map((x,i)=>
-    '<button class="human-item" onclick="openHumanPractice(\''+kind+'\','+i+')"><span><b>'+escapeHtml(x.title)+'</b><small>'+escapeHtml(x.instruction)+'</small></span><span class="human-duration">'+fmt(x.seconds)+'</span></button>'
+    '<button class="human-item" onclick="'+(x.journey?'openReturnJourney()':'openHumanPractice(\''+kind+'\','+i+')')+'"><span><b>'+escapeHtml(x.title)+'</b><small>'+escapeHtml(x.instruction)+'</small></span><span class="human-duration">'+(x.journey?'30 days':fmt(x.seconds))+'</span></button>'
   ).join('');
   show('humanCategory');
 }
