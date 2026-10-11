@@ -429,7 +429,7 @@ body{overscroll-behavior-y:none}
   bottom:calc(10px + var(--safe-bottom));
   width:min(calc(100% - 24px),496px);
   height:68px;border-radius:23px;
-  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:center;
+  display:grid;grid-template-columns:repeat(6,minmax(0,1fr));align-items:center;
   background:rgba(5,16,24,.90);
   border:1px solid rgba(196,224,235,.10);
   box-shadow:0 24px 70px rgba(0,0,0,.48),inset 0 1px 0 rgba(255,255,255,.025);
@@ -441,7 +441,9 @@ body{overscroll-behavior-y:none}
   gap:5px;font:inherit;font-size:10px
 }
 .nav-item svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.8}
-.bottom-nav .nav-item{min-width:0;font-size:9px;white-space:nowrap}
+.bottom-nav .nav-item{min-width:0;font-size:8.5px;white-space:nowrap}
+.bottom-nav .nav-item svg{width:19px;height:19px}
+@media(max-width:390px){.bottom-nav{width:calc(100% - 12px)}.bottom-nav .nav-item{font-size:8px;gap:4px}.bottom-nav .nav-item svg{width:18px;height:18px}}
 @media(max-width:370px){.bottom-nav .nav-item{font-size:8.5px;gap:4px}.bottom-nav .nav-item svg{width:19px;height:19px}}
 .nav-item.active{color:#dfbd80}
 .nav-item.active:after{
@@ -1325,6 +1327,12 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
 .download-empty b{display:block;font-size:14px}
 .download-empty p{font-size:11px;margin:6px auto 0;max-width:300px}
 
+/* Human and Fear primary buttons: white, not gold */
+#fearPlayer .soundlab-transport .primary,
+#fearPlayer .btn:not(.secondary),#humanSession #humanStartBtn{
+  background:#fff!important;color:#07131b!important;border:1px solid #fff!important;
+  box-shadow:0 8px 28px rgba(255,255,255,.10)!important;
+}
 </style>
 </head>
 <body>
@@ -1607,6 +1615,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
     <div class="kicker">Human Practice</div>
     <h2>Practice life itself.</h2>
     <p>Passion, movement and observation without needing a special identity or belief.</p>
+    <div class="hub-note">These are real-world activities with timers. Spoken guidance is not recorded yet. You can add optional background audio inside each activity.</div>
   </div>
   <div class="human-grid">
     <button class="human-card" onclick="openHumanCategory('passion')"><span class="human-symbol">♪</span><b>Passion</b><small>Music · dance · cooking · gardening · house reset</small></button>
@@ -2163,7 +2172,7 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear local history</button>
     </div>
-    <div class="app-version">HeartClear · prototype v68</div>
+    <div class="app-version">HeartClear · prototype v69</div>
   </div>
 </section>
 
@@ -2347,6 +2356,9 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
   </button>
   <button class="nav-item" data-nav="soundLab" onclick="navTo('soundLab',this)" aria-label="Sound Lab">
     <svg viewBox="0 0 24 24"><path d="M2 12h2M6 9v6M10 5v14M14 8v8M18 3v18M22 10v4"/></svg><span>Sounds</span>
+  </button>
+  <button class="nav-item" data-nav="human" onclick="navTo('human',this)" aria-label="Human Practice">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="6" r="2.5"/><path d="M12 9v6M7 11l5 2 5-2M9 21l3-6 3 6"/></svg><span>Human</span>
   </button>
   <button class="nav-item" data-nav="sacred" onclick="navTo('sacred',this)" aria-label="Sacred">
     <svg viewBox="0 0 24 24"><path d="M4 12h2M8 8v8M12 5v14M16 8v8M20 12h-2"/></svg><span>Sacred</span>
@@ -2774,7 +2786,7 @@ function show(id){
   const context={home:'Home',practices:'Meditation',human:'Human Practice',humanCategory:'Human Practice',returnJourney:'Observation',fearPractice:'Fear',fearPlayer:'Fear',soundLab:'Sound Lab',soundLabPlayer:'Sound Lab',downloads:'Offline',library:'Library',collection:'Library',sacred:'Sacred Sound',sacredDetail:'Sacred Sound',history:'History',settings:'Settings'}[id]||'';
   const ctx=document.getElementById('topContext'); if(ctx)ctx.textContent=context;
 
-  if(['home','practices','soundLab','library','sacred'].includes(id)){
+  if(['home','practices','soundLab','human','library','sacred'].includes(id)){
     document.querySelectorAll('.nav-item').forEach(btn=>btn.classList.toggle('active',btn.dataset.nav===id));
   }
 
