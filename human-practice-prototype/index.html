@@ -1947,6 +1947,21 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
 .hc-local-profile .hc-local-caution{font-size:11px;color:#e8d2a8;line-height:1.55}
 .hc-local-profile button:focus-visible,.hc-local-profile input:focus-visible{outline:2px solid #fff!important;outline-offset:3px!important}
 
+
+.hc-mix-presets{margin:15px 0 9px}.hc-mix-preset-note{color:#a5b8c2;font-size:11px;line-height:1.5;margin:7px 0 10px}
+.hc-mix-preset-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.hc-mix-preset-card{display:flex;flex-direction:column;justify-content:center;gap:5px;text-align:left;
+ min-height:74px;border:1px solid rgba(210,231,240,.13);border-radius:15px;padding:11px 12px;
+ background:rgba(7,25,35,.6);color:#f3f6f6;font:inherit}
+.hc-mix-preset-card strong{font-size:12px;line-height:1.25}
+.hc-mix-preset-card small{font-size:10px;line-height:1.35;color:#a6bbc3}
+.hc-mix-preset-card[aria-pressed="true"]{border-color:rgba(220,179,111,.7);background:rgba(172,129,65,.12)}
+.hc-mix-preset-card:focus-visible{outline:2px solid #e4c58e;outline-offset:2px}
+.hc-mix-extra{grid-column:1/-1;border:1px solid rgba(199,226,236,.15);border-radius:13px;overflow:hidden}
+.hc-mix-extra summary{cursor:pointer;font-size:11px;color:#e6d6b8;padding:12px;background:rgba(11,31,42,.45)}
+.hc-mix-extra .hc-mix-layer{margin:7px 8px}
+@media(max-width:335px){.hc-mix-preset-grid{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -2922,6 +2937,11 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
     <div class="hc-mix-heading"><div><h3>Mix your own</h3><p>Choose up to six sounds · 3 recommended for reliable playback.</p></div><span class="hc-mix-symbol" aria-hidden="true">
        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 7h16M4 12h16M4 17h16"/><circle cx="9" cy="7" r="2.1" fill="#142e3e"/><circle cx="16" cy="12" r="2.1" fill="#142e3e"/><circle cx="11" cy="17" r="2.1" fill="#142e3e"/></svg>
     </span></div>
+    <section class="hc-mix-presets" aria-label="Prepared soundscapes">
+      <div class="kicker">PREPARED NATURE SCENES</div>
+      <p class="hc-mix-preset-note">Choose a combination, or adjust your own. No autoplay.</p>
+      <div id="hcMixPresetList" class="hc-mix-preset-grid"></div>
+    </section>
     <div id="hcMixLayers" class="hc-mix-layers"></div>
     <p id="hcMixStatus" class="hc-mix-status" role="status" aria-live="polite">Choose 1–6 layers. Three is recommended for steady background playback.</p>
     <div class="hc-time-chips" id="hcMixTimerChips" aria-label="Mix listening timer">
@@ -5979,7 +5999,44 @@ soundLabAudio.addEventListener('loadedmetadata',()=>{
 const hcMixMaxLayers=6; // Six nature sources available; three is still recommended.
 const hcMixOptions=[{id:'rain',key:'rain',name:'Rain'},{id:'fire',key:'fire',name:'Fire'},
   {id:'birds',key:'birds',name:'Birds'},{id:'ocean',key:'ocean',name:'Ocean'},
-  {id:'wind',key:'treewind',name:'Wind'},{id:'thunder',key:'thunder',name:'Thunder'}];
+  {id:'wind',key:'treewind',name:'Tree Wind'},{id:'thunder',key:'thunder',name:'Thunder'},
+  {id:'stream',key:'foreststream',name:'Forest Stream'},{id:'frogs',key:'frogswater',name:'Frogs & Water'},
+  {id:'field',key:'windfield',name:'Field Wind'},{id:'night',key:'nightforest',name:'Night Forest'},
+  {id:'country',key:'countryside',name:'Countryside'},{id:'storm',key:'storm',name:'Rainstorm'}];
+const hcMixPresets=[
+  {id:'forest',name:'Forest Morning',note:'Birds · tree wind · stream',layers:{birds:.44,wind:.30,stream:.34}},
+  {id:'wetlands',name:'Wetlands at Dusk',note:'Frogs · night forest · rain',layers:{frogs:.54,night:.28,rain:.22}},
+  {id:'rainwood',name:'Rain in the Woods',note:'Rain · stream · trees',layers:{rain:.38,stream:.42,wind:.22}},
+  {id:'coast',name:'Coastal Breeze',note:'Ocean · field wind · birds',layers:{ocean:.50,field:.31,birds:.18}},
+  {id:'hearth',name:'Rainy Hearth',note:'Fire · rain · tree wind',layers:{fire:.45,rain:.30,wind:.21}},
+  {id:'stormfar',name:'Distant Storm',note:'Storm · rain · field wind',layers:{storm:.22,rain:.38,field:.28}}
+];
+// Presets only select layers; never start audio without the user pressing Start mix.
+function hcApplyMixPreset(id){
+  const preset=hcMixPresets.find(x=>x.id===id);
+  if(!preset)return;
+  hcMixStop(false);
+  hcMixSelected={...preset.layers};
+  hcRenderMixer();
+  hcMixMessage(preset.name+' selected. Adjust volumes or press Start mix.');
+}
+function hcRenderMixPresets(){
+  const list=document.getElementById('hcMixPresetList');
+  if(!list)return;
+  list.replaceChildren();
+  for(const preset of hcMixPresets){
+    const btn=document.createElement('button');
+    btn.type='button';btn.className='hc-mix-preset-card';
+    btn.setAttribute('aria-label','Select '+preset.name+' mix');
+    const b=document.createElement('strong');b.textContent=preset.name;
+    const small=document.createElement('small');small.textContent=preset.note;
+    const selected=Object.keys(preset.layers).length===Object.keys(hcMixSelected).length
+      &&Object.entries(preset.layers).every(([id,v])=>Math.abs(Number(hcMixSelected[id])-v)<.01);
+    btn.setAttribute('aria-pressed',String(selected));
+    btn.append(b,small);btn.addEventListener('click',()=>hcApplyMixPreset(preset.id));
+    list.append(btn);
+  }
+}
 let hcMixSelected={rain:.45,wind:.34},hcMixDecks=[],hcMixRunning=false,hcMixStarting=false,hcMixTimerId=null,hcMixFadeFactor=1;
 function hcMixMessage(message){const el=document.getElementById('hcMixStatus');if(el)el.textContent=message}
 function hcMixSelect(id,checked){
@@ -6015,7 +6072,12 @@ function hcMixSetDeckVolumes(fade=hcMixFadeFactor){
 function hcRenderMixer(){
   const root=document.getElementById('hcMixLayers');if(!root)return;
   root.replaceChildren();
-  hcMixOptions.forEach(({id,name})=>{
+  const extra=document.createElement('details');
+  extra.className='hc-mix-extra';
+  const summary=document.createElement('summary');
+  summary.textContent='More natural layers · stream, frogs, forest and countryside';
+  extra.append(summary);
+  hcMixOptions.forEach(({id,name},index)=>{
     const row=document.createElement('div');row.className='hc-mix-layer';
     const label=document.createElement('label');
     const check=document.createElement('input');check.type='checkbox';check.checked=Object.hasOwn(hcMixSelected,id);
@@ -6026,8 +6088,11 @@ function hcRenderMixer(){
     slider.value=String(Math.round((hcMixSelected[id]??.45)*100));slider.disabled=!check.checked;
     slider.setAttribute('aria-label',name+' volume');
     slider.oninput=()=>hcMixVolume(id,slider.value/100);
-    row.append(label,slider);root.append(row);
+    row.append(label,slider);if(index<6)root.append(row);else extra.append(row);
   });
+  extra.open=hcMixOptions.slice(6).some(x=>Object.hasOwn(hcMixSelected,x.id));
+  root.append(extra);
+  hcRenderMixPresets();
   const b=document.getElementById('hcMixPlayBtn');
   if(b){b.textContent=hcMixRunning?'Pause mix':hcMixDecks.length?'Resume mix':'Start mix';b.disabled=hcMixStarting}
   const recent=document.getElementById('hcMixRecent');if(!recent)return;
