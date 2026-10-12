@@ -24,6 +24,46 @@
 /* Ensure category labels stack correctly rather than running together inside flex cards. */
 .collection-kicker,.collection-name,.collection-description{display:block}
 .collection-description{padding-right:23px}
+
+/* Human Atlas 01.1: mobile usability updates, strictly within this app. */
+.collection-card:after{background:linear-gradient(180deg,rgba(12,19,16,.14) 0%,rgba(12,19,16,.42) 32%,rgba(12,19,16,.93) 100%)}
+.collection-card-inner{text-shadow:0 1px 6px rgba(5,12,8,.52)}
+.filter-hint{display:none}
+dialog:not([open]){display:none}
+dialog[open]{display:flex;flex-direction:column;overflow:hidden;height:min(88dvh,900px);max-height:min(88dvh,900px)}
+.reader-toolbar{display:flex;align-items:center;gap:12px;padding:11px 14px;flex-shrink:0;background:#18221c;border-bottom:1px solid rgba(220,224,206,.18);position:relative;z-index:10}
+.reader-toolbar-brand{font-weight:750;letter-spacing:.15em;color:var(--gold2);font-size:11px;line-height:1.2;margin-right:auto;white-space:nowrap}
+.reader-toolbar-brand small{font-size:8px;display:block;letter-spacing:.17em;color:var(--soft);padding-top:3px}
+.reader-listen{border:1px solid rgba(218,204,162,.42);background:rgba(218,204,162,.12);color:var(--cream);border-radius:8px;padding:8px 12px;min-height:40px;white-space:nowrap;font-size:12px;font-weight:600}
+.reader-listen:hover{border-color:var(--gold2)}
+.close-dialog{position:static;top:auto;left:auto;margin:0;z-index:11;flex-shrink:0;width:40px;height:40px;font-size:23px;background:#26332b}
+#dialog-body{min-height:0;flex:1;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;scroll-behavior:smooth}
+.modal-body-inner .paragraph{font-size:16px;line-height:1.78}
+@media(max-width:530px){
+.hero{row-gap:22px}
+.hero-figure{height:252px;margin-top:-10px;max-width:335px}
+.orbit-label{bottom:0;right:6%;font-size:11px;letter-spacing:.07em}
+.collection-card{min-height:230px}
+.collection-card-inner{padding:15px 15px 30px}
+.collection-name{font-size:21px;line-height:1.17}
+.collection-description{font-size:12px;line-height:1.52;max-width:23ch}
+.collection-kicker{font-size:8px;letter-spacing:.11em}
+.filters{scrollbar-width:thin;scrollbar-color:rgba(218,204,162,.45) transparent;scroll-padding-inline:12px}
+.filters::-webkit-scrollbar{display:block;height:3px}
+.filters::-webkit-scrollbar-thumb{background:rgba(218,204,162,.48);border-radius:10px}
+.filter-hint{display:block;color:var(--soft);font-size:11px;letter-spacing:.04em;text-align:right;margin:-12px 0 22px}
+dialog[open]{width:calc(100vw - 28px);height:min(86dvh,810px);max-height:min(86dvh,810px);border-radius:14px}
+.reader-toolbar{gap:8px;padding:10px 11px}
+.reader-toolbar-brand{font-size:9px;letter-spacing:.10em}
+.reader-toolbar-brand small{font-size:7px;letter-spacing:.1em}
+.reader-listen{font-size:11px;min-height:39px;padding:7px 10px}
+.close-dialog{width:38px;height:39px}
+.modal-banner{height:150px}
+.modal-body-inner{padding:22px 19px 29px}
+.modal-body-inner h2{font-size:clamp(29px,8vw,36px)}
+.modal-intro{font-size:19px;line-height:1.6;margin:23px 0}
+.modal-body-inner .paragraph{font-size:15px;line-height:1.78}
+}
 </style></head>
 <body>
   <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -44,7 +84,7 @@
     <main id="main-content" tabindex="-1"><div id="app" aria-live="polite"></div></main>
     <footer class="site-footer">
       <div><span class="footer-symbol">◎</span> HUMAN ATLAS <span class="footer-motto">· The world, remembered together.</span></div>
-      <div>PROTOTYPE 01 <span class="footer-dot">•</span> Independent from HeartClear <span class="footer-dot">•</span> No paid AI</div>
+      <div>PROTOTYPE 01.1 <span class="footer-dot">•</span> Independent from HeartClear <span class="footer-dot">•</span> No paid AI</div>
     </footer>
   </div>
   <nav class="mobile-nav" aria-label="Mobile navigation">
@@ -53,7 +93,9 @@
     <a data-nav="saved" href="#/saved"><span aria-hidden="true">♡</span><small>Saved</small></a>
     <a data-nav="notes" href="#/notes"><span aria-hidden="true">✎</span><small>My Notes</small></a>
   </nav>
-  <dialog id="story-dialog" aria-labelledby="story-title"><div id="dialog-body"></div></dialog>
+  <dialog id="story-dialog" aria-labelledby="story-title">
+<div class="reader-toolbar" role="toolbar" aria-label="Story reader controls"><span class="reader-toolbar-brand">HUMAN ATLAS <small>STORY READER</small></span><button class="reader-listen" id="listen-btn" type="button" data-action="listen" aria-label="Listen to story">▷ Listen</button><button class="close-dialog" type="button" data-action="close-modal" aria-label="Close story">×</button></div>
+<div id="dialog-body" tabindex="0"></div></dialog>
   <div id="toast" role="status" aria-live="polite"></div>
   
   
@@ -187,7 +229,7 @@ window.ATLAS_STORIES = [
   function home(){
     const featured = demoStories.find(s=>s.featured);
     return `<section class="hero" aria-labelledby="hero-heading">
-      <div class="hero-copy"><div class="section-eyebrow">THE LIVING ARCHIVE · PROTOTYPE 01</div>
+      <div class="hero-copy"><div class="section-eyebrow">THE LIVING ARCHIVE · PROTOTYPE 01.1</div>
       <h1 id="hero-heading">Every life<br/>holds a <em>world.</em></h1>
       <p class="lede">A place for the stories that shape us. Forgotten recipes, familiar voices, the sound of home, and questions worth carrying forward.</p>
       <div class="hero-btns"><a href="#/archive" class="primary-btn">Explore the archive <span aria-hidden="true">↗</span></a><a href="#/notes" class="secondary-btn">Preserve a memory <span aria-hidden="true">＋</span></a></div></div>
@@ -207,7 +249,7 @@ window.ATLAS_STORIES = [
   function archive(){return `<section class="archive-hero"><div class="section-eyebrow">THE HUMAN ATLAS ARCHIVE</div><h1>Follow your <em>curiosity.</em></h1><p>Twelve illustrative starter entries to demonstrate how this archive will grow. These are examples, not verified historical testimony.</p></section>
     <div class="search-row"><label class="search-wrap" for="story-search"><span aria-hidden="true">⌕</span><input id="story-search" type="search" placeholder="Search memories, places, traditions..." autocomplete="off" value="${escapeHTML(state.query)}" /></label></div>
     <div class="filters" role="group" aria-label="Filter collection"><button class="filter-chip ${state.category==='all'?'active':''}" data-action="filter" data-category="all" aria-pressed="${state.category==='all'}">All collections</button>${categories.map(c=>`<button class="filter-chip ${state.category===c.id?'active':''}" data-action="filter" data-category="${c.id}" aria-pressed="${state.category===c.id}">${escapeHTML(c.name)}</button>`).join('')}</div>
-    <div id="archive-results">${archiveCards()}</div>${notesBanner()}`;}
+    <div class="filter-hint">Swipe to see all six collections →</div><div id="archive-results">${archiveCards()}</div>${notesBanner()}`;}
   function savedPage(){const found=demoStories.filter(s=>state.saved.has(s.id));return `<section class="archive-hero"><div class="section-eyebrow">PERSONAL READING SHELF</div><h1>Stories you <em>saved.</em></h1><p>Bookmarks are kept privately in this browser. No account is needed.</p></section>${found.length?`<div class="results-count">${found.length} SAVED STORIES</div><div class="story-grid">${found.map(card).join('')}</div>`:empty('Your shelf is waiting','Tap the heart on any demo story to keep it here.')}`;}
   function myNotes(){
     return `<section class="archive-hero"><div class="section-eyebrow">YOUR PRIVATE COLLECTION</div><h1>Start with <em>a memory.</em></h1><p>Record something in your own words. It stays on this device until you choose to export a copy. Nothing here is uploaded or published.</p><span class="privacy-tag">◌ PRIVATE · THIS BROWSER ONLY</span></section>
@@ -232,11 +274,11 @@ window.ATLAS_STORIES = [
     const personal = isPersonal(s);
     const cover = personal?(safePhoto(s.photo)||img(s.category)):img(s.art);
     const paragraphs = personal ? [s.body] : s.body;
-    return `<button class="close-dialog" type="button" data-action="close-modal" aria-label="Close story">×</button><div class="modal-banner"><img src="${cover}" alt="${personal && safePhoto(s.photo)?'Your attached personal photo':'Original illustrative artwork'}"/></div>
+    return `<div class="modal-banner"><img src="${cover}" alt="${personal && safePhoto(s.photo)?'Your attached personal photo':'Original illustrative artwork'}"/></div>
       <article class="modal-body-inner"><div class="modal-top-meta"><span>${escapeHTML(categoryName(s.category))}</span><span>·</span><span>${personal?'PRIVATE NOTE':'EDITORIAL DEMO'}</span></div>
         <h2 id="story-title">${escapeHTML(s.title)}</h2><p class="modal-subtitle">${escapeHTML(s.subtitle||s.place||'A memory kept privately')}</p>
         ${meta(s)}
-        <div class="modal-controls"><button class="primary-btn" data-action="listen" id="listen-btn" type="button">▷ Listen to text</button>
+        <div class="modal-controls">
         ${!personal?`<button class="secondary-btn" type="button" data-action="save" data-id="${escapeHTML(s.id)}">${state.saved.has(s.id)?'♥ Saved story':'♡ Save story'}</button>`:''}<button class="secondary-btn" type="button" data-action="share" data-id="${escapeHTML(s.id)}">↗ Share link</button></div>
         ${!personal ? `<p class="modal-intro">${escapeHTML(s.intro)}</p>`:''}
         ${paragraphs.map(p=>`<p class="paragraph">${escapeHTML(p).replace(/\n/g,'<br>')}</p>`).join('')}
@@ -246,9 +288,10 @@ window.ATLAS_STORIES = [
   }
   function closeSpeech(){if('speechSynthesis' in window){window.speechSynthesis.cancel();}state.voiceUtterance=null;}
   function openModal(s){if(!s) {toast('This story is not on this device.');location.hash='#/'+state.view;return;}
-    dialogBody.innerHTML=modalContent(s);
+    closeSpeech();dialogBody.innerHTML=modalContent(s);
     if(!dialog.open) dialog.showModal();
-    dialog.scrollTop=0;
+    dialogBody.scrollTop=0;
+    const listenButton=document.getElementById('listen-btn');if(listenButton)listenButton.textContent='▷ Listen';
   }
   function route(){
     const parts=decodeURIComponent(location.hash.replace(/^#\/?/,'')).split('/');
