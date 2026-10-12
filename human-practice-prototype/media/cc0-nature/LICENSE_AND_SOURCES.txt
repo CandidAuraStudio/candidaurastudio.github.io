@@ -1,0 +1,9 @@
+HeartClear Nature Archive — Unmodified Original MP3s + 96kbps AAC mobile encodes
+Source: Joseph SARDIN and BigSoundBank (La Sonothèque)
+License: CC0 1.0, subject to source page's "Free and Royalty Free" marking.
+License: https://bigsoundbank.com/licenses.html
+Source URLs: https://bigsoundbank.com/UPLOAD/mp3/{0999,0031,1290,0698,0740,3181,2713,0659,1097,0555,0097,0998}.mp3
+Key map: birds=0999, fire=0031, rain=1290, ocean=0698, storm=0740, thunder=3181, foreststream=2713, treewind=0659, windfield=1097, nightforest=0555, countryside=0097, frogswater=0998.
+Original MP3 bytes are preserved unchanged. AAC files are transcoded for lower bandwidth.
+Editing/remixing and commercial use permitted under the source's stated CC0 terms for eligible files.
+No new instruments, AI-generated sound, or frequency treatment was applied.
