@@ -27,7 +27,7 @@ const assert = require('node:assert/strict');
     // Phase 1: Guest mode remains the default; every optional sharing preference starts OFF.
     const backendRequests=[];
     page.on('request',req=>{
-      if(/\\.supabase\\.co\\//i.test(req.url()))backendRequests.push(req.url());
+      if(req.url().includes('.supabase.co/'))backendRequests.push(req.url());
     });
     await page.locator('[data-nav="settings"]').evaluate(el=>el.click());
     const initialProfile=await page.evaluate(()=>({
