@@ -1834,6 +1834,21 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
 .hc-more-shortcuts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:15px 0 18px}
 
 .hc-return-notice[hidden]{display:none!important}.hc-return-notice{border:1px solid rgba(220,238,244,.19);color:#f2f8fa;background:rgba(14,39,51,.95);font-size:12px;line-height:1.45;border-radius:12px;padding:11px 14px;margin:5px 0 11px}
+
+/* v100 · quiet, optional on-device playback diagnostics in More */
+.hc-playback-diagnostics{border:1px solid rgba(201,224,233,.16);border-radius:16px;padding:14px;margin:12px 0;background:rgba(8,29,39,.5)}
+.hc-playback-diagnostics summary{cursor:pointer;min-height:36px;font-size:13px;color:#e8f0f3;font-weight:600}
+.hc-playback-diagnostics summary small{display:block;margin:6px 0 0 17px;color:#a4b6bf;font-size:11px;font-weight:400}
+.hc-check-note{font-size:11px;color:#afc0c7;line-height:1.5}
+.hc-check-actions{display:flex;flex-wrap:wrap;gap:9px;margin:11px 0}
+.hc-check-actions button{min-height:44px;border-radius:12px;padding:9px 14px;font:inherit;font-size:11px;background:rgba(15,43,56,.7);border:1px solid rgba(215,230,239,.22);color:#e7f1f4}
+.hc-check-actions button:first-child{background:#d7b478;color:#132634;font-weight:700}
+.hc-check-actions button:disabled{opacity:.45}
+#hcPlaybackCheckStatus{font-size:11px;line-height:1.5;color:#c4d1d8}
+#hcPlaybackCheckResults{list-style:none;padding:0;margin:10px 0 0;display:grid;gap:6px}
+#hcPlaybackCheckResults li{font-size:11px;line-height:1.5;padding:7px 9px;border-radius:9px;background:rgba(9,27,40,.4)}
+.hc-check-warning{color:#e6ca98}.hc-check-pass{color:#a9d0c5}
+
 </style>
 </head>
 <body>
@@ -2918,6 +2933,13 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
         <div><strong>Offline media</strong><small id="offlineStorageText">No saved media yet</small></div>
         <button class="offline-action" onclick="show('downloads')">View</button>
       </div>
+      <details class="hc-playback-diagnostics" id="hcPlaybackChecks">
+        <summary>Playback &amp; offline check <small>Check audio links, storage and player support</small></summary>
+        <p class="hc-check-note">Runs only when you tap Test. No recordings are played or uploaded.</p>
+        <div class="hc-check-actions"><button type="button" id="hcRunPlaybackCheckBtn" onclick="hcRunPlaybackChecks()">Test playback setup</button><button type="button" id="hcCopyPlaybackCheckBtn" onclick="hcCopyPlaybackCheck()" disabled>Copy report</button></div>
+        <p id="hcPlaybackCheckStatus" role="status" aria-live="polite">Not tested on this device.</p>
+        <ul id="hcPlaybackCheckResults" aria-label="Audio system test results"></ul>
+      </details>
       <div class="setting-row">
         <div><strong>Local time</strong><small id="deviceClockText">Checking device time…</small></div>
       </div>
@@ -2958,7 +2980,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear meditation history only</button>
     </div>
-    <div class="app-version">HeartClear · Version 1.1.8</div>
+    <div class="app-version">HeartClear · Version 1.1.9</div>
   </div>
 </section>
 
@@ -6560,6 +6582,87 @@ function setGreeting(){
   }
 }
 
+
+/* HeartClear playback check v100: never starts audio, never uploads private data. */
+let hcPlaybackLastReport='';
+let hcPlaybackTestRunning=false;
+async function hcPlaybackProbeUrl(url){
+  const controller=new AbortController();
+  const timeout=setTimeout(()=>controller.abort(),9000);
+  try{
+    const response=await fetch(url,{method:'HEAD',cache:'no-store',signal:controller.signal});
+    const contentType=(response.headers.get('content-type')||'').toLowerCase();
+    return {ok:response.ok && response.status!==206 && (contentType.includes('audio')||contentType.includes('octet-stream')||contentType.includes('mpeg')||contentType===''),
+      status:response.status};
+  }catch(e){return{ok:false,status:e?.name==='AbortError'?'Timed out':'Network unavailable'}}
+  finally{clearTimeout(timeout)}
+}
+async function hcRunPlaybackChecks(){
+  if(hcPlaybackTestRunning)return;
+  const button=document.getElementById('hcRunPlaybackCheckBtn');
+  const output=document.getElementById('hcPlaybackCheckResults');
+  const status=document.getElementById('hcPlaybackCheckStatus');
+  const copy=document.getElementById('hcCopyPlaybackCheckBtn');
+  if(!button||!output||!status)return;
+  hcPlaybackTestRunning=true;button.disabled=true;if(copy)copy.disabled=true;
+  status.textContent='Checking this browser and three self-hosted recordings…';
+  output.replaceChildren();hcPlaybackLastReport='';
+  const results=[];
+  function record(label,ok,detail){
+    results.push({label,ok,detail:String(detail)});
+    const li=document.createElement('li');
+    li.textContent=(ok?'✓ ':'! ')+label+' — '+String(detail);
+    li.className=ok?'hc-check-pass':'hc-check-warning';
+    output.appendChild(li);
+  }
+  try{
+    const audio=document.createElement('audio');
+    record('MP3 decoder',!!audio.canPlayType('audio/mpeg'),'Browser codec support');
+    record('AAC decoder',!!audio.canPlayType('audio/mp4; codecs="mp4a.40.2"'),'Lower-bitrate audio');
+    record('Media controls',!!('mediaSession' in navigator),
+      ('mediaSession' in navigator)?'Media Session available':'Lock-screen controls may be limited');
+    const core=['home','practices','soundLab','library','settings','soundLabPlayer','bookAudio','downloads'];
+    const missing=core.filter(id=>!document.getElementById(id));
+    record('App routes',missing.length===0,missing.length?'Missing '+missing.join(', '):'Core screens installed');
+    record('User-controlled start',!document.getElementById('soundLabAudio')?.autoplay,
+      'No auto-play attribute on Sounds player');
+    if('caches' in window){
+      try{
+        const saved=await caches.open(MEDIA_CACHE);
+        const entries=await saved.keys();
+        record('Offline media storage',true,entries.length+' saved file'+(entries.length===1?'':'s')+' in this browser');
+        const shell=await caches.open('heartclear-v100');
+        record('Offline app shell',!!(await shell.match('./index.html')),
+          (await shell.match('./index.html'))?'Home screen cached':'Not yet cached; reopen after installing update');
+      }catch(e){record('Offline cache',false,'Storage blocked or unavailable')}
+    }else record('Offline cache',false,'Not supported by this browser');
+    const samples=[
+      ['Rain','./media/cc0-nature/rain_original.mp3'],
+      ['Frogs','./media/cc0-nature/frogswater_original.mp3'],
+      ['Flute · 10 min','./media/HeartClear_Organic_Bansuri_10min_192k.mp3']
+    ];
+    for(const [label,url] of samples){
+      const response=await hcPlaybackProbeUrl(url);
+      record(label+' hosted audio',response.ok,response.ok?'Server responding (not a sound test)':'Check connection: '+response.status);
+    }
+    const good=results.filter(r=>r.ok).length;
+    status.textContent=good+' of '+results.length+' checks passed. This does not test background playback or full audio decoding.';
+    hcPlaybackLastReport=['HeartClear 1.1.9 · v100 (device check)','Generated '+new Date().toISOString(),
+      ...results.map(r=>(r.ok?'PASS ':'CHECK ')+r.label+': '+r.detail),
+      'This check does not start audio, verify sound quality or test lock-screen playback.'].join('\n');
+    if(copy)copy.disabled=false;
+  }catch(e){
+    status.textContent='The test did not finish. Check your browser and connection.';
+  }finally{hcPlaybackTestRunning=false;button.disabled=false}
+}
+async function hcCopyPlaybackCheck(){
+  if(!hcPlaybackLastReport)return;
+  const status=document.getElementById('hcPlaybackCheckStatus');
+  try{await navigator.clipboard.writeText(hcPlaybackLastReport);
+    if(status)status.textContent='Diagnostic summary copied. No notes, recording names or other personal data included.';
+  }catch(e){if(status)status.textContent='Copy unavailable. You can read the results above.'}
+}
+
 function renderSettings(){
   setGreeting();
   renderLocalContext();
@@ -7630,7 +7733,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=99');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=100');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
