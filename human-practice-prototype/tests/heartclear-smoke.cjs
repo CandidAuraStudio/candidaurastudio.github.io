@@ -17,6 +17,13 @@ const assert = require('node:assert/strict');
     assert.deepEqual(playing,[],'App must be silent on first open');
     console.log('PASS: launch stays silent');
 
+    // A phone app must not scale its document in response to accidental pinch/double-tap.
+    const viewportContent=await page.locator('meta[name="viewport"]').getAttribute('content');
+    assert.match(viewportContent,/maximum-scale=1/);
+    assert.match(viewportContent,/user-scalable=no/);
+    assert.equal(await page.evaluate(()=>getComputedStyle(document.documentElement).touchAction),'pan-x pan-y');
+    console.log('PASS: mobile page zoom disabled without blocking scrolling');
+
     const tabs=[['practices','practices'],['soundHub','soundLab'],['library','library'],['settings','settings'],['home','home']];
     for(const [nav,screen] of tabs){
       await page.locator('[data-nav="'+nav+'"]').evaluate(el=>el.click());
