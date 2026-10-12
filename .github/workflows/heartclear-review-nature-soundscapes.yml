@@ -56,7 +56,7 @@ jobs:
               stem='HeartClear_'+scene['id'].replace('-','_')+'_'+str(seconds//60)+'min'
               mp3=output/(stem+'_128k.mp3')
               aac=output/(stem+'_80k.m4a')
-              common=command+['-filter_complex',';'.join(filters),'-map','[out]','-ar','44100','-ac','2']
+              common=command+['-filter_complex',';'.join(filters),'-map','[out]','-ar','44100','-ac','2','-t',str(seconds)]
               subprocess.run(common+['-c:a','libmp3lame','-b:a','128k',str(mp3)],check=True)
               subprocess.run(common+['-c:a','aac','-b:a','80k','-movflags','+faststart',str(aac)],check=True)
               for file in [mp3,aac]:
