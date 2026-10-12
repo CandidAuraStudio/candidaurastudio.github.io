@@ -1,0 +1,35 @@
+name: HeartClear Browser and Offline Regression
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/heartclear-browser-qa.yml'
+      - 'human-practice-prototype/tests/heartclear-smoke.cjs'
+      - 'human-practice-prototype/index.html'
+      - 'human-practice-prototype/sw.js'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install headless Chromium
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Exercise real navigation and cached audio seeking
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8765 --directory . > /tmp/heartclear-http.log 2>&1 &
+          echo $! > /tmp/heartclear-server.pid
+          node human-practice-prototype/tests/heartclear-smoke.cjs
