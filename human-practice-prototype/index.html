@@ -2388,6 +2388,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
       <h2>Sound Familiarity</h2>
       <p>Meet a sound gradually instead of avoiding it. Start with the easiest level and keep the volume comfortable.</p>
     </div>
+    <p id="hcFearProgressNotice" class="fear-warning" role="status" hidden></p>
 
     <div class="fear-levels" id="fearLevels">
       <button class="fear-card" onclick="openFearTrack('ocean')">
@@ -3070,7 +3071,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear meditation history only</button>
     </div>
-    <div class="app-version">HeartClear · Version 1.2.3</div>
+    <div class="app-version">HeartClear · Version 1.2.4 · REVIEW</div>
   </div>
 </section>
 
@@ -3848,6 +3849,12 @@ function hcRestorePreviousScreen(){
 }
 
 function show(id){
+  // Never blank every screen for an unknown route; keep playback and user progress intact.
+  const destination=document.getElementById(id);
+  if(!destination||!destination.classList.contains('screen')){
+    console.warn('HeartClear: route unavailable',id);
+    return false;
+  }
   if(currentScreenId==='hcDriveMedia'&&id!=='hcDriveMedia'&&hcDriveActiveKey&&!hcDriveDocked){
     hcDriveDocked=true;
     document.getElementById('hcDriveMedia')?.classList.add('hc-drive-docked');
@@ -4464,6 +4471,24 @@ function openFearPractice(){
   show('fearPractice');
 }
 
+// Count actual playback rather than seek position. Existing history and ratings are never rewritten.
+let hcFearPlayedMs=0;
+let hcFearPlayingStartedAt=0;
+function hcFearClockStart(){
+  if(!hcFearPlayingStartedAt)hcFearPlayingStartedAt=Date.now();
+}
+function hcFearClockStop(){
+  if(hcFearPlayingStartedAt){
+    hcFearPlayedMs+=Math.max(0,Date.now()-hcFearPlayingStartedAt);
+    hcFearPlayingStartedAt=0;
+  }
+}
+function hcFearListenSeconds(){
+  return Math.floor((hcFearPlayedMs+(hcFearPlayingStartedAt?Math.max(0,Date.now()-hcFearPlayingStartedAt):0))/1000);
+}
+function hcFearFeelingLabel(value){
+  return ({0:'Comfortable',2:'Unsure',4:'Too much'})[value]??'Not selected';
+}
 function openFearTrack(key){
   const t=fearTracks[key]||fearTracks.ocean;
   currentFearKey=key in fearTracks?key:'ocean';
@@ -4474,7 +4499,9 @@ function openFearTrack(key){
   if(typeof adhkarAudio!=='undefined'&&!adhkarAudio.paused)adhkarAudio.pause();
   if(typeof soundLabAudio!=='undefined'&&!soundLabAudio.paused)soundLabAudio.pause();
 
-  fearAudio.pause();fearAudio.removeAttribute('src');
+  fearAudio.pause();hcFearClockStop();hcFearPlayedMs=0;hcFearPlayingStartedAt=0;
+  const notice=document.getElementById('hcFearProgressNotice');if(notice)notice.hidden=true;
+  fearAudio.removeAttribute('src');
   fearFallbackActive=false;fearPlayRequested=false;
   fearAudio.src=t.url;
   fearAudio.currentTime=0;
@@ -4486,7 +4513,7 @@ function openFearTrack(key){
   document.getElementById('fearTotal').textContent=fmt(t.duration);
   document.getElementById('fearVolume').value=15;
   document.getElementById('fearVolumeLabel').textContent='15%';
-  document.querySelectorAll('#fearBeforeRating button,#fearAfterRating button').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('#fearBeforeRating button,#fearAfterRating button').forEach(b=>{b.classList.remove('active');b.setAttribute('aria-pressed','false')});
 
   const status=document.getElementById('fearAudioStatus');
   if(status)status.textContent='Ready to listen · set a comfortable volume and press Play.';
@@ -4577,7 +4604,16 @@ function setFearMediaSession(){
 }
 
 function finishFearPractice(){
-  fearPlayRequested=false;fearAudio.pause();
+  fearPlayRequested=false;fearAudio.pause();hcFearClockStop();
+  const listenedSeconds=hcFearListenSeconds();
+  const notice=document.getElementById('hcFearProgressNotice');
+  if(listenedSeconds<5){
+    // An unplayed/seeked preview is not a completed activity.
+    if(notice){notice.hidden=false;notice.textContent='No activity added to history. You can return to the sound whenever you like.';}
+    show('fearPractice');
+    return;
+  }
+  if(notice)notice.hidden=true;
   const t=fearTracks[currentFearKey]||fearTracks.ocean;
   const stats=getFearStats();
   const existing=stats[currentFearKey]||{count:0};
@@ -4594,11 +4630,11 @@ function finishFearPractice(){
     practice:t.title,
     title:'Fear',
     category:'Fear',
-    listenedSeconds:Math.round(fearAudio.currentTime||0),
+    listenedSeconds,
     targetSeconds:t.duration,
     completed:true,
     endedAt:Date.now(),
-    reflection:(fearBefore!==null||fearAfter!==null)?('Before '+(fearBefore??'—')+' · After '+(fearAfter??'—')):''
+    reflection:(fearBefore!==null||fearAfter!==null)?('Before '+hcFearFeelingLabel(fearBefore)+' · After '+hcFearFeelingLabel(fearAfter)):''
   });
   saveHistory(history);
   renderFearStats();
@@ -4607,6 +4643,10 @@ function finishFearPractice(){
 }
 
 fearAudio.addEventListener('timeupdate',syncFear);
+fearAudio.addEventListener('playing',hcFearClockStart);
+fearAudio.addEventListener('waiting',hcFearClockStop);
+fearAudio.addEventListener('ended',hcFearClockStop);
+fearAudio.addEventListener('pause',hcFearClockStop);
 fearAudio.addEventListener('play',syncFear);
 fearAudio.addEventListener('pause',syncFear);
 fearAudio.addEventListener('loadedmetadata',syncFear);
@@ -7886,7 +7926,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=104');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=105');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
