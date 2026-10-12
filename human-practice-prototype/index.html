@@ -1876,6 +1876,55 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
 #hcDriveMedia.hc-drive-docked .hc-drive-video-wrap{margin:0;border-radius:11px;aspect-ratio:16/9}
 @media(max-width:390px){#hcDriveMedia.hc-drive-docked{width:min(245px,calc(100vw - 24px));bottom:calc(75px + env(safe-area-inset-bottom,0px))}}
 #hcDriveMedia button:focus-visible{outline:2px solid white;outline-offset:3px}
+
+/* v103: compact white Play/Pause buttons override every older gold theme. */
+#playBtn,#soundLabPlayBtn,#fearPlayBtn,#adhkarPlayBtn,
+#bookPlayBtn,#naturePlayBtn,#bookMiniPlay,#globalMiniPlay,
+#hcMixPlayBtn,#humanStartBtn,#humanSoundBtn,#hcTimerStart,#introPlayBtn,
+#hcHomeSessionSheet .hc-sheet-actions .primary,
+#hcHomeTimerSheet .hc-sheet-actions .primary,
+#soundLab .hc-sound-icon-btn {
+ background:#ffffff!important;background-image:none!important;color:#0b202e!important;
+ border:1px solid #ffffff!important;box-shadow:none!important;text-shadow:none!important;
+ font-weight:700!important;
+}
+#playBtn,#soundLabPlayBtn,#fearPlayBtn,#adhkarPlayBtn,
+#naturePlayBtn,#humanStartBtn,#humanSoundBtn,#hcTimerStart,#introPlayBtn,
+#hcMixPlayBtn,#hcHomeSessionSheet .hc-sheet-actions .primary,
+#hcHomeTimerSheet .hc-sheet-actions .primary {
+ width:min(100%,154px)!important;max-width:154px!important;min-width:0!important;
+ min-height:44px!important;height:auto!important;padding:10px 13px!important;
+ font-size:13px!important;line-height:1.25!important;border-radius:13px!important;
+ margin-left:auto;margin-right:auto;
+}
+#playBtn,#soundLabPlayBtn,#fearPlayBtn,#adhkarPlayBtn{justify-self:center!important}
+#hcMixPlayBtn{flex:0 1 154px!important;margin-left:0!important;margin-right:0!important}
+#bookPlayBtn{
+ width:50px!important;height:50px!important;min-height:50px!important;
+ max-width:50px!important;border-radius:50%!important;
+ justify-self:center!important;padding:0!important;font-size:20px!important;
+}
+#globalMiniPlay,#bookMiniPlay{
+ width:44px!important;height:44px!important;min-width:44px!important;max-width:44px!important;
+ min-height:44px!important;padding:0!important;border-radius:50%!important;font-size:17px!important;
+}
+#soundLab .hc-sound-icon-btn{
+ width:44px!important;height:44px!important;min-width:44px!important;min-height:44px!important;
+ border-radius:50%!important;padding:0!important;display:grid!important;place-items:center!important;
+}
+#soundLab .hc-sound-icon-btn svg{width:16px!important;height:16px!important}
+#hcDriveMedia .hc-drive-actions button{
+ min-height:44px!important;padding:9px 11px!important;border-radius:12px!important;font-size:12px!important;
+}
+#playBtn:focus-visible,#soundLabPlayBtn:focus-visible,#fearPlayBtn:focus-visible,
+#adhkarPlayBtn:focus-visible,#bookPlayBtn:focus-visible,#hcMixPlayBtn:focus-visible,
+#soundLab .hc-sound-icon-btn:focus-visible{
+ outline:2px solid #fff!important;outline-offset:3px!important;
+}
+@media(max-width:360px){
+ #playBtn,#soundLabPlayBtn,#fearPlayBtn,#adhkarPlayBtn{width:min(100%,126px)!important}
+}
+
 </style>
 </head>
 <body>
@@ -3019,7 +3068,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear meditation history only</button>
     </div>
-    <div class="app-version">HeartClear · Version 1.2.1</div>
+    <div class="app-version">HeartClear · Version 1.2.2</div>
   </div>
 </section>
 
@@ -7814,7 +7863,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=102');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=103');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();

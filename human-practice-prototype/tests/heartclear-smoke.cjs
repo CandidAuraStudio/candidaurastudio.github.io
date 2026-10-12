@@ -45,6 +45,33 @@ const assert = require('node:assert/strict');
     const fluteRows=await page.locator('#hcSoundTrackList .hc-sound-row').count();
     assert.ok(fluteRows>=4,'Expected original and 7/10/15 minute acoustic flute');
     console.log('PASS: flute catalog and live filtering ('+fluteRows+' rows)');
+
+    // Ensure every HeartClear Play/Pause button is compact, accessible, and white.
+    const playerStyle=await page.evaluate(()=>{
+      const ids=['playBtn','soundLabPlayBtn','fearPlayBtn','adhkarPlayBtn','bookPlayBtn',
+        'naturePlayBtn','bookMiniPlay','globalMiniPlay','hcMixPlayBtn',
+        'humanStartBtn','humanSoundBtn','hcTimerStart','introPlayBtn'];
+      return ids.map(id=>{
+        const el=document.getElementById(id);
+        if(!el)return{id,missing:true};
+        const s=getComputedStyle(el);
+        return {id,color:s.backgroundColor,minHeight:parseFloat(s.minHeight),maxWidth:parseFloat(s.maxWidth)};
+      });
+    });
+    for(const b of playerStyle){
+      assert.ok(!b.missing,'Missing player control: '+b.id);
+      assert.equal(b.color,'rgb(255, 255, 255)','Not white: '+b.id);
+      assert.ok(b.minHeight>=44,'Tap target too small: '+b.id);
+      assert.ok(b.maxWidth<=154,'Control too wide: '+b.id);
+    }
+    const rowStyle=await page.locator('#soundLab .hc-sound-icon-btn').first().evaluate(el=>{
+      const s=getComputedStyle(el);
+      return {color:s.backgroundColor,width:parseFloat(s.width),height:parseFloat(s.height)};
+    });
+    assert.equal(rowStyle.color,'rgb(255, 255, 255)');
+    assert.equal(rowStyle.width,44);
+    assert.equal(rowStyle.height,44);
+    console.log('PASS: all compact white playback controls and Sound row circles');
     await page.locator('[data-nav="library"]').evaluate(el=>el.click());
     await page.locator('#library button[onclick*="books"]').evaluate(el=>el.click());
     await page.locator('#collectionList button').filter({hasText:'Read English'}).evaluate(el=>el.click());
