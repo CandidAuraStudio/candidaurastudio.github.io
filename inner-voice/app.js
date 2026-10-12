@@ -256,4 +256,11 @@ root.addEventListener('change',async e=>{if(e.target.id==='restore-file'){await 
 window.addEventListener('hashchange',()=>{if(recording&&location.hash!=='#/new'){captureStop();notify('Recording stopped. Your unsaved clip will be waiting in New moment.');}draw();});
 window.addEventListener('beforeunload',e=>{if(recording){e.preventDefault();e.returnValue='';}});
 (async function init(){try{await reload();draw();}catch(err){root.innerHTML='<section class="page-head"><h1>Your local storage is unavailable.</h1><p>'+esc(err.message)+'</p><p>Open this site directly in a current Chrome, Safari or Firefox browser, outside private browsing mode. INNER VOICE cannot safely operate without local storage.</p></section>';}})();
+
+if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){
+ window.addEventListener('load',()=>{
+  navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(()=>{/* Offline installation is optional */});
+ });
+}
+
 })();
