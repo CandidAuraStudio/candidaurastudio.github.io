@@ -1,0 +1,18 @@
+{
+  "name": "HUMAN ATLAS — The Living Archive",
+  "short_name": "Human Atlas",
+  "description": "Explore stories and preserve memories in the living archive.",
+  "start_url": "./index.html#/explore",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#141a18",
+  "theme_color": "#141a18",
+  "icons": [
+    {
+      "src": "./assets/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
