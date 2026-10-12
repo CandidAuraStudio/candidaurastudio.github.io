@@ -2534,7 +2534,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
       <b>Before chanting · Meaning and context</b>
       <small>Identify the chant, its Buddhist tradition, language, pronunciation and translation, then listen comfortably. Properly attribute the original recording.</small>
       <div class="hub-note">Try a gentle quiet session. A verified Buddhist chant recording has not been added yet.</div>
-      <button class="btn secondary" onclick="openHomeTimerSheet(\'quiet\',5)">5-minute quiet listening</button>
+      <button class="btn secondary" onclick="openHomeTimerSheet('quiet',5)">5-minute quiet listening</button>
     </div>
 
     <div id="hcSacredDriveLibrary" style="display:none;margin-top:17px">
@@ -2895,7 +2895,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
     <div class="kicker">HeartClear</div>
     <h2>Settings</h2>
     <p>Playback, preferences and your own records.</p>
-    <div class="hc-more-shortcuts" aria-label="Explore HeartClear"><button onclick="show(\'human\')">Human Practice</button><button onclick="show(\'sacred\')">Sacred Sound</button><button onclick="show(\'history\')">History</button><button onclick="show(\'downloads\')">Offline</button></div>
+    <div class="hc-more-shortcuts" aria-label="Explore HeartClear"><button onclick="show('human')">Human Practice</button><button onclick="show('sacred')">Sacred Sound</button><button onclick="show('history')">History</button><button onclick="show('downloads')">Offline</button></div>
 
     <div class="settings-list">
       <div class="setting-row">
@@ -2956,7 +2956,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear meditation history only</button>
     </div>
-    <div class="app-version">HeartClear · Version 1.1.5</div>
+    <div class="app-version">HeartClear · Version 1.1.6</div>
   </div>
 </section>
 
@@ -7447,7 +7447,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=96');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=97');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
