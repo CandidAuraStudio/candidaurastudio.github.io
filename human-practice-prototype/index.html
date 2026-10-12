@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="HeartClear">
-<link rel="manifest" href="./manifest.webmanifest?v=79-install-fix">
+<link rel="manifest" href="./manifest.webmanifest?v=98">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
 <title>HeartClear · Meditation, Sounds & Reflection</title>
@@ -1833,6 +1833,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
 .hc-reading-choices button,.hc-more-shortcuts button{min-height:44px;padding:10px 14px;background:rgba(10,32,43,.68);color:#e9f2f5;border:1px solid rgba(206,231,236,.18);font:inherit;border-radius:13px;font-size:12px}
 .hc-more-shortcuts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:15px 0 18px}
 
+.hc-return-notice[hidden]{display:none!important}.hc-return-notice{border:1px solid rgba(220,238,244,.19);color:#f2f8fa;background:rgba(14,39,51,.95);font-size:12px;line-height:1.45;border-radius:12px;padding:11px 14px;margin:5px 0 11px}
 </style>
 </head>
 <body>
@@ -1869,6 +1870,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
 </div>
 
 <div class="app">
+<p id="hcReturnNotice" class="hc-return-notice" hidden role="status" aria-live="polite">Session restored. Tap Play to continue listening.</p>
 <div class="app-shell-top" id="appTopBar">
   <div class="brand-lockup">
     <div class="brand-mark" aria-hidden="true">
@@ -2956,7 +2958,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear meditation history only</button>
     </div>
-    <div class="app-version">HeartClear · Version 1.1.6</div>
+    <div class="app-version">HeartClear · Version 1.1.7</div>
   </div>
 </section>
 
@@ -3635,11 +3637,106 @@ async function clearOfflineMedia(){
   if(currentScreenId==='downloads')renderDownloads();
 }
 
+
+/* Recover the most recent player when Android terminates a background PWA.
+   Never autoplay on cold start. */
+const HC_RETURN_KEY='heartclearReturnStateV1';
+let hcReturnRestoring=false,hcReturnSaveAt=0;
+const HC_RETURN_SCREENS=new Set(['home','practices','player','sacred','sacredDetail','sacredSession',
+ 'soundHub','soundLab','soundLabPlayer','fearPractice','fearPlayer','library','collection',
+ 'bookAudio','human','humanCategory','downloads','history','settings','hcDriveMedia','omVideo']);
+function hcCaptureReturnState(force=false){
+ if(hcReturnRestoring)return;
+ if(!force && Date.now()-hcReturnSaveAt<3500)return;
+ hcReturnSaveAt=Date.now();
+ try{
+   const state=getActiveMediaState();
+   const active=state?.el && !state.el.paused && state.el.getAttribute('src')?state:null;
+   let screen=HC_RETURN_SCREENS.has(currentScreenId)?currentScreenId:'home';
+   if(active && ['home','soundHub','settings'].includes(screen))screen=active.screen;
+   const item={at:Date.now(),screen,kind:active?.key||'',
+     meditationTime:Number(audio.currentTime)||0,
+     adhkarTime:Number(adhkarAudio.currentTime)||0,
+     soundTime:Number(soundLabAudio.currentTime)||0,
+     soundKey:currentSoundKey,bookLang:currentBookAudioLang,bookChapter:currentBookChapter,
+     fearKey:currentFearKey,fearTime:Number(fearAudio.currentTime)||0,
+     driveKey:hcDriveActiveKey||null};
+   if((screen==='player'||item.kind==='meditation')&&chosenUrl){
+     item.meditation={url:chosenUrl,seconds:chosenSeconds,introUrl:chosenIntroUrl,
+       visualUrl:chosenVisualUrl,kicker:chosenKicker,title:chosenTitle};
+   }
+   localStorage.setItem(HC_RETURN_KEY,JSON.stringify(item));
+ }catch(e){}
+}
+function hcSeekRestored(el,time,sync){
+ const t=Number(time)||0;if(t<=0)return;
+ const apply=()=>{if(!el.getAttribute('src'))return;const d=Number(el.duration);
+   try{el.currentTime=Math.max(0,Math.min(t,Number.isFinite(d)&&d>0?d-.25:t))}catch(e){}
+   if(typeof sync==='function')sync();
+ };
+ if(el.readyState>=1)apply();else el.addEventListener('loadedmetadata',apply,{once:true});
+}
+function hcRestorePreviousScreen(){
+ if(currentScreenId!=='home')return false;
+ let saved=null;
+ try{saved=JSON.parse(localStorage.getItem(HC_RETURN_KEY)||'null')}catch(e){return false}
+ if(!saved||!Number.isFinite(saved.at)||saved.at>Date.now()+60000||
+     Date.now()-saved.at>12*3600*1000||!HC_RETURN_SCREENS.has(saved.screen))return false;
+ let success=false;hcReturnRestoring=true;
+ try{
+  switch(saved.screen){
+   case 'player':{
+    const p=saved.meditation;
+    if(!p||typeof p.url!=='string'||!/^https:\/\//.test(p.url)){show('practices');break}
+    chosenSeconds=Math.max(60,Number(p.seconds)||600);
+    chosenUrl=p.url;chosenIntroUrl=p.introUrl||'';chosenVisualUrl=p.visualUrl||'';
+    chosenKicker=p.kicker||'Practice';chosenTitle=p.title||'Practice';
+    preparePlayer();show('player');
+    hcSeekRestored(audio,saved.meditationTime,sync);setMediaSession();success=true;break;
+   }
+   case 'sacredSession':
+    openAdhkar('listen');hcSeekRestored(adhkarAudio,saved.adhkarTime,syncAdhkar);success=true;break;
+   case 'bookAudio':
+    if((bookChapters[saved.bookLang]||[]).some(x=>x.chapter===Number(saved.bookChapter))){
+     openBookAudio(saved.bookLang,Number(saved.bookChapter));success=true;
+    }else show('library');
+    break;
+   case 'soundLabPlayer':
+    if(Object.prototype.hasOwnProperty.call(soundLabTracks,saved.soundKey)&&saved.soundKey!=='personal'){
+     openSoundTrack(saved.soundKey);hcSeekRestored(soundLabAudio,saved.soundTime,syncSoundLab);success=true;
+    }else show('soundLab');
+    break;
+   case 'fearPlayer':
+    if(Object.prototype.hasOwnProperty.call(fearTracks,saved.fearKey)){
+     openFearTrack(saved.fearKey);hcSeekRestored(fearAudio,saved.fearTime,syncFear);success=true;
+    }else show('fearPractice');
+    break;
+   case 'hcDriveMedia':
+    if(HC_DRIVE_COLLECTIONS.some(item=>item.key===saved.driveKey)){
+     openHcDriveMedia(saved.driveKey);success=true;
+     const status=document.getElementById('hcDriveVideoStatus');
+     if(status)status.textContent='You returned to this recording. Tap Load preview to listen again.';
+    }else show('sacred');
+    break;
+   case 'omVideo':show('sacred');success=true;break;
+   case 'sacredDetail':openSacred('islamic');success=true;break;
+   default:show(saved.screen);success=true;
+  }
+  if(success&&['player','sacredSession','soundLabPlayer','bookAudio','fearPlayer'].includes(currentScreenId)){
+   const note=document.getElementById('hcReturnNotice');
+   if(note){note.hidden=false;note.textContent='Session restored. Tap Play to continue listening.'}
+  }
+ }catch(e){try{show('home')}catch(e2){}success=false}
+ finally{hcReturnRestoring=false}
+ return success;
+}
+
 function show(id){
   // Privacy: leave no live microphone behind when navigating away from voice practice.
   if(id!=='humanSession' && typeof humanVoiceRecorder!=='undefined' && humanVoiceRecorder && humanVoiceRecorder.state==='recording')endHumanVoiceRecording();
   if(id!=='humanSession'&&typeof humanSoundAudio!=='undefined'&&!humanSoundAudio.paused)humanSoundAudio.pause();
   currentScreenId=id;
+  hcCaptureReturnState(true);
   if(id!=='omVideo'){const frame=document.getElementById('omVideoFrame');if(frame&&frame.getAttribute('src')){frame.removeAttribute('src');frame.src='about:blank'}}
   if(id!=='hcDriveMedia'){
     const frame=document.getElementById('hcDriveVideoFrame');
@@ -4024,10 +4121,11 @@ for(const el of [hcPrivateIslamAudio,hcPrivateIslamVideo]){
   el.addEventListener('timeupdate',renderGlobalMini);
   el.addEventListener('ended',renderGlobalMini);
 }
-window.addEventListener('pagehide',()=>{if(hcPrivateIslamObjectUrl)hcStopPrivateIslamFile()});
+// Keep private audio alive through BFCache pagehide. Explicit Close releases its object URL.
 
 function rememberActiveMedia(key){
   try{localStorage.setItem('heartclearActiveMedia',key)}catch(e){}
+  hcCaptureReturnState(true);
 }
 
 function renderGlobalMini(){
@@ -5016,7 +5114,7 @@ function attachGlobalMiniEvents(el,key){
   if(!el)return;
   el.addEventListener('play',()=>{rememberActiveMedia(key);renderGlobalMini()});
   el.addEventListener('pause',renderGlobalMini);
-  el.addEventListener('timeupdate',renderGlobalMini);
+  el.addEventListener('timeupdate',()=>{renderGlobalMini();hcCaptureReturnState()});
   el.addEventListener('ended',renderGlobalMini);
 }
 
@@ -5154,7 +5252,8 @@ function openHcDriveMedia(key){
   document.getElementById('hcDriveVideoStatus').textContent='Tap Load preview to play this video from your Google Drive. No audio is copied into GitHub.';
   const frame=document.getElementById('hcDriveVideoFrame');
   frame.removeAttribute('src');
-  for(const el of [audio,adhkarAudio,fearAudio,soundLabAudio,bookAudioEl]){
+  if(hcMixRunning||hcMixDecks.length)hcMixStop(false);
+  for(const el of [audio,adhkarAudio,fearAudio,soundLabAudio,bookAudioEl,humanSoundAudio,hcPrivateIslamAudio,hcPrivateIslamVideo]){
     if(el && !el.paused)el.pause();
   }
   show('hcDriveMedia');
@@ -6108,6 +6207,12 @@ function setAdhkarMediaSession(){
 }
 
 function openAdhkar(mode){
+  // Exactly one listening source should have audio focus. The nature mixer uses
+  // separate HTMLAudioElements and must be stopped explicitly.
+  if(hcMixRunning||hcMixDecks.length)hcMixStop(false);
+  for(const el of [fearAudio,humanSoundAudio,hcPrivateIslamAudio,hcPrivateIslamVideo]){
+    if(el&&!el.paused)el.pause();
+  }
   if(bookAudioEl && !bookAudioEl.paused)bookAudioEl.pause();
   if(soundLabAudio && !soundLabAudio.paused)soundLabAudio.pause();
   if(!audio.paused)audio.pause();
@@ -7367,6 +7472,7 @@ document.querySelector('#player .player-artwork').addEventListener('keydown',e=>
   if(e.key==='Enter'||e.key===' '){e.preventDefault();togglePlay()}
 });
 window.addEventListener('pagehide',()=>{
+  hcCaptureReturnState(true);
   // Keep media elements untouched. Save position only; do not pause a playing track.
   hcStoreSoundLabPosition();
   if(typeof saveBookBookmark==='function')saveBookBookmark();
@@ -7376,10 +7482,16 @@ window.addEventListener('pageshow',event=>{
   // BFCache restores the existing player; a full reload exposes Continue controls.
   hcRenderSoundResume();
   renderGlobalMini();
-  if(event.persisted && !soundLabAudio.paused)setSoundLabMediaSession();
+  if(event.persisted){
+    if(!soundLabAudio.paused)setSoundLabMediaSession();
+    else if(!adhkarAudio.paused)setAdhkarMediaSession();
+    else if(!bookAudioEl.paused)setBookMediaSession();
+    else if(!audio.paused)setMediaSession();
+    hcCaptureReturnState(true);
+  }
 });
 document.addEventListener('visibilitychange',()=>{
-  if(document.hidden)hcStoreSoundLabPosition();
+  if(document.hidden){hcCaptureReturnState(true);hcStoreSoundLabPosition()}
   const pv=document.getElementById('practiceVisual');
   const av=document.getElementById('adhkarVisual');
   if(document.hidden){
@@ -7393,6 +7505,7 @@ document.addEventListener('visibilitychange',()=>{
     if(!audio.paused)syncPracticeVisual(true);
     if(!adhkarAudio.paused&&av)av.play().catch(()=>{});
     renderGlobalMini();
+    hcCaptureReturnState(true);
   }
 });
 
@@ -7406,6 +7519,7 @@ renderDashboard();
 renderHeartClearFavourites();
 hcRenderSoundResume();
 renderSettings();
+hcRestorePreviousScreen();
 
 const greetingRefreshTimer=setInterval(setGreeting,60000);
 window.addEventListener('focus',()=>{
@@ -7447,7 +7561,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=97');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=98');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
