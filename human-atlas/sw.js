@@ -1,6 +1,6 @@
 /* Human Atlas alone. The worker cannot control another app outside /human-atlas/. */
-const CACHE = 'human-atlas-live-v02';
-const SHELL = ['./','./index.html','./manifest.webmanifest','./sw.js','./assets/icon.svg','./curated-v02.js','./voice-v02.js'];
+const CACHE = 'human-atlas-live-v02-1';
+const SHELL = ['./','./index.html','./manifest.webmanifest','./sw.js','./assets/icon.svg','./curated-v02.js','./voice-v02.js','./narration-v021.js'];
 self.addEventListener('install', event => event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(SHELL)).then(() => self.skipWaiting())));
 self.addEventListener('activate', event => event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith('human-atlas-') && key !== CACHE).map(key => caches.delete(key)))).then(() => self.clients.claim())));
 self.addEventListener('fetch', event => {
