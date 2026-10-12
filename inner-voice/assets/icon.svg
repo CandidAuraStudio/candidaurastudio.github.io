@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Inner Voice">
+<defs><radialGradient id="g" cx=".32" cy=".27" r=".79"><stop stop-color="#ffdfbf"/><stop offset=".38" stop-color="#eda6a5"/><stop offset=".78" stop-color="#8d6495"/><stop offset="1" stop-color="#392947"/></radialGradient></defs>
+<rect width="512" height="512" rx="112" fill="#171427"/>
+<circle cx="256" cy="240" r="169" fill="none" stroke="#a88da8" stroke-opacity=".45" stroke-width="3"/>
+<circle cx="256" cy="240" r="137" fill="none" stroke="#ebaeb1" stroke-opacity=".44" stroke-width="4"/>
+<circle cx="256" cy="240" r="114" fill="url(#g)"/>
+<path d="M213 258c11 24 28 35 43 35 15 0 34-11 43-35" stroke="#fff1e1" stroke-width="12" fill="none" stroke-linecap="round"/>
+<circle cx="256" cy="240" r="13" fill="#f9e0d0" opacity=".6"/>
+<text x="256" y="459" text-anchor="middle" fill="#fff2e9" font-family="Arial,sans-serif" font-weight="bold" font-size="34" letter-spacing="4">INNER VOICE</text>
+</svg>
