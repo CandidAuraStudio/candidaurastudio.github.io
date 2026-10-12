@@ -2958,7 +2958,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear meditation history only</button>
     </div>
-    <div class="app-version">HeartClear · Version 1.1.7</div>
+    <div class="app-version">HeartClear · Version 1.1.8</div>
   </div>
 </section>
 
@@ -5661,9 +5661,69 @@ function hcRenderSoundRows(){
     const info=document.createElement('button');info.type='button';info.className='hc-track-info';info.textContent='i';info.setAttribute('aria-label','Recording information for '+track.title);info.onclick=()=>hcShowSoundCredits(key);
     const play=document.createElement('button');play.type='button';play.className='hc-sound-icon-btn';
     play.innerHTML='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
-    play.setAttribute('aria-label','Open '+track.title);play.onclick=()=>openSoundTrack(key);
+    play.dataset.playSound=key;
+    play.setAttribute('aria-label','Play '+track.title);
+    play.onclick=()=>hcPlaySoundFromRow(key);
     actions.append(info,play);row.append(symbol,words,duration,actions);list.append(row);
   });
+  hcUpdateSoundRowButtons();
+}
+/* The white circle is an actual Play/Pause control, not another navigation step.
+ * Keep the Sounds list visible; use the existing universal mini player for transport. */
+function hcUpdateSoundRowButtons(){
+  document.querySelectorAll('[data-play-sound]').forEach(button=>{
+    const same=button.dataset.playSound===currentSoundKey;
+    const playing=same && !soundLabAudio.paused && !!soundLabAudio.getAttribute('src');
+    const loading=same && soundLabPlayRequested && !soundLabAudio.getAttribute('src');
+    const title=soundLabTracks[button.dataset.playSound]?.title||'recording';
+    button.setAttribute('aria-label',(playing?'Pause ':loading?'Loading ':'Play ')+title);
+    button.setAttribute('aria-pressed',String(playing));
+    button.disabled=!!loading;
+    button.innerHTML=playing?
+      '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>':
+      '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
+  });
+}
+function hcPlaySoundFromRow(key){
+  if(!Object.prototype.hasOwnProperty.call(soundLabTracks,key))return;
+  // A second tap on the playing white circle pauses the same track.
+  if(currentSoundKey===key && !!soundLabAudio.getAttribute('src') && !soundLabAudio.paused){
+    soundLabPlayRequested=false;
+    soundLabAudio.pause();hcStoreSoundLabPosition();hcUpdateSoundRowButtons();renderGlobalMini();
+    return;
+  }
+  if(hcMixRunning||hcMixDecks.length)hcMixStop(false);
+  if(currentSoundKey!==key || !soundLabAudio.getAttribute('src'))openSoundTrack(key,true);
+  soundLabPlayRequested=true;
+  const status=document.getElementById('soundLabStatus');
+  const start=()=>{
+    if(currentSoundKey!==key)return;
+    // play() MUST run directly in the button gesture for ordinary MP3s.
+    let attempt;
+    try{attempt=soundLabAudio.play()}catch(e){attempt=Promise.reject(e)}
+    Promise.resolve(attempt).then(()=>{
+      rememberActiveMedia('soundlab');setSoundLabMediaSession();
+      if(status)status.textContent='Playing · '+soundLabTracks[key].title;
+      hcUpdateSoundRowButtons();renderGlobalMini();
+    }).catch(()=>{
+      soundLabPlayRequested=false;
+      if(status)status.textContent='Playback needs a new tap. Open the track and press Play.';
+      hcUpdateSoundRowButtons();renderGlobalMini();
+    });
+    hcUpdateSoundRowButtons();
+  };
+  if(key==='nature' && !soundLabAudio.getAttribute('src')){
+    // Nature Weave is assembled once from locally hosted pieces. A late play()
+    // may be blocked by Android; do not pretend it started.
+    loadNatureSound().then(url=>{
+      if(currentSoundKey!==key||!soundLabPlayRequested)return;
+      soundLabAudio.src=url;soundLabAudio.load();start();
+    }).catch(()=>{
+      soundLabPlayRequested=false;
+      if(status)status.textContent='Nature Weave unavailable. Please try another sound.';
+      hcUpdateSoundRowButtons();
+    });
+  }else start();
 }
 function hcFilterSounds(filter){
   if(!['all','nature','ambient','flute','mixes','favourites'].includes(filter))filter='all';
@@ -5940,7 +6000,7 @@ async function playNextSoundLab(userInitiated=false){
   }catch(e){const st=document.getElementById('soundLabStatus');if(st)st.textContent='Next sound is ready. Tap Play if your device blocked automatic playback.'}
   syncSoundLab();
 }
-function openSoundTrack(key){
+function openSoundTrack(key,stayInSounds=false){
   if(currentSoundKey==='personal'&&key!=='personal'){
     soundLabAudio.pause();soundLabAudio.removeAttribute('src');soundLabAudio.load();
     hcReleasePersonalNature();
@@ -5988,7 +6048,7 @@ function openSoundTrack(key){
   }
   setSoundLabMediaSession();
   updateOrganicFluteTools();
-  show('soundLabPlayer');
+  if(!stayInSounds)show('soundLabPlayer');
   syncSoundLab();
   updateHeartClearFavouriteButtons();
   const fave=document.getElementById('soundLabFavouriteBtn');
@@ -6173,8 +6233,8 @@ soundLabAudio.addEventListener('timeupdate',()=>{
   }
 });
 soundLabAudio.addEventListener('timeupdate',syncSoundLab);
-soundLabAudio.addEventListener('play',syncSoundLab);
-soundLabAudio.addEventListener('pause',syncSoundLab);
+soundLabAudio.addEventListener('play',()=>{syncSoundLab();hcUpdateSoundRowButtons()});
+soundLabAudio.addEventListener('pause',()=>{syncSoundLab();hcUpdateSoundRowButtons()});
 soundLabAudio.addEventListener('loadedmetadata',syncSoundLab);
 soundLabSeek.addEventListener('input',()=>{soundLabAudio.currentTime=Number(soundLabSeek.value)||0;syncSoundLab()});
 
@@ -7561,7 +7621,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=98');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=99');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
