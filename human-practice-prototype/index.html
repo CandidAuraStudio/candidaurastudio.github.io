@@ -6917,7 +6917,7 @@ function hcRenderLocalProfile(){
 function hcSaveLocalProfile(){
   const field=document.getElementById('hcLocalProfileName');
   const status=document.getElementById('hcLocalProfileStatus');
-  const name=String(field?.value||'').trim().replace(/\\s+/g,' ').slice(0,40);
+  const name=String(field?.value||'').trim().replace(/\s+/g,' ').slice(0,40);
   if(!name){if(status)status.textContent='Enter a display name, or choose Continue as guest.';return}
   try{
     localStorage.setItem(HC_LOCAL_PROFILE_KEY,JSON.stringify({kind:'named',displayName:name,updatedAt:Date.now()}));
