@@ -5114,7 +5114,7 @@ function attachGlobalMiniEvents(el,key){
   if(!el)return;
   el.addEventListener('play',()=>{rememberActiveMedia(key);renderGlobalMini()});
   el.addEventListener('pause',renderGlobalMini);
-  el.addEventListener('timeupdate',renderGlobalMini);
+  el.addEventListener('timeupdate',()=>{renderGlobalMini();hcCaptureReturnState()});
   el.addEventListener('ended',renderGlobalMini);
 }
 
