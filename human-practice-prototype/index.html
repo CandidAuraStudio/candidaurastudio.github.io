@@ -3651,9 +3651,12 @@ function hcCaptureReturnState(force=false){
  hcReturnSaveAt=Date.now();
  try{
    const state=getActiveMediaState();
-   const active=state?.el && !state.el.paused && state.el.getAttribute('src')?state:null;
+   // A paused/OS-interrupted source with progress still belongs to the listener.
+   // Otherwise Android may overwrite the previous player with Home.
+   const active=state?.el && state.el.getAttribute('src') &&
+     (!state.el.paused || Number(state.el.currentTime)>0.5)?state:null;
    let screen=HC_RETURN_SCREENS.has(currentScreenId)?currentScreenId:'home';
-   if(active && ['home','soundHub','settings'].includes(screen))screen=active.screen;
+   if(active && ['home','soundHub','soundLab','settings','library','sacred'].includes(screen))screen=active.screen;
    const item={at:Date.now(),screen,kind:active?.key||'',
      meditationTime:Number(audio.currentTime)||0,
      adhkarTime:Number(adhkarAudio.currentTime)||0,
@@ -6014,6 +6017,10 @@ function openSoundTrack(key,stayInSounds=false){
   if(!adhkarAudio.paused)adhkarAudio.pause();
   if(!fearAudio.paused)fearAudio.pause();
   if(!humanSoundAudio.paused)humanSoundAudio.pause();
+  // Prevent private Sacred Sound playback overlapping a nature recording.
+  for(const el of [hcPrivateIslamAudio,hcPrivateIslamVideo]){
+    if(el&&!el.paused)el.pause();
+  }
 
   soundLabClockCommit();soundLabListeningSeconds=0;soundLabPlaybackStartedAt=0;
   soundLabPlayRequested=false;soundLabFallbackActive=false;
@@ -6235,6 +6242,7 @@ soundLabAudio.addEventListener('timeupdate',()=>{
 soundLabAudio.addEventListener('timeupdate',syncSoundLab);
 soundLabAudio.addEventListener('play',()=>{syncSoundLab();hcUpdateSoundRowButtons()});
 soundLabAudio.addEventListener('pause',()=>{syncSoundLab();hcUpdateSoundRowButtons()});
+soundLabAudio.addEventListener('ended',hcUpdateSoundRowButtons);
 soundLabAudio.addEventListener('loadedmetadata',syncSoundLab);
 soundLabSeek.addEventListener('input',()=>{soundLabAudio.currentTime=Number(soundLabSeek.value)||0;syncSoundLab()});
 
@@ -7610,6 +7618,7 @@ function showUpdateBanner(){
 }
 
 function reloadHeartClear(){
+  hcCaptureReturnState(true);
   heartclearReloading=true;
   location.reload();
 }
