@@ -24,6 +24,67 @@ const assert = require('node:assert/strict');
     assert.equal(await page.evaluate(()=>getComputedStyle(document.documentElement).touchAction),'pan-x pan-y');
     console.log('PASS: mobile page zoom disabled without blocking scrolling');
 
+    // Phase 1: Guest mode remains the default; every optional sharing preference starts OFF.
+    const backendRequests=[];
+    page.on('request',req=>{
+      if(req.url().includes('.supabase.co/'))backendRequests.push(req.url());
+    });
+    await page.locator('[data-nav="settings"]').evaluate(el=>el.click());
+    const initialProfile=await page.evaluate(()=>({
+      label:document.getElementById('hcLocalProfileIdentity').textContent,
+      choices:['hcPrefAnonymous','hcPrefSync','hcPrefAdmin'].map(id=>document.getElementById(id).checked),
+      hasLocalProfile:localStorage.getItem('heartclearLocalProfileV1')!==null,
+      hasPrivacySettings:localStorage.getItem('heartclearPrivacyPreferencesV1')!==null
+    }));
+    assert.match(initialProfile.label,/Guest mode/);
+    assert.deepEqual(initialProfile.choices,[false,false,false]);
+    assert.equal(initialProfile.hasLocalProfile,false,'Guest use must not require account creation');
+    assert.equal(initialProfile.hasPrivacySettings,false,'No consent records should be created silently');
+    // Preserve existing history and bookmarks when changing the optional local name.
+    const originalHistory=await page.evaluate(()=>localStorage.getItem('clearWithinHistory'));
+    await page.evaluate(()=>localStorage.setItem('clearWithinHistory','[{"practice":"Existing practice","listenedSeconds":180}]'));
+    await page.locator('#hcLocalProfileName').fill('Alex   River');
+    await page.locator('#hcLocalProfileSaveBtn').click();
+    assert.match(await page.locator('#hcLocalProfileIdentity').innerText(),/Alex River/);
+    assert.equal(await page.evaluate(()=>hcLocalProfile().displayName),'Alex River');
+    assert.equal(await page.evaluate(()=>JSON.parse(localStorage.getItem('clearWithinHistory')).length),1);
+    await page.locator('#hcPrefAnonymous').check();
+    await page.locator('#hcPrefSync').check();
+    await page.locator('#hcPrefAdmin').check();
+    const savedPrefs=await page.evaluate(()=>JSON.parse(localStorage.getItem('heartclearPrivacyPreferencesV1')));
+    assert.equal(savedPrefs.draftOnly,true);
+    assert.equal(savedPrefs.anonymous,true);
+    assert.equal(savedPrefs.sync,true);
+    assert.equal(savedPrefs.admin,true);
+    assert.equal(await page.evaluate(()=>Boolean(hcPersonalDataSnapshot().heartclearLocalProfileV1)),true,
+      'Local profile should be exportable with the original data export');
+    assert.equal(await page.evaluate(()=>Boolean(hcPersonalDataSnapshot().heartclearPrivacyPreferencesV1)),true,
+      'Sharing preferences should be exportable');
+    await page.reload({waitUntil:'domcontentloaded'});
+    await page.waitForSelector('#home.active,#settings.active',{timeout:20000});
+    await page.locator('[data-nav="settings"]').evaluate(el=>el.click());
+    assert.match(await page.locator('#hcLocalProfileIdentity').innerText(),/Alex River/);
+    assert.deepEqual(await page.evaluate(()=>
+      ['hcPrefAnonymous','hcPrefSync','hcPrefAdmin'].map(id=>document.getElementById(id).checked)
+    ),[true,true,true], 'Independent privacy preferences must survive reload');
+    await page.locator('#hcLocalProfileGuestBtn').click();
+    assert.match(await page.locator('#hcLocalProfileIdentity').innerText(),/Guest mode/);
+    assert.equal(await page.evaluate(()=>JSON.parse(localStorage.getItem('clearWithinHistory')).length),1,
+      'Switching to guest must preserve practice history');
+    assert.deepEqual(await page.evaluate(()=>
+      ['hcPrefAnonymous','hcPrefSync','hcPrefAdmin'].map(id=>document.getElementById(id).checked)
+    ),[true,true,true], 'Switching to guest must not silently alter independent sharing preferences');
+    await page.locator('#hcPrefAnonymous').uncheck();
+    await page.locator('#hcPrefSync').uncheck();
+    await page.locator('#hcPrefAdmin').uncheck();
+    await page.evaluate(previous=>{
+      if(previous===null)localStorage.removeItem('clearWithinHistory');
+      else localStorage.setItem('clearWithinHistory',previous);
+    },originalHistory);
+    assert.deepEqual(backendRequests,[], 'Phase 1 must not connect to Supabase or upload user data');
+    console.log('PASS: guest default, optional name, three separate OFF-by-default preferences, persistence, private export and no cloud sharing');
+
+
     const tabs=[['practices','practices'],['soundHub','soundLab'],['library','library'],['settings','settings'],['home','home']];
     for(const [nav,screen] of tabs){
       await page.locator('[data-nav="'+nav+'"]').evaluate(el=>el.click());
