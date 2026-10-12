@@ -1,0 +1,116 @@
+[
+  {
+    "id": "forest-morning",
+    "title": "Forest Morning",
+    "seconds": 420,
+    "layers": [
+      {
+        "key": "birds",
+        "gain": 0.24
+      },
+      {
+        "key": "treewind",
+        "gain": 0.2
+      },
+      {
+        "key": "foreststream",
+        "gain": 0.19
+      }
+    ]
+  },
+  {
+    "id": "wetlands-dusk",
+    "title": "Wetlands at Dusk",
+    "seconds": 600,
+    "layers": [
+      {
+        "key": "frogswater",
+        "gain": 0.28
+      },
+      {
+        "key": "nightforest",
+        "gain": 0.2
+      },
+      {
+        "key": "rain",
+        "gain": 0.16
+      }
+    ]
+  },
+  {
+    "id": "woodland-rain",
+    "title": "Rain in the Woods",
+    "seconds": 600,
+    "layers": [
+      {
+        "key": "rain",
+        "gain": 0.25
+      },
+      {
+        "key": "foreststream",
+        "gain": 0.22
+      },
+      {
+        "key": "treewind",
+        "gain": 0.16
+      }
+    ]
+  },
+  {
+    "id": "coastal-breeze",
+    "title": "Coastal Breeze",
+    "seconds": 600,
+    "layers": [
+      {
+        "key": "ocean",
+        "gain": 0.31
+      },
+      {
+        "key": "windfield",
+        "gain": 0.19
+      },
+      {
+        "key": "birds",
+        "gain": 0.12
+      }
+    ]
+  },
+  {
+    "id": "rainy-hearth",
+    "title": "Rainy Hearth",
+    "seconds": 420,
+    "layers": [
+      {
+        "key": "fire",
+        "gain": 0.28
+      },
+      {
+        "key": "rain",
+        "gain": 0.2
+      },
+      {
+        "key": "treewind",
+        "gain": 0.15
+      }
+    ]
+  },
+  {
+    "id": "distant-storm",
+    "title": "Distant Storm",
+    "seconds": 420,
+    "layers": [
+      {
+        "key": "storm",
+        "gain": 0.12
+      },
+      {
+        "key": "rain",
+        "gain": 0.24
+      },
+      {
+        "key": "windfield",
+        "gain": 0.2
+      }
+    ]
+  }
+]

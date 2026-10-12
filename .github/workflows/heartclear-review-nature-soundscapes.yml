@@ -1,0 +1,97 @@
+name: HeartClear Review Nature Soundscapes
+
+on:
+  push:
+    branches:
+      - review/heartclear-content-mixes-v106
+    paths:
+      - .github/workflows/heartclear-review-nature-soundscapes.yml
+      - human-practice-prototype/review/nature-mix-specs.json
+
+permissions:
+  contents: write
+
+jobs:
+  make-nature-soundscapes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout review branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install FFmpeg audio validator
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+      - name: Create listenable MP3/AAC mixes from existing CC0 source files
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json,subprocess,hashlib
+          from pathlib import Path
+          base=Path('human-practice-prototype')
+          scenes=json.loads((base/'review/nature-mix-specs.json').read_text())
+          output=base/'review/mixed-audio'
+          output.mkdir(parents=True,exist_ok=True)
+          index=[]
+          for scene in scenes:
+              seconds=int(scene['seconds'])
+              layers=scene['layers']
+              command=['ffmpeg','-hide_banner','-loglevel','error','-nostdin','-y']
+              for layer in layers:
+                  file=base/'media/cc0-nature'/f"{layer['key']}_original.mp3"
+                  if not file.exists() or file.stat().st_size<20000:
+                      raise RuntimeError(f'Missing original archive: {file}')
+                  command+=['-stream_loop','-1','-i',str(file)]
+              filters=[]
+              for n,layer in enumerate(layers):
+                  gain=float(layer['gain'])
+                  if not 0<=gain<=.35:
+                      raise RuntimeError('Scene gain outside range')
+                  filters.append(f'[{n}:a]aresample=44100,aformat=channel_layouts=stereo,volume={gain}[a{n}]')
+              ins=''.join(f'[a{n}]' for n in range(len(layers)))
+              filters.append(ins+f'amix=inputs={len(layers)}:duration=first:dropout_transition=0:normalize=0,alimiter=limit=0.82,atrim=duration={seconds},asetpts=PTS-STARTPTS,afade=t=in:st=0:d=3,afade=t=out:st={seconds-5}:d=5[out]')
+              stem='HeartClear_'+scene['id'].replace('-','_')+'_'+str(seconds//60)+'min'
+              mp3=output/(stem+'_128k.mp3')
+              aac=output/(stem+'_80k.m4a')
+              common=command+['-filter_complex',';'.join(filters),'-map','[out]','-ar','44100','-ac','2']
+              subprocess.run(common+['-c:a','libmp3lame','-b:a','128k',str(mp3)],check=True)
+              subprocess.run(common+['-c:a','aac','-b:a','80k','-movflags','+faststart',str(aac)],check=True)
+              for file in [mp3,aac]:
+                  duration=float(subprocess.check_output(['ffprobe','-v','error','-show_entries','format=duration','-of','default=nokey=1:noprint_wrappers=1',str(file)]).decode().strip())
+                  if abs(duration-seconds)>1.2:
+                      raise RuntimeError(f'Bad duration {file}: {duration}')
+                  index.append(dict(file=file.name,seconds=seconds,bytes=file.stat().st_size,sha256=hashlib.sha256(file.read_bytes()).hexdigest()))
+              print(f'Made {scene["title"]}: {seconds}s')
+          (output/'TRACKS_AND_SHA256.json').write_text(json.dumps(index,indent=2))
+          source_notes="""HeartClear Review Nature Soundscapes — NOT LIVE
+          Six pre-rendered mixes from archived BigSoundBank CC0 recordings.
+          Recorded sound creator/source: BigSoundBank / Joseph SARDIN.
+          Source directory: human-practice-prototype/media/cc0-nature/.
+          Licence: https://bigsoundbank.com/licenses.html
+          This is new mixing/arrangement of the supplied real field recordings, not original tree/bamboo recordings or music compositions.
+          Track names do not assert Amazon provenance.
+          No user voice files are included. Avoid publishing until project owner approves the listening previews.
+          Mix contents and levels are specified in ../nature-mix-specs.json.
+          """
+          (output/'README_LICENSE.txt').write_text(source_notes)
+          PY
+      - name: Provide review audio archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: HeartClear-Six-Nature-Soundscapes-Private-Review
+          if-no-files-found: error
+          retention-days: 30
+          path: human-practice-prototype/review/mixed-audio/
+      - name: Preserve preview soundscapes on review branch only
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "HeartClear Sound Engineering"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add human-practice-prototype/review/mixed-audio/
+          git commit -m "Review only: master six layered nature soundscapes with high/mobile quality variants"
+          git pull --rebase origin review/heartclear-content-mixes-v106
+          git push origin HEAD:review/heartclear-content-mixes-v106
