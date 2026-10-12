@@ -2919,11 +2919,11 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
   </div>
   <section class="hc-mix-card" id="hcMixCard" aria-label="Make your own sound mix">
     <div class="kicker">CREATE A SOUND</div>
-    <div class="hc-mix-heading"><div><h3>Mix your own</h3><p>Choose up to six sounds · 3 recommended for reliable playback.</p></div><span class="hc-mix-symbol" aria-hidden="true">
+    <div class="hc-mix-heading"><div><h3>Mix your own</h3><p>Choose up to three sounds. Adjust each layer independently.</p></div><span class="hc-mix-symbol" aria-hidden="true">
        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 7h16M4 12h16M4 17h16"/><circle cx="9" cy="7" r="2.1" fill="#142e3e"/><circle cx="16" cy="12" r="2.1" fill="#142e3e"/><circle cx="11" cy="17" r="2.1" fill="#142e3e"/></svg>
     </span></div>
     <div id="hcMixLayers" class="hc-mix-layers"></div>
-    <p id="hcMixStatus" class="hc-mix-status" role="status" aria-live="polite">Choose 1–6 layers. Three is recommended for steady background playback.</p>
+    <p id="hcMixStatus" class="hc-mix-status" role="status" aria-live="polite">Choose 1–3 sounds. Adjust each volume, then press Start mix.</p>
     <div class="hc-time-chips" id="hcMixTimerChips" aria-label="Mix listening timer">
       <button class="active" data-time="0" onclick="hcSelectSoundsTimer(0)">Endless</button>
       <button data-time="900" onclick="hcSelectSoundsTimer(900)">15 min</button>
@@ -3122,7 +3122,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear meditation history only</button>
     </div>
-    <div class="app-version">HeartClear · Version 1.2.4</div>
+    <div class="app-version">HeartClear · Version 1.2.5</div>
   </div>
 </section>
 
@@ -5976,7 +5976,7 @@ soundLabAudio.addEventListener('loadedmetadata',()=>{
 
 
 /* Three-layer HTMLAudio mixer: retains actual field recordings, works without audio WebAudio CORS. */
-const hcMixMaxLayers=6; // Six nature sources available; three is still recommended.
+const hcMixMaxLayers=3; // Choose among six recordings, play up to three simultaneously.
 const hcMixOptions=[{id:'rain',key:'rain',name:'Rain'},{id:'fire',key:'fire',name:'Fire'},
   {id:'birds',key:'birds',name:'Birds'},{id:'ocean',key:'ocean',name:'Ocean'},
   {id:'wind',key:'treewind',name:'Wind'},{id:'thunder',key:'thunder',name:'Thunder'}];
@@ -5985,7 +5985,7 @@ function hcMixMessage(message){const el=document.getElementById('hcMixStatus');i
 function hcMixSelect(id,checked){
   if(!hcMixOptions.some(v=>v.id===id))return;
   if(checked&&Object.keys(hcMixSelected).length>=hcMixMaxLayers&&!Object.hasOwn(hcMixSelected,id)){
-    hcMixMessage('Maximum six layers. Turn another sound off first.');hcRenderMixer();return;
+    hcMixMessage('Maximum three layers. Turn another sound off first.');hcRenderMixer();return;
   }
   if(checked)hcMixSelected[id]=hcMixSelected[id]??.45;
   else delete hcMixSelected[id];
@@ -6080,7 +6080,7 @@ async function hcMixToggle(){
     return;
   }
   const selected=hcMixOptions.filter(x=>Object.hasOwn(hcMixSelected,x.id));
-  if(selected.length<1||selected.length>hcMixMaxLayers){hcMixMessage('Select between one and six sounds first.');return}
+  if(selected.length<1||selected.length>hcMixMaxLayers){hcMixMessage('Select between one and three sounds first.');return}
   for(const el of [audio,adhkarAudio,soundLabAudio,bookAudioEl,fearAudio,humanSoundAudio,hcPrivateIslamAudio,hcPrivateIslamVideo]){
     if(el&&!el.paused)el.pause();
   }
@@ -6104,7 +6104,7 @@ async function hcMixToggle(){
     const layers=selected.map(x=>({id:x.id,volume:hcMixSelected[x.id]}));
     try{localStorage.setItem('heartclearRecentMixV1',JSON.stringify({layers,updatedAt:Date.now()}))}catch(e){}
     const btn=document.getElementById('hcMixPlayBtn');if(btn)btn.textContent='Pause mix';
-    hcMixMessage(selected.map(x=>x.name).join(' + ')+(selected.length>3?' · volume-balanced; extra streams may use more data and battery.':' · playing'));
+    hcMixMessage(selected.map(x=>x.name).join(' + ')+' · playing');
     rememberActiveMedia('mix');hcMixTimerId=setInterval(hcMixTick,350);renderGlobalMini();
   }catch(e){hcMixStop(false);hcMixMessage('Could not start all layers. Check your internet connection.')}
   finally{hcMixStarting=false;if(startButton)startButton.disabled=false}
@@ -8007,7 +8007,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=105');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=106');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
