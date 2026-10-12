@@ -30,3 +30,11 @@ The service worker registration, cache key and fetch handling are scoped to that
 HeartClear remains in `human-practice-prototype/`; no HeartClear files were edited for Human Atlas v02.
 
 No paid AI or API calls.
+
+## Version 02.1 — Narration choice
+- The previous browser-default text-to-speech voice is no longer played automatically.
+- On every story, choose from English text-to-speech voices actually installed on the device and tap **Hear sample** to judge their sound. A voice whose name suggests a lower male voice is preferred when explicitly identifiable; otherwise synthetic narration starts disabled. The Web Speech API provides voice names but does not reliably expose perceived gender or quality.
+- **Listen** prioritizes the user's own saved recording if available. Native recordings remain stored locally in IndexedDB and can still be exported or deleted with the original controls.
+- **Off — use my own recording** disables synthesized voice entirely; the selected setting stays on this browser without any user account.
+- This change does **not** provide a new natural human narrator or a paid AI voice service. If a phone has only an artificial-sounding default voice, a personal recording is the reliable free alternative.
+- Existing notes, bookmarks and recordings retain their storage keys. No HeartClear paths were edited.
