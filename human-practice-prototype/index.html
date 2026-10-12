@@ -6808,6 +6808,21 @@ async function hcRunPlaybackChecks(){
     const core=['home','practices','soundLab','library','settings','soundLabPlayer','bookAudio','downloads'];
     const missing=core.filter(id=>!document.getElementById(id));
     record('App routes',missing.length===0,missing.length?'Missing '+missing.join(', '):'Core screens installed');
+    // Non-invasive route check: inspect accessible screen targets without navigating,
+    // starting audio, writing activity history, or changing the active session.
+    const navButtons=[...document.querySelectorAll('#bottomNav .nav-item')];
+    const brokenNav=navButtons.filter(button=>{
+      const route=(button.getAttribute('onclick')||'').match(/navTo\('([^']+)'/);
+      return !route||!document.querySelector('.screen#'+route[1]);
+    });
+    record('Five bottom tabs',navButtons.length===5&&brokenNav.length===0,
+      brokenNav.length?'Missing target: '+brokenNav.map(b=>b.textContent.trim()).join(', '):
+        navButtons.length===5?'All five targets are present':'Expected five navigation tabs');
+    const activityRoutes=['human','humanCategory','humanSession','returnJourney','fearPractice','fearPlayer','history'];
+    const missingActivities=activityRoutes.filter(id=>!document.getElementById(id));
+    record('Activities and progress',missingActivities.length===0,
+      missingActivities.length?'Missing: '+missingActivities.join(', '):
+        'All activity and history screens are present; stored progress is untouched');
     record('User-controlled start',!document.getElementById('soundLabAudio')?.autoplay,
       'No auto-play attribute on Sounds player');
     if('caches' in window){
@@ -6815,9 +6830,15 @@ async function hcRunPlaybackChecks(){
         const saved=await caches.open(MEDIA_CACHE);
         const entries=await saved.keys();
         record('Offline media storage',true,entries.length+' saved file'+(entries.length===1?'':'s')+' in this browser');
-        const shell=await caches.open('heartclear-v100');
-        record('Offline app shell',!!(await shell.match('./index.html')),
-          (await shell.match('./index.html'))?'Home screen cached':'Not yet cached; reopen after installing update');
+        // Read the most recent EXISTING HeartClear cache. Never create a stale v100
+        // cache while merely running a diagnostic.
+        const allCacheNames=await caches.keys();
+        const currentShell=allCacheNames.filter(name=>/^heartclear-v\d+$/.test(name))
+          .sort((a,b)=>Number(b.split('-v')[1])-Number(a.split('-v')[1]))[0];
+        const shell=currentShell?await caches.open(currentShell):null;
+        const shellReady=!!(shell&&await shell.match('./index.html'));
+        record('Offline app shell',shellReady,
+          shellReady?currentShell+' cached':'Not yet cached; reopen after installing update');
       }catch(e){record('Offline cache',false,'Storage blocked or unavailable')}
     }else record('Offline cache',false,'Not supported by this browser');
     const samples=[
@@ -6831,7 +6852,7 @@ async function hcRunPlaybackChecks(){
     }
     const good=results.filter(r=>r.ok).length;
     status.textContent=good+' of '+results.length+' checks passed. This does not test background playback or full audio decoding.';
-    hcPlaybackLastReport=['HeartClear 1.1.9 · v100 (device check)','Generated '+new Date().toISOString(),
+    hcPlaybackLastReport=[(document.querySelector('.app-version')?.textContent?.trim()||'HeartClear')+' · device check','Generated '+new Date().toISOString(),
       ...results.map(r=>(r.ok?'PASS ':'CHECK ')+r.label+': '+r.detail),
       'This check does not start audio, verify sound quality or test lock-screen playback.'].join('\n');
     if(copy)copy.disabled=false;

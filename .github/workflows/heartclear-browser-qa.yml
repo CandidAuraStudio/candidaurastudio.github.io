@@ -2,7 +2,7 @@ name: HeartClear Browser and Offline Regression
 
 on:
   push:
-    branches: [main]
+    branches: [main, feature/heartclear-v105-guest-profile-foundation]
     paths:
       - '.github/workflows/heartclear-browser-qa.yml'
       - 'human-practice-prototype/tests/heartclear-smoke.cjs'
