@@ -2002,6 +2002,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
 <button class="category-chip" data-practice-filter="sleep" onclick="filterPractices('sleep',this)" aria-pressed="false">Sleep <span class="hc-filter-num"></span></button>
 <button class="category-chip" data-practice-filter="breath" onclick="filterPractices('breath',this)" aria-pressed="false">Breath <span class="hc-filter-num"></span></button>
 <button class="category-chip" data-practice-filter="human" onclick="filterPractices('human',this)" aria-pressed="false">Human <span class="hc-filter-num"></span></button>
+<button class="category-chip" data-practice-filter="sacred" onclick="filterPractices('sacred',this)" aria-pressed="false">Sacred <span class="hc-filter-num"></span></button>
 </div></header>
 <div class="hc-practice-timer hc-shared-session"><span class="hc-timer-thumb" aria-hidden="true">◷</span><span><b>Quiet Timer</b><small>Set your time · gentle bells optional</small></span><button onclick="openHomeTimerSheet('quiet',10)">Set time</button></div>
 <section class="hc-practice-group" data-group="guided"><div class="kicker hc-group-heading">GUIDED BREATH</div><div class="library-list">
@@ -2038,6 +2039,12 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
 <section class="hc-practice-group" data-group="human"><div class="kicker hc-group-heading">HUMAN PRACTICE</div><div class="library-list">
 <button class="choice practice-card hc-shared-session" data-kind="human" data-session="human" data-tags="human" aria-label="Open Human Practice" onclick="show('human')"><span class="practice-art" aria-hidden="true"><span class="hc-art-center">✦</span></span><span class="practice-copy"><b>Human Practice</b><small>Movement · observation · attention</small></span><span class="duration">4 areas</span></button>
 </div></section>
+<section class="hc-practice-group" data-group="sacred"><div class="kicker hc-group-heading">SACRED · ISLAMIC LISTENING</div><div class="library-list">
+<button class="choice practice-card hc-shared-session" data-kind="sacred" data-session="islamHu" data-tags="sacred deep" aria-label="Open Allahu Meditation, Hu Hu Allah video" onclick="openHcDriveMedia('islamHu','practices')">
+  <span class="practice-art" aria-hidden="true"><span class="hc-art-center">☾</span></span>
+  <span class="practice-copy"><b>Allahu Meditation · Hu Hu Allah</b><small>Islamic · Sufi-style dhikr · video listening</small><span class="hc-practice-markers" aria-hidden="true"></span></span>
+  <span class="duration">VIDEO</span>
+</button></div></section>
 </section>
 
 <section class="screen" id="starterPath">
@@ -2980,7 +2987,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear meditation history only</button>
     </div>
-    <div class="app-version">HeartClear · Version 1.1.9</div>
+    <div class="app-version">HeartClear · Version 1.2.0</div>
   </div>
 </section>
 
@@ -3685,7 +3692,7 @@ function hcCaptureReturnState(force=false){
      soundTime:Number(soundLabAudio.currentTime)||0,
      soundKey:currentSoundKey,bookLang:currentBookAudioLang,bookChapter:currentBookChapter,
      fearKey:currentFearKey,fearTime:Number(fearAudio.currentTime)||0,
-     driveKey:hcDriveActiveKey||null};
+     driveKey:hcDriveActiveKey||null,driveFrom:hcDriveBackScreen||null};
    if((screen==='player'||item.kind==='meditation')&&chosenUrl){
      item.meditation={url:chosenUrl,seconds:chosenSeconds,introUrl:chosenIntroUrl,
        visualUrl:chosenVisualUrl,kicker:chosenKicker,title:chosenTitle};
@@ -3738,7 +3745,7 @@ function hcRestorePreviousScreen(){
     break;
    case 'hcDriveMedia':
     if(HC_DRIVE_COLLECTIONS.some(item=>item.key===saved.driveKey)){
-     openHcDriveMedia(saved.driveKey);success=true;
+     openHcDriveMedia(saved.driveKey,saved.driveFrom==='practices'?'practices':null);success=true;
      const status=document.getElementById('hcDriveVideoStatus');
      if(status)status.textContent='You returned to this recording. Tap Load preview to listen again.';
     }else show('sacred');
@@ -5264,13 +5271,16 @@ function hcRenderDriveCards(section,containerId){
   el.replaceChildren();
   HC_DRIVE_COLLECTIONS.filter(item=>item.section===section).forEach(item=>el.appendChild(hcDriveCard(item)));
 }
-function openHcDriveMedia(key){
+function openHcDriveMedia(key,sourceScreen=null){
   const item=HC_DRIVE_COLLECTIONS.find(i=>i.key===key);
   if(!item)return;
   hcDriveActiveKey=key;
-  hcDriveBackScreen=item.section==='meditation'?'practices':item.section==='general'?'soundLab':'sacredDetail';
-  document.getElementById('hcDriveVideoTitle').textContent=item.name;
-  document.getElementById('hcDriveVideoCategory').textContent=item.type;
+  hcDriveBackScreen=sourceScreen==='practices'?'practices':
+    item.section==='meditation'?'practices':item.section==='general'?'soundLab':'sacredDetail';
+  document.getElementById('hcDriveVideoTitle').textContent=
+    key==='islamHu'&&sourceScreen==='practices'?'Allahu Meditation · Hu Hu Allah':item.name;
+  document.getElementById('hcDriveVideoCategory').textContent=
+    key==='islamHu'&&sourceScreen==='practices'?'Islamic devotional listening · Sufi-style dhikr':item.type;
   document.getElementById('hcDriveVideoDescription').textContent=item.note;
   const link=document.getElementById('hcDriveOpenSource');
   link.href=hcDriveSourceUrl(item.id);
@@ -6401,7 +6411,7 @@ function hcPracticeRefreshCards(){
 }
 
 function filterPractices(kind,btn){
-  hcPracticeActiveFilter=['all','short','deep','sleep','breath','human'].includes(kind)?kind:'all';
+  hcPracticeActiveFilter=['all','short','deep','sleep','breath','human','sacred'].includes(kind)?kind:'all';
   const cards=[...document.querySelectorAll('#practices .practice-card')];
   function matches(card,tag){
     const tags=(card.dataset.tags||'').split(/\s+/);
@@ -7733,7 +7743,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=100');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=101');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();

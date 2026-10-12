@@ -24,6 +24,22 @@ const assert = require('node:assert/strict');
     }
     console.log('PASS: five primary bottom navigation routes');
 
+    await page.locator('[data-nav="practices"]').evaluate(el=>el.click());
+    await page.locator('#practices [data-practice-filter="sacred"]').evaluate(el=>el.click());
+    assert.equal(await page.locator('#practices [data-group="sacred"] .practice-card').count(),1);
+    assert.equal(await page.locator('#practices [data-group="guided"]').evaluate(el=>el.hidden),true);
+    await page.locator('#practices [data-session="islamHu"]').evaluate(el=>el.click());
+    assert.ok(await page.locator('#hcDriveMedia').evaluate(el=>el.classList.contains('active')));
+    assert.match(await page.locator('#hcDriveVideoTitle').innerText(),/Allahu Meditation/);
+    assert.equal(await page.locator('#hcDriveVideoFrame').getAttribute('src'),null,'Video must not autoplay');
+    assert.equal(await page.locator('#hcDriveOpenSource').getAttribute('href'),'https://drive.google.com/file/d/11Sgca-PXcd4-5DRaPQPslynyc7QtkVYx/view');
+    await page.locator('#hcDriveMedia button').first().evaluate(el=>el.click());
+    assert.ok(await page.locator('#practices').evaluate(el=>el.classList.contains('active')),'Return from devotional video should go to Practice');
+    await page.evaluate(()=>{show('sacred');openSacred('islamic')});
+    const sacredDrive=await page.locator('#hcSacredDriveCards').innerText();
+    assert.match(sacredDrive,/Hu Hu Hu Allah/,'Original Islamic video entry must remain');
+    console.log('PASS: Allahu meditation card, Sacred filter, silent preview, return and original Islamic entry');
+
     await page.locator('[data-nav="soundHub"]').evaluate(el=>el.click());
     await page.locator('button[data-filter="flute"]').evaluate(el=>el.click());
     const fluteRows=await page.locator('#hcSoundTrackList .hc-sound-row').count();
