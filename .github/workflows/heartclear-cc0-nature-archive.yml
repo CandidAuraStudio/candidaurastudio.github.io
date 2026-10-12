@@ -1,0 +1,71 @@
+name: HeartClear Preserve CC0 Nature Recordings
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/heartclear-cc0-nature-archive.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  preserve-nature:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install audio validator
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+      - name: Preserve the twelve original CC0 nature sounds and mobile AAC encodes
+        shell: bash
+        run: |
+          set -euo pipefail
+          dest=human-practice-prototype/media/cc0-nature
+          mkdir -p "$dest"
+          for item in birds:0999 fire:0031 rain:1290 ocean:0698 storm:0740 thunder:3181 foreststream:2713 treewind:0659 windfield:1097 nightforest:0555 countryside:0097 frogswater:0998; do
+            key="${item%%:*}"
+            code="${item##*:}"
+            input="$dest/${key}_original.mp3"
+            echo "Archiving $key from BigSoundBank sound $code"
+            curl -fLsS --retry 3 --retry-delay 2 --connect-timeout 18 --max-time 150 --user-agent "HeartClear CC0 archive (non-commercial metadata validation)" \
+              "https://bigsoundbank.com/UPLOAD/mp3/${code}.mp3" -o "$input"
+            test "$(stat -c%s "$input")" -gt 12000
+            ffprobe -v error -show_entries stream=codec_name -of default=nokey=1:noprint_wrappers=1 "$input" | grep -q '^mp3$'
+            ffmpeg -hide_banner -loglevel error -nostdin -y -i "$input" -vn -ar 44100 -c:a aac -b:a 96k "$dest/${key}_96k.m4a"
+            ffprobe -v error -show_entries format=duration -of default=nokey=1:noprint_wrappers=1 "$dest/${key}_96k.m4a" | awk '{exit !($1>0)}'
+          done
+          sha256sum "$dest"/*.mp3 "$dest"/*.m4a > "$dest/SHA256.txt"
+          cat > "$dest/LICENSE_AND_SOURCES.txt" <<'LICENSE'
+          HeartClear Nature Archive — Unmodified Original MP3s + 96kbps AAC mobile encodes
+          Source: Joseph SARDIN and BigSoundBank (La Sonothèque)
+          License: CC0 1.0, subject to source page's "Free and Royalty Free" marking.
+          License: https://bigsoundbank.com/licenses.html
+          Source URLs: https://bigsoundbank.com/UPLOAD/mp3/{0999,0031,1290,0698,0740,3181,2713,0659,1097,0555,0097,0998}.mp3
+          Key map: birds=0999, fire=0031, rain=1290, ocean=0698, storm=0740, thunder=3181, foreststream=2713, treewind=0659, windfield=1097, nightforest=0555, countryside=0097, frogswater=0998.
+          Original MP3 bytes are preserved unchanged. AAC files are transcoded for lower bandwidth.
+          Editing/remixing and commercial use permitted under the source's stated CC0 terms for eligible files.
+          No new instruments, AI-generated sound, or frequency treatment was applied.
+          LICENSE
+      - name: Upload preservation archive for user Google Drive
+        uses: actions/upload-artifact@v4
+        with:
+          name: HeartClear-Nature-12-CC0-Original-and-Mobile-2026
+          if-no-files-found: error
+          retention-days: 30
+          path: human-practice-prototype/media/cc0-nature/
+      - name: Commit source audio in HeartClear repo
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "HeartClear Media Builder"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add human-practice-prototype/media/cc0-nature
+          git commit -m "Archive twelve BigSoundBank CC0 nature recordings and AAC mobile versions"
+          git pull --rebase origin main
+          git push origin HEAD:main
