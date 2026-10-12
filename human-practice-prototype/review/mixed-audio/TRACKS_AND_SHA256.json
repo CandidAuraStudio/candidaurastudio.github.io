@@ -1,0 +1,74 @@
+[
+  {
+    "file": "HeartClear_forest_morning_7min_128k.mp3",
+    "seconds": 420,
+    "bytes": 6721262,
+    "sha256": "606e456ba6a9cd8cb2fcb9132b5136e6470601525af4f644e3df2d305cb91718"
+  },
+  {
+    "file": "HeartClear_forest_morning_7min_80k.m4a",
+    "seconds": 420,
+    "bytes": 4406831,
+    "sha256": "d8921f7e811188434d3181903b5715563002a8f242c4c937934352918451c87a"
+  },
+  {
+    "file": "HeartClear_wetlands_dusk_10min_128k.mp3",
+    "seconds": 600,
+    "bytes": 9601001,
+    "sha256": "2f1659f401e3ad5168e1a621f59edbc65bba7bdef13c04295d9278f52a04631e"
+  },
+  {
+    "file": "HeartClear_wetlands_dusk_10min_80k.m4a",
+    "seconds": 600,
+    "bytes": 6239263,
+    "sha256": "576ef403a1213b924c96ddb9d5f27c4237cfd5683b59dab171a1f54992f16ce1"
+  },
+  {
+    "file": "HeartClear_woodland_rain_10min_128k.mp3",
+    "seconds": 600,
+    "bytes": 9596024,
+    "sha256": "9f499bfe37b4f1a39b285dc77a393b0f95739c8cde5d8bb7947b4caf2a79daca"
+  },
+  {
+    "file": "HeartClear_woodland_rain_10min_80k.m4a",
+    "seconds": 600,
+    "bytes": 6214345,
+    "sha256": "7d35db1cc91b6ef6be90b94205443aba2e3b22af6b919b8c8eb1a8eb7d41a9d5"
+  },
+  {
+    "file": "HeartClear_coastal_breeze_10min_128k.mp3",
+    "seconds": 600,
+    "bytes": 9601001,
+    "sha256": "d4bd2fd9bfdb66dbd57916b49b88fefdec817044be8af1b1497b3ebf4b7d2908"
+  },
+  {
+    "file": "HeartClear_coastal_breeze_10min_80k.m4a",
+    "seconds": 600,
+    "bytes": 6139589,
+    "sha256": "ad9402dfd5c2bf3efc9192404368dfb69d17cf7a9a1c3b091f55e0747d06cf3a"
+  },
+  {
+    "file": "HeartClear_rainy_hearth_7min_128k.mp3",
+    "seconds": 420,
+    "bytes": 6721534,
+    "sha256": "55b351a57fc4a4f3084993dc27a6fddd3ac222bd9ff36aeb7a7b074f6b3b37c0"
+  },
+  {
+    "file": "HeartClear_rainy_hearth_7min_80k.m4a",
+    "seconds": 420,
+    "bytes": 4475793,
+    "sha256": "1b6c197574e560fb1992b15ab8facd7129fbddd4ef0f20aa6d911c752522570e"
+  },
+  {
+    "file": "HeartClear_distant_storm_7min_128k.mp3",
+    "seconds": 420,
+    "bytes": 6721262,
+    "sha256": "baa1f465d0ee4d5072428e6d77ab2b9b10dbbbb52fce67f09ded114c071247be"
+  },
+  {
+    "file": "HeartClear_distant_storm_7min_80k.m4a",
+    "seconds": 420,
+    "bytes": 4356875,
+    "sha256": "9e0411123fc56c8cf68e017289698565005fc39ab4b033cff87aac42622e8b3f"
+  }
+]
