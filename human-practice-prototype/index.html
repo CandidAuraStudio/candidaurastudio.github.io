@@ -3644,7 +3644,7 @@ const HC_RETURN_KEY='heartclearReturnStateV1';
 let hcReturnRestoring=false,hcReturnSaveAt=0;
 const HC_RETURN_SCREENS=new Set(['home','practices','player','sacred','sacredDetail','sacredSession',
  'soundHub','soundLab','soundLabPlayer','fearPractice','fearPlayer','library','collection',
- 'bookAudio','human','humanCategory','downloads','history','settings']);
+ 'bookAudio','human','humanCategory','downloads','history','settings','hcDriveMedia','omVideo']);
 function hcCaptureReturnState(force=false){
  if(hcReturnRestoring)return;
  if(!force && Date.now()-hcReturnSaveAt<3500)return;
@@ -3659,7 +3659,8 @@ function hcCaptureReturnState(force=false){
      adhkarTime:Number(adhkarAudio.currentTime)||0,
      soundTime:Number(soundLabAudio.currentTime)||0,
      soundKey:currentSoundKey,bookLang:currentBookAudioLang,bookChapter:currentBookChapter,
-     fearKey:currentFearKey};
+     fearKey:currentFearKey,fearTime:Number(fearAudio.currentTime)||0,
+     driveKey:hcDriveActiveKey||null};
    if((screen==='player'||item.kind==='meditation')&&chosenUrl){
      item.meditation={url:chosenUrl,seconds:chosenSeconds,introUrl:chosenIntroUrl,
        visualUrl:chosenVisualUrl,kicker:chosenKicker,title:chosenTitle};
@@ -3707,9 +3708,17 @@ function hcRestorePreviousScreen(){
     break;
    case 'fearPlayer':
     if(Object.prototype.hasOwnProperty.call(fearTracks,saved.fearKey)){
-     openFearTrack(saved.fearKey);success=true;
+     openFearTrack(saved.fearKey);hcSeekRestored(fearAudio,saved.fearTime,syncFear);success=true;
     }else show('fearPractice');
     break;
+   case 'hcDriveMedia':
+    if(HC_DRIVE_COLLECTIONS.some(item=>item.key===saved.driveKey)){
+     openHcDriveMedia(saved.driveKey);success=true;
+     const status=document.getElementById('hcDriveVideoStatus');
+     if(status)status.textContent='You returned to this recording. Tap Load preview to listen again.';
+    }else show('sacred');
+    break;
+   case 'omVideo':show('sacred');success=true;break;
    case 'sacredDetail':openSacred('islamic');success=true;break;
    default:show(saved.screen);success=true;
   }
@@ -5243,7 +5252,8 @@ function openHcDriveMedia(key){
   document.getElementById('hcDriveVideoStatus').textContent='Tap Load preview to play this video from your Google Drive. No audio is copied into GitHub.';
   const frame=document.getElementById('hcDriveVideoFrame');
   frame.removeAttribute('src');
-  for(const el of [audio,adhkarAudio,fearAudio,soundLabAudio,bookAudioEl]){
+  if(hcMixRunning||hcMixDecks.length)hcMixStop(false);
+  for(const el of [audio,adhkarAudio,fearAudio,soundLabAudio,bookAudioEl,humanSoundAudio,hcPrivateIslamAudio,hcPrivateIslamVideo]){
     if(el && !el.paused)el.pause();
   }
   show('hcDriveMedia');
@@ -6197,6 +6207,12 @@ function setAdhkarMediaSession(){
 }
 
 function openAdhkar(mode){
+  // Exactly one listening source should have audio focus. The nature mixer uses
+  // separate HTMLAudioElements and must be stopped explicitly.
+  if(hcMixRunning||hcMixDecks.length)hcMixStop(false);
+  for(const el of [fearAudio,humanSoundAudio,hcPrivateIslamAudio,hcPrivateIslamVideo]){
+    if(el&&!el.paused)el.pause();
+  }
   if(bookAudioEl && !bookAudioEl.paused)bookAudioEl.pause();
   if(soundLabAudio && !soundLabAudio.paused)soundLabAudio.pause();
   if(!audio.paused)audio.pause();
@@ -7466,7 +7482,13 @@ window.addEventListener('pageshow',event=>{
   // BFCache restores the existing player; a full reload exposes Continue controls.
   hcRenderSoundResume();
   renderGlobalMini();
-  if(event.persisted && !soundLabAudio.paused)setSoundLabMediaSession();
+  if(event.persisted){
+    if(!soundLabAudio.paused)setSoundLabMediaSession();
+    else if(!adhkarAudio.paused)setAdhkarMediaSession();
+    else if(!bookAudioEl.paused)setBookMediaSession();
+    else if(!audio.paused)setMediaSession();
+    hcCaptureReturnState(true);
+  }
 });
 document.addEventListener('visibilitychange',()=>{
   if(document.hidden){hcCaptureReturnState(true);hcStoreSoundLabPosition()}
@@ -7483,6 +7505,7 @@ document.addEventListener('visibilitychange',()=>{
     if(!audio.paused)syncPracticeVisual(true);
     if(!adhkarAudio.paused&&av)av.play().catch(()=>{});
     renderGlobalMini();
+    hcCaptureReturnState(true);
   }
 });
 
