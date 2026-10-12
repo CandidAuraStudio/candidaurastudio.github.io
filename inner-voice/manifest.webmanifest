@@ -1,0 +1,19 @@
+{
+  "name": "INNER VOICE — Private Thinking Companion",
+  "short_name": "Inner Voice",
+  "description": "Your private voice-first space for thoughts and moments. No login and no paid AI.",
+  "start_url": "./index.html#/home",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#111022",
+  "theme_color": "#111022",
+  "icons": [
+    {
+      "src": "./assets/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
