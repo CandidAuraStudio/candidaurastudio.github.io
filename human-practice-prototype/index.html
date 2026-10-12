@@ -1927,6 +1927,26 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
  #playBtn,#soundLabPlayBtn,#fearPlayBtn,#adhkarPlayBtn{width:min(100%,126px)!important}
 }
 
+
+/* v105: local-only guest/name profile and distinct future sharing preferences. */
+.hc-local-profile{margin:15px 0 20px;padding:17px;border:1px solid rgba(217,233,241,.18);border-radius:19px;background:linear-gradient(150deg,rgba(12,37,50,.82),rgba(7,23,34,.74))}
+.hc-local-profile h3{font-size:18px;line-height:1.35;margin:6px 0 5px}
+.hc-local-profile p{color:#cedce4;font-size:12px;line-height:1.55;margin:8px 0 13px}
+.hc-local-profile .hc-local-tag{color:#f2d7a3;font-size:10px;letter-spacing:.1em;text-transform:uppercase}
+.hc-local-profile label[for="hcLocalProfileName"]{display:block;color:#e7f0f4;font-size:12px;margin:12px 0 6px}
+.hc-local-profile input[type=text]{width:100%;min-width:0;min-height:46px;padding:12px 13px;border-radius:12px;font:inherit;font-size:16px;color:#fff;background:#0b2635;border:1px solid rgba(222,237,244,.32)}
+.hc-local-profile .hc-profile-actions{display:flex;gap:9px;flex-wrap:wrap;margin:10px 0}
+.hc-local-profile .hc-profile-actions button{flex:1 1 130px;min-height:46px;font:inherit;font-size:12px;font-weight:700;border-radius:12px;border:1px solid rgba(231,242,247,.31);background:rgba(12,37,50,.72);color:#fff;padding:10px}
+.hc-local-profile .hc-profile-actions button:first-child{background:#fff;color:#0b2432;border-color:#fff}
+.hc-local-profile .hc-profile-status{font-size:12px;line-height:1.5;color:#dce9ef;min-height:18px;margin:5px 0 0}
+.hc-local-profile .hc-local-divider{height:1px;background:rgba(219,237,246,.14);margin:18px 0}
+.hc-local-profile .hc-privacy-option{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-top:1px solid rgba(223,237,246,.10);color:#f0f7fa;font-size:12px;line-height:1.4;cursor:pointer}
+.hc-local-profile .hc-privacy-option input{width:20px;height:20px;min-width:20px;accent-color:#fff;flex:none;margin:1px 0 0}
+.hc-local-profile .hc-privacy-option b{display:block;font-size:13px;margin-bottom:4px}
+.hc-local-profile .hc-privacy-option small{display:block;font-size:11px;line-height:1.5;color:#bacdd5}
+.hc-local-profile .hc-local-caution{font-size:11px;color:#e8d2a8;line-height:1.55}
+.hc-local-profile button:focus-visible,.hc-local-profile input:focus-visible{outline:2px solid #fff!important;outline-offset:3px!important}
+
 </style>
 </head>
 <body>
@@ -3004,6 +3024,38 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
     <p>Playback, preferences and your own records.</p>
     <div class="hc-more-shortcuts" aria-label="Explore HeartClear"><button onclick="show('human')">Human Practice</button><button onclick="show('sacred')">Sacred Sound</button><button onclick="show('history')">History</button><button onclick="show('downloads')">Offline</button></div>
 
+
+    <section class="hc-local-profile" id="hcLocalProfileCard" aria-labelledby="hcLocalProfileHeading">
+      <div class="hc-local-tag">Optional · On this device</div>
+      <h3 id="hcLocalProfileHeading">Guest &amp; Profile</h3>
+      <p id="hcLocalProfileIdentity">Guest mode is active. There is no login requirement.</p>
+      <label for="hcLocalProfileName">Display name (optional)</label>
+      <input id="hcLocalProfileName" type="text" maxlength="40" autocomplete="nickname" placeholder="Your name or nickname">
+      <div class="hc-profile-actions">
+        <button type="button" id="hcLocalProfileSaveBtn" onclick="hcSaveLocalProfile()">Save local name</button>
+        <button type="button" id="hcLocalProfileGuestBtn" onclick="hcUseGuestProfile()">Continue as guest</button>
+      </div>
+      <p id="hcLocalProfileStatus" class="hc-profile-status" role="status" aria-live="polite">All existing sessions and listening positions stay on this device.</p>
+      <p>Names are only labels in this browser, not verified accounts. Google/email login and cross-device recovery are not available in Phase 1.</p>
+      <div class="hc-local-divider" aria-hidden="true"></div>
+      <h3>Sharing preferences</h3>
+      <p>These are separate, optional future preferences. <strong>Nothing is uploaded or tracked by HeartClear.</strong> We will ask for fresh permission before enabling any cloud sharing.</p>
+      <label class="hc-privacy-option" for="hcPrefAnonymous">
+        <input id="hcPrefAnonymous" type="checkbox" onchange="hcSavePrivacyPreferences()">
+        <span><b>Anonymous usage statistics</b><small>Potentially share total sessions and app feature usage, without your name.</small></span>
+      </label>
+      <label class="hc-privacy-option" for="hcPrefSync">
+        <input id="hcPrefSync" type="checkbox" onchange="hcSavePrivacyPreferences()">
+        <span><b>Sync my progress across devices</b><small>Would require an account and separate permission in a future release.</small></span>
+      </label>
+      <label class="hc-privacy-option" for="hcPrefAdmin">
+        <input id="hcPrefAdmin" type="checkbox" onchange="hcSavePrivacyPreferences()">
+        <span><b>Share limited activity with HeartClear</b><small>Would show your chosen display name and broad session counts/minutes to a private administrator, only after renewed consent.</small></span>
+      </label>
+      <p id="hcPrivacyPreferenceStatus" class="hc-profile-status" role="status" aria-live="polite">All three preferences start off. No remote collection is enabled.</p>
+      <p class="hc-local-caution">Your personal recordings, mood check-ins, journal notes, and religious listening choices remain private. Clearing this browser can remove a local profile; use Export my data first.</p>
+    </section>
+
     <div class="settings-list">
       <div class="setting-row">
         <div><strong>Reduce motion</strong><small>Turn off floating and breathing animations</small></div>
@@ -3060,7 +3112,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
       </div>
       <div class="hc-data-tools">
         <strong>Privacy &amp; your data</strong>
-        <p>No account or advertising. Practice history, mood check-ins, notes, favourites and listening positions are stored in this browser. Playback streams may contact the recording's host. Weather uses your location only if you enable it.</p>
+        <p>No online account, advertising or HeartClear activity tracking. Your optional name, sharing preferences, practice history, mood check-ins, notes, favourites and listening positions are stored in this browser. Playback streams may contact the recording's host. Weather uses your location only if you enable it.</p>
         <p>You control your local information. Export it before clearing or changing devices. Downloaded media is managed separately under Offline downloads; a voice recording saved to your device remains outside HeartClear's storage.</p>
         <div class="hc-data-buttons">
           <button onclick="hcExportPersonalData()" aria-label="Export personal HeartClear data as JSON">Export my data</button>
@@ -3070,7 +3122,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear meditation history only</button>
     </div>
-    <div class="app-version">HeartClear · Version 1.2.3</div>
+    <div class="app-version">HeartClear · Version 1.2.4</div>
   </div>
 </section>
 
@@ -3933,7 +3985,7 @@ function show(id){
   if(id==='soundLab'){hcRenderSoundRows();hcRenderMixer()}
   if(id==='history') renderHistory();
   if(id==='downloads') renderDownloads();
-  if(id==='settings') renderSettings();
+  if(id==='settings'){renderSettings();hcRenderLocalProfile()}
   if(id==='player'||id==='sacredSession')updatePipButtons();
   renderGlobalMini();
   window.scrollTo(0,0);
@@ -6826,6 +6878,74 @@ async function toggleWakeLock(){
 
 
 /* User-directed device-only data portability. This does not touch other apps on this domain. */
+
+/* Phase 1 (v105): local identity and NON-ACTIVE sharing preferences.
+   No account, network request, Supabase client, analytics sender or admin access is created here.
+   A later release MUST ask for new consent before any cloud data processing. */
+const HC_LOCAL_PROFILE_KEY='heartclearLocalProfileV1';
+const HC_PRIVACY_PREFERENCES_KEY='heartclearPrivacyPreferencesV1';
+function hcLocalProfile(){
+  try{
+    const value=JSON.parse(localStorage.getItem(HC_LOCAL_PROFILE_KEY)||'null');
+    if(value && value.kind==='named' && typeof value.displayName==='string'){
+      const displayName=value.displayName.trim().slice(0,40);
+      if(displayName)return{kind:'named',displayName};
+    }
+  }catch(e){}
+  return{kind:'guest',displayName:''};
+}
+function hcPrivacyPreferences(){
+  try{
+    const v=JSON.parse(localStorage.getItem(HC_PRIVACY_PREFERENCES_KEY)||'null');
+    if(v && typeof v==='object'){
+      return{anonymous:v.anonymous===true,sync:v.sync===true,admin:v.admin===true};
+    }
+  }catch(e){}
+  return{anonymous:false,sync:false,admin:false};
+}
+function hcRenderLocalProfile(){
+  const profile=hcLocalProfile(),choices=hcPrivacyPreferences();
+  const label=document.getElementById('hcLocalProfileIdentity');
+  const field=document.getElementById('hcLocalProfileName');
+  if(label)label.textContent=profile.kind==='named'?'Local profile: '+profile.displayName+' · No online account.':'Guest mode is active. There is no login requirement.';
+  if(field)field.value=profile.displayName;
+  [['hcPrefAnonymous','anonymous'],['hcPrefSync','sync'],['hcPrefAdmin','admin']].forEach(([id,key])=>{
+    const checkbox=document.getElementById(id);
+    if(checkbox)checkbox.checked=choices[key];
+  });
+}
+function hcSaveLocalProfile(){
+  const field=document.getElementById('hcLocalProfileName');
+  const status=document.getElementById('hcLocalProfileStatus');
+  const name=String(field?.value||'').trim().replace(/\\s+/g,' ').slice(0,40);
+  if(!name){if(status)status.textContent='Enter a display name, or choose Continue as guest.';return}
+  try{
+    localStorage.setItem(HC_LOCAL_PROFILE_KEY,JSON.stringify({kind:'named',displayName:name,updatedAt:Date.now()}));
+    hcRenderLocalProfile();
+    if(status)status.textContent='Saved on this device only. Your existing history and listening positions are unchanged.';
+  }catch(e){if(status)status.textContent='Unable to save this name. Please check browser storage permissions.'}
+}
+function hcUseGuestProfile(){
+  const status=document.getElementById('hcLocalProfileStatus');
+  try{
+    localStorage.removeItem(HC_LOCAL_PROFILE_KEY);
+    hcRenderLocalProfile();
+    if(status)status.textContent='Guest mode restored. Meditation history, downloads and sharing preferences were not changed.';
+  }catch(e){if(status)status.textContent='Unable to switch profile. Check browser storage permissions.'}
+}
+function hcSavePrivacyPreferences(){
+  const status=document.getElementById('hcPrivacyPreferenceStatus');
+  const get=id=>document.getElementById(id)?.checked===true;
+  const next={anonymous:get('hcPrefAnonymous'),sync:get('hcPrefSync'),admin:get('hcPrefAdmin')};
+  try{
+    localStorage.setItem(HC_PRIVACY_PREFERENCES_KEY,JSON.stringify({...next,updatedAt:Date.now(),draftOnly:true}));
+    if(status)status.textContent='Preferences saved locally only. No cloud tracking, syncing or sharing is active; fresh consent will be required later.';
+  }catch(e){
+    hcRenderLocalProfile();
+    if(status)status.textContent='Unable to save sharing preferences. Nothing has been uploaded.';
+  }
+}
+
 function hcOwnStorageKey(key){
   return typeof key==='string' && /^(heartclear|clearWithin|sufi)/.test(key);
 }
@@ -7822,6 +7942,7 @@ renderDashboard();
 renderHeartClearFavourites();
 hcRenderSoundResume();
 renderSettings();
+hcRenderLocalProfile();
 hcRestorePreviousScreen();
 
 const greetingRefreshTimer=setInterval(setGreeting,60000);
@@ -7865,7 +7986,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=103');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=105');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
