@@ -3711,7 +3711,8 @@ function hcCaptureReturnState(force=false){
    const active=state?.el && state.el.getAttribute('src') &&
      (!state.el.paused || Number(state.el.currentTime)>0.5)?state:null;
    let screen=HC_RETURN_SCREENS.has(currentScreenId)?currentScreenId:'home';
-   if(active && ['home','soundHub','soundLab','settings','library','sacred'].includes(screen))screen=active.screen;
+   if(hcDriveDocked&&hcDriveActiveKey)screen='hcDriveMedia';
+   else if(active && ['home','soundHub','soundLab','settings','library','sacred'].includes(screen))screen=active.screen;
    const item={at:Date.now(),screen,kind:active?.key||'',
      meditationTime:Number(audio.currentTime)||0,
      adhkarTime:Number(adhkarAudio.currentTime)||0,
@@ -3773,7 +3774,7 @@ function hcRestorePreviousScreen(){
     if(HC_DRIVE_COLLECTIONS.some(item=>item.key===saved.driveKey)){
      openHcDriveMedia(saved.driveKey);success=true;
      const status=document.getElementById('hcDriveVideoStatus');
-     if(status)status.textContent='You returned to this recording. Tap Load preview to listen again.';
+     if(status)status.textContent='Recording restored. If needed, tap Play inside the video.';
     }else show('sacred');
     break;
    case 'omVideo':show('sacred');success=true;break;
@@ -3790,15 +3791,23 @@ function hcRestorePreviousScreen(){
 }
 
 function show(id){
+  if(currentScreenId==='hcDriveMedia'&&id!=='hcDriveMedia'&&hcDriveActiveKey&&!hcDriveDocked){
+    hcDriveDocked=true;
+    document.getElementById('hcDriveMedia')?.classList.add('hc-drive-docked');
+  }
+  if(id==='hcDriveMedia'&&hcDriveDocked){
+    hcDriveDocked=false;
+    document.getElementById('hcDriveMedia')?.classList.remove('hc-drive-docked');
+  }
   // Privacy: leave no live microphone behind when navigating away from voice practice.
   if(id!=='humanSession' && typeof humanVoiceRecorder!=='undefined' && humanVoiceRecorder && humanVoiceRecorder.state==='recording')endHumanVoiceRecording();
   if(id!=='humanSession'&&typeof humanSoundAudio!=='undefined'&&!humanSoundAudio.paused)humanSoundAudio.pause();
   currentScreenId=id;
   hcCaptureReturnState(true);
   if(id!=='omVideo'){const frame=document.getElementById('omVideoFrame');if(frame&&frame.getAttribute('src')){frame.removeAttribute('src');frame.src='about:blank'}}
-  if(id!=='hcDriveMedia'){
+  if(id!=='hcDriveMedia'&&!hcDriveDocked){
     const frame=document.getElementById('hcDriveVideoFrame');
-    if(frame&&frame.getAttribute('src')){frame.removeAttribute('src');frame.src='about:blank'}
+    if(frame&&frame.getAttribute('src'))frame.src='about:blank';
   }
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   const target=document.getElementById(id);
@@ -5273,6 +5282,7 @@ function closeOmVideo(){show('sacredDetail');openSacred('hindu')}
 const HC_DRIVE_COLLECTIONS=[{"key":"generalIndianRaga","name":"Indian Classical Raga · Long Listening","section":"general","type":"Indian classical music · uploader-described","id":"1Ec2jsCaK-7arZZBshGMjT0BCtcMNDyZW","note":"User describes this 451 MB Drive recording as Indian Raga music. Exact raga, performer and reuse rights remain unverified; categorized separately from Hindu devotional chanting."},{"key":"islamDhir120","name":"Islamic Dhikr · Extended Playlist","section":"islamic","type":"Devotional dhikr · 120 min","id":"1AJCfNPgTdq2cOc4rtjFcAh0ixnyKMm_C","note":"Two-hour video titled DHIKR with twelve remembrance phrases. The uploader, performance and reuse rights are not verified. Not Quran recitation."},{"key":"islamSufiDrum","name":"Sufi Devotional Music · Frame Drum","section":"islamic","type":"Sufi-style music · 52 min","id":"13HiHCfsS2EH5muCrp9-v-veKOEUraHdp","note":"Devotional-themed music with a frame-drum image. Exact instrumentation and reuse rights require independent verification. Not Quran recitation."},{"key":"hinduKrishnaFlute","name":"Krishna Flute · Long Listening","section":"hindu","type":"Hindu-inspired flute music · 66 min","id":"1jyI0O3Tib36sKTdhohU4iQ2CbUuSJLCc","note":"Video titled Cortisol Reset with Krishna playing flute. Cortisol claims are not medically verified. Original music and licence not verified."},{"key":"islamLa","name":"La Ilaha Illallah","section":"islamic","type":"Dhikr · uploaded recording","id":"1_TQu-U5o0mTKds6W-NliHq59QzZPYrkH","note":"Remembrance of God's oneness. Exact performance style not independently checked."},{"key":"islamHu","name":"Hu Hu Hu Allah","section":"islamic","type":"Sufi-style dhikr · uploaded recording","id":"11Sgca-PXcd4-5DRaPQPslynyc7QtkVYx","note":"Devotional remembrance. This is not labelled Quran recitation."},{"key":"islamNaat","name":"Taksim ve Naat-ı Mevlâna","section":"islamic","type":"Sufi devotional performance · instrumental and vocal","id":"1Tih27JXlqpkz5X_vfE2_vLO9EiD6JCEu","note":"Traditional devotional music. Not Quran recitation or a standalone dhikr instruction."},{"key":"islamMorning","name":"Morning Adhkar · Drive recording","section":"islamic","type":"Morning supplications · uploaded recording","id":"1nTyMwDveS6Z4gQDaEMb2MAfcbghpabgd","note":"Separate Drive video; the existing HeartClear Morning Adhkar audio is also preserved."},{"key":"hinduOm","name":"OM Chanting & Singing Bowls","section":"hindu","type":"OM contemplation · uploaded video","id":"11ogtK6FopRz-g8o-gHLY6-TV4fTJ5GjN","note":"Traditional OM practice with singing bowls. Frequency-related benefits are not medically verified."},{"key":"generalDuduk","name":"Echoes of the Divine · Duduk","section":"general","type":"Sufi-inspired instrumental · not dhikr","id":"1o7d2xUS53vM0NiJhe3M-GH6gfKHCJZ47","note":"Duduk meditation music with Rumi-inspired presentation; kept separate from Quran and dhikr."},{"key":"generalAmbient","name":"Inner Balance · Ambient Listening","section":"general","type":"Ambient music · uploaded recording","id":"1Lx_e-fTNlQx7q9aXuDqX23kZV24DkfR4","note":"Ambient listening only. Claims about 432Hz, 111Hz or healing are not endorsed."}];
 let hcDriveActiveKey=null;
 let hcDriveBackScreen='sacredDetail';
+let hcDriveDocked=false;
 function hcDriveSourceUrl(id){return 'https://drive.google.com/file/d/'+encodeURIComponent(id)+'/view';}
 function hcDrivePreviewUrl(id){return 'https://drive.google.com/file/d/'+encodeURIComponent(id)+'/preview';}
 function hcDriveCard(item){
@@ -5284,9 +5294,9 @@ function hcDriveCard(item){
   const ico=document.createElement('span');ico.className='soundlab-icon';ico.textContent='▶';
   const body=document.createElement('span');
   const name=document.createElement('b');name.textContent=item.name;
-  const meta=document.createElement('small');meta.textContent=item.type+' · Google Drive';
+  const meta=document.createElement('small');meta.textContent=item.type;
   body.append(name,meta);
-  const arrow=document.createElement('span');arrow.className='soundlab-duration';arrow.textContent='Open ›';
+  const arrow=document.createElement('span');arrow.className='soundlab-duration';arrow.textContent='Play ›';
   btn.append(ico,body,arrow);
   btn.addEventListener('click',()=>openHcDriveMedia(item.key));
   return btn;
@@ -5300,33 +5310,65 @@ function hcRenderDriveCards(section,containerId){
 function openHcDriveMedia(key){
   const item=HC_DRIVE_COLLECTIONS.find(i=>i.key===key);
   if(!item)return;
+  const same=hcDriveActiveKey===key;
   hcDriveActiveKey=key;
+  hcDriveDocked=false;
+  document.getElementById('hcDriveMedia').classList.remove('hc-drive-docked');
   hcDriveBackScreen=item.section==='meditation'?'practices':item.section==='general'?'soundLab':'sacredDetail';
   document.getElementById('hcDriveVideoTitle').textContent=item.name;
   document.getElementById('hcDriveVideoCategory').textContent=item.type;
   document.getElementById('hcDriveVideoDescription').textContent=item.note;
   const link=document.getElementById('hcDriveOpenSource');
   link.href=hcDriveSourceUrl(item.id);
-  document.getElementById('hcDriveVideoStatus').textContent='Tap Load preview to play this video from your Google Drive. No audio is copied into GitHub.';
+  document.getElementById('hcDriveVideoStatus').textContent='Opening recording…';
   const frame=document.getElementById('hcDriveVideoFrame');
-  frame.removeAttribute('src');
+  if(!same)frame.removeAttribute('src');
   if(hcMixRunning||hcMixDecks.length)hcMixStop(false);
   for(const el of [audio,adhkarAudio,fearAudio,soundLabAudio,bookAudioEl,humanSoundAudio,hcPrivateIslamAudio,hcPrivateIslamVideo]){
     if(el && !el.paused)el.pause();
   }
   show('hcDriveMedia');
+  // Start the embedded preview with the FIRST tap on the library row.
+  // Drive may still require its own Play tap; our app adds no intermediate click.
+  if(!same||!frame.getAttribute('src'))hcLoadDrivePreview();
+  hcCaptureReturnState(true);
 }
 function hcLoadDrivePreview(){
   const item=HC_DRIVE_COLLECTIONS.find(i=>i.key===hcDriveActiveKey);
   if(!item)return;
   const frame=document.getElementById('hcDriveVideoFrame');
-  frame.src=hcDrivePreviewUrl(item.id);
-  document.getElementById('hcDriveVideoStatus').textContent='Drive preview is loading. If it fails, use Open in Drive below.';
+  const wanted=hcDrivePreviewUrl(item.id)+'?autoplay=1';
+  if(frame.getAttribute('src')!==wanted)frame.src=wanted;
+  document.getElementById('hcDriveVideoStatus').textContent='Video opened. If it does not play automatically, tap Play inside the video once.';
 }
-function hcExitDriveMedia(){
-  const origin=hcDriveBackScreen;
-  show(origin);
+function hcMinimizeDriveVideo(destination='home'){
+  if(!hcDriveActiveKey)return;
+  hcDriveDocked=true;
+  document.getElementById('hcDriveMedia').classList.add('hc-drive-docked');
+  if(currentScreenId!==destination)show(destination);
+  hcCaptureReturnState(true);
 }
+function hcExpandDriveVideo(){
+  if(!hcDriveActiveKey)return;
+  hcDriveDocked=false;
+  document.getElementById('hcDriveMedia').classList.remove('hc-drive-docked');
+  show('hcDriveMedia');
+  hcCaptureReturnState(true);
+}
+function hcStopDriveVideo(silent=false){
+  hcDriveDocked=false;
+  document.getElementById('hcDriveMedia').classList.remove('hc-drive-docked');
+  const frame=document.getElementById('hcDriveVideoFrame');
+  if(frame?.getAttribute('src'))frame.src='about:blank';
+  hcDriveActiveKey=null;
+  if(!silent)show(hcDriveBackScreen||'home');
+}
+function hcExitDriveMedia(){hcMinimizeDriveVideo(hcDriveBackScreen)}
+// When a native HeartClear recording plays, stop the floating Drive preview.
+// Never stop the native player in response to a Drive panel resize.
+document.querySelectorAll('audio,video').forEach(el=>{
+  el.addEventListener('play',()=>{if(hcDriveDocked)hcStopDriveVideo(true)});
+});
 function hcSyncDriveSections(){
   hcRenderDriveCards('general','hcGeneralDriveCards');
   hcRenderDriveCards('meditation','hcMeditationDriveCards');
