@@ -38,3 +38,26 @@ No paid AI or API calls.
 - **Off — use my own recording** disables synthesized voice entirely; the selected setting stays on this browser without any user account.
 - This change does **not** provide a new natural human narrator or a paid AI voice service. If a phone has only an artificial-sounding default voice, a personal recording is the reliable free alternative.
 - Existing notes, bookmarks and recordings retain their storage keys. No HeartClear paths were edited.
+
+## Version 03 — Guided memory preservation
+
+The private **My Notes** form has two new optional, collapsible sections:
+
+1. **Story guide** with prompts about where, when and how a memory was learned; invites the author to distinguish eyewitness memories from stories heard from others.
+2. **Story background** with source type, language/dialect, approximate period, relation to the storyteller (no full name required), reference and self-reported permission status.
+
+Saved notes display supplied provenance in a private story reader. Older notes remain readable and are assigned `origin: unspecified`, `permission: not-recorded` rather than guessed or falsely verified details. The existing localStorage key `human-atlas-p01:private-notes` is unchanged. JSON backup version 3 exports the notes including provenance. The importer accepts older backup records without these fields.
+
+The misleading **Share link** control no longer appears on private notes, because a local note's URL cannot share its contents to another phone. Public researched and editorial stories retain their own share link.
+
+Narration voice choices and local MediaRecorder audio use their existing modules and storage, without alteration. Voice recordings remain a **separate export** from the written-notes JSON backup. This version does not upload personal stories, collect people’s consent or certify research accuracy.
+
+## Version 03 test checklist
+
+- Open My Notes, confirm previous private entries still appear.
+- Expand Story guide and Story background, create a disposable private note with optional details, then open it and inspect its source card.
+- Export the JSON backup and confirm provenance fields exist in the record. Test import with a backup before deleting any important notes.
+- Open an earlier saved voice recording, verify play and export, and confirm the narrator voice preferences remain.
+- Installed offline app: verify refresh and navigation on Android after the new service worker activates.
+
+Only files within `human-atlas/` changed. HeartClear under `human-practice-prototype/` remains untouched.
