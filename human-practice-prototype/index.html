@@ -1849,6 +1849,34 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
 #hcPlaybackCheckResults li{font-size:11px;line-height:1.5;padding:7px 9px;border-radius:9px;background:rgba(9,27,40,.4)}
 .hc-check-warning{color:#e6ca98}.hc-check-pass{color:#a9d0c5}
 
+
+/* Keep the EXACT embedded Drive iframe mounted when the user minimizes;
+ * moving or replacing it would restart the third-party video. */
+#hcDriveMedia .hc-drive-shell{padding:19px;max-width:720px;margin:0 auto}
+#hcDriveMedia .hc-drive-actions{display:flex;align-items:center;flex-wrap:wrap;gap:9px;margin-bottom:15px}
+#hcDriveMedia .hc-drive-actions button{min-height:48px;padding:11px 15px;border-radius:13px;border:1px solid rgba(205,228,238,.22);background:rgba(12,34,47,.7);color:#f5fbff;font:inherit;font-size:13px;font-weight:650}
+#hcDriveMedia .hc-drive-back{margin-right:auto}
+#hcDriveMedia .hc-drive-stop{color:#ffdfc8!important}
+#hcDriveMedia .hc-drive-expand{display:none}
+#hcDriveMedia .hc-drive-long-info .kicker{font-size:10px;letter-spacing:.1em;color:#d9b879}
+#hcDriveMedia .hc-drive-long-info h2{margin:10px 0 8px;font-size:25px;line-height:1.2}
+#hcDriveMedia .hc-drive-type{font-size:14px;color:#a9bec9;margin:0 0 7px}
+#hcDriveMedia .hc-drive-description{font-size:12px;color:#a5b7c1;line-height:1.5}
+#hcDriveMedia .hc-drive-video-wrap{width:100%;aspect-ratio:16/9;border-radius:15px;overflow:hidden;background:#01080f;margin:16px 0;border:1px solid rgba(210,231,241,.12)}
+#hcDriveMedia .hc-drive-video-wrap iframe{width:100%;height:100%;display:block;border:0}
+#hcDriveMedia .hc-drive-source-details{margin-top:20px;font-size:12px;line-height:1.6;color:#c1d0d8}
+#hcDriveMedia .hc-drive-source-details summary{cursor:pointer;padding:10px 0;min-height:44px}
+#hcDriveMedia .hc-drive-source-details a{display:block;color:#dfc089;margin:8px 0;overflow-wrap:anywhere}
+#hcDriveMedia.hc-drive-docked{display:block!important;position:fixed;z-index:105;bottom:calc(85px + env(safe-area-inset-bottom,0px));right:12px;width:min(300px,calc(100vw - 24px));height:auto;padding:0;margin:0;pointer-events:auto;overflow:visible;max-height:unset}
+#hcDriveMedia.hc-drive-docked .hc-drive-shell{margin:0;padding:8px;background:#081923;border:1px solid rgba(223,237,245,.32);border-radius:18px;box-shadow:0 15px 55px rgba(0,0,0,.64);overflow:hidden}
+#hcDriveMedia.hc-drive-docked .hc-drive-long-info{display:none!important}
+#hcDriveMedia.hc-drive-docked .hc-drive-actions{margin:0 0 7px;flex-wrap:nowrap;justify-content:space-between}
+#hcDriveMedia.hc-drive-docked .hc-drive-back,#hcDriveMedia.hc-drive-docked .hc-drive-minimize{display:none}
+#hcDriveMedia.hc-drive-docked .hc-drive-expand{display:inline-flex;align-items:center}
+#hcDriveMedia.hc-drive-docked .hc-drive-actions button{min-height:44px;font-size:12px;padding:9px 12px}
+#hcDriveMedia.hc-drive-docked .hc-drive-video-wrap{margin:0;border-radius:11px;aspect-ratio:16/9}
+@media(max-width:390px){#hcDriveMedia.hc-drive-docked{width:min(245px,calc(100vw - 24px));bottom:calc(75px + env(safe-area-inset-bottom,0px))}}
+#hcDriveMedia button:focus-visible{outline:2px solid white;outline-offset:3px}
 </style>
 </head>
 <body>
@@ -2607,25 +2635,30 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
 </section>
 
 <section class="screen" id="hcDriveMedia">
-  <div class="glass" style="padding:18px">
-    <button class="collection-back" onclick="hcExitDriveMedia()">‹ Back to collection</button>
-    <div class="kicker">HeartClear · Drive Listening</div>
-    <h2 id="hcDriveVideoTitle">Recording</h2>
-    <p id="hcDriveVideoCategory"></p>
-    <p id="hcDriveVideoDescription" class="player-status"></p>
-    <div style="position:relative;width:100%;aspect-ratio:16/9;background:#02090f;border-radius:16px;overflow:hidden;margin:14px 0">
-      <iframe id="hcDriveVideoFrame" title="Google Drive meditation video preview" loading="lazy" referrerpolicy="no-referrer" allow="autoplay;fullscreen;picture-in-picture" allowfullscreen style="border:0;width:100%;height:100%"></iframe>
+  <div class="glass hc-drive-shell">
+    <div class="hc-drive-actions">
+      <button class="hc-drive-back" onclick="hcExitDriveMedia()" aria-label="Back to recording collection">← Back to collection</button>
+      <button class="hc-drive-minimize" onclick="hcMinimizeDriveVideo('home')" aria-label="Minimize video and continue in HeartClear">▾ Minimize</button>
+      <button class="hc-drive-expand" onclick="hcExpandDriveVideo()" aria-label="Expand listening video">↗ Expand</button>
+      <button class="hc-drive-stop" onclick="hcStopDriveVideo()" aria-label="Stop video and close player">■ Stop</button>
     </div>
-    <button class="btn" onclick="hcLoadDrivePreview()">Load video preview</button>
-    <p class="player-status" role="status" id="hcDriveVideoStatus">Choose Load video preview.</p>
-    <a id="hcDriveOpenSource" href="#" class="btn secondary" target="_blank" rel="noopener noreferrer" style="text-align:center;display:block;text-decoration:none">Open original in Google Drive ↗</a>
-    <div class="hub-note" style="margin-top:12px">
-      <b>Listen with the screen off or while using another app</b>
-      <p style="margin:7px 0;font-size:12px;line-height:1.6">The Drive video player can stop when Android minimizes Chrome. Download this recording to your phone from Drive first; then select that saved MP4 below to listen using HeartClear's native audio player. The video will not appear, and the file stays on your device.</p>
-      <label for="hcDriveAudioOnlyFile" style="font-size:12px">Select a saved MP4 or MP3 for audio-only playback</label>
-      <input id="hcDriveAudioOnlyFile" type="file" accept="audio/*,video/mp4,.mp4,.mp3,.m4a,.wav,.ogg" onchange="hcLoadPersonalNature(this)" style="max-width:100%;display:block;margin-top:8px">
+    <div class="hc-drive-long-info">
+      <div class="kicker">HEARTCLEAR · LISTENING</div>
+      <h2 id="hcDriveVideoTitle">Recording</h2>
+      <p id="hcDriveVideoCategory" class="hc-drive-type"></p>
+      <p id="hcDriveVideoDescription" class="hc-drive-description"></p>
     </div>
-    <div class="hub-note">The original is already saved in your Drive. GitHub hosts only this player interface, not a duplicate video. Playback requires access to Drive; embedded playback, offline mode and background playback depend on Google Drive and your browser.</div>
+    <div class="hc-drive-video-wrap">
+      <iframe id="hcDriveVideoFrame" title="Listening video" loading="eager" referrerpolicy="no-referrer" allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <div class="hc-drive-long-info">
+      <p class="player-status" role="status" aria-live="polite" id="hcDriveVideoStatus">Opening recording. Tap Play inside the video if needed.</p>
+      <details class="hc-drive-source-details">
+        <summary>Recording source and playback information</summary>
+        <a id="hcDriveOpenSource" href="#" target="_blank" rel="noopener noreferrer">View original in Google Drive ↗</a>
+        <p>Google Drive controls the embedded playback. Minimize keeps the same video visible while you navigate HeartClear; screen-off playback depends on Android and Drive and is not guaranteed.</p>
+      </details>
+    </div>
   </div>
 </section>
 
