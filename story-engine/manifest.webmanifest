@@ -1,0 +1,18 @@
+{
+  "name": "STORY ENGINE — Make the story visible",
+  "short_name": "Story Engine",
+  "description": "A private screenplay, cinematography and storyboard creator. Free and offline-friendly.",
+  "start_url": "./index.html#/home",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#10141c",
+  "theme_color": "#10141c",
+  "icons": [
+    {
+      "src": "./assets/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
