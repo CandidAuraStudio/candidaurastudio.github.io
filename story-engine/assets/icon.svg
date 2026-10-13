@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Story Engine icon">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e5bc89"/><stop offset=".5" stop-color="#b79d80"/><stop offset="1" stop-color="#476e75"/></linearGradient></defs>
+<rect width="512" height="512" rx="115" fill="#111821"/>
+<rect x="72" y="120" width="368" height="255" rx="22" fill="#1e303a" stroke="#e6be91" stroke-width="12"/>
+<rect x="103" y="152" width="306" height="191" rx="11" fill="url(#g)"/>
+<path d="M103 294q90-100 183-49t123 7v91H103z" fill="#344a50"/>
+<circle cx="319" cy="217" r="44" fill="#fce2b9" opacity=".9"/>
+<path d="M80 85h350M80 408h350" stroke="#e5bc89" stroke-width="11" stroke-linecap="round" opacity=".6"/>
+<text x="256" y="465" text-anchor="middle" fill="#f6eee1" font-family="Arial,sans-serif" font-size="31" font-weight="bold" letter-spacing="5">STORY ENGINE</text>
+</svg>
