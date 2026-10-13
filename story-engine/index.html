@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="STORY ENGINE — A private, free filmmaking workspace. From first idea to screenplay, shot list and storyboard.">
+<meta name="theme-color" content="#10141c">
+<meta name="color-scheme" content="dark">
+<meta property="og:title" content="STORY ENGINE — Make the story visible">
+<meta property="og:description" content="Build a screenplay, plan each shot, and visualize a storyboard—all in your browser.">
+<link rel="icon" type="image/svg+xml" href="./assets/icon.svg">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="stylesheet" href="./styles.css">
+<title>STORY ENGINE — Make the story visible</title>
+<script src="./app.js" defer></script>
+</head>
+<body>
+<a href="#main" class="skip">Skip to main content</a>
+<div class="grain" aria-hidden="true"></div>
+<div class="shell">
+<aside class="sidebar">
+ <a href="#/home" class="brand" aria-label="Story Engine home"><span class="brand-symbol">▣</span><span class="brand-type">STORY <em>ENGINE</em><small>IMAGINE · FRAME · CREATE</small></span></a>
+ <div class="side-label">YOUR STUDIO</div>
+ <nav class="side-links" aria-label="Studio navigation">
+  <a href="#/home" data-nav="home"><span>⌂</span> Studio home</a>
+  <a href="#/new" data-nav="new"><span>✦</span> New story</a>
+  <a href="#/projects" data-nav="projects"><span>▤</span> My projects</a>
+  <a href="#/guide" data-nav="guide"><span>◈</span> Filmmaker's guide</a>
+ </nav>
+ <div class="side-note"><span class="lit-dot"></span><b>From thought to frame.</b><p>Your creative drafts stay on this device. No subscriptions, cloud accounts or video-generation bills.</p><small>PROTOTYPE 01 · ORIGINAL WORK</small></div>
+</aside>
+<div class="page">
+ <header class="topbar"><a href="#/home" class="mobile-brand"><span>▣</span> STORY <em>ENGINE</em></a><div class="top-right"><span class="private-tag">◇ PRIVATE WORKSPACE</span><a href="#/new" class="new-link">＋ New story</a></div></header>
+ <main id="main" tabindex="-1"><div id="app">Loading your studio…</div></main>
+ <footer class="footer"><span>STORY ENGINE · Every story begins as a thought.</span><span>Separate from HeartClear · HUMAN ATLAS · INNER VOICE</span></footer>
+</div>
+</div>
+<nav class="mobile-nav" aria-label="Mobile studio navigation"><a href="#/home" data-nav="home"><span>⌂</span><small>Studio</small></a><a href="#/new" data-nav="new"><span>✦</span><small>Create</small></a><a href="#/projects" data-nav="projects"><span>▤</span><small>Projects</small></a><a href="#/guide" data-nav="guide"><span>◈</span><small>Learn</small></a></nav>
+<div id="toast" role="status" aria-live="polite" class="toast"></div>
+</body>
+</html>
