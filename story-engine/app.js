@@ -62,7 +62,7 @@ function projectsPage(){
  (projects.length?'<div class="project-grid">'+[...projects].sort((a,b)=>b.updatedAt.localeCompare(a.updatedAt)).map(projectCard).join('')+'</div>':empty('An empty film shelf.','Your stories will appear here.'))+privacy();
 }
 function tabs(p,active){return '<nav class="project-tabs" aria-label="Project sections">'+[['workshop','✎ Workshop'],['screenplay','▤ Screenplay'],['shots','◈ Shot list'],['board','▦ Storyboard']].map(([path,title])=>'<a class="'+(active===path?'active':'')+'" href="#/project/'+encodeURIComponent(p.id)+'/'+path+'">'+title+'</a>').join('')+'</nav>';}
-function projectHeader(p,tab){return '<div class="project-top"><a href="#/projects" class="text-link">← All projects</a><span class="storage-label" id="save-state">Saved privately on this device</span></div><div class="project-header"><span class="eyebrow">'+esc(templateList.find(t=>t.value===p.type)?.name||'Film')+' · '+esc(p.feeling.toUpperCase())+'</span><h1>'+esc(p.title)+'</h1><p>'+esc(p.logline||'This story is still taking shape.')+'</p></div>'+tabs(p,tab);}
+function projectHeader(p,tab){return '<div class="project-top"><a href="#/projects" class="text-link">← All projects</a><span class="storage-label" id="save-state">Saved privately on this device</span></div><div class="project-utility"><button class="secondary" data-action="export-project">↓ Back up this story</button><button class="secondary destructive" data-action="delete-project">Delete story</button></div><div class="project-header"><span class="eyebrow">'+esc(templateList.find(t=>t.value===p.type)?.name||'Film')+' · '+esc(p.feeling.toUpperCase())+'</span><h1>'+esc(p.title)+'</h1><p>'+esc(p.logline||'This story is still taking shape.')+'</p></div>'+tabs(p,tab);}
 function optionSet(list,current){return list.map(v=>'<option '+(current===v?'selected':'')+'>'+esc(v)+'</option>').join('');}
 function scenesList(p,sid){return '<div class="scene-list"><div class="sidebar-heading">SCENES <span>'+p.scenes.length+'</span></div>'+p.scenes.map((s,i)=>'<button class="scene-item '+(s.id===sid?'current':'')+'" type="button" data-action="choose-scene" data-scene="'+esc(s.id)+'"><span class="scene-number">'+String(i+1).padStart(2,'0')+'</span><span class="scene-caption"><strong>'+esc(s.heading||'New scene')+'</strong><small>'+esc(s.place)+' · '+esc(s.time)+'</small></span><span>›</span></button>').join('')+'<button type="button" class="add-scene" data-action="add-scene">＋ Add scene</button></div>';}
 function sceneEditor(p,s){
@@ -139,7 +139,7 @@ async function restore(file){
   const data=JSON.parse(await file.text());
   if(data?.app!=='Story Engine'||!Array.isArray(data.projects))throw Error('Not a Story Engine backup.');
   if(data.projects.length>MAX_PROJECTS)throw Error('Too many projects in backup.');
-  const restored=data.projects.map(normalProject),existing=new Set(projects.map(p=>p.id)),fresh=restored.filter(p=>!existing.has(p.id)).slice(0,MAX_PROJECTS-projects.length);
+  const restored=data.projects.map(normalProject),existing=new Set(projects.map(p=>p.id)),fresh=[];for(const item of restored){if(existing.has(item.id)||fresh.length>=MAX_PROJECTS-projects.length)continue;existing.add(item.id);fresh.push(item);}
   if(!fresh.length){toast('No new projects to restore. Existing IDs are kept.');return;}
   if(!confirm('Import '+fresh.length+' project(s)? Existing work will not be overwritten.'))return;
   const before=projects;projects=[...projects,...fresh];if(!safeStore()){projects=before;return;}route();toast(fresh.length+' project(s) restored privately.');
@@ -174,6 +174,7 @@ root.addEventListener('click',ev=>{
  if(act==='export-all'){exportAll();return;}
  if(!p)return;
  if(act==='export-project'){exportOne(p);return;}
+ if(act==='delete-project'){if(!confirm('Delete this entire story, its scenes and shot plans from this device? Export a backup first if needed.'))return;const old=projects;projects=projects.filter(q=>q.id!==p.id);if(!safeStore()){projects=old;return;}activeScene='';location.hash='#/projects';route();toast('Story deleted from this device.');return;}
  if(act==='export-script'){download(filename(p)+'-screenplay.txt',screenplayText(p),'text/plain;charset=utf-8');toast('Screenplay text requested.');return;}
  if(act==='export-csv'){download(filename(p)+'-shot-list.csv',shotsCsv(p),'text/csv;charset=utf-8');toast('Shot list requested.');return;}
  if(act==='print'){window.print();return;}
