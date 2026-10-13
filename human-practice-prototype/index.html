@@ -1954,7 +1954,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
   <div><b>HeartClear updated</b><small>A newer version is ready.</small></div>
   <button onclick="reloadHeartClear()">Refresh</button>
 </div>
-<div class="install-sheet" id="installSheet" role="dialog" aria-modal="true" aria-labelledby="installTitle">
+<div class="install-sheet" id="installSheet" role="dialog" aria-modal="true" aria-labelledby="installTitle" onclick="if(event.target===this)dismissInstallSheet()">
   <div class="install-card">
     <div class="install-head">
       <div class="install-logo">HC</div>
@@ -1977,7 +1977,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
     </div>
     <div class="install-actions">
       <button class="install-primary" id="installPrimaryBtn" onclick="handleInstallAction()">Install HeartClear</button>
-      <button class="install-secondary" onclick="dismissInstallSheet()">Continue in browser</button>
+      <button class="install-secondary" onclick="dismissInstallSheet()">Close and continue</button>
     </div>
   </div>
 </div>
@@ -3122,7 +3122,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear meditation history only</button>
     </div>
-    <div class="app-version">HeartClear · Version 1.2.5</div>
+    <div class="app-version">HeartClear · Version 1.2.6</div>
   </div>
 </section>
 
@@ -3598,16 +3598,11 @@ function isSafariBrowser(){
 }
 
 function showInstallSheet(force=false){
-  if(isStandaloneApp())return;
+  // Installation instructions are only opened by an explicit Settings > Install tap.
+  // Chrome's eligibility events and ordinary page loads must not show a modal.
+  if(!force || isStandaloneApp())return;
   const sheet=document.getElementById('installSheet');
   if(!sheet)return;
-
-  if(!force){
-    try{
-      if(sessionStorage.getItem('heartclearInstallSeen')==='1')return;
-      sessionStorage.setItem('heartclearInstallSeen','1');
-    }catch(e){}
-  }
 
   const ios=isIOSDevice();
   const iosSteps=document.getElementById('iosInstallSteps');
@@ -3663,15 +3658,17 @@ async function handleInstallAction(){
 }
 
 window.addEventListener('beforeinstallprompt',event=>{
+  // Store the real Android install prompt for the user's future explicit action.
+  // Eligibility is not consent to interrupt the current experience.
   event.preventDefault();
   deferredInstallPrompt=event;
-  if(!isStandaloneApp()){
-    const sheet=document.getElementById('installSheet');
-    if(sheet && sheet.classList.contains('show'))showInstallSheet(true);
-    else setTimeout(()=>showInstallSheet(false),600);
-  }
+  const sheet=document.getElementById('installSheet');
+  if(sheet && sheet.classList.contains('show'))showInstallSheet(true);
 });
 
+document.addEventListener('keydown',event=>{
+  if(event.key==='Escape' && document.getElementById('installSheet')?.classList.contains('show'))dismissInstallSheet();
+});
 window.addEventListener('appinstalled',()=>{
   deferredInstallPrompt=null;
   dismissInstallSheet();
@@ -8007,7 +8004,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=106');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=107');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
@@ -8024,14 +8021,8 @@ if('serviceWorker' in navigator){
   });
 }
 
-window.addEventListener('load',()=>{
-  if(isStandaloneApp())return;
-  setTimeout(()=>{
-    if(isIOSDevice())showInstallSheet(false);
-    else if(!deferredInstallPrompt)showInstallSheet(false);
-  },1400);
-});
-const heartclearAutoInstallPrompt=true;
+// No automatic install modal on load or resume. Open it from Settings only.
+const heartclearAutoInstallPrompt=false;
 </script>
 </body>
 </html>
