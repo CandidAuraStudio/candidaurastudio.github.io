@@ -1,5 +1,5 @@
 /* Story Engine isolated app cache: controls only /story-engine/ pages */
-const CACHE='story-engine-shell-v01';
+const CACHE='story-engine-shell-v01-1';
 const ASSETS=['./','./index.html','./styles.css','./app.js','./manifest.webmanifest','./assets/icon.svg'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith('story-engine-')&&key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim())));
