@@ -87,8 +87,11 @@ function chapterView(id){
  '<div class="note"><div class="eyebrow">'+line('PERSONAL CONTEMPLATION — NOT THE VERSE','தனிப்பட்ட சிந்தனை — வசனம் அல்ல')+'</div><h3>'+line('Carry one question.','ஒரு கேள்வியை எடுத்துச் செல்லுங்கள்.')+'</h3><p>'+B(ch.reflection)+'</p><div class="actions" style="margin-top:18px">'+button('#/journal','Write privately','தனியாக எழுதுங்கள்',true)+button('#/voice','Explore listening','கேட்பதை ஆராயுங்கள்')+'</div><small>'+line('Arabic verse text was cross-checked against the linked Qur’an chapter. This app does not host recordings or synthesize Qur’anic recitation.','இணைக்கப்பட்ட குர்ஆன் அத்தியாயத்துடன் அரபு வசனங்கள் ஒப்பிடப்பட்டுள்ளன. இந்தச் செயலி ஓதல் ஒலிப்பதிவுகளை வைத்திருக்கவோ இயந்திர ஓதலை உருவாக்கவோ இல்லை.')+'</small></div>';
 }
 function baqarahView(){
- if(window.NIYYAH_LIBRARY_UI && window.NIYYAH_BAQARAH_OPENING)
-  return window.NIYYAH_LIBRARY_UI.baqarah(libraryContext());
+ if(window.NIYYAH_LIBRARY_UI && window.NIYYAH_BAQARAH_FULL && window.NIYYAH_BAQARAH_EDITORIAL){
+  const parts=location.hash.slice(2).split('/');
+  const baqarahStart=Number(parts[1])||1;
+  return window.NIYYAH_LIBRARY_UI.baqarah({...libraryContext(),baqarahFull:window.NIYYAH_BAQARAH_FULL,editorial:window.NIYYAH_BAQARAH_EDITORIAL,baqarahStart});
+ }
  return wisdom();
 }
 function voice(){
