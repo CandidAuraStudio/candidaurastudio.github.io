@@ -3325,7 +3325,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear meditation history only</button>
     </div>
-    <div class="app-version">HeartClear · Version 1.2.8</div>
+    <div class="app-version">HeartClear · Version 1.2.9</div>
   </div>
 </section>
 
@@ -4018,7 +4018,7 @@ const HC_RETURN_KEY='heartclearReturnStateV1';
 let hcReturnRestoring=false,hcReturnSaveAt=0;
 const HC_RETURN_SCREENS=new Set(['home','practices','player','sacred','sacredDetail','sacredSession','hcLivingQuran',
  'soundHub','soundLab','soundLabPlayer','fearPractice','fearPlayer','library','collection',
- 'bookAudio','human','humanCategory','downloads','history','settings','hcDriveMedia','omVideo']);
+ 'bookAudio','human','humanCategory','downloads','history','settings','hcDriveMedia','omVideo','hcReels']);
 function hcCaptureReturnState(force=false){
  if(hcReturnRestoring)return;
  if(!force && Date.now()-hcReturnSaveAt<3500)return;
@@ -4109,6 +4109,84 @@ function hcRestorePreviousScreen(){
  return success;
 }
 
+
+/* Reels preview reuses four existing HeartClear visuals; no new uploads. */
+const hcReelItems=[
+{id:'wake',title:'Arrive with the morning',kicker:'MORNING',caption:'Notice one comfortable breath. Nothing to force.',session:'Deep Wake Up'},
+{id:'noon',title:'Find a quiet moment',kicker:'MIDDAY',caption:'There is space between one moment and the next.',session:'Noon Reset'},
+{id:'evening',title:'Let the day settle',kicker:'EVENING',caption:'Listen to the sounds already around you.',session:'Evening Release'},
+{id:'sleep',title:'A softer night',kicker:'REST',caption:'Slow your attention and rest when ready.',session:'Deep Sleep'}
+];
+let hcReelIndex=0,hcReelTouchStart=0;
+function hcReelElement(){return document.getElementById('hcReelVideo')}
+function hcReelShouldAutoPlay(){
+ return !hcReturnRestoring&&!document.hidden&&!document.body.classList.contains('reduce-motion')&&
+  !(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+}
+function hcReelUpdatePlayButton(){
+ const v=hcReelElement(),b=document.getElementById('hcReelPlayBtn');if(!v||!b)return;
+ b.textContent=v.paused?'Play':'Pause';b.setAttribute('aria-label',v.paused?'Play reel':'Pause reel');
+}
+function hcReelStop(){const v=hcReelElement();if(v){v.pause();hcReelUpdatePlayButton()}}
+function hcReelRender(){
+ const v=hcReelElement();if(!v)return;
+ hcReelIndex=(hcReelIndex+hcReelItems.length)%hcReelItems.length;
+ const item=hcReelItems[hcReelIndex],src=offlineMeditationCatalog[item.id]?.visual||'';
+ v.pause();v.removeAttribute('src');v.load();
+ document.getElementById('hcReelNumber').textContent=(hcReelIndex+1)+' / '+hcReelItems.length;
+ document.getElementById('hcReelKicker').textContent=item.kicker;
+ document.getElementById('hcReelTitle').textContent=item.title;
+ document.getElementById('hcReelCaption').textContent=item.caption;
+ document.getElementById('hcReelProgress').style.width='0%';
+ document.getElementById('hcReelFallback').hidden=!!src;
+ document.getElementById('hcReelHint').textContent='Swipe up for next, down for previous. Reels are silent.';
+ v.muted=true;v.playsInline=true;
+ if(src){
+   v.src=src;v.load();
+   if(hcReelShouldAutoPlay())v.play().catch(()=>{
+     if(currentScreenId==='hcReels')document.getElementById('hcReelHint').textContent='Tap Play to watch this preview.';
+     hcReelUpdatePlayButton();
+   });
+ }
+ hcReelUpdatePlayButton();
+}
+function hcOpenReels(){show('hcReels')}
+function hcCloseReels(){hcReelStop();show('home')}
+function hcReelNext(){hcReelIndex=(hcReelIndex+1)%hcReelItems.length;hcReelRender()}
+function hcReelPrevious(){hcReelIndex=(hcReelIndex+hcReelItems.length-1)%hcReelItems.length;hcReelRender()}
+async function hcReelToggle(){
+ const v=hcReelElement();if(!v||!v.getAttribute('src'))return;
+ if(v.paused){try{await v.play()}catch(e){document.getElementById('hcReelHint').textContent='Preview playback unavailable on this device.'}}
+ else v.pause();
+ hcReelUpdatePlayButton();
+}
+function hcReelOpenPractice(){
+ const item=hcReelItems[hcReelIndex];hcReelStop();show('practices');openHomeSessionSheet(item.session);
+}
+{
+ const v=hcReelElement(),frame=document.getElementById('hcReelsStage');
+ if(v){
+  v.addEventListener('play',hcReelUpdatePlayButton);
+  v.addEventListener('pause',hcReelUpdatePlayButton);
+  v.addEventListener('timeupdate',()=>{
+    if(currentScreenId!=='hcReels')return;
+    const end=Number.isFinite(v.duration)&&v.duration>0?Math.min(15,v.duration):15;
+    document.getElementById('hcReelProgress').style.width=Math.min(100,100*(v.currentTime||0)/end)+'%';
+    if(end>.25&&v.currentTime>=end-.04)hcReelNext();
+  });
+  v.addEventListener('ended',()=>{if(currentScreenId==='hcReels')hcReelNext()});
+  v.addEventListener('error',()=>{if(currentScreenId==='hcReels')document.getElementById('hcReelFallback').hidden=false});
+ }
+ if(frame){
+  frame.addEventListener('touchstart',e=>{if(e.touches.length===1)hcReelTouchStart=e.touches[0].clientY},{passive:true});
+  frame.addEventListener('touchend',e=>{
+    if(!hcReelTouchStart||!e.changedTouches.length)return;
+    const delta=e.changedTouches[0].clientY-hcReelTouchStart;hcReelTouchStart=0;
+    if(delta<-55)hcReelNext();else if(delta>55)hcReelPrevious();
+  },{passive:true});
+ }
+}
+
 function show(id){
   if(currentScreenId==='hcDriveMedia'&&id!=='hcDriveMedia'&&hcDriveActiveKey&&!hcDriveDocked){
     hcDriveDocked=true;
@@ -4121,6 +4199,7 @@ function show(id){
   // Privacy: leave no live microphone behind when navigating away from voice practice.
   if(id!=='humanSession' && typeof humanVoiceRecorder!=='undefined' && humanVoiceRecorder && humanVoiceRecorder.state==='recording')endHumanVoiceRecording();
   if(id!=='humanSession'&&typeof humanSoundAudio!=='undefined'&&!humanSoundAudio.paused)humanSoundAudio.pause();
+  if(id!=='hcReels')hcReelStop();
   currentScreenId=id;
   hcCaptureReturnState(true);
   if(id!=='omVideo'){const frame=document.getElementById('omVideoFrame');if(frame&&frame.getAttribute('src')){frame.removeAttribute('src');frame.src='about:blank'}}
@@ -4144,6 +4223,7 @@ function show(id){
   const context={
     hcDriveMedia:'Drive Listening',
     home:'Home',
+    hcReels:'Reels',
     practices:'Practice',
     human:'Human Practice',
     humanCategory:'Human Practice',
@@ -4171,6 +4251,7 @@ function show(id){
 
   const navMap={
     home:'home',
+    hcReels:'home',
     practices:'practices',human:'practices',humanCategory:'practices',humanSession:'practices',returnJourney:'practices',
     soundHub:'soundHub',soundLab:'soundHub',soundLabPlayer:'soundHub',fearPractice:'soundHub',fearPlayer:'soundHub',
     sacred:'soundHub',sacredDetail:'soundHub',sacredSession:'soundHub',hcFatiha:'soundHub',hcLivingQuran:'soundHub',
@@ -4193,6 +4274,7 @@ function show(id){
   const ba=document.getElementById('bookAudioEl');
   updateBookMini(id);
   if(id==='home'){setGreeting();renderDashboard();updateHomeOfflineCount();renderHeartClearFavourites();hcRenderSoundResume();}
+  if(id==='hcReels')hcReelRender();
   if(id==='practices'){filterPractices(hcPracticeActiveFilter);}
   if(id==='soundLab'){hcRenderSoundRows();hcRenderMixer()}
   if(id==='history') renderHistory();
@@ -8219,7 +8301,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=107');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=110');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
