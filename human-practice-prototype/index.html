@@ -2187,10 +2187,6 @@ body.hc-reels-active{overflow:hidden;overscroll-behavior:none}
     </div>
   </div>
 
-  <div class="hc-reels-home-card">
-     <div><div class="eyebrow">SHORT MOMENTS</div><strong>HeartClear Reels</strong><small>33 uploaded shorts · watch inside HeartClear</small></div>
-     <button type="button" onclick="hcOpenReels()" aria-label="Watch HeartClear Reels">Watch Reels <span aria-hidden="true">›</span></button>
-   </div>
   <div class="home-section hc-favourites" id="heartclearFavouritesSection" hidden>
     <div class="section-head"><h3>Favourites</h3></div>
     <div class="hc-fav-list" id="heartclearFavouritesList" aria-label="Saved favourites"></div>
@@ -2207,7 +2203,7 @@ body.hc-reels-active{overflow:hidden;overscroll-behavior:none}
   </button>
 </section>
 
-<section class="screen" id="hcReels" aria-labelledby="hcReelsHeading">
+<section class="screen" id="hcReels" aria-labelledby="hcReelsHeading" hidden aria-hidden="true">
    <div class="hc-reels-head">
       <button class="hc-reels-back" type="button" onclick="hcCloseReels()" aria-label="Close Reels and return Home"><span aria-hidden="true">×</span><span class="hc-reels-back-label"> Close</span></button>
       <span class="kicker">HEARTCLEAR · REELS</span>
@@ -2233,7 +2229,7 @@ body.hc-reels-active{overflow:hidden;overscroll-behavior:none}
      <button type="button" id="hcReelPlayBtn" onclick="hcReelToggle()" aria-label="Load or close current Drive video">Reload</button>
      <button type="button" onclick="hcReelNext()" aria-label="Next reel">Next <span aria-hidden="true">↓</span></button>
    </div>
-   <a class="hc-reels-practice" id="hcReelSource" href="https://drive.google.com/drive/folders/1rBf05zVstCYf_f9GqQL_k7yDu3LL79q9" target="_blank" rel="noopener noreferrer">Open original in Drive <span aria-hidden="true">↗</span></a>
+   <a class="hc-reels-practice" id="hcReelSource" href="#" hidden target="_blank" rel="noopener noreferrer">Open original in Drive <span aria-hidden="true">↗</span></a>
    <p class="hc-reels-hint" id="hcReelHint" role="status" aria-live="polite">The video loads when you open Reels. If autoplay is blocked, tap Play inside the video. Swipe along the right edge to switch.</p>
 </section>
 
@@ -3268,7 +3264,7 @@ body.hc-reels-active{overflow:hidden;overscroll-behavior:none}
     <div class="kicker">HeartClear</div>
     <h2>Settings</h2>
     <p>Playback, preferences and your own records.</p>
-    <div class="hc-more-shortcuts" aria-label="Explore HeartClear"><button onclick="hcOpenReels()">Reels</button><button onclick="show('human')">Human Practice</button><button onclick="show('sacred')">Sacred Sound</button><button onclick="show('history')">History</button><button onclick="show('downloads')">Offline</button></div>
+    <div class="hc-more-shortcuts" aria-label="Explore HeartClear"><button onclick="show('human')">Human Practice</button><button onclick="show('sacred')">Sacred Sound</button><button onclick="show('history')">History</button><button onclick="show('downloads')">Offline</button></div>
 
 
     <section class="hc-local-profile" id="hcLocalProfileCard" aria-labelledby="hcLocalProfileHeading">
@@ -3614,9 +3610,7 @@ body.hc-reels-active{overflow:hidden;overscroll-behavior:none}
   <button class="nav-item active" data-nav="home" onclick="navTo('home',this)" aria-label="Home">
     <svg viewBox="0 0 24 24"><path d="M3.5 10.4 12 3.7l8.5 6.7v9.1h-6v-5.7h-5v5.7h-6Z"/></svg><span>Home</span>
   </button>
-  <button class="nav-item" data-nav="hcReels" onclick="hcOpenReels()" aria-label="Reels — full-screen short videos">
-    <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="4"/><path d="m10 8 6 4-6 4Z"/></svg><span>Reels</span>
-  </button>
+  
   <button class="nav-item" data-nav="practices" onclick="navTo('practices',this)" aria-label="Practice">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v9M7.5 12h9"/></svg><span>Practice</span>
   </button>
@@ -4159,14 +4153,15 @@ function hcRestorePreviousScreen(){
 /* Reels v111 — 33 actual viewer-shared MP4 files in the dedicated Drive Reels folder.
    Not related to the four meditation practice visuals. Loading is user-initiated and
    the cross-origin Drive player owns playback/volume/seek controls. */
-const hcReelItems=[{"id":"1wjFyjY5tdpGIjRaWizLaKdVoUPqCY5Nz","short":"01","filename":"048e2b38c0df2432e02606f27290fafb.mp4","size":16859056},{"id":"1q7g8_TTi1yeyfWLZWJbmA7z_DKSN8qtc","short":"02","filename":"17aa1b6da4ab9407bf281eb8c56e3add.mp4","size":7578923},{"id":"1Xr7TWqtqi0yQySEqihhJCQsiTjciq-89","short":"03","filename":"1fdd32f0d4015a618d98c619be3bb6ad.mp4","size":52095532},{"id":"1c2ILWbonYxysQG_QTcLzG7QzwK5HYGd5","short":"04","filename":"20d26beb6efbbb55695301f51fa69db3.mp4","size":31903894},{"id":"1uj-Vh14VaziKpLl5fgyVARc6etY34-9a","short":"05","filename":"281fd0946c341fb0bf8c2e3f87ac37bc.mp4","size":43777554},{"id":"1cRZ8DYJWrhbuXaPa4NHRMhM6WEhuoLSY","short":"06","filename":"2aacd50f7de96d514d3dac166bf3e03c.mp4","size":4008285},{"id":"1DFxG0_o90pctOn_pWnqSzlwLtNGrZQWp","short":"07","filename":"2b8f384454262be5b1407cb5a7518bc3.mp4","size":16079578},{"id":"1xaxoC9ZzbCUTVJxv9jsPT0E885mZchsO","short":"08","filename":"35e12569267be1e066803ff6fc7e54b6.mp4","size":44908973},{"id":"1JaU3Pzvq-daim9e6m4Tv_A5yvKyO4bPj","short":"09","filename":"3759d20a9e1590df8745dfc565c2ad4c.mp4","size":17650321},{"id":"1Wqe6yS-zX1tP-1ek3_MCgphpjbdOHOrj","short":"10","filename":"4541eb1e79ade2231d3ea7d12b05f9c7.mp4","size":9747933},{"id":"1lXLxkP7ZJfAgC8ImNQ_Qd3FsVZMHyIl9","short":"11","filename":"4d7bb834f3ab0422a1f46d21a596a8e2.mp4","size":2481085},{"id":"1DQEAG01_vV0A7WvhAwqala76xy_QFOU1","short":"12","filename":"4fdfb6dc4b64fac33769b5bc46a68099.mp4","size":23022864},{"id":"1OHKK8jm1ABX8wdj0PSgVPiOO04L3MISG","short":"13","filename":"5eaf7a38dfeb900d82c23489321e6fee.mp4","size":5435618},{"id":"1sVw7jh8Ava82p0nsgJcox0UA3ckQW_7-","short":"14","filename":"65caa25db24293674733e7833277845c.mp4","size":31814117},{"id":"1RUKhmz6UyoghdmuopM8JxeXx_bwcpGNa","short":"15","filename":"7ec98d1f044df8a8d9b02152523b4ef4.mp4","size":45957598},{"id":"1iyvz4LH-3rkGpgrAcaDsBwc_82LZ_MPM","short":"16","filename":"8193b645a0f61003529d5850ffc57330.mp4","size":25986624},{"id":"1pQ0c-_rh00yWSqxVSH-vrwhJYsxFGKBk","short":"17","filename":"8979b49ddc77b557bc702cfdec1621b2.mp4","size":8440710},{"id":"1pPtrL5s4gCyy4g0lZ4A97AGs0EEwrBA6","short":"18","filename":"91f7c64111422f22ac8d3f8ed01235be.mp4","size":49201371},{"id":"1RGVEQydljciXipzkuj3YEw_wFe2vunpA","short":"19","filename":"97d59a04680436301d26c73d4f471059.mp4","size":14964677},{"id":"1Jirir8zb_vEARWt-YFWm-O1snIZKDeKE","short":"20","filename":"afe28daf2b6333afb9460c0d12ebb3de.mp4","size":5057332},{"id":"1MwoPkELjCsBS9yZ9HtJtttOdS76U0SOi","short":"21","filename":"b00bf0d82c1b512b6e6f6d8e654917fd.mp4","size":20054749},{"id":"1fYqQqJIwear7KfnggwzYuoFF8CW14Hsb","short":"22","filename":"bc5797ce3e159edb1c43d083a2cadbfb.mp4","size":4797179},{"id":"1ZPIqLNSI4r_hQF334NeOQSRSstPRyHyk","short":"23","filename":"bf7700351b74209ee0af3f0c3cf24071.mp4","size":17362597},{"id":"1P1_JQXG6dRn8zNxBt2diKG1SXjdV7vda","short":"24","filename":"c007bdc076fcd3d0f16694b7d6bd4fd6.mp4","size":50284419},{"id":"1E43R4dkBlx8iPF58muZEMpQM9hnWKRSY","short":"25","filename":"c0c3c7772653c75e5d44d518176ca262.mp4","size":5551887},{"id":"15WxH7HQaeh0qZyHqJIqgq9W7XTouBFe1","short":"26","filename":"cd0c3a4814d5724e46f8c892599e67ad.mp4","size":2111007},{"id":"12fbY_G1H8N0aav2cLnDgIfAnB2z2XNzG","short":"27","filename":"cdd4da63242b8d80fc0991ab48bbecd9.mp4","size":41317136},{"id":"15vZozQgAZsMw2zeN2LokeZd_93lwzYPK","short":"28","filename":"d951874291a465903a461b24d3370f9a.mp4","size":81749587},{"id":"1tUSLXBo77iw7PrW2GNaArw5_V3RX48Wc","short":"29","filename":"d9d6bc97426f961346b5c4b3541cbedb.mp4","size":45315012},{"id":"1hHznvoSNCwRBHrx1qXM4ACJjIKrathMe","short":"30","filename":"e94b265e210e289660a1c93a77b7a42c.mp4","size":63510559},{"id":"1-jAXg880YY0-u4-DTYIJCufiagUFM-UN","short":"31","filename":"ecae06a872ac8f947dcad1623545664d.mp4","size":52813458},{"id":"1ZjxbW2cJCb33apj6bNIT9pqyjrZeb34n","short":"32","filename":"ed5c12af78cbf4567abe8d70d4d4ee83.mp4","size":16029162},{"id":"1oUIDwLNJpmNX0CNY8fuqo5Nqxy7iD20n","short":"33","filename":"f242b8216b1b304ac48eda69bb52b0a5.mp4","size":28979846}];
+const hcReelItems=[]; // Privacy hold; unpublished and unverified.
+
 let hcReelIndex=0,hcReelTouchStart=0,hcReelAutoload=false,hcReelSwipeStart=0;
 let hcReelFrameLoaded=false;
 function hcReelFrame(){return document.getElementById('hcReelFrame')}
 function hcReelSourceUrl(item){return 'https://drive.google.com/file/d/'+encodeURIComponent(item.id)+'/view'}
 function hcReelPreviewUrl(item){return 'https://drive.google.com/file/d/'+encodeURIComponent(item.id)+'/preview'}
 function hcReelSetSource(){
- const item=hcReelItems[hcReelIndex];
+ const item=hcReelItems[hcReelIndex];if(!item)return;
  const a=document.getElementById('hcReelSource');
  if(a){a.href=hcReelSourceUrl(item);a.setAttribute('aria-label','Open original reel '+(hcReelIndex+1)+' in Google Drive')}
 }
@@ -4198,11 +4193,12 @@ function hcReelRender(){
  hcReelUpdatePlayButton();
  if(hcReelAutoload)hcReelToggle();
 }
-function hcOpenReels(){hcReelAutoload=true;show('hcReels')}
+function hcOpenReels(){hcReelAutoload=false;hcReelStop();show('home')}
 function hcCloseReels(){hcReelAutoload=false;hcReelStop();show('home')}
-function hcReelNext(){hcReelIndex=(hcReelIndex+1)%hcReelItems.length;hcReelRender()}
-function hcReelPrevious(){hcReelIndex=(hcReelIndex+hcReelItems.length-1)%hcReelItems.length;hcReelRender()}
+function hcReelNext(){if(!hcReelItems.length)return;hcReelIndex=(hcReelIndex+1)%hcReelItems.length;hcReelRender()}
+function hcReelPrevious(){if(!hcReelItems.length)return;hcReelIndex=(hcReelIndex+hcReelItems.length-1)%hcReelItems.length;hcReelRender()}
 function hcReelToggle(){
+ if(!hcReelItems.length){hcReelStop();return}
  if(hcReelFrameLoaded){hcReelStop();return;}
  const frame=hcReelFrame(),item=hcReelItems[hcReelIndex];
  if(!frame||!item)return;
@@ -8376,7 +8372,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=110');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=113');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
