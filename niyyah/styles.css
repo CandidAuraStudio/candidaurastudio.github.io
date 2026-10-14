@@ -42,3 +42,30 @@ a{color:inherit;text-decoration:none}button,input,textarea,select{font:inherit}b
 .term-arabic{font:normal 33px/1.9 "Noto Naskh Arabic","Traditional Arabic",serif;text-align:right;color:var(--light);margin:11px 0}
 @media(max-width:740px){.baqarah-sections{grid-template-columns:1fr}.baqarah-notes{grid-template-columns:1fr}}
 @media(max-width:590px){.library-feature-grid{grid-template-columns:1fr;gap:10px}.library-feature{min-height:0;padding:21px}.library-feature h2{font-size:29px}.library-search-wrap{align-items:stretch}.library-search-wrap input{flex-basis:100%}.basmala-panel .arabic{font-size:26px}.study-section{padding:16px}}
+
+
+/* NIYYAH v1.2 — full Baqarah and separated contemporary reading layers */
+.baqarah-status{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:14px 0 23px}
+.baqarah-status>div{border:1px solid var(--stroke);border-radius:12px;padding:17px;background:linear-gradient(145deg,#23343e,#192934);display:flex;flex-direction:column;gap:8px}
+.baqarah-status strong{font:normal 32px/1 Georgia,serif;color:var(--light)}
+.baqarah-status span{font-size:11px;color:var(--muted);line-height:1.65}
+.baqarah-jumps{display:flex;flex-wrap:wrap;gap:9px;margin:18px 0}
+.baqarah-jumps a{display:inline-flex;align-items:center;border:1px solid rgba(219,192,144,.37);background:rgba(226,192,147,.06);padding:9px 13px;border-radius:25px;color:var(--light);font-size:12px;min-height:39px}
+.baqarah-jumps a:hover{background:rgba(226,192,147,.15)}
+.baqarah-pagination{display:flex;align-items:center;justify-content:space-between;gap:9px;margin:17px 0 21px}
+.baqarah-pagination span{font-size:12px;color:var(--gold);font-variant-numeric:tabular-nums;white-space:nowrap;text-align:center}
+.baqarah-pagination a,.baqarah-pagination>span:first-child,.baqarah-pagination>span:last-child{flex:1}
+.baqarah-pagination a{font-size:12px;min-height:39px;padding:8px}
+.baqarah-verse-list{display:grid;gap:22px}
+.baqarah-verse-group{border:1px solid rgba(210,197,170,.22);border-radius:13px;background:#16242f;overflow:hidden;scroll-margin-top:85px}
+.baqarah-verse-group>.verse{border:0;border-radius:0;background:none;padding-bottom:15px}
+.language-context{background:rgba(177,203,199,.05);border-top:1px solid var(--stroke);padding:16px 22px;font-size:13px;line-height:1.85;color:var(--muted)}
+.reflection-kicker{font-size:10px;letter-spacing:.10em;font-weight:800;color:var(--gold);margin-bottom:9px}
+.akmal-reflection{border-top:1px solid rgba(222,190,143,.38);background:linear-gradient(140deg,rgba(210,187,143,.10),rgba(125,163,160,.08));padding:19px 22px 22px}
+.akmal-reflection h3{font-size:23px;line-height:1.35;margin:0 0 10px;color:var(--light)}
+.akmal-reflection p{font-size:13px;color:var(--ink);line-height:1.95;margin:0}
+.akmal-reflection small{display:block;margin-top:13px;font-size:10px;color:var(--muted);line-height:1.75}
+.reflection-awaiting{border-top:1px solid rgba(210,197,170,.15);padding:14px 22px 17px;background:rgba(232,217,188,.025)}
+.reflection-awaiting p{font-size:12px;color:var(--muted);line-height:1.8;margin:0}
+.baqarah-reading>.section-head{margin-bottom:10px}
+@media(max-width:590px){.baqarah-status{gap:7px}.baqarah-status>div{padding:13px 9px}.baqarah-status strong{font-size:25px}.baqarah-status span{font-size:10px}.baqarah-jumps a{font-size:10px;padding:8px 10px}.baqarah-pagination{gap:5px}.baqarah-pagination a{padding:7px 6px;font-size:10px}.baqarah-pagination span{font-size:10px}.baqarah-verse-list{gap:16px}.baqarah-verse-group>.verse{padding:18px 15px 12px}.language-context,.akmal-reflection,.reflection-awaiting{padding:15px}.akmal-reflection h3{font-size:21px}}
