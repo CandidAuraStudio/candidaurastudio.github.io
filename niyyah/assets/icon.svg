@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="NIYYAH">
+<defs><radialGradient id="light" cx=".35" cy=".28" r=".76"><stop stop-color="#fff7d7"/><stop offset=".14" stop-color="#e9c992"/><stop offset=".45" stop-color="#83aaa2"/><stop offset=".77" stop-color="#395e69"/><stop offset="1" stop-color="#132533"/></radialGradient></defs>
+<rect width="512" height="512" rx="108" fill="#101823"/>
+<circle cx="256" cy="234" r="183" stroke="#e1c597" stroke-opacity=".34" stroke-width="3" fill="none"/>
+<circle cx="256" cy="234" r="155" stroke="#96c1b8" stroke-opacity=".27" stroke-width="3" fill="none"/>
+<circle cx="256" cy="234" r="127" fill="url(#light)"/>
+<circle cx="256" cy="234" r="69" stroke="#fff6dd" stroke-width="4" fill="none" opacity=".7"/>
+<circle cx="256" cy="234" r="11" fill="#fff3d6"/>
+<text x="256" y="458" text-anchor="middle" fill="#f8efda" font-size="40" letter-spacing="8" font-weight="600" font-family="Arial,sans-serif">NIYYAH</text>
+</svg>
