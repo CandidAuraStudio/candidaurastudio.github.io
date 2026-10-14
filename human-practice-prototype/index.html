@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="HeartClear">
-<link rel="manifest" href="./manifest.webmanifest?v=98">
+<link rel="manifest" href="./manifest.webmanifest?v=108">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
 <title>HeartClear · Meditation, Sounds & Reflection</title>
@@ -1947,6 +1947,9 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
 .hc-local-profile .hc-local-caution{font-size:11px;color:#e8d2a8;line-height:1.55}
 .hc-local-profile button:focus-visible,.hc-local-profile input:focus-visible{outline:2px solid #fff!important;outline-offset:3px!important}
 
+
+/* Bilingual Al-Fatiha lesson; styles are scoped to the new screen */
+#hcFatiha{justify-content:flex-start;padding-top:24px;padding-bottom:94px}#hcFatiha .glass{padding:18px}#hcFatiha .fatiha-language{display:flex;gap:8px;margin:15px 0}#hcFatiha .fatiha-language button{flex:1;padding:10px 4px;border-radius:13px;border:1px solid var(--line);background:#102535;color:white;font:inherit;font-size:12px}#hcFatiha .fatiha-language button[aria-pressed="true"]{background:white;color:#091822}#hcFatiha .fatiha-card{border:1px solid var(--line);border-radius:20px;background:rgba(5,18,27,.8);padding:15px;margin:12px 0}#hcFatiha .fatiha-card b{font-size:12px;color:#efdaad}#hcFatiha .fatiha-ar{font-family:"Noto Naskh Arabic",serif;font-size:27px;text-align:right;line-height:2.1;color:#fff;letter-spacing:normal}#hcFatiha .fatiha-card p{font-size:14px;line-height:1.8;margin:7px 0 13px}#hcFatiha .fatiha-reflection{border-top:1px solid var(--line);padding-top:12px}#hcFatiha [lang="ta"]{line-height:1.9}#hcFatiha[data-fatiha-mode="ta"] [data-fatiha-lang="en"],#hcFatiha[data-fatiha-mode="en"] [data-fatiha-lang="ta"]{display:none}#hcFatiha .fatiha-note{padding:13px;border:1px solid var(--line);border-radius:16px;background:rgba(38,75,90,.25);font-size:12px;line-height:1.7;margin:14px 0}#hcFatiha .fatiha-note p{font-size:12px}#hcFatiha .fatiha-note a{color:#e9d4ac}
 </style>
 </head>
 <body>
@@ -2025,6 +2028,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
     </div>
   </div>
 
+  <div style="display:grid;gap:7px;margin:12px 0"><button class="choice" onclick="show('hcFatiha')" style="margin:0"><b>Al-Fatiha · ஸூரத்துல் ஃபாத்திஹா</b><small>Read in தமிழ் &amp; English · Seven verses</small></button><button class="choice" onclick="openAdhkar('listen')" style="margin:0"><b>Morning Adhkar · காலை திக்ர்</b><small>Listen · 28:18 · Morning supplications</small></button></div>
   <div class="hc-home-secondary-resumes">
     <div class="home-resume library-resume hc-secondary-resume" id="homeLibraryResumeCard">
       <div class="eyebrow">Continue audiobook</div>
@@ -2102,6 +2106,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
 <button class="category-chip" data-practice-filter="human" onclick="filterPractices('human',this)" aria-pressed="false">Human <span class="hc-filter-num"></span></button>
 <button class="category-chip" data-practice-filter="sacred" onclick="filterPractices('sacred',this)" aria-pressed="false">Sacred <span class="hc-filter-num"></span></button>
 </div></header>
+<section class="hc-practice-group" data-group="sacred"><div class="kicker hc-group-heading">MORNING · SACRED LISTENING / காலை திக்ர்</div><div class="library-list"><button class="choice practice-card hc-shared-session" data-kind="sacred" data-session="adhkar" data-tags="sacred morning" onclick="openAdhkar('listen')"><span class="practice-art" aria-hidden="true"><span class="hc-art-center">☾</span></span><span class="practice-copy"><b>Morning Adhkar · காலை திக்ர்</b><small>Supplication and remembrance</small></span><span class="duration">28:18</span></button><button class="choice practice-card hc-shared-session" data-kind="sacred" data-session="fatiha" data-tags="sacred morning" onclick="show('hcFatiha')"><span class="practice-art" aria-hidden="true"><span class="hc-art-center">✦</span></span><span class="practice-copy"><b>Surah Al-Fatiha · ஃபாத்திஹா</b><small>Arabic · தமிழ் · English</small></span><span class="duration">READ</span></button></div></section>
 <div class="hc-practice-timer hc-shared-session"><span class="hc-timer-thumb" aria-hidden="true">◷</span><span><b>Quiet Timer</b><small>Set your time · gentle bells optional</small></span><button onclick="openHomeTimerSheet('quiet',10)">Set time</button></div>
 <section class="hc-practice-group" data-group="guided"><div class="kicker hc-group-heading">GUIDED BREATH</div><div class="library-list">
 <button class="choice practice-card hc-shared-session" data-session="wake" data-kind="short" data-tags="short breath" aria-label="View Deep Wake Up session · 10 minutes" onclick="openHomeSessionSheet('Deep Wake Up')">
@@ -2577,6 +2582,14 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
   </div>
 </section>
 
+<section class="screen" id="hcFatiha" data-fatiha-mode="both"><div class="glass"><button class="collection-back" onclick="show('sacredDetail')">‹ Sacred Sound</button><div class="kicker">Qur'an · Chapter 1</div><h2>Surah Al-Fatiha</h2><p lang="ta">ஸூரத்துல் ஃபாத்திஹா — நேர்வழியை நோக்கிய வாழ்வுப் பயணம்</p><p data-fatiha-lang="en">Read all seven verses with a meaning-based rendering and a separate reflection for daily life.</p><p data-fatiha-lang="ta" lang="ta">ஏழு வசனங்களையும் அவற்றின் பொருளையும் வாசித்து, வாழ்வுடன் இணைத்துச் சிந்திப்போம்.</p><div class="fatiha-language" role="group" aria-label="Explanation language"><button data-fatiha-select="both" aria-pressed="true" onclick="hcSetFatihaLanguage('both')">Both / இரண்டும்</button><button data-fatiha-select="ta" aria-pressed="false" onclick="hcSetFatihaLanguage('ta')">தமிழ்</button><button data-fatiha-select="en" aria-pressed="false" onclick="hcSetFatihaLanguage('en')">English</button></div><div class="fatiha-note"><div data-fatiha-lang="en">Meaning and personal reflection are shown separately. These reflections are not a literal translation or the only accepted interpretation.</div><div data-fatiha-lang="ta" lang="ta">வசனங்களின் பொருளும் நமது தனிப்பட்ட சிந்தனைகளும் தனித்தனியாக உள்ளன. இவை மட்டுமே ஒரே விளக்கம் என்று கூறவில்லை.</div></div><article class="fatiha-card"><div class="kicker">Verse 1 · வசனம் 1</div><p class="fatiha-ar" lang="ar" dir="rtl">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p><div data-fatiha-lang="en"><b>Meaning · English</b><p>In the name of Allah, the Most Compassionate, the Most Merciful.</p></div><div data-fatiha-lang="ta" lang="ta"><b>பொருள் · தமிழ்</b><p>அளவற்ற அருளும் கருணையும் உடைய அல்லாஹ்வின் பெயரால்.</p></div><div class="fatiha-reflection"><div data-fatiha-lang="en"><b>Reflection</b><p>Begin with mercy; let compassion shape your actions.</p></div><div data-fatiha-lang="ta" lang="ta"><b>வாழ்க்கைச் சிந்தனை</b><p>கருணையோடு தொடங்குங்கள்; உங்கள் செயல்களிலும் கருணை வெளிப்படட்டும்.</p></div></div></article>
+<article class="fatiha-card"><div class="kicker">Verse 2 · வசனம் 2</div><p class="fatiha-ar" lang="ar" dir="rtl">الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ</p><div data-fatiha-lang="en"><b>Meaning · English</b><p>All praise belongs to Allah, Lord of all worlds.</p></div><div data-fatiha-lang="ta" lang="ta"><b>பொருள் · தமிழ்</b><p>எல்லா உலகங்களையும் பரிபாலிக்கும் அல்லாஹ்வுக்கே எல்லாப் புகழும்.</p></div><div class="fatiha-reflection"><div data-fatiha-lang="en"><b>Reflection</b><p>Gratitude reminds us that we belong to a greater creation.</p></div><div data-fatiha-lang="ta" lang="ta"><b>வாழ்க்கைச் சிந்தனை</b><p>நன்றி உணர்வு நாம் பெரிய படைப்பின் ஒரு பகுதி என்பதை நினைவூட்டுகிறது.</p></div></div></article>
+<article class="fatiha-card"><div class="kicker">Verse 3 · வசனம் 3</div><p class="fatiha-ar" lang="ar" dir="rtl">الرَّحْمَٰنِ الرَّحِيمِ</p><div data-fatiha-lang="en"><b>Meaning · English</b><p>The Most Compassionate, the Most Merciful.</p></div><div data-fatiha-lang="ta" lang="ta"><b>பொருள் · தமிழ்</b><p>அளவற்ற அருளாளன், மிகுந்த கருணையாளன்.</p></div><div class="fatiha-reflection"><div data-fatiha-lang="en"><b>Reflection</b><p>Mercy appears again. Consider its place in your relationships.</p></div><div data-fatiha-lang="ta" lang="ta"><b>வாழ்க்கைச் சிந்தனை</b><p>கருணை மீண்டும் சொல்லப்படுகிறது. உங்கள் உறவுகளில் அதன் இடத்தைச் சிந்தியுங்கள்.</p></div></div></article>
+<article class="fatiha-card"><div class="kicker">Verse 4 · வசனம் 4</div><p class="fatiha-ar" lang="ar" dir="rtl">مَالِكِ يَوْمِ الدِّينِ</p><div data-fatiha-lang="en"><b>Meaning · English</b><p>Master of the Day of Judgment.</p></div><div data-fatiha-lang="ta" lang="ta"><b>பொருள் · தமிழ்</b><p>நியாயத்தீர்ப்பு நாளின் அதிபதி.</p></div><div class="fatiha-reflection"><div data-fatiha-lang="en"><b>Reflection</b><p>This verse speaks of divine judgment; reflect also on today's responsibility.</p></div><div data-fatiha-lang="ta" lang="ta"><b>வாழ்க்கைச் சிந்தனை</b><p>இது இறைத் தீர்ப்பைப் பேசுகிறது; இன்றைய பொறுப்புகளையும் சிந்தியுங்கள்.</p></div></div></article>
+<article class="fatiha-card"><div class="kicker">Verse 5 · வசனம் 5</div><p class="fatiha-ar" lang="ar" dir="rtl">إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ</p><div data-fatiha-lang="en"><b>Meaning · English</b><p>You alone we worship, and You alone we ask for help.</p></div><div data-fatiha-lang="ta" lang="ta"><b>பொருள் · தமிழ்</b><p>உன்னையே நாங்கள் வணங்குகிறோம்; உன்னிடமே உதவி தேடுகிறோம்.</p></div><div class="fatiha-reflection"><div data-fatiha-lang="en"><b>Reflection</b><p>Humility means recognising we cannot control everything.</p></div><div data-fatiha-lang="ta" lang="ta"><b>வாழ்க்கைச் சிந்தனை</b><p>எல்லாவற்றையும் கட்டுப்படுத்த முடியாது என்பதை உணர்வதே பணிவு.</p></div></div></article>
+<article class="fatiha-card"><div class="kicker">Verse 6 · வசனம் 6</div><p class="fatiha-ar" lang="ar" dir="rtl">اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ</p><div data-fatiha-lang="en"><b>Meaning · English</b><p>Guide us to the straight path.</p></div><div data-fatiha-lang="ta" lang="ta"><b>பொருள் · தமிழ்</b><p>எங்களை நேரான வழியில் நடத்துவாயாக.</p></div><div class="fatiha-reflection"><div data-fatiha-lang="en"><b>Reflection</b><p>Ask for guidance in how you live today: truthfulness, justice and care.</p></div><div data-fatiha-lang="ta" lang="ta"><b>வாழ்க்கைச் சிந்தனை</b><p>இன்றைய வாழ்வில் உண்மை, நீதி, அக்கறையுடன் நடக்க வழிகாட்டுதலை வேண்டுங்கள்.</p></div></div></article>
+<article class="fatiha-card"><div class="kicker">Verse 7 · வசனம் 7</div><p class="fatiha-ar" lang="ar" dir="rtl">صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ</p><div data-fatiha-lang="en"><b>Meaning · English</b><p>The path of those You have blessed, not those who incur anger or lose their way.</p></div><div data-fatiha-lang="ta" lang="ta"><b>பொருள் · தமிழ்</b><p>நீ அருள் புரிந்தவர்களின் வழியில் எங்களை நடத்துவாயாக; கோபத்திற்கு ஆளானவர்களின் வழியிலும் வழிதவறியவர்களின் வழியிலும் அல்ல.</p></div><div class="fatiha-reflection"><div data-fatiha-lang="en"><b>Reflection</b><p>Ask not only to recognise what is right, but to practise it.</p></div><div data-fatiha-lang="ta" lang="ta"><b>வாழ்க்கைச் சிந்தனை</b><p>சரியானதை அறிவதோடு அதை வாழ்விலும் கடைப்பிடிக்க வேண்டுங்கள்.</p></div></div></article><div class="fatiha-note"><b>About the straight path · நேர்வழி</b><p data-fatiha-lang="en">Verse 1:6 asks for guidance to the straight path. Al-Fatiha does not describe a hair-thin bridge. A bridge in the afterlife is discussed in hadith sources, including Sahih al-Bukhari 6573. This study focuses on the Qur'an's words and guidance for how we live.</p><p data-fatiha-lang="ta" lang="ta">1:6 ஆம் வசனம் நேர்வழியில் நடத்தும்படி வேண்டுகிறது. முடியை விட மெலிந்த பாலம் பற்றிய விளக்கம் ஃபாத்திஹாவில் இல்லை. மறுமை பாலம் பற்றிய செய்திகள் ஸஹீஹ் புகாரி 6573 போன்ற ஹதீஸ் நூல்களில் வருகின்றன. இங்கு குர்ஆன் கூறும் நேர்வழியும் நமது வாழ்வில் அதன் பொருளுமே மையம்.</p><p><a href="https://quran.com/al-fatihah" target="_blank" rel="noopener noreferrer">Qur'an 1:1–7 · Arabic / Translation / Audio</a></p></div></div></section>
+
 <section class="screen sacred-hub" id="sacred">
   <div class="hub-hero">
     <div class="kicker">Breath · Voice · Stillness</div>
@@ -2621,7 +2634,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
       <p id="sacredMeaning">Understand the meaning and context, then listen or recite naturally without forcing the breath.</p>
     </div>
 
-    <div class="sacred-feature" id="islamicFeatured">
+    <div class="sacred-feature" id="islamicFeatured"><b>Surah Al-Fatiha · ஸூரத்துல் ஃபாத்திஹா</b><small>Seven verses. Meaning and life reflections in Tamil and English.</small><div class="sacred-feature-actions"><button onclick="show('hcFatiha')">Read · தமிழ் / English</button><button onclick="openAdhkar('listen')">Morning Adhkar</button></div><div style="height:1px;background:var(--line);margin:15px 0"></div>
       <b>Morning Adhkar · 28 min</b>
       <small>Use it as a standalone listening session or after a gentle practice. Choose quiet listening or recite along at a comfortable voice and pace.</small>
       <div class="sacred-feature-actions">
@@ -3122,7 +3135,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear meditation history only</button>
     </div>
-    <div class="app-version">HeartClear · Version 1.2.6</div>
+    <div class="app-version">HeartClear · Version 1.2.7</div>
   </div>
 </section>
 
@@ -3385,6 +3398,8 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
 </div>
 
 <script>
+function hcSetFatihaLanguage(lang){if(!['both','ta','en'].includes(lang))lang='both';const screen=document.getElementById('hcFatiha');if(!screen)return;screen.dataset.fatihaMode=lang;screen.querySelectorAll('[data-fatiha-select]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.fatihaSelect===lang)));try{localStorage.setItem('hcFatihaLanguage',lang)}catch(e){}}
+try{hcSetFatihaLanguage(localStorage.getItem('hcFatihaLanguage')||'both')}catch(e){hcSetFatihaLanguage('both')}
 let chosenSeconds=600;
 let playbackPhase='meditation';
 let natureSoundURL='';
@@ -3944,6 +3959,7 @@ function show(id){
     sacred:'Sacred Sound',
     sacredDetail:'Sacred Sound',
     sacredSession:'Sacred Sound',
+    hcFatiha:'Al-Fatiha',
     downloads:'Offline',
     library:'Library',
     collection:'Library',
@@ -3958,7 +3974,7 @@ function show(id){
     home:'home',
     practices:'practices',human:'practices',humanCategory:'practices',humanSession:'practices',returnJourney:'practices',
     soundHub:'soundHub',soundLab:'soundHub',soundLabPlayer:'soundHub',fearPractice:'soundHub',fearPlayer:'soundHub',
-    sacred:'soundHub',sacredDetail:'soundHub',sacredSession:'soundHub',
+    sacred:'soundHub',sacredDetail:'soundHub',sacredSession:'soundHub',hcFatiha:'soundHub',
     library:'library',collection:'library',bookAudio:'library',bookReader:'library',downloads:'library',
     settings:'settings',history:'settings'
   };
