@@ -2007,6 +2007,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
 /* Hide preview decoration over the cross-origin Drive controls while video is loaded. */
 .hc-reels-stage:has(#hcReelFrame:not([hidden])) .hc-reels-screen-shade,.hc-reels-stage:has(#hcReelFrame:not([hidden])) .hc-reels-copy,.hc-reels-stage:has(#hcReelFrame:not([hidden])) .hc-reels-progress{display:none}
 .hc-reels-stage:has(#hcReelFrame:not([hidden])) .hc-reels-badge{pointer-events:none;z-index:3}
+.hc-reels-badge,.hc-reels-copy,.hc-reels-progress{z-index:3}
 
 .hc-reels-screen-shade{pointer-events:none;position:absolute;inset:0;background:linear-gradient(180deg,rgba(2,12,20,.38) 0%,transparent 32%,rgba(0,8,17,.04) 47%,rgba(0,9,19,.91) 100%)}
 .hc-reels-progress{position:absolute;top:11px;left:12px;right:12px;height:3px;border-radius:4px;background:rgba(255,255,255,.4);overflow:hidden}
