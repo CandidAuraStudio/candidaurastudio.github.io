@@ -53,3 +53,19 @@ No files in `human-practice-prototype/`, `human-atlas/`, `inner-voice/` or `stor
 5. Create journal entry, refresh, export a backup, restore a copy without duplicates, delete an entry.
 6. Install on supported Android and iOS browsers; test cached offline app pages and prompt accessibility.
 7. Verify each external source link leads to the intended passage.
+
+
+## Version 1.1 — Juz Amma library and Al-Baqarah foundation (2026-10-14)
+
+- All **37 Juz Amma surahs (78–114), 564 numbered verses**, included in three separate, precached Arabic modules, with opening basmala shown separately and not misnumbered. Search by chapter name or number works in the existing Sacred Wisdom section.
+- Arabic text sourced from the semarketir/quranjson distribution, attributed to Tanzil Quran Text (Uthmani) under CC BY 3.0. No Arabic verses were modified. See https://tanzil.net/docs/Text_License and https://github.com/semarketir/quranjson .
+- Existing Al-Fatiha and the fully explained short chapters Al-Ikhlas, Al-Falaq and An-Nas remain available in the same independent NIYYAH app.
+- Initial **original, meaning-based English/Tamil draft explanations** are provided for Al-Asr (103), Al-Kawthar (108), Al-Kafirun (109) and An-Nasr (110), total 15 verses. For other new verses, the reader clearly states that translations are still being reviewed, with direct links to external explanations. No invented or unlicensed translations.
+- Separate opening **Al-Baqarah 2:1–20** study with source-checked Arabic. Original English/Tamil draft meanings for 2:1–5 and separate linguistic/personal notes for *Alif Lam Mim* and *al-muttaqin*; the personal reflection is explicitly **not an approved final tafsir** and must be reviewed with the author before publication as teaching. The rest of the surah (through 2:286) is not imported.
+- Language switching, local journal and its saved entries, practice timer, and optional history controls retain the Phase 1 storage keys and behavior.
+- The independent NIYYAH service-worker cache is now `niyyah-shell-v1-1-0`, precaching the new scripts.
+- **Human review still required:** Arabic reader/tajwid expert, Sri Lankan Tamil editorial quality of original meaning drafts, live Android/iPhone/desktop layouts and offline behavior.
+
+### HeartClear and the other apps
+
+No existing HeartClear, HUMAN ATLAS, INNER VOICE or STORY ENGINE files were edited. A future optional HeartClear **Explore More** hub is only a design plan until this NIYYAH release is tested. It can eventually link to the independent apps, culinary cultural content and the later video/reels section without merging storage or disturbing the existing meditation/player system.
