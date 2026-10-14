@@ -1,6 +1,6 @@
 /* NIYYAH phase 1 isolated service worker. Controls only /niyyah/ URLs and caches NIYYAH assets. */
-const CACHE='niyyah-shell-v1-1-0';
-const SHELL=['./','./index.html','./styles.css','./app.js','./verses.js','./lessons.js','./juz78-89.js','./juz90-101.js','./juz102-114.js','./baqarah-opening.js','./library-ui.js','./manifest.webmanifest','./assets/icon.svg'];
+const CACHE='niyyah-shell-v1-2-0';
+const SHELL=['./','./index.html','./styles.css','./app.js','./verses.js','./lessons.js','./juz78-89.js','./juz90-101.js','./juz102-114.js','./baqarah-opening.js','./baqarah-full-v12.js','./baqarah-editorial-v12.js','./library-ui.js','./manifest.webmanifest','./assets/icon.svg'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith('niyyah-')&&key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',event=>{
