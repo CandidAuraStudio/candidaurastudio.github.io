@@ -2027,6 +2027,37 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
 #hcReels button:focus-visible,.hc-reels-home-card button:focus-visible{outline:2px solid white;outline-offset:3px}
 @media(prefers-reduced-motion:reduce){.hc-reels-progress span{transition:none}}
 @media(max-height:620px){.hc-reels-stage{height:50svh;min-height:260px}}
+
+/* HeartClear v112 — full-viewport vertical Reels, including installed PWA. */
+body.hc-reels-active{overflow:hidden;overscroll-behavior:none}
+#hcReels.active{position:fixed;inset:0;z-index:2000;width:100vw;max-width:none;height:100dvh;min-height:0;margin:0;padding:0;display:flex;flex-direction:column;justify-content:stretch;overflow:hidden;background:#030a12;animation:none;transform:none}
+#hcReels .hc-reels-stage{position:relative;flex:1;min-height:0;height:100%;width:100%;max-width:none;aspect-ratio:auto;margin:0;border:0;border-radius:0;box-shadow:none;background:#030a12;touch-action:pan-y}
+#hcReels #hcReelFrame{width:100%;height:100%;background:#030a12}
+#hcReels .hc-reels-head{position:absolute;z-index:20;top:0;left:0;right:0;max-width:none;margin:0;padding:calc(10px + env(safe-area-inset-top)) 16px 12px;pointer-events:none;text-align:left;background:linear-gradient(to bottom,rgba(0,0,0,.72),transparent);display:flex;align-items:center;gap:11px}
+#hcReels .hc-reels-head .kicker,#hcReels .hc-reels-head p{display:none}
+#hcReels .hc-reels-head h2{font-size:16px;letter-spacing:.04em;margin:0}
+#hcReels .hc-reels-back{display:inline-flex;align-items:center;justify-content:center;gap:4px;min-width:50px;height:43px;padding:0 8px;margin:0;background:rgba(0,0,0,.38);border-radius:25px;color:#fff;font-size:16px;font-weight:700;pointer-events:auto}
+#hcReels .hc-reels-back span[aria-hidden]{font-size:28px;line-height:1}
+#hcReels .hc-reels-stage:has(#hcReelFrame:not([hidden])) .hc-reels-badge{position:absolute;z-index:21;top:calc(17px + env(safe-area-inset-top));right:12px}
+#hcReels .hc-reels-badge{top:calc(17px + env(safe-area-inset-top));right:14px}
+#hcReels .hc-reels-copy{bottom:calc(110px + env(safe-area-inset-bottom));left:20px;right:70px}
+#hcReels .hc-reels-controls{position:absolute;z-index:23;bottom:calc(66px + env(safe-area-inset-bottom));left:12px;right:12px;width:auto;margin:0;grid-template-columns:1fr 1fr 1fr;gap:9px;pointer-events:auto}
+#hcReels .hc-reels-controls button{min-height:46px;border-radius:14px;background:rgba(2,16,26,.72);border:1px solid rgba(255,255,255,.42);backdrop-filter:blur(12px);color:#fff}
+#hcReels .hc-reels-controls button:nth-child(2){background:#f3f5f6;color:#172a35}
+#hcReels .hc-reels-practice{position:absolute;z-index:22;bottom:calc(15px + env(safe-area-inset-bottom));left:12px;right:12px;width:auto;min-height:40px;padding:7px 12px;margin:0;font-size:11px;border-radius:12px;background:rgba(0,18,29,.73)}
+#hcReels .hc-reels-hint{position:absolute;z-index:19;left:14px;right:68px;bottom:calc(167px + env(safe-area-inset-bottom));width:auto;margin:0;font-size:11px;line-height:1.4;color:#e6eced;pointer-events:none;text-shadow:0 1px 5px #000;background:rgba(0,0,0,.20);border-radius:8px;padding:4px 7px}
+#hcReels .hc-reels-progress{display:none}
+#hcReels .hc-reel-drive-poster{border-radius:0;inset:0}
+#hcReels .hc-reel-swipe-rail{position:absolute;z-index:24;top:calc(95px + env(safe-area-inset-top));bottom:calc(175px + env(safe-area-inset-bottom));right:0;width:43px;display:flex;align-items:center;justify-content:center;gap:15px;flex-direction:column;touch-action:none;user-select:none;color:#fff;background:linear-gradient(to left,rgba(3,18,30,.32),rgba(3,18,30,0));border-left:1px solid rgba(255,255,255,.07)}
+#hcReels .hc-reel-swipe-rail span{font-size:26px;line-height:1;color:#f5e5c5;text-shadow:0 2px 8px #000}
+#hcReels .hc-reel-swipe-rail small{font-size:8px;letter-spacing:.15em;writing-mode:vertical-rl;color:#d3e1e7;text-shadow:0 1px 7px #000}
+@media(min-width:700px){
+ #hcReels .hc-reels-stage{width:min(100%,520px);align-self:center}
+ #hcReels .hc-reels-controls,#hcReels .hc-reels-practice,#hcReels .hc-reels-hint{left:max(12px,calc((100vw - 520px)/2 + 12px));right:max(12px,calc((100vw - 520px)/2 + 12px))}
+ #hcReels .hc-reel-swipe-rail{right:max(0px,calc((100vw - 520px)/2))}
+}
+@media(prefers-reduced-motion:reduce){#hcReels.active{animation:none}}
+
 </style>
 </head>
 <body>
@@ -2178,14 +2209,15 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
 
 <section class="screen" id="hcReels" aria-labelledby="hcReelsHeading">
    <div class="hc-reels-head">
-      <button class="hc-reels-back" type="button" onclick="hcCloseReels()" aria-label="Back to Home">‹ Home</button>
+      <button class="hc-reels-back" type="button" onclick="hcCloseReels()" aria-label="Close Reels and return Home"><span aria-hidden="true">×</span><span class="hc-reels-back-label"> Close</span></button>
       <span class="kicker">HEARTCLEAR · REELS</span>
-      <h2 id="hcReelsHeading">Short moments</h2>
-      <p>Your own uploaded short videos from the Reels folder. Original sound is available through the video player.</p>
+      <h2 id="hcReelsHeading">Reels</h2>
+      <p>33 uploaded shorts · Swipe along the right edge ↑ ↓</p>
    </div>
    <div class="hc-reels-stage" id="hcReelsStage" aria-label="Swipe up for next reel, down for previous">
      <button id="hcReelPoster" class="hc-reel-drive-poster" type="button" onclick="hcReelToggle()" aria-label="Load selected uploaded video"><span class="hc-reel-playmark" aria-hidden="true">▶</span><strong>Ready to watch</strong><span>Tap here to load your uploaded short inside HeartClear.</span></button>
-     <iframe id="hcReelFrame" class="hc-reel-drive-frame" title="Google Drive reel video player" loading="lazy" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="no-referrer-when-downgrade" hidden></iframe>
+     <iframe id="hcReelFrame" class="hc-reel-drive-frame" title="Google Drive reel video player" loading="eager" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="no-referrer-when-downgrade" hidden></iframe>
+     <div id="hcReelSwipeRail" class="hc-reel-swipe-rail" aria-label="Swipe upward for the next reel or downward for the previous reel"><span aria-hidden="true">↑</span><small>SWIPE</small><span aria-hidden="true">↓</span></div>
      <div class="hc-reels-screen-shade" aria-hidden="true"></div>
      <div class="hc-reels-progress" aria-hidden="true"><span id="hcReelProgress"></span></div>
      <div class="hc-reels-badge" id="hcReelNumber">1 / 33</div>
@@ -2197,12 +2229,12 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
      
    </div>
    <div class="hc-reels-controls" aria-label="Reels controls">
-     <button type="button" onclick="hcReelPrevious()" aria-label="Previous reel"><span aria-hidden="true">↑</span> Previous</button>
-     <button type="button" id="hcReelPlayBtn" onclick="hcReelToggle()" aria-label="Load Drive video">Load video</button>
+     <button type="button" onclick="hcReelPrevious()" aria-label="Previous reel"><span aria-hidden="true">↑</span> Prev</button>
+     <button type="button" id="hcReelPlayBtn" onclick="hcReelToggle()" aria-label="Load or close current Drive video">Reload</button>
      <button type="button" onclick="hcReelNext()" aria-label="Next reel">Next <span aria-hidden="true">↓</span></button>
    </div>
    <a class="hc-reels-practice" id="hcReelSource" href="https://drive.google.com/drive/folders/1rBf05zVstCYf_f9GqQL_k7yDu3LL79q9" target="_blank" rel="noopener noreferrer">Open original in Drive <span aria-hidden="true">↗</span></a>
-   <p class="hc-reels-hint" id="hcReelHint">Tap Load video, then play inside Drive. Use Previous / Next to switch. Video stops when you leave.</p>
+   <p class="hc-reels-hint" id="hcReelHint" role="status" aria-live="polite">The video loads when you open Reels. If autoplay is blocked, tap Play inside the video. Swipe along the right edge to switch.</p>
 </section>
 
 <section class="screen practice-library" id="practices">
@@ -3582,6 +3614,9 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
   <button class="nav-item active" data-nav="home" onclick="navTo('home',this)" aria-label="Home">
     <svg viewBox="0 0 24 24"><path d="M3.5 10.4 12 3.7l8.5 6.7v9.1h-6v-5.7h-5v5.7h-6Z"/></svg><span>Home</span>
   </button>
+  <button class="nav-item" data-nav="hcReels" onclick="hcOpenReels()" aria-label="Reels — full-screen short videos">
+    <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="4"/><path d="m10 8 6 4-6 4Z"/></svg><span>Reels</span>
+  </button>
   <button class="nav-item" data-nav="practices" onclick="navTo('practices',this)" aria-label="Practice">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v9M7.5 12h9"/></svg><span>Practice</span>
   </button>
@@ -4125,7 +4160,7 @@ function hcRestorePreviousScreen(){
    Not related to the four meditation practice visuals. Loading is user-initiated and
    the cross-origin Drive player owns playback/volume/seek controls. */
 const hcReelItems=[{"id":"1wjFyjY5tdpGIjRaWizLaKdVoUPqCY5Nz","short":"01","filename":"048e2b38c0df2432e02606f27290fafb.mp4","size":16859056},{"id":"1q7g8_TTi1yeyfWLZWJbmA7z_DKSN8qtc","short":"02","filename":"17aa1b6da4ab9407bf281eb8c56e3add.mp4","size":7578923},{"id":"1Xr7TWqtqi0yQySEqihhJCQsiTjciq-89","short":"03","filename":"1fdd32f0d4015a618d98c619be3bb6ad.mp4","size":52095532},{"id":"1c2ILWbonYxysQG_QTcLzG7QzwK5HYGd5","short":"04","filename":"20d26beb6efbbb55695301f51fa69db3.mp4","size":31903894},{"id":"1uj-Vh14VaziKpLl5fgyVARc6etY34-9a","short":"05","filename":"281fd0946c341fb0bf8c2e3f87ac37bc.mp4","size":43777554},{"id":"1cRZ8DYJWrhbuXaPa4NHRMhM6WEhuoLSY","short":"06","filename":"2aacd50f7de96d514d3dac166bf3e03c.mp4","size":4008285},{"id":"1DFxG0_o90pctOn_pWnqSzlwLtNGrZQWp","short":"07","filename":"2b8f384454262be5b1407cb5a7518bc3.mp4","size":16079578},{"id":"1xaxoC9ZzbCUTVJxv9jsPT0E885mZchsO","short":"08","filename":"35e12569267be1e066803ff6fc7e54b6.mp4","size":44908973},{"id":"1JaU3Pzvq-daim9e6m4Tv_A5yvKyO4bPj","short":"09","filename":"3759d20a9e1590df8745dfc565c2ad4c.mp4","size":17650321},{"id":"1Wqe6yS-zX1tP-1ek3_MCgphpjbdOHOrj","short":"10","filename":"4541eb1e79ade2231d3ea7d12b05f9c7.mp4","size":9747933},{"id":"1lXLxkP7ZJfAgC8ImNQ_Qd3FsVZMHyIl9","short":"11","filename":"4d7bb834f3ab0422a1f46d21a596a8e2.mp4","size":2481085},{"id":"1DQEAG01_vV0A7WvhAwqala76xy_QFOU1","short":"12","filename":"4fdfb6dc4b64fac33769b5bc46a68099.mp4","size":23022864},{"id":"1OHKK8jm1ABX8wdj0PSgVPiOO04L3MISG","short":"13","filename":"5eaf7a38dfeb900d82c23489321e6fee.mp4","size":5435618},{"id":"1sVw7jh8Ava82p0nsgJcox0UA3ckQW_7-","short":"14","filename":"65caa25db24293674733e7833277845c.mp4","size":31814117},{"id":"1RUKhmz6UyoghdmuopM8JxeXx_bwcpGNa","short":"15","filename":"7ec98d1f044df8a8d9b02152523b4ef4.mp4","size":45957598},{"id":"1iyvz4LH-3rkGpgrAcaDsBwc_82LZ_MPM","short":"16","filename":"8193b645a0f61003529d5850ffc57330.mp4","size":25986624},{"id":"1pQ0c-_rh00yWSqxVSH-vrwhJYsxFGKBk","short":"17","filename":"8979b49ddc77b557bc702cfdec1621b2.mp4","size":8440710},{"id":"1pPtrL5s4gCyy4g0lZ4A97AGs0EEwrBA6","short":"18","filename":"91f7c64111422f22ac8d3f8ed01235be.mp4","size":49201371},{"id":"1RGVEQydljciXipzkuj3YEw_wFe2vunpA","short":"19","filename":"97d59a04680436301d26c73d4f471059.mp4","size":14964677},{"id":"1Jirir8zb_vEARWt-YFWm-O1snIZKDeKE","short":"20","filename":"afe28daf2b6333afb9460c0d12ebb3de.mp4","size":5057332},{"id":"1MwoPkELjCsBS9yZ9HtJtttOdS76U0SOi","short":"21","filename":"b00bf0d82c1b512b6e6f6d8e654917fd.mp4","size":20054749},{"id":"1fYqQqJIwear7KfnggwzYuoFF8CW14Hsb","short":"22","filename":"bc5797ce3e159edb1c43d083a2cadbfb.mp4","size":4797179},{"id":"1ZPIqLNSI4r_hQF334NeOQSRSstPRyHyk","short":"23","filename":"bf7700351b74209ee0af3f0c3cf24071.mp4","size":17362597},{"id":"1P1_JQXG6dRn8zNxBt2diKG1SXjdV7vda","short":"24","filename":"c007bdc076fcd3d0f16694b7d6bd4fd6.mp4","size":50284419},{"id":"1E43R4dkBlx8iPF58muZEMpQM9hnWKRSY","short":"25","filename":"c0c3c7772653c75e5d44d518176ca262.mp4","size":5551887},{"id":"15WxH7HQaeh0qZyHqJIqgq9W7XTouBFe1","short":"26","filename":"cd0c3a4814d5724e46f8c892599e67ad.mp4","size":2111007},{"id":"12fbY_G1H8N0aav2cLnDgIfAnB2z2XNzG","short":"27","filename":"cdd4da63242b8d80fc0991ab48bbecd9.mp4","size":41317136},{"id":"15vZozQgAZsMw2zeN2LokeZd_93lwzYPK","short":"28","filename":"d951874291a465903a461b24d3370f9a.mp4","size":81749587},{"id":"1tUSLXBo77iw7PrW2GNaArw5_V3RX48Wc","short":"29","filename":"d9d6bc97426f961346b5c4b3541cbedb.mp4","size":45315012},{"id":"1hHznvoSNCwRBHrx1qXM4ACJjIKrathMe","short":"30","filename":"e94b265e210e289660a1c93a77b7a42c.mp4","size":63510559},{"id":"1-jAXg880YY0-u4-DTYIJCufiagUFM-UN","short":"31","filename":"ecae06a872ac8f947dcad1623545664d.mp4","size":52813458},{"id":"1ZjxbW2cJCb33apj6bNIT9pqyjrZeb34n","short":"32","filename":"ed5c12af78cbf4567abe8d70d4d4ee83.mp4","size":16029162},{"id":"1oUIDwLNJpmNX0CNY8fuqo5Nqxy7iD20n","short":"33","filename":"f242b8216b1b304ac48eda69bb52b0a5.mp4","size":28979846}];
-let hcReelIndex=0,hcReelTouchStart=0;
+let hcReelIndex=0,hcReelTouchStart=0,hcReelAutoload=false,hcReelSwipeStart=0;
 let hcReelFrameLoaded=false;
 function hcReelFrame(){return document.getElementById('hcReelFrame')}
 function hcReelSourceUrl(item){return 'https://drive.google.com/file/d/'+encodeURIComponent(item.id)+'/view'}
@@ -4158,12 +4193,13 @@ function hcReelRender(){
  const title=document.getElementById('hcReelTitle');if(title)title.textContent='Video '+item.short;
  const caption=document.getElementById('hcReelCaption');if(caption)caption.textContent='Your original Google Drive short · audio available';
  const progress=document.getElementById('hcReelProgress');if(progress)progress.style.width='0%';
- const hint=document.getElementById('hcReelHint');if(hint)hint.textContent='Tap Load video, then Play inside the Drive player. Use Previous / Next below to switch clips.';
+ const hint=document.getElementById('hcReelHint');if(hint)hint.textContent='Swipe ↑ / ↓ on the right edge to switch. If playback does not start automatically, tap Play inside the video.';
  hcReelSetSource();
  hcReelUpdatePlayButton();
+ if(hcReelAutoload)hcReelToggle();
 }
-function hcOpenReels(){show('hcReels')}
-function hcCloseReels(){hcReelStop();show('home')}
+function hcOpenReels(){hcReelAutoload=true;show('hcReels')}
+function hcCloseReels(){hcReelAutoload=false;hcReelStop();show('home')}
 function hcReelNext(){hcReelIndex=(hcReelIndex+1)%hcReelItems.length;hcReelRender()}
 function hcReelPrevious(){hcReelIndex=(hcReelIndex+hcReelItems.length-1)%hcReelItems.length;hcReelRender()}
 function hcReelToggle(){
@@ -4171,12 +4207,14 @@ function hcReelToggle(){
  const frame=hcReelFrame(),item=hcReelItems[hcReelIndex];
  if(!frame||!item)return;
  const cover=document.getElementById('hcReelPoster');
- frame.src=hcReelPreviewUrl(item);
+ // A user action opens this embedded Drive player. Autoplay is best-effort only:
+ // cross-origin playback still depends on Chrome/WebKit and Google Drive.
+ frame.src=hcReelPreviewUrl(item)+'?autoplay=1';
  frame.hidden=false;
  if(cover)cover.hidden=true;
  hcReelFrameLoaded=true;
  const hint=document.getElementById('hcReelHint');
- if(hint)hint.textContent='Tap Play within the embedded Google Drive video. Native player controls manage sound and seeking. If it does not load, use Open in Drive.';
+ if(hint)hint.textContent='If the video is paused, tap Play inside the Drive player. Swipe ↑ / ↓ along the right edge. Use Open in Drive if needed.';
  hcReelUpdatePlayButton();
 }
 function hcReelOpenSource(){
@@ -4193,6 +4231,32 @@ function hcReelOpenSource(){
    if(delta<-55)hcReelNext();else if(delta>55)hcReelPrevious();
   },{passive:true});
  }
+ // The Drive iframe is cross-origin: it cannot deliver swipes to the parent.
+ // Reserve a narrow right-edge gesture zone without blocking central playback.
+ const rail=document.getElementById('hcReelSwipeRail');
+ if(rail){
+  rail.addEventListener('touchstart',event=>{
+   if(event.touches.length===1)hcReelSwipeStart=event.touches[0].clientY;
+  },{passive:true});
+  rail.addEventListener('touchend',event=>{
+   if(!hcReelSwipeStart||!event.changedTouches.length)return;
+   const delta=event.changedTouches[0].clientY-hcReelSwipeStart;
+   hcReelSwipeStart=0;
+   if(delta<-45)hcReelNext();else if(delta>45)hcReelPrevious();
+   event.stopPropagation();
+  },{passive:true});
+  rail.addEventListener('wheel',event=>{
+   if(currentScreenId!=='hcReels'||Math.abs(event.deltaY)<25)return;
+   event.preventDefault();
+   const now=Date.now();if(rail._lastStep&&now-rail._lastStep<650)return;rail._lastStep=now;
+   if(event.deltaY>0)hcReelNext();else hcReelPrevious();
+  },{passive:false});
+ }
+ document.addEventListener('keydown',event=>{
+  if(currentScreenId!=='hcReels'||event.target.closest('input,textarea,select'))return;
+  if(event.key==='ArrowDown'){event.preventDefault();hcReelNext()}
+  if(event.key==='ArrowUp'){event.preventDefault();hcReelPrevious()}
+ });
 }
 
 
@@ -4208,7 +4272,8 @@ function show(id){
   // Privacy: leave no live microphone behind when navigating away from voice practice.
   if(id!=='humanSession' && typeof humanVoiceRecorder!=='undefined' && humanVoiceRecorder && humanVoiceRecorder.state==='recording')endHumanVoiceRecording();
   if(id!=='humanSession'&&typeof humanSoundAudio!=='undefined'&&!humanSoundAudio.paused)humanSoundAudio.pause();
-  if(id!=='hcReels')hcReelStop();
+  if(id!=='hcReels'){hcReelAutoload=false;hcReelStop()}
+  document.body.classList.toggle('hc-reels-active',id==='hcReels');
   currentScreenId=id;
   hcCaptureReturnState(true);
   if(id!=='omVideo'){const frame=document.getElementById('omVideoFrame');if(frame&&frame.getAttribute('src')){frame.removeAttribute('src');frame.src='about:blank'}}
@@ -4225,7 +4290,7 @@ function show(id){
   });
 
   if(id!=='quietTimer' && hcTimerActive)hcTimerStop(true);
-  const immersive=['quietTimer','sessionReady','intro','prep','instructions','player','aftercare','completion','hcDriveMedia','omVideo','humanSession','sacredSession','bookAudio','bookReader','soundLabPlayer','fearPlayer'].includes(id);
+  const immersive=['hcReels','quietTimer','sessionReady','intro','prep','instructions','player','aftercare','completion','hcDriveMedia','omVideo','humanSession','sacredSession','bookAudio','bookReader','soundLabPlayer','fearPlayer'].includes(id);
   document.getElementById('bottomNav').classList.toggle('hidden',immersive);
   document.getElementById('appTopBar').classList.toggle('hidden',immersive);
 
@@ -4260,7 +4325,7 @@ function show(id){
 
   const navMap={
     home:'home',
-    hcReels:'home',
+    hcReels:'hcReels',
     practices:'practices',human:'practices',humanCategory:'practices',humanSession:'practices',returnJourney:'practices',
     soundHub:'soundHub',soundLab:'soundHub',soundLabPlayer:'soundHub',fearPractice:'soundHub',fearPlayer:'soundHub',
     sacred:'soundHub',sacredDetail:'soundHub',sacredSession:'soundHub',hcFatiha:'soundHub',hcLivingQuran:'soundHub',
