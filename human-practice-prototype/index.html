@@ -8211,6 +8211,7 @@ document.querySelector('#player .player-artwork').addEventListener('keydown',e=>
 });
 window.addEventListener('pagehide',()=>{
   hcCaptureReturnState(true);
+  hcReelStop();
   // Keep media elements untouched. Save position only; do not pause a playing track.
   hcStoreSoundLabPosition();
   if(typeof saveBookBookmark==='function')saveBookBookmark();
@@ -8229,7 +8230,7 @@ window.addEventListener('pageshow',event=>{
   }
 });
 document.addEventListener('visibilitychange',()=>{
-  if(document.hidden){hcCaptureReturnState(true);hcStoreSoundLabPosition()}
+  if(document.hidden){hcCaptureReturnState(true);hcStoreSoundLabPosition();hcReelStop()}
   const pv=document.getElementById('practiceVisual');
   const av=document.getElementById('adhkarVisual');
   if(document.hidden){
