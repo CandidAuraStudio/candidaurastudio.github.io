@@ -36,3 +36,17 @@ Source links to Quran.com open only when selected. No Arabic synthesis, copyrigh
 The English and Tamil Qur'anic explanations are original educational paraphrases, not certified translations. Theatrical or introspective metaphors are never presented as literal definitions of Allah, or as neuroscientific proof of doctrine.
 
 The future optional HeartClear link to NIYYAH has **not** been added. Waiting for user testing and review.
+
+
+## 2026-10-14 — Version 1.1: parallel foundation
+
+- Published all 37 Juz Amma chapters, **564 numbered Arabic verses**, with verified surah counts and unchanged Tanzil-attributed source text.
+- Added fully bilingual chapter titles, a search field, exact verse-number display, initial English/Tamil meaning drafts for 15 new verses, and prominent review-pending labels where the meanings are not ready.
+- Added a separate `#/baqarah` reading space with Arabic 2:1–20; explanatory drafts for 2:1–5; a cautious *Alif Lam Mim* linguistic note; and a clearly identified draft personal question for *muttaqin*. No invented reflections for 2:6–20.
+- Kept Al-Fatiha and existing 112–114 meaning readers intact.
+- Extended the isolated offline cache; preserved language, preferences and journal keys.
+- Automated source checks: 37 surahs, 564 verses, expected verse counts, sequential references, 20 Baqarah opening verses, bilingual text availability, JavaScript syntax and simulated navigation/reader/search/journal/timer behavior.
+- **Pending:** per-verse English/Tamil drafts for 549 remaining new Juz Amma verses, user reflection review, Arabic/Tamil editorial review, device QA, licensed in-app audio and phase-2 sound functions.
+- **No HeartClear master-hub edit yet.** Independent-app link locations are planned for a later update, after user approval of the tested NIYYAH experience.
+
+Source/permission: Tanzil Quran Text, Uthmani, CC BY 3.0, https://tanzil.net ; intermediate distribution https://github.com/semarketir/quranjson .
