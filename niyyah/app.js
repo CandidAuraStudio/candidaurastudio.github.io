@@ -49,7 +49,7 @@ const path=[
 ];
 function home(){
  const day=Math.floor(new Date().setHours(0,0,0,0)/86400000),reflect=learning.daily[(day%7+7)%7]||learning.daily[0];
- const routeLabels={intention:['Why we act','நாம் ஏன் செயல்படுகிறோம்?'],ego:['Recognising reaction','எதிர்வினையை உணர்தல்'],wisdom:['The four chapters','நான்கு அத்தியாயங்கள்'],voice:['Listen and pause','கேட்டுப் நிதானித்தல்'],practice:['A few minutes','சில நிமிடங்கள்'],science:['What research finds','ஆய்வு கூறுவது']};
+ const routeLabels={intention:['Why we act','நாம் ஏன் செயல்படுகிறோம்?'],ego:['Recognising reaction','எதிர்வினையை உணர்தல்'],wisdom:['Juz Amma · 37 surahs','ஜுஸ் அம்மா · 37 அத்தியாயங்கள்'],voice:['Listen and pause','கேட்டுப் நிதானித்தல்'],practice:['A few minutes','சில நிமிடங்கள்'],science:['What research finds','ஆய்வு கூறுவது']};
  return '<div class="hero"><div><div class="eyebrow">'+line('THE INNER SCIENCE OF INTENTION','நோக்கத்தின் அக அறிவியல்')+'</div><h1>'+line('Before you act,<br>notice within.','செயலுக்கு முன்<br>உள்ளே கவனியுங்கள்.').replace(/&lt;br&gt;/g,'<br>')+'</h1><p>'+line('Do not merely repeat words. Understand what you are saying. Notice the intention behind each action.','வார்த்தைகளை வெறுமனே திரும்பச் சொல்லாதீர்கள். நீங்கள் சொல்வதன் பொருளை உணருங்கள். உங்கள் செயலுக்குப் பின்னால் உள்ள நோக்கத்தைக் கவனியுங்கள்.')+'</p><div class="actions">'+button('#/practice','Continue practice','பயிற்சியைத் தொடருங்கள்',true)+button('#/wisdom','Explore sacred wisdom','இறை ஞானத்தை ஆராயுங்கள்')+'</div></div>'+
  '<div class="hero-visual" aria-hidden="true"><div class="halo"></div><div class="halo two"></div><div class="halo three"></div><div class="light-core"><span>◌</span></div><div class="hero-caption">INTENTION · AWARENESS · ACTION</div></div></div>'+
  '<div class="hero-motto"><span><b>01</b> '+line('NOTICE','கவனியுங்கள்')+'</span><span><b>02</b> '+line('UNDERSTAND','புரிந்துகொள்ளுங்கள்')+'</span><span><b>03</b> '+line('ACT WITH CARE','அக்கறையுடன் செயல்படுங்கள்')+'</span></div>'+
@@ -63,7 +63,10 @@ function lessonsView(kind){
  '<div class="lesson-list">'+list.map((v,i)=>'<article class="lesson-card"><div class="eyebrow">0'+(i+1)+'</div><h3>'+B(v.title)+'</h3><p>'+B(v.body)+'</p><div class="question">'+B(v.question)+'</div><div class="practice-note">'+B(v.step)+'</div></article>').join('')+'</div>'+
  '<div class="note"><div class="eyebrow">'+line('GENTLE EXPERIMENT','மென்மையான பயிற்சி')+'</div><h3>'+line('Observe without accusation.','குற்றம் சாட்டாமல் கவனியுங்கள்.')+'</h3><p>'+line('A passing thought is not a verdict about your worth. Choose your next response with curiosity and kindness.','கடந்து செல்லும் எண்ணம் உங்கள் மதிப்பைப் பற்றிய தீர்ப்பு அல்ல. அடுத்த பதிலை ஆர்வத்துடனும் அன்புடனும் தேர்ந்தெடுங்கள்.')+'</p><div class="actions" style="margin-top:16px">'+button('#/practice','Try a short practice','சிறிய பயிற்சியை முயற்சிக்கவும்',true)+button('#/journal','Write a reflection','குறிப்பெழுதுங்கள்')+'</div></div>';
 }
+function libraryContext(){return {lang,prefs,chapters,juz:window.NIYYAH_JUZ30||[],baqarah:window.NIYYAH_BAQARAH_OPENING||null,E,B,line,button,header,nearness};}
 function wisdom(){
+ if(window.NIYYAH_LIBRARY_UI && Array.isArray(window.NIYYAH_JUZ30) && window.NIYYAH_JUZ30.length===37)
+  return window.NIYYAH_LIBRARY_UI.library(libraryContext());
  return header({en:'SACRED WISDOM',ta:'இறை ஞானம்'},{en:'Words. Meaning. Reflection.',ta:'வசனம். பொருள். சிந்தனை.'},{en:'Study the original Arabic alongside independent meaning-based English and Tamil explanations. Nothing here claims to replace scholarship or a qualified reciter.',ta:'மூல அரபு வசனங்களுடன் கருத்தை விளக்கும் ஆங்கில, தமிழ் உரைகளைப் படியுங்கள். இவை அறிஞர்களின் விளக்கத்திற்கும் சரியான ஓதலைக் கற்பிக்கும் ஆசிரியருக்கும் மாற்றல்ல.'})+
  '<div class="chapter-grid">'+chapters.map(ch=>'<a class="chapter-card" href="#/chapter/'+ch.id+'"><div class="number">'+ch.number+' / QUR’AN</div><h3>'+B(ch.name)+'</h3><p>'+B(ch.theme)+'</p><div class="verse-count">'+ch.verses.length+' '+line('verses','வசனங்கள்')+' ↗</div></a>').join('')+'</div>'+
  '<div class="note"><div class="eyebrow">'+line('SOURCE SEPARATION','மூலமும் விளக்கமும் வேறுபடும்')+'</div><h3>'+line('What is scripture, and what is reflection?','எது வசனம்? எது மனிதச் சிந்தனை?')+'</h3><p>'+line('Arabic verses are the Qur’anic text. English/Tamil meanings are original explanatory renderings, not certified translations. Transliteration is approximate. Personal reflection is clearly outside the verse text. No hadith or classical tafsir is quoted as if it were part of the Qur’an.','அரபு வசனங்களே குர்ஆனின் மூல உரை. ஆங்கில, தமிழ் பொருள்கள் புரிதலுக்கான சொந்த விளக்கங்கள்; அதிகாரப்பூர்வ மொழிபெயர்ப்புகள் அல்ல. ஒலிபெயர்ப்பு தோராயமானது. தனிப்பட்ட சிந்தனை வசனத்திற்கு வெளியே தெளிவாகக் காட்டப்படுகிறது. ஹதீஸோ பாரம்பரியத் தஃப்ஸீரோ குர்ஆன் வசனமாகக் காட்டப்படவில்லை.')+'</p><small>'+line('Verse numbering: Al-Fatiha includes Bismillah as verse 1; chapters 112–114 do not count the opening Bismillah as a numbered verse.','வசன எண்கள்: அல்ஃபாத்திஹாவில் பிஸ்மில்லாஹ் வசனம் 1; 112–114 அத்தியாயங்களில் தொடக்க பிஸ்மில்லாஹ் வசன எண்ணில் சேராது.')+'</small></div>'+nearness();
@@ -73,6 +76,8 @@ function nearness(){
  return '<section class="note"><div class="eyebrow">'+line('QUR’AN 50:16 & 42:11','குர்ஆன் 50:16 மற்றும் 42:11')+'</div><h3>'+B(v.title)+'</h3><p>'+B(v.body)+'</p><div class="tool-row" style="margin-top:14px">'+v.urls.map((url,i)=>'<a target="_blank" rel="noopener noreferrer" href="'+url+'" class="small-link">'+(i?'42:11':'50:16')+' ↗</a>').join('')+'</div></section>';
 }
 function chapterView(id){
+ if(window.NIYYAH_LIBRARY_UI && Array.isArray(window.NIYYAH_JUZ30) && window.NIYYAH_JUZ30.length===37)
+  return window.NIYYAH_LIBRARY_UI.chapter(id,libraryContext());
  const ch=chapters.find(x=>x.id===id);if(!ch)return wisdom();
  const reference=ch.verses[0]?.ref||'';
  return '<div class="chapter-top"><a href="#/wisdom" class="small-link">← '+line('All chapters','அனைத்து அத்தியாயங்கள்')+'</a><div class="eyebrow" style="margin-top:18px">'+line('QUR’AN · CHAPTER','குர்ஆன் · அத்தியாயம்')+' '+ch.number+'</div><h1>'+B(ch.name)+'</h1><p>'+B(ch.theme)+'</p></div>'+
@@ -80,6 +85,11 @@ function chapterView(id){
  '<label class="switch-row"><input type="checkbox" id="latin-switch" '+(prefs.showLatin?'checked':'')+'><span>'+line('Show transliteration (approximate)','ஒலிபெயர்ப்பைக் காட்டுங்கள் (தோராயம்)')+'</span></label>'+
  '<section class="verse-list" aria-label="Chapter verses" style="margin-top:22px">'+ch.verses.map(v=>'<article class="verse"><div class="verse-head"><span class="verse-ref">'+v.ref+'</span><span class="script-label">'+line('QUR’ANIC ARABIC','குர்ஆன் அரபு')+'</span></div><p class="arabic" dir="rtl" lang="ar">'+E(v.arabic)+'</p>'+(prefs.showLatin?'<p class="translit">'+line('Transliteration:','ஒலிபெயர்ப்பு:')+' '+E(v.transliteration)+'</p>':'')+'<div class="verse-meaning"><div class="sub-label">'+line('Meaning-focused explanation, not a formal translation','கருத்தைப் புரிய வைக்கும் விளக்கம்; அதிகாரப்பூர்வ மொழிபெயர்ப்பு அல்ல')+'</div>'+B(v.meaning)+'</div></article>').join('')+'</section>'+
  '<div class="note"><div class="eyebrow">'+line('PERSONAL CONTEMPLATION — NOT THE VERSE','தனிப்பட்ட சிந்தனை — வசனம் அல்ல')+'</div><h3>'+line('Carry one question.','ஒரு கேள்வியை எடுத்துச் செல்லுங்கள்.')+'</h3><p>'+B(ch.reflection)+'</p><div class="actions" style="margin-top:18px">'+button('#/journal','Write privately','தனியாக எழுதுங்கள்',true)+button('#/voice','Explore listening','கேட்பதை ஆராயுங்கள்')+'</div><small>'+line('Arabic verse text was cross-checked against the linked Qur’an chapter. This app does not host recordings or synthesize Qur’anic recitation.','இணைக்கப்பட்ட குர்ஆன் அத்தியாயத்துடன் அரபு வசனங்கள் ஒப்பிடப்பட்டுள்ளன. இந்தச் செயலி ஓதல் ஒலிப்பதிவுகளை வைத்திருக்கவோ இயந்திர ஓதலை உருவாக்கவோ இல்லை.')+'</small></div>';
+}
+function baqarahView(){
+ if(window.NIYYAH_LIBRARY_UI && window.NIYYAH_BAQARAH_OPENING)
+  return window.NIYYAH_LIBRARY_UI.baqarah(libraryContext());
+ return wisdom();
 }
 function voice(){
  const steps=[
@@ -142,8 +152,8 @@ function timerReset(){timerPause();timer.remaining=timer.minutes*60;timer.finish
 function render(){
  const pth=decodeURIComponent(location.hash.replace(/^#\/?/,'')).split('/'),page=pth[0]||'home';
  if(currentRoute==='practice'&&page!=='practice')timerPause();
- currentRoute=['home','intention','ego','wisdom','voice','science','practice','journal'].includes(page)?page:page==='chapter'?'wisdom':'home';
- root.innerHTML=page==='home'?home():page==='intention'||page==='ego'?lessonsView(page):page==='wisdom'?wisdom():page==='chapter'?chapterView(pth[1]):page==='voice'?voice():page==='science'?science():page==='practice'?practice():page==='journal'?journal():home();
+ currentRoute=['home','intention','ego','wisdom','voice','science','practice','journal'].includes(page)?page:page==='chapter'||page==='baqarah'?'wisdom':'home';
+ root.innerHTML=page==='home'?home():page==='intention'||page==='ego'?lessonsView(page):page==='wisdom'?wisdom():page==='chapter'?chapterView(pth[1]):page==='baqarah'?baqarahView():page==='voice'?voice():page==='science'?science():page==='practice'?practice():page==='journal'?journal():home();
  chrome();
  if(page==='practice'&&timer.active)updateTimerDOM();
  window.scrollTo({top:0,behavior:'instant'});
@@ -153,6 +163,10 @@ const langSelect=document.getElementById('lang-select');
 if(langSelect)langSelect.addEventListener('change',e=>{lang=e.target.value;if(!['en','ta','both'].includes(lang))lang='en';try{localStorage.setItem(LANG_KEY,lang);}catch(_){};render();});
 const more=document.getElementById('more-nav'),menu=document.getElementById('more-menu');
 if(more)more.addEventListener('click',()=>{menu.hidden=!menu.hidden;more.setAttribute('aria-expanded',String(!menu.hidden));});
+root.addEventListener('input',e=>{
+ if(e.target.id==='surah-search'&&window.NIYYAH_LIBRARY_UI)
+  window.NIYYAH_LIBRARY_UI.filter(e.target.value,{lang});
+});
 root.addEventListener('change',e=>{
  if(e.target.id==='latin-switch'){prefs.showLatin=e.target.checked;put(PREFS_KEY,prefs);render();}
  if(e.target.id==='history-opt'){prefs.history=e.target.checked;if(!prefs.history)prefs.completed=0;put(PREFS_KEY,prefs);render();}
