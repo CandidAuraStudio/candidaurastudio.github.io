@@ -2000,7 +2000,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
 .hc-reels-stage{position:relative;overflow:hidden;isolation:isolate;width:min(100%,370px);height:min(62svh,590px);min-height:310px;aspect-ratio:9/16;margin:auto;border-radius:24px;border:1px solid rgba(224,239,246,.19);background:radial-gradient(circle at 65% 30%,#3b728d,#0d2736 60%,#081521);box-shadow:0 24px 65px rgba(0,0,0,.3);touch-action:pan-y}
 #hcReelFrame{display:block;width:100%;height:100%;border:0;background:#07121b}
 #hcReelFrame[hidden],#hcReelPoster[hidden]{display:none!important}
-.hc-reel-drive-poster{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:25px;text-align:center;background:radial-gradient(circle at 57% 35%,#244758,#0b1d2a 70%);color:#f4f7f8}
+.hc-reel-drive-poster{position:absolute;inset:0;z-index:2;border:0;width:100%;height:100%;font:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:25px;text-align:center;background:radial-gradient(circle at 57% 35%,#244758,#0b1d2a 70%);color:#f4f7f8}
 .hc-reel-drive-poster strong{font-size:19px}
 .hc-reel-drive-poster span{font-size:12px;line-height:1.7;color:#c9d7de;max-width:245px}
 .hc-reel-playmark{font-size:28px;display:grid;place-items:center;width:75px;height:75px;border-radius:50%;border:1px solid rgba(255,255,255,.48);color:#fff;box-shadow:0 0 35px rgba(187,212,221,.14)}
@@ -2184,7 +2184,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
       <p>Your own uploaded short videos from the Reels folder. Original sound is available through the video player.</p>
    </div>
    <div class="hc-reels-stage" id="hcReelsStage" aria-label="Swipe up for next reel, down for previous">
-     <div id="hcReelPoster" class="hc-reel-drive-poster"><div class="hc-reel-playmark" aria-hidden="true">▶</div><strong>Ready to watch</strong><span>Tap Load video to open your uploaded short inside HeartClear.</span></div>
+     <button id="hcReelPoster" class="hc-reel-drive-poster" type="button" onclick="hcReelToggle()" aria-label="Load selected uploaded video"><span class="hc-reel-playmark" aria-hidden="true">▶</span><strong>Ready to watch</strong><span>Tap here to load your uploaded short inside HeartClear.</span></button>
      <iframe id="hcReelFrame" class="hc-reel-drive-frame" title="Google Drive reel video player" loading="lazy" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="no-referrer-when-downgrade" hidden></iframe>
      <div class="hc-reels-screen-shade" aria-hidden="true"></div>
      <div class="hc-reels-progress" aria-hidden="true"><span id="hcReelProgress"></span></div>
