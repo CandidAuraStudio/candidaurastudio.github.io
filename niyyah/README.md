@@ -69,3 +69,16 @@ No files in `human-practice-prototype/`, `human-atlas/`, `inner-voice/` or `stor
 ### HeartClear and the other apps
 
 No existing HeartClear, HUMAN ATLAS, INNER VOICE or STORY ENGINE files were edited. A future optional HeartClear **Explore More** hub is only a design plan until this NIYYAH release is tested. It can eventually link to the independent apps, culinary cultural content and the later video/reels section without merging storage or disturbing the existing meditation/player system.
+
+
+## Version 1.2 — Full Al-Baqarah Arabic, modern meanings, and attributed reflections
+
+- Added a new independent, immutable-data file `baqarah-full-v12.js` with **all 286 Arabic verses of Al-Baqarah**, taken from the licensed Tanzil/Uthmani distributed dataset. Arabic text and verse numbering are not paraphrased or modernized.
+- Added `baqarah-editorial-v12.js` containing **original modern English and Sri Lankan Tamil explanatory renderings for 22 verses:** 2:1–20, 2:144, and 2:170. These are educational *drafts*, not certified interpretations or copied copyrighted translations.
+- The Baqarah reader now paginates **20 verses at a time** (last page six verses), and has quick links to **2:2 (muttaqin), 2:144 (qibla), 2:170 (inherited belief)**.
+- The presentation of each passage is **Arabic scripture → meaning-focused English/Tamil explanation (where prepared) → separately labelled 'Akmal's Reflection' only where grounded in the author's earlier words**.
+- Three remembered themes were recovered from earlier conversation: at 2:2 the question of muttaqin addresses the reader's own present responsibility; at 2:144 Akmal said, “The Kaaba is unity made visible. Love is that unity made alive”; at 2:170 he explored inherited belief and the need to understand rather than mechanically repeat. Only the quotation about the Kaaba is presented as a direct quotation; the other two are labelled as summaries requiring Akmal's sign-off.
+- The app does **not** claim that `muttaqin` literally translates as `you`, nor that the user's application replaces classical tafsir. A note on disability metaphors avoids mistaking scriptural metaphors for statements about real people's abilities.
+- For remaining **264 verses**, Arabic text is accessible and direct verse-level links lead to existing public translations; the app clearly labels its *own* English and Tamil lesson as pending instead of inventing Akmal's interpretation.
+- Previous Juz Amma, Al-Fatiha, existing notes, language choices, offline settings, and timer remain untouched. NIYYAH cache bumped to `niyyah-shell-v1-2-0`; new modules cached for offline Arabic reading.
+- Expert Arabic/tajwid and Sri Lankan Tamil editorial sign-off, as well as actual Android/iPhone/browser testing, remain outstanding. External source links require a connection.
