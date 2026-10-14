@@ -11,3 +11,34 @@ a{color:inherit;text-decoration:none}button,input,textarea,select{font:inherit}b
 @media(max-width:860px){.shell{display:block}.side{display:none}.topbar{height:75px;padding:0 22px;border-bottom:1px solid var(--stroke);justify-content:space-between}.mobile-brand{display:flex;align-items:center;gap:8px;font-weight:720;font-size:17px;letter-spacing:.1em}.mobile-brand span{color:var(--gold);font-size:32px}.page main{padding:0 22px 110px}.footer{display:none}.bottom-nav{display:flex;position:fixed;z-index:80;bottom:0;left:0;right:0;justify-content:space-around;background:rgba(14,23,34,.97);border-top:1px solid var(--stroke);padding:7px 8px max(8px,env(safe-area-inset-bottom));backdrop-filter:blur(18px)}.bottom-nav a,.bottom-nav button{border:0;background:transparent;display:flex;flex-direction:column;align-items:center;min-width:58px;color:var(--quiet);font-size:22px;line-height:1.25;padding:3px 6px}.bottom-nav small{font-size:10px;line-height:1.6}.bottom-nav a.active{color:var(--light)}.more-menu{display:grid;position:fixed;bottom:75px;right:12px;z-index:85;min-width:205px;max-width:calc(100vw - 24px);background:#263846;border:1px solid var(--stroke);border-radius:12px;padding:8px;box-shadow:0 16px 45px #0007}.more-menu[hidden]{display:none}.more-menu a{display:block;font-size:13px;padding:10px 13px;border-radius:8px}.more-menu a:hover{background:rgba(255,255,255,.09)}.toast{bottom:97px}}
 @media(max-width:590px){.topbar{height:67px;padding:0 14px}.lang-label{display:none}.top-actions{gap:6px}.top-actions select{max-width:128px;font-size:11px;padding:7px 5px;min-height:37px}.top-practice{display:none}.mobile-brand{font-size:14px}.mobile-brand span{font-size:28px}.page main{padding:0 17px 105px}.hero{display:flex;flex-direction:column;align-items:stretch;min-height:0;padding-top:31px;gap:0}.hero h1{font-size:clamp(43px,11.6vw,61px);margin:13px 0}.hero p{font-size:13px;margin-bottom:20px}.hero .actions>*{flex:1;padding:10px 8px;font-size:11px}.hero-visual{width:100%;height:235px;margin:4px auto 12px}.halo{width:215px;height:215px}.halo.two{width:175px;height:175px}.halo.three{width:245px;height:245px}.light-core{height:132px;width:132px}.light-core span{font-size:55px}.hero-caption{font-size:8px}.hero-motto{margin:0 0 38px;gap:10px}.hero-motto span{font-size:8px}.section{margin:37px 0}.section-head{display:block;margin-bottom:17px}.section-head h2{font-size:33px}.section-head p{margin-top:9px}.journey-path{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.path-card{padding:16px}.path-card h3{font-size:20px}.path-card p{font-size:11px}.daily-card{display:block;padding:22px}.daily-card h2{font-size:28px}.daily-card p{font-size:13px}.daily-card a{margin-top:20px}.page-head{padding-top:28px}.page-head h1{font-size:clamp(38px,10vw,52px)}.page-head p{font-size:13px}.lesson-list,.chapter-grid,.science-grid,.practice-layout,.journal-layout{grid-template-columns:1fr}.lesson-card{min-height:0}.chapter-card{min-height:145px}.verse{padding:18px 16px}.arabic{font-size:31px;line-height:2.15}.source-strip{align-items:flex-start;flex-direction:column}.timer-card,.practice-guide,.journal-box{padding:19px}.timer-circle{height:194px;width:194px}.time{font-size:49px}.voice-steps{grid-template-columns:1fr 1fr;gap:9px}.voice-step{padding:15px}.voice-step h3{font-size:20px}.voice-step p{font-size:11px}.tool-row>*{flex:1}.bilingual .second{padding-top:10px}.tamil{font-size:1.13em;line-height:2.05}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+
+
+/* NIYYAH 1.1 — Juz Amma and Al-Baqarah. Styles isolated inside /niyyah/. */
+.library-feature-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:17px 0 38px}
+.library-feature{display:flex;flex-direction:column;gap:9px;padding:24px;border:1px solid rgba(218,190,139,.29);border-radius:14px;background:linear-gradient(145deg,#233742,#182a36);min-height:188px}
+.library-feature:hover{border-color:rgba(241,209,160,.7)}
+.library-feature h2{margin:9px 0 1px;font-size:clamp(24px,3vw,37px)}
+.library-feature p{color:var(--muted);font-size:12px;line-height:1.85;margin:0 0 4px}
+.library-feature>span:last-child{font-size:19px;color:var(--gold);margin-top:auto}
+.library-search-wrap{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin:16px 0 20px}
+.library-search-wrap label{font-size:11px;color:var(--muted);flex-basis:100%}
+.library-search-wrap input{flex:1;min-width:170px;border:1px solid var(--stroke);border-radius:9px;background:#101f2a;color:var(--ink);padding:12px 15px;min-height:44px;font-size:13px}
+.library-search-wrap small{color:var(--jade);font-size:11px}
+[data-surah-entry][hidden]{display:none!important}
+.chapter-card .verse-count{line-height:1.6}
+.chapter-card h3{overflow-wrap:anywhere}
+.meaning-pending{background:rgba(213,193,155,.055);border-radius:8px;padding:15px}
+.meaning-pending p{font-size:13px;color:var(--muted);line-height:1.85;margin:0 0 10px}
+.meaning-pending a{display:inline-block;font-size:12px;color:var(--gold);text-decoration:underline;text-underline-offset:4px}
+.basmala-panel{margin:17px 0;border:1px solid rgba(223,193,151,.28);background:rgba(198,174,136,.04);padding:12px 21px 17px;border-radius:12px;text-align:center}
+.basmala-panel .arabic{text-align:center;font-size:30px;margin:0}
+.basmala-panel small{font-size:10px;color:var(--muted)}
+.baqarah-sections{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:24px 0}
+.study-section{padding:20px;border-radius:12px;border:1px solid var(--stroke);background:var(--panel)}
+.study-section h3{margin:11px 0 9px;font-size:22px}
+.study-section p{margin:0;font-size:12px;color:var(--muted)}
+.baqarah-notes{grid-template-columns:repeat(2,minmax(0,1fr));margin:22px 0}
+.baqarah-notes .lesson-card{min-height:0}
+.term-arabic{font:normal 33px/1.9 "Noto Naskh Arabic","Traditional Arabic",serif;text-align:right;color:var(--light);margin:11px 0}
+@media(max-width:740px){.baqarah-sections{grid-template-columns:1fr}.baqarah-notes{grid-template-columns:1fr}}
+@media(max-width:590px){.library-feature-grid{grid-template-columns:1fr;gap:10px}.library-feature{min-height:0;padding:21px}.library-feature h2{font-size:29px}.library-search-wrap{align-items:stretch}.library-search-wrap input{flex-basis:100%}.basmala-panel .arabic{font-size:26px}.study-section{padding:16px}}
