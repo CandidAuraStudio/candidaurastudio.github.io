@@ -1984,6 +1984,39 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
 #hcLivingQuran .hc-living-button{display:block;width:100%;padding:14px 10px;border-radius:14px;background:white;color:#0d2330;border:0;font:inherit;font-size:12px;font-weight:700;margin:14px 0}
 #hcLivingQuran[data-living-mode="ta"] [data-living-lang="en"],#hcLivingQuran[data-living-mode="en"] [data-living-lang="ta"]{display:none}
 
+
+/* HeartClear Reels: a quiet, in-app preview shelf using only the four existing meditation visuals. */
+.hc-reels-home-card{margin-top:18px;display:flex;gap:14px;align-items:center;justify-content:space-between;padding:15px 16px;border:1px solid rgba(204,227,235,.13);border-radius:19px;background:linear-gradient(135deg,rgba(21,48,62,.82),rgba(5,20,32,.9))}
+.hc-reels-home-card .eyebrow{color:#caa66d;font-size:10px;letter-spacing:.09em}
+.hc-reels-home-card strong{display:block;font-size:17px;margin-top:4px}
+.hc-reels-home-card small{display:block;font-size:11px;line-height:1.4;color:#bdcdd5;margin-top:4px}
+.hc-reels-home-card button{flex:none;min-height:46px;padding:10px 12px;border:1px solid #fff;border-radius:12px;background:#fff;color:#0a2332;font:inherit;font-weight:750;font-size:12px}
+#hcReels{max-width:650px;margin-inline:auto;padding-bottom:110px}
+.hc-reels-head{text-align:left;margin:5px auto 13px;max-width:370px}
+.hc-reels-back{min-height:44px;padding:7px 10px 7px 0;border:0;background:none;color:#f1f5f6;font:inherit;font-size:13px}
+.hc-reels-head .kicker{display:block;font-size:10px;color:#d6b77f;letter-spacing:.14em;margin:3px 0}
+.hc-reels-head h2{font-size:25px;letter-spacing:-.03em;margin:7px 0}
+.hc-reels-head p{margin:0;color:#c3d2d8;font-size:12px;line-height:1.5}
+.hc-reels-stage{position:relative;overflow:hidden;isolation:isolate;width:min(100%,370px);height:min(62svh,590px);min-height:310px;aspect-ratio:9/16;margin:auto;border-radius:24px;border:1px solid rgba(224,239,246,.19);background:radial-gradient(circle at 65% 30%,#3b728d,#0d2736 60%,#081521);box-shadow:0 24px 65px rgba(0,0,0,.3);touch-action:pan-y}
+#hcReelVideo{display:block;width:100%;height:100%;object-fit:cover}
+.hc-reels-screen-shade{pointer-events:none;position:absolute;inset:0;background:linear-gradient(180deg,rgba(2,12,20,.38) 0%,transparent 32%,rgba(0,8,17,.04) 47%,rgba(0,9,19,.91) 100%)}
+.hc-reels-progress{position:absolute;top:11px;left:12px;right:12px;height:3px;border-radius:4px;background:rgba(255,255,255,.4);overflow:hidden}
+.hc-reels-progress span{display:block;background:white;height:100%;width:0%;transition:width .2s linear}
+.hc-reels-badge{position:absolute;top:24px;right:14px;font-size:11px;letter-spacing:.04em;background:rgba(2,17,26,.63);border-radius:999px;padding:5px 9px;color:#fff}
+.hc-reels-copy{position:absolute;bottom:23px;left:20px;right:20px;pointer-events:none;text-shadow:0 2px 12px rgba(0,0,0,.35)}
+.hc-reels-kicker{font-size:10px;font-weight:800;letter-spacing:.14em;color:#d4b77e}
+.hc-reels-copy h3{font-size:25px;line-height:1.2;margin:8px 0}
+.hc-reels-copy p{font-size:14px;line-height:1.55;color:#eef4f6;margin:0}
+.hc-reels-fallback[hidden]{display:none!important}
+.hc-reels-fallback{position:absolute;left:20px;right:20px;top:37%;padding:16px;border-radius:14px;background:rgba(7,27,39,.85);font-size:13px;text-align:center}
+.hc-reels-controls{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;width:min(100%,370px);margin:11px auto}
+.hc-reels-controls button{min-height:47px;border:1px solid rgba(224,239,246,.24);border-radius:13px;color:#fff;font:inherit;font-size:12px;background:rgba(13,40,55,.7)}
+.hc-reels-controls button:nth-child(2){background:#fff;color:#102635;border-color:#fff;font-weight:750}
+.hc-reels-practice{display:flex;align-items:center;justify-content:space-between;width:min(100%,370px);min-height:48px;margin:0 auto;padding:12px 15px;background:rgba(9,34,46,.78);border:1px solid rgba(217,235,242,.21);border-radius:13px;color:#fff;font:inherit;font-size:13px;font-weight:650}
+.hc-reels-hint{width:min(100%,370px);margin:11px auto;color:#a8c0ca;font-size:11px;line-height:1.5}
+#hcReels button:focus-visible,.hc-reels-home-card button:focus-visible{outline:2px solid white;outline-offset:3px}
+@media(prefers-reduced-motion:reduce){.hc-reels-progress span{transition:none}}
+@media(max-height:620px){.hc-reels-stage{height:50svh;min-height:260px}}
 </style>
 </head>
 <body>
@@ -2113,6 +2146,10 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
     </div>
   </div>
 
+  <div class="hc-reels-home-card">
+     <div><div class="eyebrow">SHORT MOMENTS</div><strong>HeartClear Reels</strong><small>Four guided-visual previews · watch inside the app</small></div>
+     <button type="button" onclick="hcOpenReels()" aria-label="Watch HeartClear Reels">Watch Reels <span aria-hidden="true">›</span></button>
+   </div>
   <div class="home-section hc-favourites" id="heartclearFavouritesSection" hidden>
     <div class="section-head"><h3>Favourites</h3></div>
     <div class="hc-fav-list" id="heartclearFavouritesList" aria-label="Saved favourites"></div>
@@ -2127,6 +2164,34 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
   <button class="hc-week-line" onclick="show('history')" aria-label="Open this week's history">
     <b>This week</b><span id="homeWeekLine">0 sessions · 0 min</span><i>›</i>
   </button>
+</section>
+
+<section class="screen" id="hcReels" aria-labelledby="hcReelsHeading">
+   <div class="hc-reels-head">
+      <button class="hc-reels-back" type="button" onclick="hcCloseReels()" aria-label="Back to Home">‹ Home</button>
+      <span class="kicker">HEARTCLEAR · REELS</span>
+      <h2 id="hcReelsHeading">Short moments</h2>
+      <p>Visual reflections from existing meditations. Reels are silent previews.</p>
+   </div>
+   <div class="hc-reels-stage" id="hcReelsStage" aria-label="Swipe up for next reel, down for previous">
+     <video id="hcReelVideo" muted playsinline preload="metadata" aria-label="Meditation visual preview"></video>
+     <div class="hc-reels-screen-shade" aria-hidden="true"></div>
+     <div class="hc-reels-progress" aria-hidden="true"><span id="hcReelProgress"></span></div>
+     <div class="hc-reels-badge" id="hcReelNumber">1 / 4</div>
+     <div class="hc-reels-copy">
+       <div class="hc-reels-kicker" id="hcReelKicker">MORNING</div>
+       <h3 id="hcReelTitle">A moment to arrive</h3>
+       <p id="hcReelCaption">Notice the present moment.</p>
+     </div>
+     <div class="hc-reels-fallback" id="hcReelFallback" hidden>Preview unavailable right now. You can still open the full practice.</div>
+   </div>
+   <div class="hc-reels-controls" aria-label="Reels controls">
+     <button type="button" onclick="hcReelPrevious()" aria-label="Previous reel"><span aria-hidden="true">↑</span> Previous</button>
+     <button type="button" id="hcReelPlayBtn" onclick="hcReelToggle()" aria-label="Play or pause reel">Pause</button>
+     <button type="button" onclick="hcReelNext()" aria-label="Next reel">Next <span aria-hidden="true">↓</span></button>
+   </div>
+   <button class="hc-reels-practice" id="hcReelOpenPractice" type="button" onclick="hcReelOpenPractice()">Open full meditation <span aria-hidden="true">›</span></button>
+   <p class="hc-reels-hint" id="hcReelHint">Swipe up or tap Next. Video previews stay muted and stop when you leave.</p>
 </section>
 
 <section class="screen practice-library" id="practices">
@@ -3160,7 +3225,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
     <div class="kicker">HeartClear</div>
     <h2>Settings</h2>
     <p>Playback, preferences and your own records.</p>
-    <div class="hc-more-shortcuts" aria-label="Explore HeartClear"><button onclick="show('human')">Human Practice</button><button onclick="show('sacred')">Sacred Sound</button><button onclick="show('history')">History</button><button onclick="show('downloads')">Offline</button></div>
+    <div class="hc-more-shortcuts" aria-label="Explore HeartClear"><button onclick="hcOpenReels()">Reels</button><button onclick="show('human')">Human Practice</button><button onclick="show('sacred')">Sacred Sound</button><button onclick="show('history')">History</button><button onclick="show('downloads')">Offline</button></div>
 
 
     <section class="hc-local-profile" id="hcLocalProfileCard" aria-labelledby="hcLocalProfileHeading">
