@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="HeartClear">
-<link rel="manifest" href="./manifest.webmanifest?v=108">
+<link rel="manifest" href="./manifest.webmanifest?v=109">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
 <title>HeartClear · Meditation, Sounds & Reflection</title>
@@ -1950,6 +1950,40 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
 
 /* Bilingual Al-Fatiha lesson; styles are scoped to the new screen */
 #hcFatiha{justify-content:flex-start;padding-top:24px;padding-bottom:94px}#hcFatiha .glass{padding:18px}#hcFatiha .fatiha-language{display:flex;gap:8px;margin:15px 0}#hcFatiha .fatiha-language button{flex:1;padding:10px 4px;border-radius:13px;border:1px solid var(--line);background:#102535;color:white;font:inherit;font-size:12px}#hcFatiha .fatiha-language button[aria-pressed="true"]{background:white;color:#091822}#hcFatiha .fatiha-card{border:1px solid var(--line);border-radius:20px;background:rgba(5,18,27,.8);padding:15px;margin:12px 0}#hcFatiha .fatiha-card b{font-size:12px;color:#efdaad}#hcFatiha .fatiha-ar{font-family:"Noto Naskh Arabic",serif;font-size:27px;text-align:right;line-height:2.1;color:#fff;letter-spacing:normal}#hcFatiha .fatiha-card p{font-size:14px;line-height:1.8;margin:7px 0 13px}#hcFatiha .fatiha-reflection{border-top:1px solid var(--line);padding-top:12px}#hcFatiha [lang="ta"]{line-height:1.9}#hcFatiha[data-fatiha-mode="ta"] [data-fatiha-lang="en"],#hcFatiha[data-fatiha-mode="en"] [data-fatiha-lang="ta"]{display:none}#hcFatiha .fatiha-note{padding:13px;border:1px solid var(--line);border-radius:16px;background:rgba(38,75,90,.25);font-size:12px;line-height:1.7;margin:14px 0}#hcFatiha .fatiha-note p{font-size:12px}#hcFatiha .fatiha-note a{color:#e9d4ac}
+
+/* Living Qur'an learning screen: independent of existing player and meditation styles */
+#hcLivingQuran{justify-content:flex-start;padding:20px 0 98px}#hcLivingQuran .hc-living-shell{padding:20px 16px}
+#hcLivingQuran .hc-living-shell>h2{font-size:30px}
+#hcLivingQuran h3{font-size:19px;line-height:1.4;letter-spacing:normal}
+#hcLivingQuran h3 [lang="ta"]{font-size:16px}
+#hcLivingQuran [lang="ta"]{font-family:system-ui,"Noto Sans Tamil",sans-serif;line-height:1.9}
+#hcLivingQuran p{font-size:13px;line-height:1.8}
+#hcLivingQuran .hc-living-language{display:flex;gap:7px;margin:17px 0}
+#hcLivingQuran .hc-living-language button{flex:1;min-width:0;padding:12px 5px;border-radius:12px;background:#0b2331;color:#e8eef0;border:1px solid var(--line);font:inherit;font-size:12px;font-weight:650}
+#hcLivingQuran .hc-living-language button[aria-pressed="true"]{background:white;color:#0b1720;border-color:white}
+#hcLivingQuran .hc-living-intro,#hcLivingQuran .hc-living-chapter{border:1px solid var(--line);border-radius:20px;background:rgba(8,28,41,.65);margin:12px 0;padding:17px 15px}
+#hcLivingQuran .hc-living-chapter{background:rgba(5,20,31,.8)}
+#hcLivingQuran .hc-living-note{font-size:12px;color:#aec5ce;line-height:1.75}
+#hcLivingQuran .hc-living-source{font-size:11px!important;line-height:1.6}
+#hcLivingQuran a{color:#e5d0a6}
+#hcLivingQuran .hc-living-caption{margin-top:4px;font-size:12px;color:#b8cad3}
+#hcLivingQuran .hc-living-bismillah{text-align:center;font-family:"Noto Naskh Arabic","Amiri",serif;font-size:25px;line-height:2.2;color:white}
+#hcLivingQuran .hc-living-ar{text-align:right;font-family:"Noto Naskh Arabic","Amiri",serif;font-size:26px!important;line-height:2.1!important;color:white}
+#hcLivingQuran .hc-living-verse{padding:12px 0;border-top:1px solid var(--line)}
+#hcLivingQuran .hc-living-verse-no{font-size:11px;color:#e9d0a4}
+#hcLivingQuran .hc-living-verse p{margin:7px 0}
+#hcLivingQuran .hc-living-reflection{border-top:1px solid var(--line);padding-top:14px;margin-top:11px}
+#hcLivingQuran .hc-living-reflection b{font-size:12px;color:#e4c99b}
+#hcLivingQuran .hc-living-external{font-size:13px;display:inline-block;margin-top:10px}
+#hcLivingQuran .hc-living-dhikr{border:1px solid rgba(214,192,143,.22);border-radius:15px;padding:12px;margin-top:12px;background:rgba(212,162,86,.06)}
+#hcLivingQuran .hc-living-dhikr>b{color:#f4dab0}
+#hcLivingQuran .hc-living-routine{display:grid;gap:10px}
+#hcLivingQuran .hc-living-routine>div{padding:10px 11px;border:1px solid var(--line);border-radius:12px}
+#hcLivingQuran .hc-living-routine b{font-size:12px;color:#e8d3af}
+#hcLivingQuran .hc-living-routine p{margin:4px 0}
+#hcLivingQuran .hc-living-button{display:block;width:100%;padding:14px 10px;border-radius:14px;background:white;color:#0d2330;border:0;font:inherit;font-size:12px;font-weight:700;margin:14px 0}
+#hcLivingQuran[data-living-mode="ta"] [data-living-lang="en"],#hcLivingQuran[data-living-mode="en"] [data-living-lang="ta"]{display:none}
+
 </style>
 </head>
 <body>
@@ -2029,6 +2063,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
   </div>
 
   <div style="display:grid;gap:7px;margin:12px 0"><button class="choice" onclick="show('hcFatiha')" style="margin:0"><b>Al-Fatiha · ஸூரத்துல் ஃபாத்திஹா</b><small>Read in தமிழ் &amp; English · Seven verses</small></button><button class="choice" onclick="openAdhkar('listen')" style="margin:0"><b>Morning Adhkar · காலை திக்ர்</b><small>Listen · 28:18 · Morning supplications</small></button></div>
+  <button class="choice" onclick="show('hcLivingQuran')" style="margin:0 0 12px"><b>The Living Qur'an · மூன்று குல் ஸூராக்கள்</b><small>Arabic · Tamil · English · Gentle recitation &amp; 5-minute daily habit</small></button>
   <div class="hc-home-secondary-resumes">
     <div class="home-resume library-resume hc-secondary-resume" id="homeLibraryResumeCard">
       <div class="eyebrow">Continue audiobook</div>
@@ -2107,6 +2142,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
 <button class="category-chip" data-practice-filter="sacred" onclick="filterPractices('sacred',this)" aria-pressed="false">Sacred <span class="hc-filter-num"></span></button>
 </div></header>
 <section class="hc-practice-group" data-group="sacred"><div class="kicker hc-group-heading">MORNING · SACRED LISTENING / காலை திக்ர்</div><div class="library-list"><button class="choice practice-card hc-shared-session" data-kind="sacred" data-session="adhkar" data-tags="sacred morning" onclick="openAdhkar('listen')"><span class="practice-art" aria-hidden="true"><span class="hc-art-center">☾</span></span><span class="practice-copy"><b>Morning Adhkar · காலை திக்ர்</b><small>Supplication and remembrance</small></span><span class="duration">28:18</span></button><button class="choice practice-card hc-shared-session" data-kind="sacred" data-session="fatiha" data-tags="sacred morning" onclick="show('hcFatiha')"><span class="practice-art" aria-hidden="true"><span class="hc-art-center">✦</span></span><span class="practice-copy"><b>Surah Al-Fatiha · ஃபாத்திஹா</b><small>Arabic · தமிழ் · English</small></span><span class="duration">READ</span></button></div></section>
+<button class="choice practice-card hc-shared-session" data-kind="sacred" data-session="livingQuran" data-tags="sacred morning" onclick="show('hcLivingQuran')" style="margin-bottom:12px" aria-label="Open the Three Qul Surahs and recitation routine"><span class="practice-art" aria-hidden="true"><span class="hc-art-center">✦</span></span><span class="practice-copy"><b>Three Qul · மூன்று குல்</b><small>Surahs 112, 113, 114 · Recite &amp; reflect</small></span><span class="duration">READ</span></button>
 <div class="hc-practice-timer hc-shared-session"><span class="hc-timer-thumb" aria-hidden="true">◷</span><span><b>Quiet Timer</b><small>Set your time · gentle bells optional</small></span><button onclick="openHomeTimerSheet('quiet',10)">Set time</button></div>
 <section class="hc-practice-group" data-group="guided"><div class="kicker hc-group-heading">GUIDED BREATH</div><div class="library-list">
 <button class="choice practice-card hc-shared-session" data-session="wake" data-kind="short" data-tags="short breath" aria-label="View Deep Wake Up session · 10 minutes" onclick="openHomeSessionSheet('Deep Wake Up')">
@@ -2588,7 +2624,96 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
 <article class="fatiha-card"><div class="kicker">Verse 4 · வசனம் 4</div><p class="fatiha-ar" lang="ar" dir="rtl">مَالِكِ يَوْمِ الدِّينِ</p><div data-fatiha-lang="en"><b>Meaning · English</b><p>Master of the Day of Judgment.</p></div><div data-fatiha-lang="ta" lang="ta"><b>பொருள் · தமிழ்</b><p>நியாயத்தீர்ப்பு நாளின் அதிபதி.</p></div><div class="fatiha-reflection"><div data-fatiha-lang="en"><b>Reflection</b><p>This verse speaks of divine judgment; reflect also on today's responsibility.</p></div><div data-fatiha-lang="ta" lang="ta"><b>வாழ்க்கைச் சிந்தனை</b><p>இது இறைத் தீர்ப்பைப் பேசுகிறது; இன்றைய பொறுப்புகளையும் சிந்தியுங்கள்.</p></div></div></article>
 <article class="fatiha-card"><div class="kicker">Verse 5 · வசனம் 5</div><p class="fatiha-ar" lang="ar" dir="rtl">إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ</p><div data-fatiha-lang="en"><b>Meaning · English</b><p>You alone we worship, and You alone we ask for help.</p></div><div data-fatiha-lang="ta" lang="ta"><b>பொருள் · தமிழ்</b><p>உன்னையே நாங்கள் வணங்குகிறோம்; உன்னிடமே உதவி தேடுகிறோம்.</p></div><div class="fatiha-reflection"><div data-fatiha-lang="en"><b>Reflection</b><p>Humility means recognising we cannot control everything.</p></div><div data-fatiha-lang="ta" lang="ta"><b>வாழ்க்கைச் சிந்தனை</b><p>எல்லாவற்றையும் கட்டுப்படுத்த முடியாது என்பதை உணர்வதே பணிவு.</p></div></div></article>
 <article class="fatiha-card"><div class="kicker">Verse 6 · வசனம் 6</div><p class="fatiha-ar" lang="ar" dir="rtl">اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ</p><div data-fatiha-lang="en"><b>Meaning · English</b><p>Guide us to the straight path.</p></div><div data-fatiha-lang="ta" lang="ta"><b>பொருள் · தமிழ்</b><p>எங்களை நேரான வழியில் நடத்துவாயாக.</p></div><div class="fatiha-reflection"><div data-fatiha-lang="en"><b>Reflection</b><p>Ask for guidance in how you live today: truthfulness, justice and care.</p></div><div data-fatiha-lang="ta" lang="ta"><b>வாழ்க்கைச் சிந்தனை</b><p>இன்றைய வாழ்வில் உண்மை, நீதி, அக்கறையுடன் நடக்க வழிகாட்டுதலை வேண்டுங்கள்.</p></div></div></article>
-<article class="fatiha-card"><div class="kicker">Verse 7 · வசனம் 7</div><p class="fatiha-ar" lang="ar" dir="rtl">صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ</p><div data-fatiha-lang="en"><b>Meaning · English</b><p>The path of those You have blessed, not those who incur anger or lose their way.</p></div><div data-fatiha-lang="ta" lang="ta"><b>பொருள் · தமிழ்</b><p>நீ அருள் புரிந்தவர்களின் வழியில் எங்களை நடத்துவாயாக; கோபத்திற்கு ஆளானவர்களின் வழியிலும் வழிதவறியவர்களின் வழியிலும் அல்ல.</p></div><div class="fatiha-reflection"><div data-fatiha-lang="en"><b>Reflection</b><p>Ask not only to recognise what is right, but to practise it.</p></div><div data-fatiha-lang="ta" lang="ta"><b>வாழ்க்கைச் சிந்தனை</b><p>சரியானதை அறிவதோடு அதை வாழ்விலும் கடைப்பிடிக்க வேண்டுங்கள்.</p></div></div></article><div class="fatiha-note"><b>About the straight path · நேர்வழி</b><p data-fatiha-lang="en">Verse 1:6 asks for guidance to the straight path. Al-Fatiha does not describe a hair-thin bridge. A bridge in the afterlife is discussed in hadith sources, including Sahih al-Bukhari 6573. This study focuses on the Qur'an's words and guidance for how we live.</p><p data-fatiha-lang="ta" lang="ta">1:6 ஆம் வசனம் நேர்வழியில் நடத்தும்படி வேண்டுகிறது. முடியை விட மெலிந்த பாலம் பற்றிய விளக்கம் ஃபாத்திஹாவில் இல்லை. மறுமை பாலம் பற்றிய செய்திகள் ஸஹீஹ் புகாரி 6573 போன்ற ஹதீஸ் நூல்களில் வருகின்றன. இங்கு குர்ஆன் கூறும் நேர்வழியும் நமது வாழ்வில் அதன் பொருளுமே மையம்.</p><p><a href="https://quran.com/al-fatihah" target="_blank" rel="noopener noreferrer">Qur'an 1:1–7 · Arabic / Translation / Audio</a></p></div></div></section>
+<article class="fatiha-card"><div class="kicker">Verse 7 · வசனம் 7</div><p class="fatiha-ar" lang="ar" dir="rtl">صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ</p><div data-fatiha-lang="en"><b>Meaning · English</b><p>The path of those You have blessed, not those who incur anger or lose their way.</p></div><div data-fatiha-lang="ta" lang="ta"><b>பொருள் · தமிழ்</b><p>நீ அருள் புரிந்தவர்களின் வழியில் எங்களை நடத்துவாயாக; கோபத்திற்கு ஆளானவர்களின் வழியிலும் வழிதவறியவர்களின் வழியிலும் அல்ல.</p></div><div class="fatiha-reflection"><div data-fatiha-lang="en"><b>Reflection</b><p>Ask not only to recognise what is right, but to practise it.</p></div><div data-fatiha-lang="ta" lang="ta"><b>வாழ்க்கைச் சிந்தனை</b><p>சரியானதை அறிவதோடு அதை வாழ்விலும் கடைப்பிடிக்க வேண்டுங்கள்.</p></div></div></article><button class="hc-living-button" onclick="show('hcLivingQuran')" style="display:block;width:100%;margin:14px 0;padding:14px;border:0;border-radius:14px;background:white;color:#0d2330;font:inherit;font-weight:700">Next: Three Qul · மூன்று குல் ஸூராக்கள் →</button><div class="fatiha-note"><b>About the straight path · நேர்வழி</b><p data-fatiha-lang="en">Verse 1:6 asks for guidance to the straight path. Al-Fatiha does not describe a hair-thin bridge. A bridge in the afterlife is discussed in hadith sources, including Sahih al-Bukhari 6573. This study focuses on the Qur'an's words and guidance for how we live.</p><p data-fatiha-lang="ta" lang="ta">1:6 ஆம் வசனம் நேர்வழியில் நடத்தும்படி வேண்டுகிறது. முடியை விட மெலிந்த பாலம் பற்றிய விளக்கம் ஃபாத்திஹாவில் இல்லை. மறுமை பாலம் பற்றிய செய்திகள் ஸஹீஹ் புகாரி 6573 போன்ற ஹதீஸ் நூல்களில் வருகின்றன. இங்கு குர்ஆன் கூறும் நேர்வழியும் நமது வாழ்வில் அதன் பொருளுமே மையம்.</p><p><a href="https://quran.com/al-fatihah" target="_blank" rel="noopener noreferrer">Qur'an 1:1–7 · Arabic / Translation / Audio</a></p></div></div></section>
+
+
+<section class="screen" id="hcLivingQuran" data-living-mode="both">
+ <div class="glass hc-living-shell">
+  <button class="collection-back" onclick="openSacred('islamic')">‹ Islamic · Sacred Sound</button>
+  <div class="kicker">Sacred Practice · Qur'an and daily awareness</div>
+  <h2>The Living Qur'an</h2><p lang="ta">வாழ்வில் குர்ஆன் · ஓதுதல், உணர்தல், கடைப்பிடித்தல்</p>
+  <p data-living-lang="en">Understand the words. Speak gently. Reflect deeply. Let kindness become a daily action.</p><p data-living-lang="ta" lang="ta">வசனங்களைப் புரிந்துகொள்ளுங்கள். இயல்பாகக் குரலில் ஓதுங்கள். ஆழமாகச் சிந்தித்து, அன்பை அன்றாடச் செயலாக்குங்கள்.</p>
+  <div class="hc-living-language" role="group" aria-label="Study language">
+   <button data-living-select="both" aria-pressed="true" onclick="hcSetLivingLanguage('both')">Both / இரண்டும்</button>
+   <button data-living-select="ta" aria-pressed="false" onclick="hcSetLivingLanguage('ta')">தமிழ்</button>
+   <button data-living-select="en" aria-pressed="false" onclick="hcSetLivingLanguage('en')">English</button>
+  </div>
+  <div class="hc-living-intro">
+   <h3 data-living-lang="en">Allah, nearness and the human breath</h3><h3 data-living-lang="ta" lang="ta">அல்லாஹ், இறை நெருக்கம், மனித மூச்சு</h3>
+   <p data-living-lang="en"><strong>Allah</strong> is the Arabic word for God; it does not literally mean air or breath. The Qur'an describes God as closer than the jugular vein (50:16), and says nothing is like God (42:11). Contemplating each ordinary breath can be a personal way to remember that nearness, without claiming God is physically the air or inside the body.</p>
+   <p data-living-lang="ta" lang="ta"><strong>அல்லாஹ்</strong> என்பது இறைவனைக் குறிக்கும் அரபுச் சொல்; அதன் நேரடிப் பொருள் காற்று அல்லது மூச்சு அல்ல. இறைவன் மனிதனின் கழுத்து நரம்பைவிட நெருக்கமானவன் எனக் குர்ஆன் (50:16) கூறுகிறது; அவனைப் போன்றது எதுவுமில்லை என்றும் (42:11) கூறுகிறது. இயல்பான ஒவ்வொரு மூச்சையும் கவனிப்பது இறை நெருக்கத்தை நினைவுகூர உதவும் தனிப்பட்ட ஆன்மிகச் சிந்தனை. இறைவனே காற்று என்றோ உடலில் உடலுருவாக இருக்கிறான் என்றோ இது கூறவில்லை.</p>
+   <p class="hc-living-source"><a href="https://quran.com/50/16" target="_blank" rel="noopener noreferrer">Qur'an 50:16</a> · <a href="https://quran.com/42/11" target="_blank" rel="noopener noreferrer">42:11</a> · <a href="https://quran.com/al-ikhlas" target="_blank" rel="noopener noreferrer">112:1–4</a></p>
+  </div>
+  <div class="hc-living-intro">
+   <h3 data-living-lang="en">Recite, do not strain</h3><h3 data-living-lang="ta" lang="ta">ஓதுங்கள்; வற்புறுத்த வேண்டாம்</h3>
+   <p data-living-lang="en">The first verses of Al-Alaq (96:1–5) begin with a call to read or recite. But the Qur'an also teaches moderation of volume (17:110), and inward, humble remembrance (7:205). You can recite audibly, at an easy conversational level; silence also has a place. Do not shout, push your voice or hold your breath.</p>
+   <p data-living-lang="ta" lang="ta">அல் அலக் 96:1–5 வசனங்கள் வாசிக்கவும் ஓதவும் அழைக்கின்றன. ஆனால் 17:110 அளவான குரலைக் கூறுகிறது; 7:205 பணிவான உள்ளார்ந்த இறைநினைவை வலியுறுத்துகிறது. இயல்பாகக் கேட்கும் அளவில் ஓதலாம். அமைதிக்கும் இடமுண்டு. கத்தவோ, குரலை வற்புறுத்தவோ, மூச்சை அடக்கவோ வேண்டாம்.</p>
+   <div class="hc-living-dhikr">
+    <b>Allahu · اللهُ</b>
+    <p data-living-lang="en">Optional personal dhikr: say “Allahu” gently on an ordinary outbreath, without stretching the sound beyond what feels comfortable. This is devotional remembrance, not a Qur'anic verse or a scientific treatment.</p>
+    <p data-living-lang="ta" lang="ta">விருப்பமான தனிப்பட்ட திக்ர்: இயல்பாக மூச்சை வெளியிடும்போது “அல்லாஹு” என்று மெதுவாகச் சொல்லலாம். குரலையோ மூச்சையோ வலுக்கட்டாயமாக நீட்ட வேண்டாம். இது இறைநினைவுப் பயிற்சி; குர்ஆன் வசனமோ மருத்துவ சிகிச்சையோ அல்ல.</p>
+   </div>
+   <p class="hc-living-source"><a href="https://quran.com/96/1" target="_blank" rel="noopener noreferrer">96:1</a> · <a href="https://quran.com/17/110" target="_blank" rel="noopener noreferrer">17:110</a> · <a href="https://quran.com/7/205" target="_blank" rel="noopener noreferrer">7:205</a></p>
+  </div>
+  <div class="hc-living-intro">
+   <h3 data-living-lang="en">A gentle five-minute habit</h3><h3 data-living-lang="ta" lang="ta">தினமும் ஐந்து நிமிட எளிய பழக்கம்</h3>
+   <div class="hc-living-routine">
+    <div><b>1 · 1 min</b><p data-living-lang="en">Sit comfortably. Let breathing remain natural.</p><p data-living-lang="ta" lang="ta">சௌகரியமாக அமர்ந்து இயல்பான மூச்சைக் கவனியுங்கள்.</p></div>
+    <div><b>2 · 2 min</b><p data-living-lang="en">Listen to or gently recite a few Qur'anic verses aloud.</p><p data-living-lang="ta" lang="ta">சில குர்ஆன் வசனங்களைக் கேளுங்கள் அல்லது இயல்பாகக் குரலில் ஓதுங்கள்.</p></div>
+    <div><b>3 · 1 min</b><p data-living-lang="en">Pause for quiet remembrance; optional gentle “Allahu.”</p><p data-living-lang="ta" lang="ta">அமைதியாக இறைவனை நினைவுகூருங்கள்; விருப்பமெனில் மெதுவாக “அல்லாஹு” சொல்லுங்கள்.</p></div>
+    <div><b>4 · 1 min</b><p data-living-lang="en">Choose one small act of truthfulness, kindness or patience today.</p><p data-living-lang="ta" lang="ta">இன்று உண்மை, கருணை அல்லது பொறுமையுடன் செய்ய ஓர் எளிய செயலைத் தேர்ந்தெடுங்கள்.</p></div>
+   </div>
+   <button class="hc-living-button" onclick="openHomeTimerSheet('quiet',5)">Open 5-minute quiet timer / ஐந்து நிமிட நேரக்கணிப்பான்</button>
+   <p class="hc-living-note" data-living-lang="en">Repeat when useful, with no pressure to complete a streak. Ordinary meals, hydration and rest support wellbeing; this practice requires no fasting or dietary restriction.</p>
+   <p class="hc-living-note" data-living-lang="ta" lang="ta">நிர்பந்தமின்றி விருப்பப்படி தினமும் செய்யலாம். வழக்கமான உணவு, தண்ணீர், ஓய்வு முக்கியம். இதற்கு நோன்போ உணவுக் கட்டுப்பாடோ தேவையில்லை.</p>
+  </div>
+  <h3 style="margin:22px 0 8px">The Three Qul Surahs <span lang="ta">· மூன்று குல் ஸூராக்கள்</span></h3>
+  <p data-living-lang="en">These are Surahs 112, 113 and 114. The Arabic text is shown with brief, meaning-based Tamil and English renderings; our reflections are clearly separate. The links below lead to recorded Qur'an recitation.</p>
+  <p data-living-lang="ta" lang="ta">இவை 112, 113, 114 ஆம் ஸூராக்கள். அரபு வசனங்கள், எளிய தமிழ்/ஆங்கிலப் பொருள், தனிப்பட்ட சிந்தனை ஆகியவை தனித்தனியாகக் கொடுக்கப்பட்டுள்ளன. ஒலி ஓதலைக் கேட்க கீழே உள்ள இணைப்புகளைப் பயன்படுத்தலாம்.</p>
+  <article class="hc-living-chapter" id="hcLiving112">
+ <div class="kicker">Qur'an · Surah 112 · 4 verses</div><h3>Al-Ikhlas · <span lang="ta">அல் இக்லாஸ்</span></h3>
+ <p class="hc-living-caption">Oneness / இறைவனின் ஒருமை</p><p class="hc-living-bismillah" lang="ar" dir="rtl">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
+ <div class="hc-living-verse"><div class="hc-living-verse-no">112:1</div><p lang="ar" dir="rtl" class="hc-living-ar">قُلْ هُوَ ٱللَّهُ أَحَدٌ</p><p data-living-lang="en">Say: He is Allah, One.</p><p data-living-lang="ta" lang="ta">கூறுவீராக: அவன் அல்லாஹ், ஒருவனே.</p></div>
+<div class="hc-living-verse"><div class="hc-living-verse-no">112:2</div><p lang="ar" dir="rtl" class="hc-living-ar">ٱللَّهُ ٱلصَّمَدُ</p><p data-living-lang="en">Allah, upon whom all depend.</p><p data-living-lang="ta" lang="ta">அல்லாஹ், அனைவரும் சார்ந்திருப்பவன்.</p></div>
+<div class="hc-living-verse"><div class="hc-living-verse-no">112:3</div><p lang="ar" dir="rtl" class="hc-living-ar">لَمْ يَلِدْ وَلَمْ يُولَدْ</p><p data-living-lang="en">He does not beget, nor was He born.</p><p data-living-lang="ta" lang="ta">அவன் பெற்றெடுக்கவும் இல்லை; பிறக்கவும் இல்லை.</p></div>
+<div class="hc-living-verse"><div class="hc-living-verse-no">112:4</div><p lang="ar" dir="rtl" class="hc-living-ar">وَلَمْ يَكُن لَّهُۥ كُفُوًا أَحَدٌۢ</p><p data-living-lang="en">And none is comparable to Him.</p><p data-living-lang="ta" lang="ta">அவனுக்கு நிகராக எவரும் இல்லை.</p></div>
+ <div class="hc-living-reflection"><b data-living-lang="en">Reflection · Not a literal translation</b><b data-living-lang="ta" lang="ta">சிந்தனை · நேரடி மொழிபெயர்ப்பு அல்ல</b><p data-living-lang="en">God is not another human figure. The chapter emphasises absolute oneness and incomparability; approach life with humility rather than imagining the Creator in our image.</p><p data-living-lang="ta" lang="ta">இறைவன் நம்மைப் போன்ற இன்னொரு மனித உருவம் அல்ல. அவனது ஒருமையையும் ஒப்பற்ற தன்மையையும் இந்த அத்தியாயம் வலியுறுத்துகிறது.</p></div>
+ <a href="https://quran.com/al-ikhlas" target="_blank" rel="noopener noreferrer" class="hc-living-external">Listen to verified reciters on Quran.com ↗</a>
+ <p class="hc-living-note" data-living-lang="ta" lang="ta">அரபு ஓதுதலைக் கேட்டு, இயல்பான குரலில் மெதுவாகத் திரும்ப ஓதலாம். உச்சரிப்பை சரிபார்க்கவும்.</p><p class="hc-living-note" data-living-lang="en">Listen first, then repeat at a comfortable audible volume. Check your Arabic pronunciation with a qualified reciter.</p>
+ </article>
+<article class="hc-living-chapter" id="hcLiving113">
+ <div class="kicker">Qur'an · Surah 113 · 5 verses</div><h3>Al-Falaq · <span lang="ta">அல் ஃபலக்</span></h3>
+ <p class="hc-living-caption">Seeking refuge / பாதுகாப்பை வேண்டுதல்</p><p class="hc-living-bismillah" lang="ar" dir="rtl">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
+ <div class="hc-living-verse"><div class="hc-living-verse-no">113:1</div><p lang="ar" dir="rtl" class="hc-living-ar">قُلْ أَعُوذُ بِرَبِّ ٱلْفَلَقِ</p><p data-living-lang="en">Say: I seek refuge with the Lord of daybreak.</p><p data-living-lang="ta" lang="ta">கூறுவீராக: விடியலின் இறைவனிடம் நான் பாதுகாப்பு தேடுகிறேன்.</p></div>
+<div class="hc-living-verse"><div class="hc-living-verse-no">113:2</div><p lang="ar" dir="rtl" class="hc-living-ar">مِن شَرِّ مَا خَلَقَ</p><p data-living-lang="en">From the harm of what He has created.</p><p data-living-lang="ta" lang="ta">அவன் படைத்தவற்றிலிருந்து ஏற்படும் தீங்கிலிருந்து.</p></div>
+<div class="hc-living-verse"><div class="hc-living-verse-no">113:3</div><p lang="ar" dir="rtl" class="hc-living-ar">وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ</p><p data-living-lang="en">And from the harm of darkness as it spreads.</p><p data-living-lang="ta" lang="ta">இருள் சூழும்போது அதனால் ஏற்படும் தீங்கிலிருந்தும்.</p></div>
+<div class="hc-living-verse"><div class="hc-living-verse-no">113:4</div><p lang="ar" dir="rtl" class="hc-living-ar">وَمِن شَرِّ ٱلنَّفَّـٰثَـٰتِ فِى ٱلْعُقَدِ</p><p data-living-lang="en">And from the harm of those who blow upon knots.</p><p data-living-lang="ta" lang="ta">முடிச்சுகளில் ஊதுவோரின் தீங்கிலிருந்தும்.</p></div>
+<div class="hc-living-verse"><div class="hc-living-verse-no">113:5</div><p lang="ar" dir="rtl" class="hc-living-ar">وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ</p><p data-living-lang="en">And from the harm of an envious person when they envy.</p><p data-living-lang="ta" lang="ta">பொறாமைப்படுபவர் பொறாமை கொள்ளும்போது ஏற்படும் தீங்கிலிருந்தும்.</p></div>
+ <div class="hc-living-reflection"><b data-living-lang="en">Reflection · Not a literal translation</b><b data-living-lang="ta" lang="ta">சிந்தனை · நேரடி மொழிபெயர்ப்பு அல்ல</b><p data-living-lang="en">The prayer asks protection from harm, darkness, hostile acts and envy. Reflect on seeking safety and choosing not to harm others.</p><p data-living-lang="ta" lang="ta">தீங்கு, இருள், தீய செயல்கள், பொறாமை ஆகியவற்றிலிருந்து பாதுகாப்பை இந்த அத்தியாயம் வேண்டுகிறது. பிறருக்குத் தீங்கு செய்யாத வாழ்வையும் சிந்திப்போம்.</p></div>
+ <a href="https://quran.com/al-falaq" target="_blank" rel="noopener noreferrer" class="hc-living-external">Listen to verified reciters on Quran.com ↗</a>
+ <p class="hc-living-note" data-living-lang="ta" lang="ta">அரபு ஓதுதலைக் கேட்டு, இயல்பான குரலில் மெதுவாகத் திரும்ப ஓதலாம். உச்சரிப்பை சரிபார்க்கவும்.</p><p class="hc-living-note" data-living-lang="en">Listen first, then repeat at a comfortable audible volume. Check your Arabic pronunciation with a qualified reciter.</p>
+ </article>
+<article class="hc-living-chapter" id="hcLiving114">
+ <div class="kicker">Qur'an · Surah 114 · 6 verses</div><h3>An-Nas · <span lang="ta">அன் நாஸ்</span></h3>
+ <p class="hc-living-caption">Inner whispers / உள்ளத்தின் கிசுகிசுப்புகள்</p><p class="hc-living-bismillah" lang="ar" dir="rtl">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
+ <div class="hc-living-verse"><div class="hc-living-verse-no">114:1</div><p lang="ar" dir="rtl" class="hc-living-ar">قُلْ أَعُوذُ بِرَبِّ ٱلنَّاسِ</p><p data-living-lang="en">Say: I seek refuge with the Lord of humankind.</p><p data-living-lang="ta" lang="ta">கூறுவீராக: மனிதர்களின் இறைவனிடம் பாதுகாப்பு தேடுகிறேன்.</p></div>
+<div class="hc-living-verse"><div class="hc-living-verse-no">114:2</div><p lang="ar" dir="rtl" class="hc-living-ar">مَلِكِ ٱلنَّاسِ</p><p data-living-lang="en">The Sovereign of humankind.</p><p data-living-lang="ta" lang="ta">மனிதர்களின் அரசனிடம்.</p></div>
+<div class="hc-living-verse"><div class="hc-living-verse-no">114:3</div><p lang="ar" dir="rtl" class="hc-living-ar">إِلَـٰهِ ٱلنَّاسِ</p><p data-living-lang="en">The God of humankind.</p><p data-living-lang="ta" lang="ta">மனிதர்களின் கடவுளிடம்.</p></div>
+<div class="hc-living-verse"><div class="hc-living-verse-no">114:4</div><p lang="ar" dir="rtl" class="hc-living-ar">مِن شَرِّ ٱلْوَسْوَاسِ ٱلْخَنَّاسِ</p><p data-living-lang="en">From the harm of the whisperer who withdraws.</p><p data-living-lang="ta" lang="ta">பின்வாங்கி மறையும் கிசுகிசுப்பவனின் தீங்கிலிருந்து.</p></div>
+<div class="hc-living-verse"><div class="hc-living-verse-no">114:5</div><p lang="ar" dir="rtl" class="hc-living-ar">ٱلَّذِى يُوَسْوِسُ فِى صُدُورِ ٱلنَّاسِ</p><p data-living-lang="en">Who whispers into the hearts of humankind.</p><p data-living-lang="ta" lang="ta">மனிதர்களின் உள்ளங்களில் கிசுகிசுப்பவனிடமிருந்து.</p></div>
+<div class="hc-living-verse"><div class="hc-living-verse-no">114:6</div><p lang="ar" dir="rtl" class="hc-living-ar">مِنَ ٱلْجِنَّةِ وَٱلنَّاسِ</p><p data-living-lang="en">Whether from jinn or from humankind.</p><p data-living-lang="ta" lang="ta">ஜின்களிலிருந்தும் மனிதர்களிலிருந்தும்.</p></div>
+ <div class="hc-living-reflection"><b data-living-lang="en">Reflection · Not a literal translation</b><b data-living-lang="ta" lang="ta">சிந்தனை · நேரடி மொழிபெயர்ப்பு அல்ல</b><p data-living-lang="en">The chapter asks refuge from hidden whispering that enters human hearts. Reflect on fear, persuasion and choosing not to follow every thought.</p><p data-living-lang="ta" lang="ta">மனித உள்ளங்களில் எழும் மறைவான கிசுகிசுப்புகளிலிருந்து பாதுகாப்பை இந்த அத்தியாயம் வேண்டுகிறது. ஒவ்வொரு எண்ணத்தையும் உடனே பின்பற்றாமல் தெளிவுடன் சிந்திப்போம்.</p></div>
+ <a href="https://quran.com/an-nas" target="_blank" rel="noopener noreferrer" class="hc-living-external">Listen to verified reciters on Quran.com ↗</a>
+ <p class="hc-living-note" data-living-lang="ta" lang="ta">அரபு ஓதுதலைக் கேட்டு, இயல்பான குரலில் மெதுவாகத் திரும்ப ஓதலாம். உச்சரிப்பை சரிபார்க்கவும்.</p><p class="hc-living-note" data-living-lang="en">Listen first, then repeat at a comfortable audible volume. Check your Arabic pronunciation with a qualified reciter.</p>
+ </article>
+  <div class="hc-living-intro">
+   <h3 data-living-lang="en">Sound and the nervous system: what science actually shows</h3><h3 data-living-lang="ta" lang="ta">ஒலியும் நரம்பு மண்டலமும்: அறிவியல் கூறுவது</h3>
+   <p data-living-lang="en">Small preliminary studies of humming and slow breathing have found changes in heart-rate variability and reports of relaxation. That does not show that a particular sacred syllable heals the nervous system. Recitation is offered here for spiritual meaning and gentle attention, not as medical treatment.</p>
+   <p data-living-lang="ta" lang="ta">மெதுவான மூச்சு மற்றும் ஹம்மிங் ஒலி குறித்து நடந்த சில சிறிய ஆய்வுகளில் இதயத் துடிப்பு மாறுபாடும் தளர்வு உணர்வும் ஆய்வு செய்யப்பட்டன. ஒரு குறிப்பிட்ட புனித ஒலி நரம்பு மண்டலத்தை குணப்படுத்துகிறது என்று அவை நிரூபிக்கவில்லை. இப்பயிற்சி ஆன்மிக அர்த்தத்திற்கும் மென்மையான கவனத்திற்கும்தான்; மருத்துவ சிகிச்சைக்கு மாற்று அல்ல.</p>
+   <p class="hc-living-source"><a href="https://pubmed.ncbi.nlm.nih.gov/40482984/" target="_blank" rel="noopener noreferrer">2025 pilot study · 16 adults</a></p>
+  </div>
+ </div>
+</section>
 
 <section class="screen sacred-hub" id="sacred">
   <div class="hub-hero">
@@ -2634,7 +2759,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
       <p id="sacredMeaning">Understand the meaning and context, then listen or recite naturally without forcing the breath.</p>
     </div>
 
-    <div class="sacred-feature" id="islamicFeatured"><b>Surah Al-Fatiha · ஸூரத்துல் ஃபாத்திஹா</b><small>Seven verses. Meaning and life reflections in Tamil and English.</small><div class="sacred-feature-actions"><button onclick="show('hcFatiha')">Read · தமிழ் / English</button><button onclick="openAdhkar('listen')">Morning Adhkar</button></div><div style="height:1px;background:var(--line);margin:15px 0"></div>
+    <div class="sacred-feature" id="islamicFeatured"><button class="hc-living-button" onclick="show('hcLivingQuran')" style="display:block;width:100%;padding:13px;margin:0 0 14px;background:white;color:#10212e;border:0;border-radius:14px;font:inherit;font-size:13px;font-weight:700;text-align:left">The Living Qur'an · மூன்று குல் ஸூராக்கள் / Voice &amp; stillness →</button><b>Surah Al-Fatiha · ஸூரத்துல் ஃபாத்திஹா</b><small>Seven verses. Meaning and life reflections in Tamil and English.</small><div class="sacred-feature-actions"><button onclick="show('hcFatiha')">Read · தமிழ் / English</button><button onclick="openAdhkar('listen')">Morning Adhkar</button></div><div style="height:1px;background:var(--line);margin:15px 0"></div>
       <b>Morning Adhkar · 28 min</b>
       <small>Use it as a standalone listening session or after a gentle practice. Choose quiet listening or recite along at a comfortable voice and pace.</small>
       <div class="sacred-feature-actions">
@@ -3135,7 +3260,7 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear meditation history only</button>
     </div>
-    <div class="app-version">HeartClear · Version 1.2.7</div>
+    <div class="app-version">HeartClear · Version 1.2.8</div>
   </div>
 </section>
 
@@ -3398,6 +3523,14 @@ body.reduce-motion #practices .practice-card .practice-art::after{animation:none
 </div>
 
 <script>
+function hcSetLivingLanguage(lang){
+  if(!['both','ta','en'].includes(lang))lang='both';
+  const el=document.getElementById('hcLivingQuran');if(!el)return;
+  el.dataset.livingMode=lang;
+  el.querySelectorAll('[data-living-select]').forEach(btn=>btn.setAttribute('aria-pressed',String(btn.dataset.livingSelect===lang)));
+  try{localStorage.setItem('hcLivingQuranLanguage',lang)}catch(e){}
+}
+try{hcSetLivingLanguage(localStorage.getItem('hcLivingQuranLanguage')||localStorage.getItem('hcFatihaLanguage')||'both')}catch(e){hcSetLivingLanguage('both')}
 function hcSetFatihaLanguage(lang){if(!['both','ta','en'].includes(lang))lang='both';const screen=document.getElementById('hcFatiha');if(!screen)return;screen.dataset.fatihaMode=lang;screen.querySelectorAll('[data-fatiha-select]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.fatihaSelect===lang)));try{localStorage.setItem('hcFatihaLanguage',lang)}catch(e){}}
 try{hcSetFatihaLanguage(localStorage.getItem('hcFatihaLanguage')||'both')}catch(e){hcSetFatihaLanguage('both')}
 let chosenSeconds=600;
@@ -3818,7 +3951,7 @@ async function clearOfflineMedia(){
    Never autoplay on cold start. */
 const HC_RETURN_KEY='heartclearReturnStateV1';
 let hcReturnRestoring=false,hcReturnSaveAt=0;
-const HC_RETURN_SCREENS=new Set(['home','practices','player','sacred','sacredDetail','sacredSession',
+const HC_RETURN_SCREENS=new Set(['home','practices','player','sacred','sacredDetail','sacredSession','hcLivingQuran',
  'soundHub','soundLab','soundLabPlayer','fearPractice','fearPlayer','library','collection',
  'bookAudio','human','humanCategory','downloads','history','settings','hcDriveMedia','omVideo']);
 function hcCaptureReturnState(force=false){
@@ -3960,6 +4093,7 @@ function show(id){
     sacredDetail:'Sacred Sound',
     sacredSession:'Sacred Sound',
     hcFatiha:'Al-Fatiha',
+    hcLivingQuran:'The Living Qur\'an',
     downloads:'Offline',
     library:'Library',
     collection:'Library',
@@ -3974,7 +4108,7 @@ function show(id){
     home:'home',
     practices:'practices',human:'practices',humanCategory:'practices',humanSession:'practices',returnJourney:'practices',
     soundHub:'soundHub',soundLab:'soundHub',soundLabPlayer:'soundHub',fearPractice:'soundHub',fearPlayer:'soundHub',
-    sacred:'soundHub',sacredDetail:'soundHub',sacredSession:'soundHub',hcFatiha:'soundHub',
+    sacred:'soundHub',sacredDetail:'soundHub',sacredSession:'soundHub',hcFatiha:'soundHub',hcLivingQuran:'soundHub',
     library:'library',collection:'library',bookAudio:'library',bookReader:'library',downloads:'library',
     settings:'settings',history:'settings'
   };
