@@ -46,7 +46,7 @@ NIYYAH operates on this device with no network actions beyond loading its own pu
 No files in `human-practice-prototype/`, `human-atlas/`, `inner-voice/` or `story-engine/` are edited. The later optional HeartClear-to-NIYYAH navigation link requires user review after NIYYAH testing.
 
 ## Quality checks to complete on devices
-1. Verify 22 verse numbers, Arabic diacritics and Bengali? No—Sri Lankan Tamil language presentation on an Android phone with a qualified Arabic reader for pronunciation.
+1. Review the 22 Arabic verses, diacritics, transliteration and Sri Lankan Tamil phrasing with qualified Arabic and Tamil readers.
 2. Change EN → தமிழ் → both, reload, verify chosen language persists.
 3. Read every chapter in all three modes and inspect font wrapping.
 4. Start/pause/restart each 3/5/7/10 minute practice; verify optional history remains off unless enabled.
