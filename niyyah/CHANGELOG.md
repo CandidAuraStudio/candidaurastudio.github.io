@@ -50,3 +50,14 @@ The future optional HeartClear link to NIYYAH has **not** been added. Waiting fo
 - **No HeartClear master-hub edit yet.** Independent-app link locations are planned for a later update, after user approval of the tested NIYYAH experience.
 
 Source/permission: Tanzil Quran Text, Uthmani, CC BY 3.0, https://tanzil.net ; intermediate distribution https://github.com/semarketir/quranjson .
+
+
+## 2026-10-14 — Version 1.2: Reading and reflection improvements
+
+**New:** full 286-verse Arabic Al-Baqarah; modern original English/Tamil meanings for 2:1–20, 2:144 and 2:170; a 20-verse mobile reader with navigation and thematic shortcuts; dedicated separate provenance-labelled Akmal reflection sections for 2:2, 2:144 and 2:170; added lexical context and sensitive disability-metaphor interpretation warnings.
+
+**Clearly incomplete:** 264 Baqarah verses still lack app-hosted English/Tamil explanatory drafts. Akmal's reflection on other verses is not inferred or attributed without his words. Reflections currently shown as summaries should be reviewed by Akmal before being treated as final public teaching.
+
+**Unchanged:** HeartClear, HUMAN ATLAS, INNER VOICE, STORY ENGINE; NIYYAH language and journal keys; core practice timer; 37 Juz Amma chapters. No audio has been downloaded or synthesized.
+
+**Source:** Tanzil Quran Text (Uthmani), CC BY 3.0, https://tanzil.net ; https://tanzil.net/docs/Text_License .
