@@ -2058,6 +2058,12 @@ body.hc-reels-active{overflow:hidden;overscroll-behavior:none}
 }
 @media(prefers-reduced-motion:reduce){#hcReels.active{animation:none}}
 
+/* Public sharing: compact install entry on Home; no unsolicited modal. */
+.hc-home-install-link{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid rgba(215,233,241,.22);background:rgba(10,29,42,.55);color:#fff;border-radius:999px;min-height:43px;padding:8px 12px;font:inherit;font-size:12px;font-weight:680;white-space:nowrap}
+.hc-home-install-link[hidden],.hc-install-browser-hint[hidden]{display:none!important}
+.hc-install-browser-hint{border:1px solid rgba(219,192,129,.35);background:rgba(40,33,23,.65);color:#f0dfbe;padding:11px 13px;border-radius:12px;font-size:12px;line-height:1.5;margin:12px 0}
+.hc-install-copy-status{display:block;font-size:12px;line-height:1.5;color:#c7d9e1;margin-top:10px;min-height:16px}
+@media(max-width:350px){.hc-home-install-link{padding:7px 9px;font-size:11px}}
 </style>
 </head>
 <body>
@@ -2086,10 +2092,13 @@ body.hc-reels-active{overflow:hidden;overscroll-behavior:none}
       <div class="install-step"><span>2</span><div><b>Choose Add to Home screen</b><small>Chrome may show Install app directly instead.</small></div></div>
       <div class="install-step"><span>3</span><div><b>Confirm Install</b><small>HeartClear will appear in your Android app list.</small></div></div>
     </div>
+    <p id="hcInstallBrowserHint" class="hc-install-browser-hint" hidden>Opened from Instagram? Use the Instagram menu to open this link in Chrome (Android) or Safari (iPhone), then follow the installation steps.</p>
     <div class="install-actions">
       <button class="install-primary" id="installPrimaryBtn" onclick="handleInstallAction()">Install HeartClear</button>
+      <button class="install-secondary" onclick="hcCopyInstallLink()">Copy installation link</button>
       <button class="install-secondary" onclick="dismissInstallSheet()">Close and continue</button>
     </div>
+    <small id="hcInstallCopyStatus" class="hc-install-copy-status" role="status" aria-live="polite"></small>
   </div>
 </div>
 
@@ -2111,6 +2120,7 @@ body.hc-reels-active{overflow:hidden;overscroll-behavior:none}
 <section class="screen active" id="home">
   <div class="hc-home-greeting-row">
     <div class="home-greeting" id="timeGreeting">Welcome</div>
+    <button class="hc-home-install-link" id="hcHomeInstallBtn" onclick="showInstallSheet(true)" type="button" aria-label="Install HeartClear on your phone">Install app <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v4h16v-4"/></svg></button>
   </div>
   <script>
     (function(){
@@ -3364,7 +3374,7 @@ body.hc-reels-active{overflow:hidden;overscroll-behavior:none}
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear meditation history only</button>
     </div>
-    <div class="app-version">HeartClear · Version 1.2.9</div>
+    <div class="app-version">HeartClear · Version 1.3.0</div>
   </div>
 </section>
 
@@ -3847,7 +3857,7 @@ function isIOSDevice(){
 
 function isSafariBrowser(){
   const ua=navigator.userAgent||'';
-  return /Safari/i.test(ua) && !/CriOS|FxiOS|EdgiOS|OPiOS|DuckDuckGo/i.test(ua);
+  return /Safari/i.test(ua) && !/CriOS|FxiOS|EdgiOS|OPiOS|DuckDuckGo|Instagram|FBAN|FBAV|FB_IAB/i.test(ua);
 }
 
 function showInstallSheet(force=false){
@@ -3863,6 +3873,9 @@ function showInstallSheet(force=false){
   const button=document.getElementById('installPrimaryBtn');
   const subtitle=document.getElementById('installSubtitle');
 
+  const embedded=/Instagram|FBAN|FBAV|FB_IAB/i.test(navigator.userAgent||'');
+  const browserHint=document.getElementById('hcInstallBrowserHint');
+  if(browserHint)browserHint.hidden=!embedded;
   if(ios){
     iosSteps.style.display='grid';
     if(androidSteps)androidSteps.style.display='none';
@@ -3877,6 +3890,31 @@ function showInstallSheet(force=false){
   }
 
   sheet.classList.add('show');
+}
+
+const HC_PUBLIC_INSTALL_URL='https://candidaurastudio.github.io/human-practice-prototype/';
+async function hcCopyInstallLink(){
+  const status=document.getElementById('hcInstallCopyStatus');
+  try{
+    if(!navigator.clipboard?.writeText)throw new Error('Clipboard not available');
+    await navigator.clipboard.writeText(HC_PUBLIC_INSTALL_URL);
+    if(status)status.textContent='Link copied. Open it in Chrome or Safari to install.';
+  }catch(e){
+    // Some in-app browsers restrict clipboard access; give a copyable link instead.
+    if(status){
+      status.replaceChildren();
+      const input=document.createElement('input');
+      input.value=HC_PUBLIC_INSTALL_URL;input.readOnly=true;
+      input.setAttribute('aria-label','HeartClear installation link');
+      input.style.cssText='width:100%;padding:10px;border-radius:9px;border:1px solid #a7bfca;background:#0c2636;color:white;font-size:12px';
+      status.append('Select and copy this link: ',input);
+      input.focus();input.select();
+    }
+  }
+}
+function hcRefreshHomeInstallButton(){
+  const btn=document.getElementById('hcHomeInstallBtn');
+  if(btn)btn.hidden=isStandaloneApp();
 }
 
 function dismissInstallSheet(){
@@ -3925,6 +3963,7 @@ document.addEventListener('keydown',event=>{
 window.addEventListener('appinstalled',()=>{
   deferredInstallPrompt=null;
   dismissInstallSheet();
+  hcRefreshHomeInstallButton();
   try{localStorage.setItem('heartclearInstalled','1')}catch(e){}
 });
 
@@ -4343,7 +4382,7 @@ function show(id){
   if(av && id!=='sacredSession') av.pause();
   const ba=document.getElementById('bookAudioEl');
   updateBookMini(id);
-  if(id==='home'){setGreeting();renderDashboard();updateHomeOfflineCount();renderHeartClearFavourites();hcRenderSoundResume();}
+  if(id==='home'){setGreeting();renderDashboard();updateHomeOfflineCount();renderHeartClearFavourites();hcRenderSoundResume();hcRefreshHomeInstallButton();}
   if(id==='hcReels')hcReelRender();
   if(id==='practices'){filterPractices(hcPracticeActiveFilter);}
   if(id==='soundLab'){hcRenderSoundRows();hcRenderMixer()}
@@ -8323,6 +8362,7 @@ try{
   if(localStorage.getItem('clearWithinReducedMotion')==='1') document.body.classList.add('reduce-motion');
 }catch(e){}
 setGreeting();
+hcRefreshHomeInstallButton();
 renderLocalContext();
 renderDashboard();
 renderHeartClearFavourites();
@@ -8372,7 +8412,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=113');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=114');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
