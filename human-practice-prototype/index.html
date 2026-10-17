@@ -2112,7 +2112,7 @@ body.hc-reels-active{overflow:hidden;overscroll-behavior:none}
 #hcReels .hc-reels-hint{display:none!important}
 @media(max-width:370px){#hcReels .hc-reel-swipe-rail{width:66px!important}}
 
-/* Reels v117: single wider swipe edge, discreet one-sided controls.
+/* Reels v118: single wider swipe edge, discreet one-sided controls.
  * Do not change iframe scaling: landscape Drive reels retain their letterboxing. */
 #hcReels .hc-reel-swipe-left{display:none!important}
 #hcReels .hc-reel-swipe-rail{
@@ -2268,7 +2268,7 @@ body.hc-reels-active{overflow:hidden;overscroll-behavior:none}
   </div>
 
   <div class="hc-reels-home-card">
-    <div><div class="eyebrow">SHORT VIDEOS</div><strong>Reels</strong><small>71 videos · shuffled · swipe up or down</small></div>
+    <div><div class="eyebrow">SHORT VIDEOS</div><strong>Reels</strong><small>78 videos · shuffled · swipe up or down</small></div>
     <button type="button" onclick="hcOpenReels()" aria-label="Open full-screen Reels">Watch</button>
   </div>
     <div class="hc-starter-card">
@@ -2310,7 +2310,7 @@ body.hc-reels-active{overflow:hidden;overscroll-behavior:none}
       <button class="hc-reels-back" type="button" onclick="hcCloseReels()" aria-label="Close Reels and return Home"><span aria-hidden="true">×</span><span class="hc-reels-back-label"> Close</span></button>
       <span class="kicker">HEARTCLEAR · REELS</span>
       <h2 id="hcReelsHeading">Reels</h2>
-      <p>Swipe either edge ↑ ↓ · your Drive videos</p>
+      <p>Swipe the right edge ↑ ↓</p>
    </div>
    <div class="hc-reels-stage" id="hcReelsStage" aria-label="Swipe up for next reel, down for previous">
      <button id="hcReelPoster" class="hc-reel-drive-poster" type="button" onclick="hcReelToggle()" aria-label="Load selected uploaded video"><span class="hc-reel-playmark" aria-hidden="true">▶</span><strong>Ready to watch</strong><span>Tap here to load your uploaded short inside HeartClear.</span></button>
@@ -2318,7 +2318,7 @@ body.hc-reels-active{overflow:hidden;overscroll-behavior:none}
       <div id="hcReelSwipeRail" class="hc-reel-swipe-rail" aria-label="Swipe upward for the next reel or downward for the previous reel"><span aria-hidden="true">↑</span><small>SWIPE</small><span aria-hidden="true">↓</span></div>
      <div class="hc-reels-screen-shade" aria-hidden="true"></div>
      <div class="hc-reels-progress" aria-hidden="true"><span id="hcReelProgress"></span></div>
-     <div class="hc-reels-badge" id="hcReelNumber">1 / 71</div>
+     <div class="hc-reels-badge" id="hcReelNumber">1 / 78</div>
      <div class="hc-reels-copy">
        <div class="hc-reels-kicker" id="hcReelKicker">UPLOADED REEL</div>
        <h3 id="hcReelTitle">Video 01</h3>
@@ -2331,7 +2331,6 @@ body.hc-reels-active{overflow:hidden;overscroll-behavior:none}
      <button type="button" id="hcReelPlayBtn" onclick="hcReelToggle()" aria-label="Load or close current Drive video">Reload</button>
      <button type="button" onclick="hcReelNext()" aria-label="Next reel" title="Next reel"><span aria-hidden="true">↓</span></button>
    </div>
-   <a class="hc-reels-practice" id="hcReelSource" href="#" hidden target="_blank" rel="noopener noreferrer" aria-label="Open reel source in Google Drive" title="Open reel source"><span aria-hidden="true">↗</span></a>
    <p class="hc-reels-hint" id="hcReelHint" role="status" aria-live="polite">Swipe either edge to change reels. Tap Play in the video if your browser blocks autoplay.</p>
 </section>
 
@@ -3466,7 +3465,7 @@ body.hc-reels-active{overflow:hidden;overscroll-behavior:none}
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear meditation history only</button>
     </div>
-    <div class="app-version">HeartClear · Version 1.3.3</div>
+    <div class="app-version">HeartClear · Version 1.3.4</div>
   </div>
 </section>
 
@@ -4285,10 +4284,10 @@ function hcRestorePreviousScreen(){
 }
 
 
-/* Reels v117 — 71 distinct named MP4 uploads from the user's Drive Reels folder.
+/* Reels v118 — 78 distinct MP4 uploads in the existing Drive Reels folder.
    Not related to the four meditation practice visuals. Loading is user-initiated and
    the cross-origin Drive player owns playback/volume/seek controls. */
-const hcReelItems=[{"id":"14rhxM8P88gM1xWLitLVjLNiihcnsIvFH","short":"01"},{"id":"1_bWlCW3Zgv8RZm74LIk6H3utpQSdvr6C","short":"02"},{"id":"1k_3vWitGE2syhrJOkxraKKjS7h5kotgO","short":"03"},{"id":"157j4JrUZoBWJla6YrOP2ravJ5A4v8jD0","short":"04"},{"id":"11egb0iT5b7NwIdnJdGp2cWqVqnnD7_XP","short":"05"},{"id":"1OV7sh9vYunWOuGpwsc21vwAO4mPrpGGm","short":"06"},{"id":"1vVS4rFd203WLlKIkh1N5oe8F6g3diwsf","short":"07"},{"id":"1YkYNSjEvkFRYMT95fwEJTGS5LmnazElX","short":"08"},{"id":"1q7g8_TTi1yeyfWLZWJbmA7z_DKSN8qtc","short":"09"},{"id":"1E43R4dkBlx8iPF58muZEMpQM9hnWKRSY","short":"10"},{"id":"1oUIDwLNJpmNX0CNY8fuqo5Nqxy7iD20n","short":"11"},{"id":"1c2ILWbonYxysQG_QTcLzG7QzwK5HYGd5","short":"12"},{"id":"1pQ0c-_rh00yWSqxVSH-vrwhJYsxFGKBk","short":"13"},{"id":"1lXLxkP7ZJfAgC8ImNQ_Qd3FsVZMHyIl9","short":"14"},{"id":"15vZozQgAZsMw2zeN2LokeZd_93lwzYPK","short":"15"},{"id":"12fbY_G1H8N0aav2cLnDgIfAnB2z2XNzG","short":"16"},{"id":"1ZPIqLNSI4r_hQF334NeOQSRSstPRyHyk","short":"17"},{"id":"1tUSLXBo77iw7PrW2GNaArw5_V3RX48Wc","short":"18"},{"id":"1P1_JQXG6dRn8zNxBt2diKG1SXjdV7vda","short":"19"},{"id":"1MwoPkELjCsBS9yZ9HtJtttOdS76U0SOi","short":"20"},{"id":"1JaU3Pzvq-daim9e6m4Tv_A5yvKyO4bPj","short":"21"},{"id":"1pPtrL5s4gCyy4g0lZ4A97AGs0EEwrBA6","short":"22"},{"id":"1iyvz4LH-3rkGpgrAcaDsBwc_82LZ_MPM","short":"23"},{"id":"1DFxG0_o90pctOn_pWnqSzlwLtNGrZQWp","short":"24"},{"id":"1xaxoC9ZzbCUTVJxv9jsPT0E885mZchsO","short":"25"},{"id":"1fYqQqJIwear7KfnggwzYuoFF8CW14Hsb","short":"26"},{"id":"1RGVEQydljciXipzkuj3YEw_wFe2vunpA","short":"27"},{"id":"1hHznvoSNCwRBHrx1qXM4ACJjIKrathMe","short":"28"},{"id":"1ZjxbW2cJCb33apj6bNIT9pqyjrZeb34n","short":"29"},{"id":"1sVw7jh8Ava82p0nsgJcox0UA3ckQW_7-","short":"30"},{"id":"1Xr7TWqtqi0yQySEqihhJCQsiTjciq-89","short":"31"},{"id":"1-jAXg880YY0-u4-DTYIJCufiagUFM-UN","short":"32"},{"id":"1Wqe6yS-zX1tP-1ek3_MCgphpjbdOHOrj","short":"33"},{"id":"1RUKhmz6UyoghdmuopM8JxeXx_bwcpGNa","short":"34"},{"id":"1wjFyjY5tdpGIjRaWizLaKdVoUPqCY5Nz","short":"35"},{"id":"1Vdv20kTTRbMLa4m6pvUASpZW_29O14lk","short":"36"},{"id":"1Q4dKDI2pyUsJKMGksRK31In4BbEvHRlZ","short":"37"},{"id":"15Dn1HMwUdabCpNR68DhPnjfgy6Ojm5DN","short":"38"},{"id":"1cSRPrDL0PdA36iu76Yx8LMzPMICUHAzN","short":"39"},{"id":"1iiY8P6UF9DbDynViQLSgyf6gcq-8_0oS","short":"40"},{"id":"1T6RwoUEXQN5hYB-yKjL-X6W-Uv5t5j95","short":"41"},{"id":"1UdnA5URzw2D4ATqfDCrB_YuxIIJujqMT","short":"42"},{"id":"1dM_8JnIGTIWkNes40ecR6OwetodAntx2","short":"43"},{"id":"1DgiBU3ezQnnhPxZCtf8YPgXY12HTAKS9","short":"44"},{"id":"1QtK0og_CzZt2nyzjhEydNOZdbz_NnvlC","short":"45"},{"id":"1VoWoN5mzgC_eYnVQejGCYTcl9RKs80_6","short":"46"},{"id":"167rAklkDpqsQNa5KEI-kVLiWbL9QgDI_","short":"47"},{"id":"1OYgnFKl6JfvKeZxENosQzdVmQucVOWTc","short":"48"},{"id":"1-MPU4NLO51__A5mA0plwUGtKsVDjazYu","short":"49"},{"id":"1SMcUnX6zhj1Y8dk40X9AUwgP6t2WBFD8","short":"50"},{"id":"1v7G9KauENqaX0sk8kORz52HwfP7tnzwX","short":"51"},{"id":"1-MRUeG1_uEsar8n1FEQ1386u9-edDraz","short":"52"},{"id":"1IjFAnpVRrckHgap07j1qrWddi6pSD5sL","short":"53"},{"id":"1QrB4idSip9meXLeoqG9r3Qzcp4eC9qzj","short":"54"},{"id":"1MrR8SVRIT2Q0_CzoCNkliSaULATWscRh","short":"55"},{"id":"1V1NK_xuK_5b76FB0XynIoAoSVOqU9G6A","short":"56"},{"id":"1OuI0CY3Su0q_i_INiiO_121yw4HjBXoN","short":"57"},{"id":"1kRsU4YzGNXZgrr-vH3rYpeR8qqk4GJm6","short":"58"},{"id":"10Uwr3HspjgrREwp7aHmLEFCMGwl7_Qk4","short":"59"},{"id":"1SCfmoc6Mor9CGoHP4qAsjmZaz4siW1Ru","short":"60"},{"id":"1W-_Qi3FXfwgpLyu2GYQ7HrbN_-riczuU","short":"61"},{"id":"1bKzlYjDry64JV0kp_Gys54x_OpPTPNN_","short":"62"},{"id":"1YOQKiil1YrojFT3T9xIpLdBLpMEI_5sV","short":"63"},{"id":"11A5FnuOYFvVOgTPSe_RdmUwWN2CCYrG_","short":"64"},{"id":"1xZuvEjxNaDRYRfIC1W6FiS7gErYOmbQz","short":"65"},{"id":"1C2A2rA7_0IXvRCmmn2FdC0tKt3h5zEYK","short":"66"},{"id":"12jwoQx7mNVCXIhbW-lqmP4VDAk5TMchM","short":"67"},{"id":"1GUmV-VyrbYIeYVowq5xgTBnl5jD3_VZZ","short":"68"},{"id":"1RlWoRRHNrXqDECBr77ZaJUSzscoP58Kw","short":"69"},{"id":"1zkUpnIDJtd2k3XM0Fv2WDyCS-IIONXZY","short":"70"},{"id":"16lWCLxgBy5GVDRCNug7PEJKUe3rWy_AB","short":"71"}]; // Owner-supplied Drive embeds only; MP4 files not copied to GitHub.
+const hcReelItems=[{"id":"14rhxM8P88gM1xWLitLVjLNiihcnsIvFH","short":"01"},{"id":"1_bWlCW3Zgv8RZm74LIk6H3utpQSdvr6C","short":"02"},{"id":"1k_3vWitGE2syhrJOkxraKKjS7h5kotgO","short":"03"},{"id":"157j4JrUZoBWJla6YrOP2ravJ5A4v8jD0","short":"04"},{"id":"11egb0iT5b7NwIdnJdGp2cWqVqnnD7_XP","short":"05"},{"id":"1OV7sh9vYunWOuGpwsc21vwAO4mPrpGGm","short":"06"},{"id":"1vVS4rFd203WLlKIkh1N5oe8F6g3diwsf","short":"07"},{"id":"1YkYNSjEvkFRYMT95fwEJTGS5LmnazElX","short":"08"},{"id":"1q7g8_TTi1yeyfWLZWJbmA7z_DKSN8qtc","short":"09"},{"id":"1E43R4dkBlx8iPF58muZEMpQM9hnWKRSY","short":"10"},{"id":"1oUIDwLNJpmNX0CNY8fuqo5Nqxy7iD20n","short":"11"},{"id":"1c2ILWbonYxysQG_QTcLzG7QzwK5HYGd5","short":"12"},{"id":"1pQ0c-_rh00yWSqxVSH-vrwhJYsxFGKBk","short":"13"},{"id":"1lXLxkP7ZJfAgC8ImNQ_Qd3FsVZMHyIl9","short":"14"},{"id":"15vZozQgAZsMw2zeN2LokeZd_93lwzYPK","short":"15"},{"id":"12fbY_G1H8N0aav2cLnDgIfAnB2z2XNzG","short":"16"},{"id":"1ZPIqLNSI4r_hQF334NeOQSRSstPRyHyk","short":"17"},{"id":"1tUSLXBo77iw7PrW2GNaArw5_V3RX48Wc","short":"18"},{"id":"1P1_JQXG6dRn8zNxBt2diKG1SXjdV7vda","short":"19"},{"id":"1MwoPkELjCsBS9yZ9HtJtttOdS76U0SOi","short":"20"},{"id":"1JaU3Pzvq-daim9e6m4Tv_A5yvKyO4bPj","short":"21"},{"id":"1pPtrL5s4gCyy4g0lZ4A97AGs0EEwrBA6","short":"22"},{"id":"1iyvz4LH-3rkGpgrAcaDsBwc_82LZ_MPM","short":"23"},{"id":"1DFxG0_o90pctOn_pWnqSzlwLtNGrZQWp","short":"24"},{"id":"1xaxoC9ZzbCUTVJxv9jsPT0E885mZchsO","short":"25"},{"id":"1fYqQqJIwear7KfnggwzYuoFF8CW14Hsb","short":"26"},{"id":"1RGVEQydljciXipzkuj3YEw_wFe2vunpA","short":"27"},{"id":"1hHznvoSNCwRBHrx1qXM4ACJjIKrathMe","short":"28"},{"id":"1ZjxbW2cJCb33apj6bNIT9pqyjrZeb34n","short":"29"},{"id":"1sVw7jh8Ava82p0nsgJcox0UA3ckQW_7-","short":"30"},{"id":"1Xr7TWqtqi0yQySEqihhJCQsiTjciq-89","short":"31"},{"id":"1-jAXg880YY0-u4-DTYIJCufiagUFM-UN","short":"32"},{"id":"1Wqe6yS-zX1tP-1ek3_MCgphpjbdOHOrj","short":"33"},{"id":"1RUKhmz6UyoghdmuopM8JxeXx_bwcpGNa","short":"34"},{"id":"1wjFyjY5tdpGIjRaWizLaKdVoUPqCY5Nz","short":"35"},{"id":"1Vdv20kTTRbMLa4m6pvUASpZW_29O14lk","short":"36"},{"id":"1Q4dKDI2pyUsJKMGksRK31In4BbEvHRlZ","short":"37"},{"id":"15Dn1HMwUdabCpNR68DhPnjfgy6Ojm5DN","short":"38"},{"id":"1cSRPrDL0PdA36iu76Yx8LMzPMICUHAzN","short":"39"},{"id":"1iiY8P6UF9DbDynViQLSgyf6gcq-8_0oS","short":"40"},{"id":"1T6RwoUEXQN5hYB-yKjL-X6W-Uv5t5j95","short":"41"},{"id":"1UdnA5URzw2D4ATqfDCrB_YuxIIJujqMT","short":"42"},{"id":"1dM_8JnIGTIWkNes40ecR6OwetodAntx2","short":"43"},{"id":"1DgiBU3ezQnnhPxZCtf8YPgXY12HTAKS9","short":"44"},{"id":"1QtK0og_CzZt2nyzjhEydNOZdbz_NnvlC","short":"45"},{"id":"1VoWoN5mzgC_eYnVQejGCYTcl9RKs80_6","short":"46"},{"id":"167rAklkDpqsQNa5KEI-kVLiWbL9QgDI_","short":"47"},{"id":"1OYgnFKl6JfvKeZxENosQzdVmQucVOWTc","short":"48"},{"id":"1-MPU4NLO51__A5mA0plwUGtKsVDjazYu","short":"49"},{"id":"1SMcUnX6zhj1Y8dk40X9AUwgP6t2WBFD8","short":"50"},{"id":"1v7G9KauENqaX0sk8kORz52HwfP7tnzwX","short":"51"},{"id":"1-MRUeG1_uEsar8n1FEQ1386u9-edDraz","short":"52"},{"id":"1IjFAnpVRrckHgap07j1qrWddi6pSD5sL","short":"53"},{"id":"1QrB4idSip9meXLeoqG9r3Qzcp4eC9qzj","short":"54"},{"id":"1MrR8SVRIT2Q0_CzoCNkliSaULATWscRh","short":"55"},{"id":"1V1NK_xuK_5b76FB0XynIoAoSVOqU9G6A","short":"56"},{"id":"1OuI0CY3Su0q_i_INiiO_121yw4HjBXoN","short":"57"},{"id":"1kRsU4YzGNXZgrr-vH3rYpeR8qqk4GJm6","short":"58"},{"id":"10Uwr3HspjgrREwp7aHmLEFCMGwl7_Qk4","short":"59"},{"id":"1SCfmoc6Mor9CGoHP4qAsjmZaz4siW1Ru","short":"60"},{"id":"1W-_Qi3FXfwgpLyu2GYQ7HrbN_-riczuU","short":"61"},{"id":"1bKzlYjDry64JV0kp_Gys54x_OpPTPNN_","short":"62"},{"id":"1YOQKiil1YrojFT3T9xIpLdBLpMEI_5sV","short":"63"},{"id":"11A5FnuOYFvVOgTPSe_RdmUwWN2CCYrG_","short":"64"},{"id":"1xZuvEjxNaDRYRfIC1W6FiS7gErYOmbQz","short":"65"},{"id":"1C2A2rA7_0IXvRCmmn2FdC0tKt3h5zEYK","short":"66"},{"id":"12jwoQx7mNVCXIhbW-lqmP4VDAk5TMchM","short":"67"},{"id":"1GUmV-VyrbYIeYVowq5xgTBnl5jD3_VZZ","short":"68"},{"id":"1RlWoRRHNrXqDECBr77ZaJUSzscoP58Kw","short":"69"},{"id":"1zkUpnIDJtd2k3XM0Fv2WDyCS-IIONXZY","short":"70"},{"id":"16lWCLxgBy5GVDRCNug7PEJKUe3rWy_AB","short":"71"},{"id":"1ro6n7n886TpxsdK-DEPoRIB1k29f2iYd","short":"72"},{"id":"1DQEAG01_vV0A7WvhAwqala76xy_QFOU1","short":"73"},{"id":"1cRZ8DYJWrhbuXaPa4NHRMhM6WEhuoLSY","short":"74"},{"id":"1Jirir8zb_vEARWt-YFWm-O1snIZKDeKE","short":"75"},{"id":"1OHKK8jm1ABX8wdj0PSgVPiOO04L3MISG","short":"76"},{"id":"15WxH7HQaeh0qZyHqJIqgq9W7XTouBFe1","short":"77"},{"id":"1uj-Vh14VaziKpLl5fgyVARc6etY34-9a","short":"78"}]; // Owner-supplied Drive embeds only; MP4 files not copied to GitHub.
 
 const HC_REEL_LAST_KEY='heartclearLastReelV1';
 function hcRememberReel(){
@@ -4332,13 +4331,7 @@ function hcReelShuffle(excludedIndex=-1){
 }
 
 function hcReelFrame(){return document.getElementById('hcReelFrame')}
-function hcReelSourceUrl(item){return 'https://drive.google.com/file/d/'+encodeURIComponent(item.id)+'/view'}
 function hcReelPreviewUrl(item){return 'https://drive.google.com/file/d/'+encodeURIComponent(item.id)+'/preview'}
-function hcReelSetSource(){
- const item=hcReelItems[hcReelIndex];if(!item)return;
- const a=document.getElementById('hcReelSource');
- if(a){a.href=hcReelSourceUrl(item);a.setAttribute('aria-label','Open original reel '+(hcReelIndex+1)+' in Google Drive')}
-}
 function hcReelUpdatePlayButton(){
  const b=document.getElementById('hcReelPlayBtn');if(!b)return;
  b.textContent=hcReelFrameLoaded?'×':'▶';
@@ -4360,11 +4353,10 @@ function hcReelRender(){
  const item=hcReelItems[hcReelIndex];hcRememberReel();
  const count=document.getElementById('hcReelNumber');if(count)count.textContent=(hcReelShuffleCursor+1)+' / '+hcReelItems.length;
  const kicker=document.getElementById('hcReelKicker');if(kicker)kicker.textContent='UPLOADED REEL';
- const title=document.getElementById('hcReelTitle');if(title)title.textContent='Reel '+item.short;
- const caption=document.getElementById('hcReelCaption');if(caption)caption.textContent='Video in your Google Drive Reels collection';
+ const title=document.getElementById('hcReelTitle');if(title)title.textContent='Reel';
+ const caption=document.getElementById('hcReelCaption');if(caption)caption.textContent='Swipe up or down to change';
  const progress=document.getElementById('hcReelProgress');if(progress)progress.style.width='0%';
- const hint=document.getElementById('hcReelHint');if(hint)hint.textContent='Swipe ↑ / ↓ on either edge to switch. Tap Play inside the video if needed.';
- hcReelSetSource();
+ const hint=document.getElementById('hcReelHint');if(hint)hint.textContent='Swipe ↑ / ↓ on the right edge to change reels.';
  hcReelUpdatePlayButton();
  if(hcReelAutoload)hcReelToggle();
 }
@@ -4401,12 +4393,8 @@ function hcReelToggle(){
  if(cover)cover.hidden=true;
  hcReelFrameLoaded=true;
  const hint=document.getElementById('hcReelHint');
- if(hint)hint.textContent='Swipe ↑ / ↓ along either edge. Google Drive may require one tap on its Play control.';
+ if(hint)hint.textContent='Swipe ↑ / ↓ on the right edge to change reels.';
  hcReelUpdatePlayButton();
-}
-function hcReelOpenSource(){
- const item=hcReelItems[hcReelIndex];
- if(item)window.open(hcReelSourceUrl(item),'_blank','noopener,noreferrer');
 }
 {
  const frame=document.getElementById('hcReelsStage');
@@ -8609,7 +8597,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=117');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=118');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
