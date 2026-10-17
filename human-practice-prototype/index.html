@@ -2064,6 +2064,18 @@ body.hc-reels-active{overflow:hidden;overscroll-behavior:none}
 .hc-install-browser-hint{border:1px solid rgba(219,192,129,.35);background:rgba(40,33,23,.65);color:#f0dfbe;padding:11px 13px;border-radius:12px;font-size:12px;line-height:1.5;margin:12px 0}
 .hc-install-copy-status{display:block;font-size:12px;line-height:1.5;color:#c7d9e1;margin-top:10px;min-height:16px}
 @media(max-width:350px){.hc-home-install-link{padding:7px 9px;font-size:11px}}
+
+/* Reels v115: usable vertical controls on either edge, native Drive playback in the centre. */
+#hcReels .hc-reel-swipe-rail{width:clamp(54px,16vw,86px)!important;touch-action:none;cursor:ns-resize}
+#hcReels .hc-reel-swipe-left{left:0;right:auto!important;background:linear-gradient(to right,rgba(3,18,30,.40),rgba(3,18,30,0));border-right:1px solid rgba(255,255,255,.10);border-left:0}
+#hcReels .hc-reel-swipe-left span{font-size:25px}
+#hcReels .hc-reel-swipe-left small{font-size:9px}
+#hcReels .hc-reels-hint{right:clamp(70px,19vw,100px);left:clamp(70px,19vw,100px);bottom:calc(171px + env(safe-area-inset-bottom));text-align:center}
+#hcReels .hc-reels-badge{z-index:28}
+@media (max-width:370px){
+  #hcReels .hc-reel-swipe-rail{width:49px!important}
+  #hcReels .hc-reels-hint{left:54px;right:54px}
+}
 </style>
 </head>
 <body>
@@ -4180,6 +4192,7 @@ function hcRestorePreviousScreen(){
      if(status)status.textContent='Recording restored. If needed, tap Play inside the video.';
     }else show('sacred');
     break;
+   case 'hcReels':show('home');success=true;break;
    case 'omVideo':show('sacred');success=true;break;
    case 'sacredDetail':openSacred('islamic');success=true;break;
    default:show(saved.screen);success=true;
@@ -4295,22 +4308,26 @@ function hcReelOpenSource(){
  }
  // The Drive iframe is cross-origin: it cannot deliver swipes to the parent.
  // Reserve a narrow right-edge gesture zone without blocking central playback.
- const rail=document.getElementById('hcReelSwipeRail');
- if(rail){
+ // Drive's iframe is cross-origin. Keep a sizeable swipe gesture zone on BOTH edges
+ // so the central player remains available for native Play/Pause controls.
+ for(const rail of [document.getElementById('hcReelSwipeRail'),document.getElementById('hcReelSwipeLeft')]){
+  if(!rail)continue;
+  let startY=null,lastStep=0;
   rail.addEventListener('touchstart',event=>{
-   if(event.touches.length===1)hcReelSwipeStart=event.touches[0].clientY;
+   if(event.touches.length===1)startY=event.touches[0].clientY;
   },{passive:true});
   rail.addEventListener('touchend',event=>{
-   if(!hcReelSwipeStart||!event.changedTouches.length)return;
-   const delta=event.changedTouches[0].clientY-hcReelSwipeStart;
-   hcReelSwipeStart=0;
-   if(delta<-45)hcReelNext();else if(delta>45)hcReelPrevious();
+   if(startY===null||!event.changedTouches.length)return;
+   const delta=event.changedTouches[0].clientY-startY;startY=null;
+   const now=Date.now();if(now-lastStep<450)return;
+   if(delta<-45){lastStep=now;hcReelNext()}
+   else if(delta>45){lastStep=now;hcReelPrevious()}
    event.stopPropagation();
   },{passive:true});
   rail.addEventListener('wheel',event=>{
    if(currentScreenId!=='hcReels'||Math.abs(event.deltaY)<25)return;
    event.preventDefault();
-   const now=Date.now();if(rail._lastStep&&now-rail._lastStep<650)return;rail._lastStep=now;
+   const now=Date.now();if(now-lastStep<600)return;lastStep=now;
    if(event.deltaY>0)hcReelNext();else hcReelPrevious();
   },{passive:false});
  }
@@ -4318,6 +4335,7 @@ function hcReelOpenSource(){
   if(currentScreenId!=='hcReels'||event.target.closest('input,textarea,select'))return;
   if(event.key==='ArrowDown'){event.preventDefault();hcReelNext()}
   if(event.key==='ArrowUp'){event.preventDefault();hcReelPrevious()}
+  if(event.key==='Escape'){event.preventDefault();hcCloseReels()}
  });
 }
 
@@ -4738,8 +4756,10 @@ function renderGlobalMini(){
   const mini=document.getElementById('globalMini');
   if(!mini)return;
   const state=getActiveMediaState();
-  if(!state || (!state.key?.includes('mix') && state.el.paused && (Number(state.el.currentTime)||0)<.5)){
-    mini.classList.remove('show');
+  // Paused audio is accessible through the Home Continue cards and source player.
+  // Never let a paused 00:00 (or an old audiobook) cover another screen.
+  if(!state || state.el.paused || (state.key==='mix'&&!hcMixRunning) || currentScreenId==='hcReels'){
+    mini.classList.remove('show');mini.classList.remove('is-mix');
     return;
   }
 
