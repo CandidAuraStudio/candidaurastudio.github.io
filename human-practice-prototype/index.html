@@ -2146,6 +2146,40 @@ body.hc-reels-active{overflow:hidden;overscroll-behavior:none}
 @media(max-width:370px){
   #hcReels .hc-reel-swipe-rail{width:clamp(73px,25vw,93px)!important}
 }
+
+/* Reels v119: HeartClear buttons no longer sit over Drive's native bottom controls.
+ * Google Drive owns the embedded player's native chrome; do not intercept media touches. */
+#hcReels .hc-reels-controls{
+  position:absolute!important;
+  top:calc(80px + env(safe-area-inset-top,0px))!important;
+  bottom:auto!important;
+  left:auto!important;
+  right:9px!important;
+  z-index:31!important;
+  width:44px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  gap:7px!important;
+  margin:0!important;
+}
+#hcReels .hc-reels-controls button{width:44px!important;height:44px!important;min-height:44px!important;min-width:44px!important;padding:0!important;font-size:17px!important;border-radius:50%!important;background:rgba(3,18,29,.48)!important}
+#hcReels .hc-reels-controls button:nth-child(2){background:rgba(3,18,29,.65)!important;color:white!important}
+#hcReels:has(#hcReelFrame:not([hidden])) .hc-reels-controls button:nth-child(2){display:none!important}
+#hcReels .hc-reel-swipe-rail{
+  top:calc(195px + env(safe-area-inset-top,0px))!important;
+  bottom:max(245px,36dvh)!important;
+  width:clamp(64px,19vw,99px)!important;
+  right:0!important;
+  background:linear-gradient(to left,rgba(2,12,21,.08),transparent 85%)!important;
+  z-index:24!important;
+  border:0!important;
+}
+#hcReels .hc-reel-swipe-rail span{font-size:17px!important}
+#hcReels .hc-reel-swipe-rail small{font-size:9px!important;letter-spacing:.11em!important}
+#hcReels .hc-reels-head .hc-reels-back{background:rgba(0,0,0,.32)}
+@media(max-height:650px){
+  #hcReels .hc-reel-swipe-rail{top:calc(175px + env(safe-area-inset-top,0px))!important;bottom:165px!important}
+}
 </style>
 </head>
 <body>
@@ -3465,7 +3499,7 @@ body.hc-reels-active{overflow:hidden;overscroll-behavior:none}
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear meditation history only</button>
     </div>
-    <div class="app-version">HeartClear · Version 1.3.4</div>
+    <div class="app-version">HeartClear · Version 1.3.5</div>
   </div>
 </section>
 
@@ -8597,7 +8631,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=118');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=119');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
