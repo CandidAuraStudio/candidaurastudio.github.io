@@ -2180,6 +2180,8 @@ body.hc-reels-active{overflow:hidden;overscroll-behavior:none}
 @media(max-height:650px){
   #hcReels .hc-reel-swipe-rail{top:calc(175px + env(safe-area-inset-top,0px))!important;bottom:165px!important}
 }
+/* A queued update must never cover the active Drive reel; offer it after closing Reels. */
+body.hc-reels-active #updateBanner{display:none!important;pointer-events:none!important}
 </style>
 </head>
 <body>
@@ -3499,7 +3501,7 @@ body.hc-reels-active{overflow:hidden;overscroll-behavior:none}
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear meditation history only</button>
     </div>
-    <div class="app-version">HeartClear · Version 1.3.5</div>
+    <div class="app-version">HeartClear · Version 1.3.6</div>
   </div>
 </section>
 
@@ -8631,7 +8633,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=119');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=120');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
