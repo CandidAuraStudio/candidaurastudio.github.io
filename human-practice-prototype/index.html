@@ -2174,6 +2174,12 @@ body.hc-reels-active{overflow:hidden;overscroll-behavior:none}
       <small id="hcSoundResumeMeta">Continue where you left off</small>
       <button onclick="hcResumeSoundLab()" aria-label="Resume last listening session">Resume</button>
     </div>
+    <div class="home-resume hc-secondary-resume" id="hcAdhkarResumeCard" style="display:none">
+      <div class="eyebrow">Continue sacred listening</div>
+      <strong>Morning Adhkar</strong>
+      <small id="hcAdhkarResumeMeta">Continue at your saved position</small>
+      <button onclick="hcResumeAdhkar()" aria-label="Resume Morning Adhkar at your saved time">Resume</button>
+    </div>
   </div>
 
   <div class="hc-quick-grid" aria-label="Quick start">
@@ -4156,6 +4162,9 @@ function hcRestorePreviousScreen(){
  try{saved=JSON.parse(localStorage.getItem(HC_RETURN_KEY)||'null')}catch(e){return false}
  if(!saved||!Number.isFinite(saved.at)||saved.at>Date.now()+60000||
      Date.now()-saved.at>12*3600*1000||!HC_RETURN_SCREENS.has(saved.screen))return false;
+ // A fresh launch cannot continue audio until the listener presses Play.
+ // Keep previous positions in discrete Home Continue cards instead of opening a large paused player.
+ if(['player','sacredSession','soundLabPlayer','bookAudio','fearPlayer','hcDriveMedia','hcReels'].includes(saved.screen))return false;
  let success=false;hcReturnRestoring=true;
  try{
   switch(saved.screen){
@@ -7884,6 +7893,43 @@ function closeHomeSheets(){
   document.getElementById('hcHomeTimerSheet')?.classList.remove('show');
 }
 
+
+/* Sacred listening saves the exact position on this device. Nothing autoplays on restart. */
+const HC_ADHKAR_PROGRESS='heartclearAdhkarProgressV1';
+function hcRememberAdhkarPosition(){
+  const t=Number(adhkarAudio.currentTime)||0;
+  const d=Number.isFinite(adhkarAudio.duration)?adhkarAudio.duration:1698;
+  if(t<=.8||(d>0&&t>=d-2))return;
+  try{localStorage.setItem(HC_ADHKAR_PROGRESS,JSON.stringify({time:t,updatedAt:Date.now()}))}catch(e){}
+}
+function hcGetAdhkarPosition(){
+  try{
+    const saved=JSON.parse(localStorage.getItem(HC_ADHKAR_PROGRESS)||'null');
+    const t=Number(saved?.time);
+    return Number.isFinite(t)&&t>1&&t<1695?t:0;
+  }catch(e){return 0}
+}
+function hcRenderAdhkarResume(){
+  const card=document.getElementById('hcAdhkarResumeCard');if(!card)return;
+  const t=hcGetAdhkarPosition();
+  card.style.display=t>0?'block':'none';
+  if(t>0)document.getElementById('hcAdhkarResumeMeta').textContent='Continue from '+fmt(t)+' · saved here';
+}
+function hcResumeAdhkar(){
+  const t=hcGetAdhkarPosition();
+  openAdhkar('listen');
+  if(t>0)hcSeekRestored(adhkarAudio,t,syncAdhkar);
+}
+adhkarAudio.addEventListener('pause',()=>{hcRememberAdhkarPosition();hcRenderAdhkarResume()});
+adhkarAudio.addEventListener('timeupdate',()=>{
+  const t=Math.floor(adhkarAudio.currentTime||0);
+  if(t>0&&t%5===0&&(!hcRememberAdhkarPosition.lastAt||Date.now()-hcRememberAdhkarPosition.lastAt>4400)){
+    hcRememberAdhkarPosition.lastAt=Date.now();hcRememberAdhkarPosition();
+  }
+});
+adhkarAudio.addEventListener('ended',()=>{try{localStorage.removeItem(HC_ADHKAR_PROGRESS)}catch(e){}hcRenderAdhkarResume()});
+window.addEventListener('pagehide',hcRememberAdhkarPosition);
+
 function renderDashboard(){
   renderLocalContext();
   const stats=last7DayStats();
@@ -7899,6 +7945,7 @@ function renderDashboard(){
   if(weekLine)weekLine.textContent=stats.sessions+' session'+(stats.sessions===1?'':'s')+' · '+stats.minutes+' min';
 
   renderLibraryResumeCard();
+  hcRenderAdhkarResume();
   hcPracticeRefreshCards();
   const card=document.getElementById('homeResumeCard');
   if(!card)return;
