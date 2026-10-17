@@ -2076,6 +2076,41 @@ body.hc-reels-active{overflow:hidden;overscroll-behavior:none}
   #hcReels .hc-reel-swipe-rail{width:49px!important}
   #hcReels .hc-reels-hint{left:54px;right:54px}
 }
+
+/* Reel v116: compact one-sided controls and broader swipe rails. */
+#hcReels .hc-reels-controls{
+ position:absolute;z-index:35;left:auto;right:10px;
+ bottom:calc(93px + env(safe-area-inset-bottom,0px));
+ width:47px;margin:0;padding:0;display:flex;flex-direction:column;align-items:center;gap:10px;pointer-events:auto;
+}
+#hcReels .hc-reels-controls button{
+ flex:0 0 auto;width:46px;height:46px;min-width:46px;min-height:46px;padding:0;
+ display:flex;align-items:center;justify-content:center;
+ border-radius:50%;font-size:21px;font-weight:700;line-height:1;
+ background:rgba(3,19,31,.72);border:1px solid rgba(255,255,255,.43);
+}
+#hcReels .hc-reels-controls button:nth-child(2){background:#f5f7f8;color:#102432;border-color:#f5f7f8}
+#hcReels .hc-reels-practice{
+ z-index:35;position:absolute;left:auto;right:10px;
+ bottom:calc(32px + env(safe-area-inset-bottom,0px));width:46px;height:46px;
+ min-height:46px;margin:0;padding:0;border-radius:50%;display:grid;place-items:center;
+ font-size:0;background:rgba(3,19,31,.72);border:1px solid rgba(255,255,255,.43);
+}
+#hcReels .hc-reels-practice span{font-size:22px;line-height:1}
+#hcReels .hc-reel-swipe-rail{
+ top:calc(86px + env(safe-area-inset-top,0px));
+ bottom:calc(268px + env(safe-area-inset-bottom,0px));
+ width:clamp(68px,20vw,101px)!important;gap:9px;
+ background:linear-gradient(to left,rgba(3,18,30,.23),transparent);
+}
+#hcReels .hc-reel-swipe-left{
+ bottom:calc(92px + env(safe-area-inset-bottom,0px));
+ background:linear-gradient(to right,rgba(3,18,30,.25),transparent);
+}
+#hcReels .hc-reel-swipe-rail span{font-size:20px}
+#hcReels .hc-reel-swipe-rail small{font-size:8px;letter-spacing:.13em}
+#hcReels .hc-reels-hint{display:none!important}
+@media(max-width:370px){#hcReels .hc-reel-swipe-rail{width:66px!important}}
 </style>
 </head>
 <body>
@@ -2198,7 +2233,7 @@ body.hc-reels-active{overflow:hidden;overscroll-behavior:none}
   </div>
 
   <div class="hc-reels-home-card">
-    <div><div class="eyebrow">SHORT VIDEOS</div><strong>Reels</strong><small>35 videos · swipe up or down · continue your last reel</small></div>
+    <div><div class="eyebrow">SHORT VIDEOS</div><strong>Reels</strong><small>35 videos · shuffled order · swipe up or down</small></div>
     <button type="button" onclick="hcOpenReels()" aria-label="Open full-screen Reels">Watch</button>
   </div>
     <div class="hc-starter-card">
@@ -2258,11 +2293,11 @@ body.hc-reels-active{overflow:hidden;overscroll-behavior:none}
      
    </div>
    <div class="hc-reels-controls" aria-label="Reels controls">
-     <button type="button" onclick="hcReelPrevious()" aria-label="Previous reel"><span aria-hidden="true">↑</span> Prev</button>
+     <button type="button" onclick="hcReelPrevious()" aria-label="Previous reel" title="Previous reel"><span aria-hidden="true">↑</span></button>
      <button type="button" id="hcReelPlayBtn" onclick="hcReelToggle()" aria-label="Load or close current Drive video">Reload</button>
-     <button type="button" onclick="hcReelNext()" aria-label="Next reel">Next <span aria-hidden="true">↓</span></button>
+     <button type="button" onclick="hcReelNext()" aria-label="Next reel" title="Next reel"><span aria-hidden="true">↓</span></button>
    </div>
-   <a class="hc-reels-practice" id="hcReelSource" href="#" hidden target="_blank" rel="noopener noreferrer">Open original in Drive <span aria-hidden="true">↗</span></a>
+   <a class="hc-reels-practice" id="hcReelSource" href="#" hidden target="_blank" rel="noopener noreferrer" aria-label="Open reel source in Google Drive" title="Open reel source"><span aria-hidden="true">↗</span></a>
    <p class="hc-reels-hint" id="hcReelHint" role="status" aria-live="polite">Swipe either edge to change reels. Tap Play in the video if your browser blocks autoplay.</p>
 </section>
 
@@ -3397,7 +3432,7 @@ body.hc-reels-active{overflow:hidden;overscroll-behavior:none}
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear meditation history only</button>
     </div>
-    <div class="app-version">HeartClear · Version 1.3.1</div>
+    <div class="app-version">HeartClear · Version 1.3.2</div>
   </div>
 </section>
 
@@ -4245,6 +4280,23 @@ function hcPauseOtherAudioForReels(){
 }
 let hcReelIndex=0,hcReelTouchStart=0,hcReelAutoload=false,hcReelSwipeStart=0;
 let hcReelFrameLoaded=false;
+let hcReelShuffleOrder=[],hcReelShuffleCursor=0;
+/* Fisher–Yates shuffle without replacement. Keep the order in memory so
+ * swiping down revisits the actually watched reel. */
+function hcReelShuffle(excludedIndex=-1){
+ const order=hcReelItems.map((_,i)=>i);
+ for(let i=order.length-1;i>0;i--){
+  const j=Math.floor(Math.random()*(i+1));
+  [order[i],order[j]]=[order[j],order[i]];
+ }
+ if(order.length>1&&order[0]===excludedIndex){
+  const j=1+Math.floor(Math.random()*(order.length-1));
+  [order[0],order[j]]=[order[j],order[0]];
+ }
+ hcReelShuffleOrder=order;hcReelShuffleCursor=0;
+ if(order.length)hcReelIndex=order[0];
+}
+
 function hcReelFrame(){return document.getElementById('hcReelFrame')}
 function hcReelSourceUrl(item){return 'https://drive.google.com/file/d/'+encodeURIComponent(item.id)+'/view'}
 function hcReelPreviewUrl(item){return 'https://drive.google.com/file/d/'+encodeURIComponent(item.id)+'/preview'}
@@ -4255,7 +4307,8 @@ function hcReelSetSource(){
 }
 function hcReelUpdatePlayButton(){
  const b=document.getElementById('hcReelPlayBtn');if(!b)return;
- b.textContent=hcReelFrameLoaded?'Close video':'Load video';
+ b.textContent=hcReelFrameLoaded?'×':'▶';
+ b.title=hcReelFrameLoaded?'Close video':'Load video';
  b.setAttribute('aria-label',hcReelFrameLoaded?'Close current Drive video':'Load current Drive reel');
 }
 function hcReelStop(){
@@ -4271,7 +4324,7 @@ function hcReelRender(){
  hcReelIndex=(hcReelIndex+hcReelItems.length)%hcReelItems.length;
  hcReelStop();
  const item=hcReelItems[hcReelIndex];hcRememberReel();
- const count=document.getElementById('hcReelNumber');if(count)count.textContent=(hcReelIndex+1)+' / '+hcReelItems.length;
+ const count=document.getElementById('hcReelNumber');if(count)count.textContent=(hcReelShuffleCursor+1)+' / '+hcReelItems.length;
  const kicker=document.getElementById('hcReelKicker');if(kicker)kicker.textContent='UPLOADED REEL';
  const title=document.getElementById('hcReelTitle');if(title)title.textContent='Reel '+item.short;
  const caption=document.getElementById('hcReelCaption');if(caption)caption.textContent='Video in your Google Drive Reels collection';
@@ -4281,10 +4334,26 @@ function hcReelRender(){
  hcReelUpdatePlayButton();
  if(hcReelAutoload)hcReelToggle();
 }
-function hcOpenReels(){hcReelIndex=hcSavedReelIndex();hcReelAutoload=true;hcPauseOtherAudioForReels();show('hcReels')}
+function hcOpenReels(){
+ let previous=-1;
+ try{if(localStorage.getItem(HC_REEL_LAST_KEY))previous=hcSavedReelIndex()}catch(e){}
+ hcReelShuffle(previous);hcReelAutoload=true;
+ hcPauseOtherAudioForReels();show('hcReels');
+}
 function hcCloseReels(){hcReelAutoload=false;hcReelStop();show('home')}
-function hcReelNext(){if(!hcReelItems.length)return;hcReelIndex=(hcReelIndex+1)%hcReelItems.length;hcReelRender()}
-function hcReelPrevious(){if(!hcReelItems.length)return;hcReelIndex=(hcReelIndex+hcReelItems.length-1)%hcReelItems.length;hcReelRender()}
+function hcReelNext(){
+ if(!hcReelItems.length)return;
+ if(hcReelShuffleOrder.length!==hcReelItems.length)hcReelShuffle(hcReelIndex);
+ else if(hcReelShuffleCursor>=hcReelShuffleOrder.length-1)hcReelShuffle(hcReelIndex);
+ else hcReelShuffleCursor++;
+ hcReelIndex=hcReelShuffleOrder[hcReelShuffleCursor];hcReelRender();
+}
+function hcReelPrevious(){
+ if(!hcReelItems.length)return;
+ if(hcReelShuffleOrder.length!==hcReelItems.length)hcReelShuffle(hcReelIndex);
+ else if(hcReelShuffleCursor>0)hcReelShuffleCursor--;
+ hcReelIndex=hcReelShuffleOrder[hcReelShuffleCursor];hcReelRender();
+}
 function hcReelToggle(){
  if(!hcReelItems.length){hcReelStop();return}
  if(hcReelFrameLoaded){hcReelStop();return;}
@@ -8506,7 +8575,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=115');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=116');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
