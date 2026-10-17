@@ -2064,6 +2064,18 @@ body.hc-reels-active{overflow:hidden;overscroll-behavior:none}
 .hc-install-browser-hint{border:1px solid rgba(219,192,129,.35);background:rgba(40,33,23,.65);color:#f0dfbe;padding:11px 13px;border-radius:12px;font-size:12px;line-height:1.5;margin:12px 0}
 .hc-install-copy-status{display:block;font-size:12px;line-height:1.5;color:#c7d9e1;margin-top:10px;min-height:16px}
 @media(max-width:350px){.hc-home-install-link{padding:7px 9px;font-size:11px}}
+
+/* Reels v115: usable vertical controls on either edge, native Drive playback in the centre. */
+#hcReels .hc-reel-swipe-rail{width:clamp(54px,16vw,86px)!important;touch-action:none;cursor:ns-resize}
+#hcReels .hc-reel-swipe-left{left:0;right:auto!important;background:linear-gradient(to right,rgba(3,18,30,.40),rgba(3,18,30,0));border-right:1px solid rgba(255,255,255,.10);border-left:0}
+#hcReels .hc-reel-swipe-left span{font-size:25px}
+#hcReels .hc-reel-swipe-left small{font-size:9px}
+#hcReels .hc-reels-hint{right:clamp(70px,19vw,100px);left:clamp(70px,19vw,100px);bottom:calc(171px + env(safe-area-inset-bottom));text-align:center}
+#hcReels .hc-reels-badge{z-index:28}
+@media (max-width:370px){
+  #hcReels .hc-reel-swipe-rail{width:49px!important}
+  #hcReels .hc-reels-hint{left:54px;right:54px}
+}
 </style>
 </head>
 <body>
@@ -2162,6 +2174,12 @@ body.hc-reels-active{overflow:hidden;overscroll-behavior:none}
       <small id="hcSoundResumeMeta">Continue where you left off</small>
       <button onclick="hcResumeSoundLab()" aria-label="Resume last listening session">Resume</button>
     </div>
+    <div class="home-resume hc-secondary-resume" id="hcAdhkarResumeCard" style="display:none">
+      <div class="eyebrow">Continue sacred listening</div>
+      <strong>Morning Adhkar</strong>
+      <small id="hcAdhkarResumeMeta">Continue at your saved position</small>
+      <button onclick="hcResumeAdhkar()" aria-label="Resume Morning Adhkar at your saved time">Resume</button>
+    </div>
   </div>
 
   <div class="hc-quick-grid" aria-label="Quick start">
@@ -2179,7 +2197,11 @@ body.hc-reels-active{overflow:hidden;overscroll-behavior:none}
     </button>
   </div>
 
-  <div class="hc-starter-card">
+  <div class="hc-reels-home-card">
+    <div><div class="eyebrow">SHORT VIDEOS</div><strong>Reels</strong><small>35 videos · swipe up or down · continue your last reel</small></div>
+    <button type="button" onclick="hcOpenReels()" aria-label="Open full-screen Reels">Watch</button>
+  </div>
+    <div class="hc-starter-card">
     <div>
       <div class="eyebrow">7-Day Starter</div>
       <b>Build a simple practice</b>
@@ -2213,20 +2235,21 @@ body.hc-reels-active{overflow:hidden;overscroll-behavior:none}
   </button>
 </section>
 
-<section class="screen" id="hcReels" aria-labelledby="hcReelsHeading" hidden aria-hidden="true">
+<section class="screen" id="hcReels" aria-labelledby="hcReelsHeading">
    <div class="hc-reels-head">
       <button class="hc-reels-back" type="button" onclick="hcCloseReels()" aria-label="Close Reels and return Home"><span aria-hidden="true">×</span><span class="hc-reels-back-label"> Close</span></button>
       <span class="kicker">HEARTCLEAR · REELS</span>
       <h2 id="hcReelsHeading">Reels</h2>
-      <p>33 uploaded shorts · Swipe along the right edge ↑ ↓</p>
+      <p>Swipe either edge ↑ ↓ · your Drive videos</p>
    </div>
    <div class="hc-reels-stage" id="hcReelsStage" aria-label="Swipe up for next reel, down for previous">
      <button id="hcReelPoster" class="hc-reel-drive-poster" type="button" onclick="hcReelToggle()" aria-label="Load selected uploaded video"><span class="hc-reel-playmark" aria-hidden="true">▶</span><strong>Ready to watch</strong><span>Tap here to load your uploaded short inside HeartClear.</span></button>
      <iframe id="hcReelFrame" class="hc-reel-drive-frame" title="Google Drive reel video player" loading="eager" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="no-referrer-when-downgrade" hidden></iframe>
-     <div id="hcReelSwipeRail" class="hc-reel-swipe-rail" aria-label="Swipe upward for the next reel or downward for the previous reel"><span aria-hidden="true">↑</span><small>SWIPE</small><span aria-hidden="true">↓</span></div>
+     <div id="hcReelSwipeLeft" class="hc-reel-swipe-rail hc-reel-swipe-left" aria-label="Swipe up for next reel or down for previous reel"><span aria-hidden="true">↑</span><small>SWIPE</small><span aria-hidden="true">↓</span></div>
+      <div id="hcReelSwipeRail" class="hc-reel-swipe-rail" aria-label="Swipe upward for the next reel or downward for the previous reel"><span aria-hidden="true">↑</span><small>SWIPE</small><span aria-hidden="true">↓</span></div>
      <div class="hc-reels-screen-shade" aria-hidden="true"></div>
      <div class="hc-reels-progress" aria-hidden="true"><span id="hcReelProgress"></span></div>
-     <div class="hc-reels-badge" id="hcReelNumber">1 / 33</div>
+     <div class="hc-reels-badge" id="hcReelNumber">1 / 35</div>
      <div class="hc-reels-copy">
        <div class="hc-reels-kicker" id="hcReelKicker">UPLOADED REEL</div>
        <h3 id="hcReelTitle">Video 01</h3>
@@ -2240,7 +2263,7 @@ body.hc-reels-active{overflow:hidden;overscroll-behavior:none}
      <button type="button" onclick="hcReelNext()" aria-label="Next reel">Next <span aria-hidden="true">↓</span></button>
    </div>
    <a class="hc-reels-practice" id="hcReelSource" href="#" hidden target="_blank" rel="noopener noreferrer">Open original in Drive <span aria-hidden="true">↗</span></a>
-   <p class="hc-reels-hint" id="hcReelHint" role="status" aria-live="polite">The video loads when you open Reels. If autoplay is blocked, tap Play inside the video. Swipe along the right edge to switch.</p>
+   <p class="hc-reels-hint" id="hcReelHint" role="status" aria-live="polite">Swipe either edge to change reels. Tap Play in the video if your browser blocks autoplay.</p>
 </section>
 
 <section class="screen practice-library" id="practices">
@@ -3374,7 +3397,7 @@ body.hc-reels-active{overflow:hidden;overscroll-behavior:none}
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear meditation history only</button>
     </div>
-    <div class="app-version">HeartClear · Version 1.3.0</div>
+    <div class="app-version">HeartClear · Version 1.3.1</div>
   </div>
 </section>
 
@@ -4139,6 +4162,9 @@ function hcRestorePreviousScreen(){
  try{saved=JSON.parse(localStorage.getItem(HC_RETURN_KEY)||'null')}catch(e){return false}
  if(!saved||!Number.isFinite(saved.at)||saved.at>Date.now()+60000||
      Date.now()-saved.at>12*3600*1000||!HC_RETURN_SCREENS.has(saved.screen))return false;
+ // A fresh launch cannot continue audio until the listener presses Play.
+ // Keep previous positions in discrete Home Continue cards instead of opening a large paused player.
+ if(['player','sacredSession','soundLabPlayer','bookAudio','fearPlayer','hcDriveMedia','hcReels'].includes(saved.screen))return false;
  let success=false;hcReturnRestoring=true;
  try{
   switch(saved.screen){
@@ -4175,6 +4201,7 @@ function hcRestorePreviousScreen(){
      if(status)status.textContent='Recording restored. If needed, tap Play inside the video.';
     }else show('sacred');
     break;
+   case 'hcReels':show('home');success=true;break;
    case 'omVideo':show('sacred');success=true;break;
    case 'sacredDetail':openSacred('islamic');success=true;break;
    default:show(saved.screen);success=true;
@@ -4192,8 +4219,30 @@ function hcRestorePreviousScreen(){
 /* Reels v111 — 33 actual viewer-shared MP4 files in the dedicated Drive Reels folder.
    Not related to the four meditation practice visuals. Loading is user-initiated and
    the cross-origin Drive player owns playback/volume/seek controls. */
-const hcReelItems=[]; // Privacy hold; unpublished and unverified.
+const hcReelItems=[{"id":"14rhxM8P88gM1xWLitLVjLNiihcnsIvFH","short":"01"},{"id":"1_bWlCW3Zgv8RZm74LIk6H3utpQSdvr6C","short":"02"},{"id":"1k_3vWitGE2syhrJOkxraKKjS7h5kotgO","short":"03"},{"id":"157j4JrUZoBWJla6YrOP2ravJ5A4v8jD0","short":"04"},{"id":"11egb0iT5b7NwIdnJdGp2cWqVqnnD7_XP","short":"05"},{"id":"1OV7sh9vYunWOuGpwsc21vwAO4mPrpGGm","short":"06"},{"id":"1vVS4rFd203WLlKIkh1N5oe8F6g3diwsf","short":"07"},{"id":"1YkYNSjEvkFRYMT95fwEJTGS5LmnazElX","short":"08"},{"id":"1q7g8_TTi1yeyfWLZWJbmA7z_DKSN8qtc","short":"09"},{"id":"1E43R4dkBlx8iPF58muZEMpQM9hnWKRSY","short":"10"},{"id":"1oUIDwLNJpmNX0CNY8fuqo5Nqxy7iD20n","short":"11"},{"id":"1c2ILWbonYxysQG_QTcLzG7QzwK5HYGd5","short":"12"},{"id":"1pQ0c-_rh00yWSqxVSH-vrwhJYsxFGKBk","short":"13"},{"id":"1lXLxkP7ZJfAgC8ImNQ_Qd3FsVZMHyIl9","short":"14"},{"id":"15vZozQgAZsMw2zeN2LokeZd_93lwzYPK","short":"15"},{"id":"12fbY_G1H8N0aav2cLnDgIfAnB2z2XNzG","short":"16"},{"id":"1ZPIqLNSI4r_hQF334NeOQSRSstPRyHyk","short":"17"},{"id":"1tUSLXBo77iw7PrW2GNaArw5_V3RX48Wc","short":"18"},{"id":"1P1_JQXG6dRn8zNxBt2diKG1SXjdV7vda","short":"19"},{"id":"1MwoPkELjCsBS9yZ9HtJtttOdS76U0SOi","short":"20"},{"id":"1JaU3Pzvq-daim9e6m4Tv_A5yvKyO4bPj","short":"21"},{"id":"1pPtrL5s4gCyy4g0lZ4A97AGs0EEwrBA6","short":"22"},{"id":"1iyvz4LH-3rkGpgrAcaDsBwc_82LZ_MPM","short":"23"},{"id":"1DFxG0_o90pctOn_pWnqSzlwLtNGrZQWp","short":"24"},{"id":"1xaxoC9ZzbCUTVJxv9jsPT0E885mZchsO","short":"25"},{"id":"1fYqQqJIwear7KfnggwzYuoFF8CW14Hsb","short":"26"},{"id":"1RGVEQydljciXipzkuj3YEw_wFe2vunpA","short":"27"},{"id":"1hHznvoSNCwRBHrx1qXM4ACJjIKrathMe","short":"28"},{"id":"1ZjxbW2cJCb33apj6bNIT9pqyjrZeb34n","short":"29"},{"id":"1sVw7jh8Ava82p0nsgJcox0UA3ckQW_7-","short":"30"},{"id":"1Xr7TWqtqi0yQySEqihhJCQsiTjciq-89","short":"31"},{"id":"1-jAXg880YY0-u4-DTYIJCufiagUFM-UN","short":"32"},{"id":"1Wqe6yS-zX1tP-1ek3_MCgphpjbdOHOrj","short":"33"},{"id":"1RUKhmz6UyoghdmuopM8JxeXx_bwcpGNa","short":"34"},{"id":"1wjFyjY5tdpGIjRaWizLaKdVoUPqCY5Nz","short":"35"}]; // Owner-supplied Drive embeds only; MP4 files not copied to GitHub.
 
+const HC_REEL_LAST_KEY='heartclearLastReelV1';
+function hcRememberReel(){
+  const item=hcReelItems[hcReelIndex];if(!item)return;
+  try{localStorage.setItem(HC_REEL_LAST_KEY,JSON.stringify({id:item.id,updatedAt:Date.now()}))}catch(e){}
+}
+function hcSavedReelIndex(){
+  try{
+    const saved=JSON.parse(localStorage.getItem(HC_REEL_LAST_KEY)||'null');
+    const index=hcReelItems.findIndex(item=>item.id===saved?.id);
+    return index>=0?index:0;
+  }catch(e){return 0}
+}
+function hcPauseOtherAudioForReels(){
+  // Save existing listening positions before switching; never erase a bookmark.
+  try{saveBookBookmark()}catch(e){}
+  try{hcStoreSoundLabPosition()}catch(e){}
+  try{if(audio&&Number(audio.currentTime)>0&&chosenUrl)rememberLastSession(audio.currentTime)}catch(e){}
+  for(const el of [audio,adhkarAudio,soundLabAudio,bookAudioEl,fearAudio,humanSoundAudio]){
+    if(el && !el.paused)el.pause();
+  }
+  if(typeof hcMixPause==='function')try{hcMixPause()}catch(e){}
+}
 let hcReelIndex=0,hcReelTouchStart=0,hcReelAutoload=false,hcReelSwipeStart=0;
 let hcReelFrameLoaded=false;
 function hcReelFrame(){return document.getElementById('hcReelFrame')}
@@ -4221,18 +4270,18 @@ function hcReelRender(){
  if(!hcReelItems.length)return;
  hcReelIndex=(hcReelIndex+hcReelItems.length)%hcReelItems.length;
  hcReelStop();
- const item=hcReelItems[hcReelIndex];
+ const item=hcReelItems[hcReelIndex];hcRememberReel();
  const count=document.getElementById('hcReelNumber');if(count)count.textContent=(hcReelIndex+1)+' / '+hcReelItems.length;
  const kicker=document.getElementById('hcReelKicker');if(kicker)kicker.textContent='UPLOADED REEL';
- const title=document.getElementById('hcReelTitle');if(title)title.textContent='Video '+item.short;
- const caption=document.getElementById('hcReelCaption');if(caption)caption.textContent='Your original Google Drive short · audio available';
+ const title=document.getElementById('hcReelTitle');if(title)title.textContent='Reel '+item.short;
+ const caption=document.getElementById('hcReelCaption');if(caption)caption.textContent='Video in your Google Drive Reels collection';
  const progress=document.getElementById('hcReelProgress');if(progress)progress.style.width='0%';
- const hint=document.getElementById('hcReelHint');if(hint)hint.textContent='Swipe ↑ / ↓ on the right edge to switch. If playback does not start automatically, tap Play inside the video.';
+ const hint=document.getElementById('hcReelHint');if(hint)hint.textContent='Swipe ↑ / ↓ on either edge to switch. Tap Play inside the video if needed.';
  hcReelSetSource();
  hcReelUpdatePlayButton();
  if(hcReelAutoload)hcReelToggle();
 }
-function hcOpenReels(){hcReelAutoload=false;hcReelStop();show('home')}
+function hcOpenReels(){hcReelIndex=hcSavedReelIndex();hcReelAutoload=true;hcPauseOtherAudioForReels();show('hcReels')}
 function hcCloseReels(){hcReelAutoload=false;hcReelStop();show('home')}
 function hcReelNext(){if(!hcReelItems.length)return;hcReelIndex=(hcReelIndex+1)%hcReelItems.length;hcReelRender()}
 function hcReelPrevious(){if(!hcReelItems.length)return;hcReelIndex=(hcReelIndex+hcReelItems.length-1)%hcReelItems.length;hcReelRender()}
@@ -4249,7 +4298,7 @@ function hcReelToggle(){
  if(cover)cover.hidden=true;
  hcReelFrameLoaded=true;
  const hint=document.getElementById('hcReelHint');
- if(hint)hint.textContent='If the video is paused, tap Play inside the Drive player. Swipe ↑ / ↓ along the right edge. Use Open in Drive if needed.';
+ if(hint)hint.textContent='Swipe ↑ / ↓ along either edge. Google Drive may require one tap on its Play control.';
  hcReelUpdatePlayButton();
 }
 function hcReelOpenSource(){
@@ -4268,22 +4317,26 @@ function hcReelOpenSource(){
  }
  // The Drive iframe is cross-origin: it cannot deliver swipes to the parent.
  // Reserve a narrow right-edge gesture zone without blocking central playback.
- const rail=document.getElementById('hcReelSwipeRail');
- if(rail){
+ // Drive's iframe is cross-origin. Keep a sizeable swipe gesture zone on BOTH edges
+ // so the central player remains available for native Play/Pause controls.
+ for(const rail of [document.getElementById('hcReelSwipeRail'),document.getElementById('hcReelSwipeLeft')]){
+  if(!rail)continue;
+  let startY=null,lastStep=0;
   rail.addEventListener('touchstart',event=>{
-   if(event.touches.length===1)hcReelSwipeStart=event.touches[0].clientY;
+   if(event.touches.length===1)startY=event.touches[0].clientY;
   },{passive:true});
   rail.addEventListener('touchend',event=>{
-   if(!hcReelSwipeStart||!event.changedTouches.length)return;
-   const delta=event.changedTouches[0].clientY-hcReelSwipeStart;
-   hcReelSwipeStart=0;
-   if(delta<-45)hcReelNext();else if(delta>45)hcReelPrevious();
+   if(startY===null||!event.changedTouches.length)return;
+   const delta=event.changedTouches[0].clientY-startY;startY=null;
+   const now=Date.now();if(now-lastStep<450)return;
+   if(delta<-45){lastStep=now;hcReelNext()}
+   else if(delta>45){lastStep=now;hcReelPrevious()}
    event.stopPropagation();
   },{passive:true});
   rail.addEventListener('wheel',event=>{
    if(currentScreenId!=='hcReels'||Math.abs(event.deltaY)<25)return;
    event.preventDefault();
-   const now=Date.now();if(rail._lastStep&&now-rail._lastStep<650)return;rail._lastStep=now;
+   const now=Date.now();if(now-lastStep<600)return;lastStep=now;
    if(event.deltaY>0)hcReelNext();else hcReelPrevious();
   },{passive:false});
  }
@@ -4291,6 +4344,7 @@ function hcReelOpenSource(){
   if(currentScreenId!=='hcReels'||event.target.closest('input,textarea,select'))return;
   if(event.key==='ArrowDown'){event.preventDefault();hcReelNext()}
   if(event.key==='ArrowUp'){event.preventDefault();hcReelPrevious()}
+  if(event.key==='Escape'){event.preventDefault();hcCloseReels()}
  });
 }
 
@@ -4711,8 +4765,10 @@ function renderGlobalMini(){
   const mini=document.getElementById('globalMini');
   if(!mini)return;
   const state=getActiveMediaState();
-  if(!state || (!state.key?.includes('mix') && state.el.paused && (Number(state.el.currentTime)||0)<.5)){
-    mini.classList.remove('show');
+  // Paused audio is accessible through the Home Continue cards and source player.
+  // Never let a paused 00:00 (or an old audiobook) cover another screen.
+  if(!state || state.el.paused || (state.key==='mix'&&!hcMixRunning) || currentScreenId==='hcReels'){
+    mini.classList.remove('show');mini.classList.remove('is-mix');
     return;
   }
 
@@ -7837,6 +7893,43 @@ function closeHomeSheets(){
   document.getElementById('hcHomeTimerSheet')?.classList.remove('show');
 }
 
+
+/* Sacred listening saves the exact position on this device. Nothing autoplays on restart. */
+const HC_ADHKAR_PROGRESS='heartclearAdhkarProgressV1';
+function hcRememberAdhkarPosition(){
+  const t=Number(adhkarAudio.currentTime)||0;
+  const d=Number.isFinite(adhkarAudio.duration)?adhkarAudio.duration:1698;
+  if(t<=.8||(d>0&&t>=d-2))return;
+  try{localStorage.setItem(HC_ADHKAR_PROGRESS,JSON.stringify({time:t,updatedAt:Date.now()}))}catch(e){}
+}
+function hcGetAdhkarPosition(){
+  try{
+    const saved=JSON.parse(localStorage.getItem(HC_ADHKAR_PROGRESS)||'null');
+    const t=Number(saved?.time);
+    return Number.isFinite(t)&&t>1&&t<1695?t:0;
+  }catch(e){return 0}
+}
+function hcRenderAdhkarResume(){
+  const card=document.getElementById('hcAdhkarResumeCard');if(!card)return;
+  const t=hcGetAdhkarPosition();
+  card.style.display=t>0?'block':'none';
+  if(t>0)document.getElementById('hcAdhkarResumeMeta').textContent='Continue from '+fmt(t)+' · saved here';
+}
+function hcResumeAdhkar(){
+  const t=hcGetAdhkarPosition();
+  openAdhkar('listen');
+  if(t>0)hcSeekRestored(adhkarAudio,t,syncAdhkar);
+}
+adhkarAudio.addEventListener('pause',()=>{hcRememberAdhkarPosition();hcRenderAdhkarResume()});
+adhkarAudio.addEventListener('timeupdate',()=>{
+  const t=Math.floor(adhkarAudio.currentTime||0);
+  if(t>0&&t%5===0&&(!hcRememberAdhkarPosition.lastAt||Date.now()-hcRememberAdhkarPosition.lastAt>4400)){
+    hcRememberAdhkarPosition.lastAt=Date.now();hcRememberAdhkarPosition();
+  }
+});
+adhkarAudio.addEventListener('ended',()=>{try{localStorage.removeItem(HC_ADHKAR_PROGRESS)}catch(e){}hcRenderAdhkarResume()});
+window.addEventListener('pagehide',hcRememberAdhkarPosition);
+
 function renderDashboard(){
   renderLocalContext();
   const stats=last7DayStats();
@@ -7852,6 +7945,7 @@ function renderDashboard(){
   if(weekLine)weekLine.textContent=stats.sessions+' session'+(stats.sessions===1?'':'s')+' · '+stats.minutes+' min';
 
   renderLibraryResumeCard();
+  hcRenderAdhkarResume();
   hcPracticeRefreshCards();
   const card=document.getElementById('homeResumeCard');
   if(!card)return;
@@ -8412,7 +8506,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=114');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=115');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
