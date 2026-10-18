@@ -1,3 +1,5 @@
+#hcQuranStudy .hcqs-header h2 .hcqs-en,#hcQuranStudy .hcqs-header h2 .hcqs-ta,#hcQuranStudy .hcqs-meaning .hcqs-en,#hcQuranStudy .hcqs-meaning .hcqs-ta,#hcQuranStudy .hcqs-editorial>div:not(.hcqs-source-label) .hcqs-en,#hcQuranStudy .hcqs-editorial>div:not(.hcqs-source-label) .hcqs-ta,#hcQuranStudy .hcqs-private-note>p .hcqs-en,#hcQuranStudy .hcqs-private-note>p .hcqs-ta{display:block}
+#hcQuranStudy .hcqs-edit .hcqs-en,#hcQuranStudy .hcqs-edit .hcqs-ta{display:block;line-height:1.55}
 
 /* HeartClear Qur'an study extension · independent of existing media/playback controls */
 #hcQuranStudy{justify-content:flex-start;padding-top:20px;padding-bottom:96px}
