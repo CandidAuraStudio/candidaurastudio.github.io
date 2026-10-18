@@ -2326,7 +2326,7 @@ body.hc-reels-active #updateBanner{display:none!important;pointer-events:none!im
   </div>
 
   <div class="hc-reels-home-card">
-    <div><div class="eyebrow">SHORT VIDEOS</div><strong>Reels</strong><small>78 videos · shuffled · swipe up or down</small></div>
+    <div><div class="eyebrow">SHORT VIDEOS</div><strong>Reels</strong><small id="hcReelsHomeMeta">Shuffled unwatched videos · swipe up or down</small></div>
     <button type="button" onclick="hcOpenReels()" aria-label="Open full-screen Reels">Watch</button>
   </div>
     <div class="hc-starter-card">
@@ -2380,6 +2380,7 @@ body.hc-reels-active #updateBanner{display:none!important;pointer-events:none!im
       </div>
      <div class="hc-reels-screen-shade" aria-hidden="true"></div>
      <div class="hc-reels-progress" aria-hidden="true"><span id="hcReelProgress"></span></div>
+     <div class="hc-reel-all-seen" id="hcReelAllSeen" hidden role="status"><h3>All caught up</h3><p>You've opened all available reels on this device. New reels will appear here when added.</p><button type="button" onclick="hcCloseReels()">Back to Home</button></div>
      <div class="hc-reels-badge" id="hcReelNumber">1 / 78</div>
      <div class="hc-reels-copy">
        <div class="hc-reels-kicker" id="hcReelKicker">UPLOADED REEL</div>
@@ -4387,18 +4388,67 @@ let hcReelFrameLoaded=false;
 let hcReelShuffleOrder=[],hcReelShuffleCursor=0;
 /* Fisher–Yates shuffle without replacement. Keep the order in memory so
  * swiping down revisits the actually watched reel. */
-function hcReelShuffle(excludedIndex=-1){
- const order=hcReelItems.map((_,i)=>i);
+/* A Drive iframe cannot confirm full playback. We mark an opened reel as seen
+ * when the viewer moves away or exits, then persist its stable Drive ID locally. */
+const HC_REELS_SEEN_KEY='heartclearReelsSeenV1';
+let hcReelSeenMemory=new Set();
+function hcReelSeenIds(){
+ try{
+  const raw=JSON.parse(localStorage.getItem(HC_REELS_SEEN_KEY)||'[]');
+  if(Array.isArray(raw)){
+   const valid=new Set(hcReelItems.map(item=>item.id));
+   hcReelSeenMemory=new Set(raw.filter(id=>typeof id==='string'&&valid.has(id)));
+  }
+ }catch(e){}
+ return hcReelSeenMemory;
+}
+function hcReelUnseenCount(){
+ const seen=hcReelSeenIds();return hcReelItems.filter(item=>!seen.has(item.id)).length;
+}
+function hcUpdateReelsHomeMeta(){
+ const n=hcReelUnseenCount(),el=document.getElementById('hcReelsHomeMeta');
+ if(el)el.textContent=n?n+' unwatched · shuffled · swipe up or down':'All caught up · new reels appear when added';
+}
+function hcMarkCurrentReelSeen(){
+ if(!hcReelFrameLoaded)return false;
+ const item=hcReelItems[hcReelIndex];if(!item)return false;
+ const seen=hcReelSeenIds();if(seen.has(item.id))return false;
+ seen.add(item.id);hcReelSeenMemory=seen;
+ try{localStorage.setItem(HC_REELS_SEEN_KEY,JSON.stringify([...seen]))}catch(e){}
+ hcUpdateReelsHomeMeta();return true;
+}
+function hcReelShuffle(){
+ const seen=hcReelSeenIds();
+ const order=hcReelItems.map((item,i)=>seen.has(item.id)?-1:i).filter(i=>i>=0);
  for(let i=order.length-1;i>0;i--){
-  const j=Math.floor(Math.random()*(i+1));
-  [order[i],order[j]]=[order[j],order[i]];
- }
- if(order.length>1&&order[0]===excludedIndex){
-  const j=1+Math.floor(Math.random()*(order.length-1));
-  [order[0],order[j]]=[order[j],order[0]];
+  const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]];
  }
  hcReelShuffleOrder=order;hcReelShuffleCursor=0;
  if(order.length)hcReelIndex=order[0];
+}
+function hcReelAllSeen(){
+ hcReelStop();
+ const el=document.getElementById('hcReelAllSeen');if(el)el.hidden=false;
+ const poster=document.getElementById('hcReelPoster');if(poster)poster.hidden=true;
+ const badge=document.getElementById('hcReelNumber');if(badge)badge.textContent='All seen';
+ hcUpdateReelsHomeMeta();
+}
+function hcAdvanceUnseenReel(direction){
+ if(!hcReelItems.length)return;
+ const opened=hcReelFrameLoaded;
+ hcMarkCurrentReelSeen();
+ const seen=hcReelSeenIds();
+ hcReelShuffleOrder=hcReelShuffleOrder.filter(i=>!seen.has(hcReelItems[i].id));
+ if(!hcReelShuffleOrder.length){hcReelAllSeen();return}
+ const old=hcReelShuffleCursor;
+ hcReelShuffleCursor=direction==='previous'
+  ?(old-1+hcReelShuffleOrder.length)%hcReelShuffleOrder.length
+  :old%hcReelShuffleOrder.length;
+ if(!opened&&hcReelShuffleOrder[hcReelShuffleCursor]===hcReelIndex&&hcReelShuffleOrder.length>1){
+  hcReelShuffleCursor=(hcReelShuffleCursor+1)%hcReelShuffleOrder.length;
+ }
+ hcReelIndex=hcReelShuffleOrder[hcReelShuffleCursor];
+ hcReelRender();
 }
 
 let hcReelLastSwipeAt=0;
@@ -4425,11 +4475,12 @@ function hcReelStop(){
 }
 function hcReelRender(){
  if(!document.getElementById('hcReelsStage'))return;
- if(!hcReelItems.length)return;
+ if(!hcReelShuffleOrder.length){hcReelAllSeen();return}
+ const empty=document.getElementById('hcReelAllSeen');if(empty)empty.hidden=true;
  hcReelIndex=(hcReelIndex+hcReelItems.length)%hcReelItems.length;
  hcReelStop();
  const item=hcReelItems[hcReelIndex];hcRememberReel();
- const count=document.getElementById('hcReelNumber');if(count)count.textContent=(hcReelShuffleCursor+1)+' / '+hcReelItems.length;
+ const count=document.getElementById('hcReelNumber');if(count)count.textContent=hcReelUnseenCount()+' unseen';
  const kicker=document.getElementById('hcReelKicker');if(kicker)kicker.textContent='UPLOADED REEL';
  const title=document.getElementById('hcReelTitle');if(title)title.textContent='Reel';
  const caption=document.getElementById('hcReelCaption');if(caption)caption.textContent='Swipe up or down to change';
@@ -4439,25 +4490,16 @@ function hcReelRender(){
  if(hcReelAutoload)hcReelToggle();
 }
 function hcOpenReels(){
- let previous=-1;
- try{if(localStorage.getItem(HC_REEL_LAST_KEY))previous=hcSavedReelIndex()}catch(e){}
- hcReelShuffle(previous);hcReelAutoload=true;
+ hcReelShuffle();hcReelAutoload=true;
  hcPauseOtherAudioForReels();show('hcReels');
 }
-function hcCloseReels(){hcReelAutoload=false;hcReelStop();show('home')}
-function hcReelNext(){
- if(!hcReelItems.length)return;
- if(hcReelShuffleOrder.length!==hcReelItems.length)hcReelShuffle(hcReelIndex);
- else if(hcReelShuffleCursor>=hcReelShuffleOrder.length-1)hcReelShuffle(hcReelIndex);
- else hcReelShuffleCursor++;
- hcReelIndex=hcReelShuffleOrder[hcReelShuffleCursor];hcReelRender();
+function hcCloseReels(){
+ hcMarkCurrentReelSeen();
+ hcReelAutoload=false;hcReelStop();show('home');
 }
-function hcReelPrevious(){
- if(!hcReelItems.length)return;
- if(hcReelShuffleOrder.length!==hcReelItems.length)hcReelShuffle(hcReelIndex);
- else if(hcReelShuffleCursor>0)hcReelShuffleCursor--;
- hcReelIndex=hcReelShuffleOrder[hcReelShuffleCursor];hcReelRender();
-}
+function hcReelNext(){hcAdvanceUnseenReel('next')}
+function hcReelPrevious(){hcAdvanceUnseenReel('previous')}
+
 function hcReelToggle(){
  if(!hcReelItems.length){hcReelStop();return}
  if(hcReelFrameLoaded){hcReelStop();return;}
@@ -4518,6 +4560,8 @@ function hcReelToggle(){
 }
 
 
+hcUpdateReelsHomeMeta();
+
 function show(id){
   if(currentScreenId==='hcDriveMedia'&&id!=='hcDriveMedia'&&hcDriveActiveKey&&!hcDriveDocked){
     hcDriveDocked=true;
@@ -4530,7 +4574,10 @@ function show(id){
   // Privacy: leave no live microphone behind when navigating away from voice practice.
   if(id!=='humanSession' && typeof humanVoiceRecorder!=='undefined' && humanVoiceRecorder && humanVoiceRecorder.state==='recording')endHumanVoiceRecording();
   if(id!=='humanSession'&&typeof humanSoundAudio!=='undefined'&&!humanSoundAudio.paused)humanSoundAudio.pause();
-  if(id!=='hcReels'){hcReelAutoload=false;hcReelStop()}
+  if(id!=='hcReels'){
+    if(currentScreenId==='hcReels')hcMarkCurrentReelSeen();
+    hcReelAutoload=false;hcReelStop()
+  }
   document.body.classList.toggle('hc-reels-active',id==='hcReels');
   currentScreenId=id;
   hcCaptureReturnState(true);
