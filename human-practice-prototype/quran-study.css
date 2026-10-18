@@ -1,0 +1,70 @@
+
+/* HeartClear Qur'an study extension · independent of existing media/playback controls */
+#hcQuranStudy{justify-content:flex-start;padding-top:20px;padding-bottom:96px}
+#hcQuranStudy .hcqs-shell{padding:20px 15px}
+#hcQuranStudy [lang="ta"]{font-family:system-ui,"Noto Sans Tamil",sans-serif;line-height:1.9}
+#hcQuranStudy .hcqs-header h2{font-size:clamp(25px,7.5vw,34px);letter-spacing:-.025em;line-height:1.2;margin:10px 0}
+#hcQuranStudy .hcqs-en,#hcQuranStudy .hcqs-ta{font-size:inherit}
+#hcQuranStudy[data-qs-language="ta"] .hcqs-en,#hcQuranStudy[data-qs-language="en"] .hcqs-ta{display:none}
+#hcQuranStudy .hcqs-header>p{font-size:13px;line-height:1.75}
+#hcQuranStudy .hcqs-language{display:flex;gap:7px;margin:17px 0}
+#hcQuranStudy .hcqs-language button{flex:1;min-width:0;border:1px solid rgba(224,236,242,.23);background:rgba(7,26,38,.8);color:#e9f1f4;padding:11px 6px;border-radius:12px;font:inherit;font-size:12px;min-height:43px}
+#hcQuranStudy .hcqs-language button[aria-pressed="true"],#hcQuranStudy .hcqs-picker button[aria-pressed="true"]{background:white;border-color:white;color:#102635}
+#hcQuranStudy .hcqs-picker{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#hcQuranStudy .hcqs-picker button{display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;min-height:75px;padding:12px 10px;border-radius:15px;border:1px solid rgba(214,233,243,.16);background:rgba(9,33,45,.66);color:#f0f5f6;text-align:left;font:inherit}
+#hcQuranStudy .hcqs-picker span{font-size:12px;font-weight:700;line-height:1.45}
+#hcQuranStudy .hcqs-picker small{font-size:11px;margin-top:7px;color:#b5c4ca}
+#hcQuranStudy .hcqs-picker button[aria-pressed="true"] small{color:#46616d}
+#hcQuranStudy .hcqs-caution{padding:12px 13px;border:1px solid rgba(224,235,241,.13);border-radius:12px;background:rgba(10,36,48,.56);color:#d7e5ea;font-size:12px!important;line-height:1.7}
+#hcQuranStudy .hcqs-summary{margin-top:20px;padding:16px;border-radius:18px;background:linear-gradient(145deg,rgba(24,55,70,.86),rgba(7,25,37,.84));border:1px solid rgba(229,237,242,.12)}
+#hcQuranStudy .hcqs-summary h3{font-size:20px;letter-spacing:-.02em}
+#hcQuranStudy .hcqs-summary>p{font-size:12px;margin:5px 0 0}
+#hcQuranStudy .hcqs-summary .hcqs-bismillah{font-family:"Noto Naskh Arabic","Amiri",serif;text-align:center;font-size:23px;color:#fff;line-height:2.2;padding-top:12px;margin:0}
+#hcQuranStudy .hcqs-highlights{padding:14px 0 8px;display:flex;gap:7px;flex-wrap:wrap}
+#hcQuranStudy .hcqs-highlights .hcqs-subhead{width:100%;font-size:12px;color:#e5d2a5;margin-bottom:4px}
+#hcQuranStudy .hcqs-highlights button{border-radius:999px;border:1px solid rgba(236,218,170,.28);color:#f1e0ba;background:rgba(48,66,72,.45);font:inherit;font-size:11px;padding:9px 12px;min-height:36px}
+#hcQuranStudy .hcqs-pager{display:flex;gap:10px;justify-content:space-between;align-items:center;margin:12px 0}
+#hcQuranStudy .hcqs-pager button{border:1px solid rgba(220,236,242,.23);background:rgba(5,25,38,.82);color:white;min-height:44px;border-radius:12px;padding:10px 11px;font:inherit;font-size:12px;font-weight:700}
+#hcQuranStudy .hcqs-pager button:disabled{opacity:.4}
+#hcQuranStudy .hcqs-pager span{font-size:12px;font-variant-numeric:tabular-nums;white-space:nowrap;color:#d5e1e6}
+#hcQuranStudy .hcqs-verses{display:grid;gap:14px}
+#hcQuranStudy .hcqs-verse{background:rgba(7,24,36,.91);border:1px solid rgba(214,232,241,.17);border-radius:22px;padding:17px 14px;scroll-margin-top:20px}
+#hcQuranStudy .hcqs-verse-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+#hcQuranStudy .hcqs-verse-head strong{font-size:13px;color:#f2d6a1}
+#hcQuranStudy .hcqs-verse-head a{font-size:11px;line-height:1.6;color:#d6e9f1;text-decoration:underline;text-underline-offset:3px;text-align:right}
+#hcQuranStudy .hcqs-arabic{font-family:"Noto Naskh Arabic","Amiri",serif;font-size:clamp(23px,6.8vw,31px);line-height:2.2;letter-spacing:normal;color:#fff;text-align:right;padding:16px 2px;margin:3px 0 5px;overflow-wrap:anywhere}
+#hcQuranStudy .hcqs-subhead{font-size:11px;text-transform:none;color:#e5cc97;letter-spacing:.025em;font-weight:700}
+#hcQuranStudy .hcqs-meaning{font-size:14px;line-height:1.85;margin-top:9px;color:#eff5f7}
+#hcQuranStudy .hcqs-meaning .hcqs-ta{margin-top:9px}
+#hcQuranStudy .hcqs-unwritten{font-size:12px;color:#bdced6;margin:15px 0 12px}
+#hcQuranStudy .hcqs-editorial{border-top:1px solid rgba(219,235,242,.15);padding:14px 0 6px;margin-top:14px;font-size:13px;color:#dbe7e9;line-height:1.7}
+#hcQuranStudy .hcqs-editorial strong{display:block;color:#fff;font-size:14px;margin-bottom:9px}
+#hcQuranStudy .hcqs-editorial>div:not(.hcqs-source-label){margin:7px 0}
+#hcQuranStudy .hcqs-editorial small{display:block;color:#b8c9d1;font-size:11px;line-height:1.6;margin:7px 0}
+#hcQuranStudy .hcqs-source-label{display:inline-block;font-size:10px;letter-spacing:.01em;border:1px solid rgba(227,209,166,.24);padding:5px 8px;color:#e5cfa4;border-radius:999px;margin-bottom:11px}
+#hcQuranStudy .hcqs-private-note{margin:14px 0;padding:12px;background:rgba(151,190,164,.09);border:1px solid rgba(193,222,198,.27);border-radius:14px}
+#hcQuranStudy .hcqs-private-note strong{font-size:12px}
+#hcQuranStudy .hcqs-private-note p{white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px}
+#hcQuranStudy .hcqs-private-note small{font-size:10px;color:#b9cfbf}
+#hcQuranStudy .hcqs-edit{margin-top:12px;width:100%;min-height:44px;border-radius:13px;border:1px solid rgba(221,236,241,.25);background:rgba(11,39,54,.65);color:#fff;font:inherit;font-size:12px;font-weight:700;padding:12px}
+#hcQuranStudy .hcqs-editor{padding:12px 0}
+#hcQuranStudy .hcqs-editor label,#hcQuranStudy .hcqs-jump label{display:block;font-size:12px;color:#e9d7aa;margin:8px 0}
+#hcQuranStudy .hcqs-editor textarea{display:block;width:100%;font:inherit;font-size:14px;line-height:1.65;background:#0b202e;border:1px solid #66818d;border-radius:12px;padding:13px;color:white;resize:vertical}
+#hcQuranStudy .hcqs-editor-actions{display:flex;gap:8px;margin-top:10px}
+#hcQuranStudy .hcqs-editor-actions button{flex:1;background:white;color:#112534;border:0;border-radius:11px;padding:12px 9px;font:inherit;font-weight:700;font-size:12px;min-height:44px}
+#hcQuranStudy .hcqs-editor-actions .hcqs-cancel{background:#183442;color:#fff;border:1px solid rgba(219,234,241,.18)}
+#hcQuranStudy .hcqs-jump{display:grid;grid-template-columns:1fr auto;gap:9px;margin-top:23px;align-items:end}
+#hcQuranStudy .hcqs-jump label{grid-column:1/-1;margin:0}
+#hcQuranStudy .hcqs-jump input{background:#0c2635;color:#fff;font:inherit;font-size:16px;border-radius:12px;border:1px solid rgba(229,237,245,.34);padding:11px;width:100%;min-height:44px}
+#hcQuranStudy .hcqs-jump button{min-height:44px;background:white;color:#0f2735;border:0;border-radius:12px;font:inherit;font-weight:700;font-size:12px;padding:0 18px}
+#hcQuranStudy .hcqs-private-tools{padding:17px 0 4px;margin-top:20px;border-top:1px solid rgba(214,233,242,.2)}
+#hcQuranStudy .hcqs-private-tools h3{font-size:20px}
+#hcQuranStudy .hcqs-private-tools p{font-size:12px;line-height:1.7}
+#hcQuranStudy .hcqs-private-tools>button{min-height:46px;background:white;color:#0b2432;border-radius:13px;padding:12px 14px;border:0;font:inherit;font-size:12px;font-weight:700;width:100%}
+#hcQuranStudy .hcqs-import-label{display:block;font-size:12px;margin-top:18px;color:#e4d1ab}
+#hcQuranStudy .hcqs-private-tools input[type=file]{display:block;margin-top:8px;max-width:100%;font:inherit;font-size:11px;color:#d8e4e9}
+#hcQuranStudy .hcqs-license{font-size:10px;line-height:1.65;color:#a5b9c2;overflow-wrap:anywhere;margin-top:24px}
+#hcQuranStudy .hcqs-license a{color:#dcecf1}
+#hcQuranStudy button:focus-visible,#hcQuranStudy a:focus-visible,#hcQuranStudy input:focus-visible,#hcQuranStudy textarea:focus-visible{outline:2px solid #fff;outline-offset:3px}
+@media(min-width:480px){#hcQuranStudy .hcqs-verse{padding:20px}#hcQuranStudy .hcqs-shell{padding:25px}}
+@media(max-width:350px){#hcQuranStudy .hcqs-picker{grid-template-columns:1fr}#hcQuranStudy .hcqs-pager{gap:3px}#hcQuranStudy .hcqs-pager button{font-size:11px}}
