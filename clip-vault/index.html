@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0a1928">
 <meta name="description" content="A private phone-friendly helper to organize authorised Reels and send original video files to Google Drive.">
 <link rel="manifest" href="./manifest.webmanifest">
-<title>Clip Vault · Video to Drive</title>
+<title>Clip Vault · Video to Drive (v2)</title>
 <style>
 :root{color-scheme:dark;--bg:#081522;--panel:#102739;--panel2:#143147;--line:#34546b;--fg:#f3f8fb;--muted:#bdd0da;--accent:#e9d8ac}
 *{box-sizing:border-box}html{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--fg)}
@@ -48,13 +48,14 @@ kbd{background:#0b2636;padding:2px 5px;border-radius:4px}
 <div class="tag">01 · Paste video link</div>
 <label class="label" for="source">TikTok · Instagram Reels · YouTube · direct MP4</label>
 <input type="url" id="source" placeholder="https://www.instagram.com/reel/..." autocomplete="url" inputmode="url">
-<div class="actions"><button type="button" id="paste" class="secondary">Paste</button><button type="button" id="check">Check link</button></div>
+<div class="actions"><button type="button" id="paste" class="secondary">Paste</button><button type="button" id="check">Continue with link</button></div>
 <div id="linkResult" hidden></div>
 </section>
 <section class="section">
 <div class="tag">02 · Choose video file</div>
 <h2>Keep the original quality</h2>
-<p style="font-size:13px">Once you have a video file from the creator, your own account, or an allowed download, choose it below. Clip Vault never converts, compresses, or removes a watermark.</p>
+<p style="font-size:13px">Save the video using the platform’s permitted download option first. Then select it here. Clip Vault keeps the file untouched: no compression, conversion, or watermark removal.</p>
+<label class="label" for="files">Choose downloaded video(s) from your phone</label>
 <input type="file" id="files" accept="video/*,.mp4,.mov,.webm,.m4v" multiple>
 <div id="fileDetails" class="status" hidden></div>
 <div class="actions">
@@ -72,7 +73,7 @@ kbd{background:#0b2636;padding:2px 5px;border-radius:4px}
 <div class="actions"><button type="button" id="remember" class="secondary">Save current link</button><button type="button" id="export" class="secondary">Export link list</button></div>
 <div id="recent" style="margin-top:16px"></div>
 </section>
-<footer>For your own or permitted-to-save videos. This tool cannot unlock private, protected, or download-disabled posts, or guarantee a platform's maximum resolution. It does not store account passwords.</footer>
+<footer>v2 · This website is a link-and-file helper, not an automatic downloader for TikTok, Instagram or YouTube posts. Only save videos you own or are allowed to download. Uploads use your phone’s Android share sheet or the Google Drive app; they never go to this website.</footer>
 </main>
 <script>
 (()=>{
@@ -101,15 +102,24 @@ const u=safeLink($("source").value);
 if(!u){result.className="status";result.textContent="Paste a full HTTPS video link first.";return}
 const type=service(u);
 const instructions={
-tiktok:"In TikTok, open the video → Share → Save video, if the creator allows downloads. Then select the saved video file below.",
-instagram:"In Instagram, open the Reel → Share → Download, if that option is enabled. For your own videos, use your saved original or Instagram account export.",
+tiktok:"TikTok short links open a TikTok post, not a direct MP4. To obtain a permitted copy: open the video in TikTok → Share → Save video. Then tap “I saved it — choose file” below. If “Save video” is missing, that post cannot be downloaded through TikTok’s available option.",
+instagram:"Open the Reel in Instagram and use Share → Download if the creator/platform enables it. For your own videos, use your saved original or account export. Then choose the file below.",
 youtube:"YouTube watch and Shorts links are not MP4 download links. For videos you uploaded, use YouTube Studio → Content → Download or Google Takeout for original uploads. YouTube Premium offline downloads stay in YouTube.",
 direct:"This looks like a direct media file. If the file host permits browser access, Clip Vault can try to save it without changing its quality.",
 other:"This is a website link, not a verified video file. Use an official download option or ask the creator for the original video file."
 };
 const p=document.createElement("p");p.className="info";p.textContent=instructions[type];result.appendChild(p);
 const row=document.createElement("div");row.className="actions";
-const open=document.createElement("a");open.href=u.toString();open.target="_blank";open.rel="noopener noreferrer";open.className="button secondary";open.textContent="Open source ↗";row.appendChild(open);
+const open=document.createElement("a");open.href=u.toString();open.target="_blank";open.rel="noopener noreferrer";open.className="button";open.textContent=({tiktok:"1 · Open in TikTok to save video ↗",instagram:"1 · Open in Instagram to download ↗",youtube:"Open on YouTube ↗",direct:"Open original video ↗"})[type]||"Open source ↗";row.appendChild(open);
+if(type==="tiktok"||type==="instagram"){
+ const choose=document.createElement("button");choose.type="button";choose.className="secondary";choose.textContent="2 · I saved it — choose video file";choose.addEventListener("click",()=>{
+  const picker=$("files");picker.scrollIntoView({behavior:"smooth",block:"center"});
+  picker.click();
+ });row.appendChild(choose);
+ const tip=document.createElement("p");tip.className="info";
+ tip.textContent="3 · After choosing the file, tap Send file to Drive. Keep this page open when you return from the video app.";
+ result.appendChild(tip);
+}
 if(type==="direct"){
 const dl=document.createElement("button");dl.type="button";dl.textContent="Download direct file";dl.addEventListener("click",()=>downloadDirect(u,dl));row.appendChild(dl);
 }
