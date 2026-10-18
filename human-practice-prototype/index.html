@@ -2202,6 +2202,20 @@ body.hc-reels-active{overflow:hidden;overscroll-behavior:none}
 @media(max-height:650px){#hcReels .hc-reel-swipe-rail{top:calc(155px + env(safe-area-inset-top,0px))!important;bottom:120px!important;gap:10px}}
 /* A queued update must never cover the active Drive reel; offer it after closing Reels. */
 body.hc-reels-active #updateBanner{display:none!important;pointer-events:none!important}
+
+/* Watched reels are excluded from future shuffled queues; zero-state is discreet. */
+#hcReels .hc-reel-all-seen[hidden]{display:none!important}
+#hcReels .hc-reel-all-seen{
+ position:absolute;z-index:22;inset:0;display:flex;align-items:center;justify-content:center;
+ flex-direction:column;gap:13px;padding:25px;text-align:center;
+ background:linear-gradient(160deg,#122c3c,#061018);color:#fff
+}
+#hcReels .hc-reel-all-seen h3{font-size:24px;margin:0}
+#hcReels .hc-reel-all-seen p{font-size:13px;line-height:1.6;max-width:270px;color:#dae6ea}
+#hcReels .hc-reel-all-seen button{
+ border-radius:13px;padding:12px 19px;min-height:48px;border:1px solid white;
+ font:inherit;font-weight:750;color:#142936;background:#fff
+}
 </style>
 <link rel="stylesheet" href="./quran-study.css?v=122">
 </head>
@@ -2374,9 +2388,9 @@ body.hc-reels-active #updateBanner{display:none!important;pointer-events:none!im
      <button id="hcReelPoster" class="hc-reel-drive-poster" type="button" onclick="hcReelToggle()" aria-label="Load selected uploaded video"><span class="hc-reel-playmark" aria-hidden="true">▶</span><strong>Ready to watch</strong><span>Tap here to load your uploaded short inside HeartClear.</span></button>
      <iframe id="hcReelFrame" class="hc-reel-drive-frame" title="Google Drive reel video player" loading="eager" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="no-referrer-when-downgrade" hidden></iframe>
       <div id="hcReelSwipeRail" class="hc-reel-swipe-rail" aria-label="Swipe up and down or use small arrows to change reels">
-        <button type="button" class="hc-reel-rail-btn" aria-label="Previous reel" onclick="hcReelRailTap('previous')">↑</button>
+        <button type="button" class="hc-reel-rail-btn" aria-label="Previous unwatched reel" onclick="hcReelRailTap('previous')">↑</button>
         <small aria-hidden="true">SWIPE</small>
-        <button type="button" class="hc-reel-rail-btn" aria-label="Next reel" onclick="hcReelRailTap('next')">↓</button>
+        <button type="button" class="hc-reel-rail-btn" aria-label="Next unwatched reel" onclick="hcReelRailTap('next')">↓</button>
       </div>
      <div class="hc-reels-screen-shade" aria-hidden="true"></div>
      <div class="hc-reels-progress" aria-hidden="true"><span id="hcReelProgress"></span></div>
@@ -3534,7 +3548,7 @@ body.hc-reels-active #updateBanner{display:none!important;pointer-events:none!im
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear meditation history only</button>
     </div>
-    <div class="app-version">HeartClear · Version 1.3.8</div>
+    <div class="app-version">HeartClear · Version 1.3.9</div>
   </div>
 </section>
 
@@ -4561,6 +4575,9 @@ function hcReelToggle(){
 
 
 hcUpdateReelsHomeMeta();
+window.addEventListener('pagehide',()=>{
+ if(currentScreenId==='hcReels')hcMarkCurrentReelSeen();
+});
 
 function show(id){
   if(currentScreenId==='hcDriveMedia'&&id!=='hcDriveMedia'&&hcDriveActiveKey&&!hcDriveDocked){
@@ -8723,7 +8740,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=121');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=123');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
