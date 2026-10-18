@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="HeartClear">
-<link rel="manifest" href="./manifest.webmanifest?v=109">
+<link rel="manifest" href="./manifest.webmanifest?v=122">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
 <title>HeartClear · Meditation, Sounds & Reflection</title>
@@ -2203,6 +2203,7 @@ body.hc-reels-active{overflow:hidden;overscroll-behavior:none}
 /* A queued update must never cover the active Drive reel; offer it after closing Reels. */
 body.hc-reels-active #updateBanner{display:none!important;pointer-events:none!important}
 </style>
+<link rel="stylesheet" href="./quran-study.css?v=122">
 </head>
 <body>
 <div class="update-banner" id="updateBanner">
@@ -2285,6 +2286,7 @@ body.hc-reels-active #updateBanner{display:none!important;pointer-events:none!im
   </div>
 
   <div style="display:grid;gap:7px;margin:12px 0"><button class="choice" onclick="show('hcFatiha')" style="margin:0"><b>Al-Fatiha · ஸூரத்துல் ஃபாத்திஹா</b><small>Read in தமிழ் &amp; English · Seven verses</small></button><button class="choice" onclick="openAdhkar('listen')" style="margin:0"><b>Morning Adhkar · காலை திக்ர்</b><small>Listen · 28:18 · Morning supplications</small></button></div>
+  <button class="choice" onclick="hcOpenQuranStudy()" style="margin:0 0 12px"><b>Qur'an &amp; Inner Journey · குர்ஆனும் உள்ளார்ந்த பயணமும்</b><small>Al-Baqarah 286 · An-Nisa 176 · Fussilat 54 · An-Nas 6 · My reflections</small></button>
   <button class="choice" onclick="show('hcLivingQuran')" style="margin:0 0 12px"><b>The Living Qur'an · மூன்று குல் ஸூராக்கள்</b><small>Arabic · Tamil · English · Gentle recitation &amp; 5-minute daily habit</small></button>
   <div class="hc-home-secondary-resumes">
     <div class="home-resume library-resume hc-secondary-resume" id="homeLibraryResumeCard">
@@ -2837,6 +2839,7 @@ body.hc-reels-active #updateBanner{display:none!important;pointer-events:none!im
   <button class="hc-library-offline-link" onclick="show('downloads')">Offline downloads →</button>
 
   <div class="hub-grid">
+    <button class="hub-card" onclick="hcOpenQuranStudy()"><span class="hub-icon">۞</span><span><b>Qur'an &amp; Inner Journey · குர்ஆன்</b><small>Four full Arabic surahs, selected Tamil and English meaning drafts, personal reflection editor.</small></span><span class="hub-arrow">›</span></button>
     <button class="hub-card" onclick="openCollection('english')">
       <span class="hub-icon">EN</span>
       <span><b>English Audiobooks</b><small>Long-form listening, reflection and learning.</small></span>
@@ -2879,6 +2882,15 @@ body.hc-reels-active #updateBanner{display:none!important;pointer-events:none!im
   </div>
 </section>
 
+<section class="screen" id="hcQuranStudy">
+ <div class="glass hcqs-shell">
+  <button class="collection-back" onclick="openSacred('islamic')">‹ Islamic · Sacred Sound</button>
+  <div id="hcQuranStudyRoot" aria-live="polite" aria-label="Qur'an verse reader">
+   <h2>Opening Qur'an study · குர்ஆன் வாசிப்பு</h2>
+   <p>Loading complete Arabic chapters and private reflection tools.</p>
+  </div>
+ </div>
+</section>
 <section class="screen" id="hcFatiha" data-fatiha-mode="both"><div class="glass"><button class="collection-back" onclick="show('sacredDetail')">‹ Sacred Sound</button><div class="kicker">Qur'an · Chapter 1</div><h2>Surah Al-Fatiha</h2><p lang="ta">ஸூரத்துல் ஃபாத்திஹா — நேர்வழியை நோக்கிய வாழ்வுப் பயணம்</p><p data-fatiha-lang="en">Read all seven verses with a meaning-based rendering and a separate reflection for daily life.</p><p data-fatiha-lang="ta" lang="ta">ஏழு வசனங்களையும் அவற்றின் பொருளையும் வாசித்து, வாழ்வுடன் இணைத்துச் சிந்திப்போம்.</p><div class="fatiha-language" role="group" aria-label="Explanation language"><button data-fatiha-select="both" aria-pressed="true" onclick="hcSetFatihaLanguage('both')">Both / இரண்டும்</button><button data-fatiha-select="ta" aria-pressed="false" onclick="hcSetFatihaLanguage('ta')">தமிழ்</button><button data-fatiha-select="en" aria-pressed="false" onclick="hcSetFatihaLanguage('en')">English</button></div><div class="fatiha-note"><div data-fatiha-lang="en">Meaning and personal reflection are shown separately. These reflections are not a literal translation or the only accepted interpretation.</div><div data-fatiha-lang="ta" lang="ta">வசனங்களின் பொருளும் நமது தனிப்பட்ட சிந்தனைகளும் தனித்தனியாக உள்ளன. இவை மட்டுமே ஒரே விளக்கம் என்று கூறவில்லை.</div></div><article class="fatiha-card"><div class="kicker">Verse 1 · வசனம் 1</div><p class="fatiha-ar" lang="ar" dir="rtl">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p><div data-fatiha-lang="en"><b>Meaning · English</b><p>In the name of Allah, the Most Compassionate, the Most Merciful.</p></div><div data-fatiha-lang="ta" lang="ta"><b>பொருள் · தமிழ்</b><p>அளவற்ற அருளும் கருணையும் உடைய அல்லாஹ்வின் பெயரால்.</p></div><div class="fatiha-reflection"><div data-fatiha-lang="en"><b>Reflection</b><p>Begin with mercy; let compassion shape your actions.</p></div><div data-fatiha-lang="ta" lang="ta"><b>வாழ்க்கைச் சிந்தனை</b><p>கருணையோடு தொடங்குங்கள்; உங்கள் செயல்களிலும் கருணை வெளிப்படட்டும்.</p></div></div></article>
 <article class="fatiha-card"><div class="kicker">Verse 2 · வசனம் 2</div><p class="fatiha-ar" lang="ar" dir="rtl">الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ</p><div data-fatiha-lang="en"><b>Meaning · English</b><p>All praise belongs to Allah, Lord of all worlds.</p></div><div data-fatiha-lang="ta" lang="ta"><b>பொருள் · தமிழ்</b><p>எல்லா உலகங்களையும் பரிபாலிக்கும் அல்லாஹ்வுக்கே எல்லாப் புகழும்.</p></div><div class="fatiha-reflection"><div data-fatiha-lang="en"><b>Reflection</b><p>Gratitude reminds us that we belong to a greater creation.</p></div><div data-fatiha-lang="ta" lang="ta"><b>வாழ்க்கைச் சிந்தனை</b><p>நன்றி உணர்வு நாம் பெரிய படைப்பின் ஒரு பகுதி என்பதை நினைவூட்டுகிறது.</p></div></div></article>
 <article class="fatiha-card"><div class="kicker">Verse 3 · வசனம் 3</div><p class="fatiha-ar" lang="ar" dir="rtl">الرَّحْمَٰنِ الرَّحِيمِ</p><div data-fatiha-lang="en"><b>Meaning · English</b><p>The Most Compassionate, the Most Merciful.</p></div><div data-fatiha-lang="ta" lang="ta"><b>பொருள் · தமிழ்</b><p>அளவற்ற அருளாளன், மிகுந்த கருணையாளன்.</p></div><div class="fatiha-reflection"><div data-fatiha-lang="en"><b>Reflection</b><p>Mercy appears again. Consider its place in your relationships.</p></div><div data-fatiha-lang="ta" lang="ta"><b>வாழ்க்கைச் சிந்தனை</b><p>கருணை மீண்டும் சொல்லப்படுகிறது. உங்கள் உறவுகளில் அதன் இடத்தைச் சிந்தியுங்கள்.</p></div></div></article>
@@ -3020,7 +3032,7 @@ body.hc-reels-active #updateBanner{display:none!important;pointer-events:none!im
       <p id="sacredMeaning">Understand the meaning and context, then listen or recite naturally without forcing the breath.</p>
     </div>
 
-    <div class="sacred-feature" id="islamicFeatured"><button class="hc-living-button" onclick="show('hcLivingQuran')" style="display:block;width:100%;padding:13px;margin:0 0 14px;background:white;color:#10212e;border:0;border-radius:14px;font:inherit;font-size:13px;font-weight:700;text-align:left">The Living Qur'an · மூன்று குல் ஸூராக்கள் / Voice &amp; stillness →</button><b>Surah Al-Fatiha · ஸூரத்துல் ஃபாத்திஹா</b><small>Seven verses. Meaning and life reflections in Tamil and English.</small><div class="sacred-feature-actions"><button onclick="show('hcFatiha')">Read · தமிழ் / English</button><button onclick="openAdhkar('listen')">Morning Adhkar</button></div><div style="height:1px;background:var(--line);margin:15px 0"></div>
+    <div class="sacred-feature" id="islamicFeatured"><button class="hc-living-button" onclick="hcOpenQuranStudy()" style="display:block;width:100%;padding:13px;margin:0 0 12px;background:#fff;color:#10212e;border:0;border-radius:14px;font:inherit;font-size:13px;font-weight:700;text-align:left">Full Qur'an study · Al-Baqarah 286 / An-Nisa / Fussilat / An-Nas · தமிழ் →</button><button class="hc-living-button" onclick="show('hcLivingQuran')" style="display:block;width:100%;padding:13px;margin:0 0 14px;background:white;color:#10212e;border:0;border-radius:14px;font:inherit;font-size:13px;font-weight:700;text-align:left">The Living Qur'an · மூன்று குல் ஸூராக்கள் / Voice &amp; stillness →</button><b>Surah Al-Fatiha · ஸூரத்துல் ஃபாத்திஹா</b><small>Seven verses. Meaning and life reflections in Tamil and English.</small><div class="sacred-feature-actions"><button onclick="show('hcFatiha')">Read · தமிழ் / English</button><button onclick="openAdhkar('listen')">Morning Adhkar</button></div><div style="height:1px;background:var(--line);margin:15px 0"></div>
       <b>Morning Adhkar · 28 min</b>
       <small>Use it as a standalone listening session or after a gentle practice. Choose quiet listening or recite along at a comfortable voice and pace.</small>
       <div class="sacred-feature-actions">
@@ -3521,7 +3533,7 @@ body.hc-reels-active #updateBanner{display:none!important;pointer-events:none!im
       </div>
       <button class="danger-btn" onclick="clearLocalHistory()">Clear meditation history only</button>
     </div>
-    <div class="app-version">HeartClear · Version 1.3.7</div>
+    <div class="app-version">HeartClear · Version 1.3.8</div>
   </div>
 </section>
 
@@ -3784,6 +3796,9 @@ body.hc-reels-active #updateBanner{display:none!important;pointer-events:none!im
 
 </div>
 
+<script src="./quran-study-data.js?v=122"></script>
+<script src="./quran-study-reflections.js?v=122"></script>
+<script src="./quran-study-ui.js?v=122"></script>
 <script>
 function hcSetLivingLanguage(lang){
   if(!['both','ta','en'].includes(lang))lang='both';
@@ -4242,7 +4257,7 @@ async function clearOfflineMedia(){
    Never autoplay on cold start. */
 const HC_RETURN_KEY='heartclearReturnStateV1';
 let hcReturnRestoring=false,hcReturnSaveAt=0;
-const HC_RETURN_SCREENS=new Set(['home','practices','player','sacred','sacredDetail','sacredSession','hcLivingQuran',
+const HC_RETURN_SCREENS=new Set(['home','practices','player','sacred','sacredDetail','sacredSession','hcLivingQuran','hcQuranStudy',
  'soundHub','soundLab','soundLabPlayer','fearPractice','fearPlayer','library','collection',
  'bookAudio','human','humanCategory','downloads','history','settings','hcDriveMedia','omVideo','hcReels']);
 function hcCaptureReturnState(force=false){
@@ -4556,6 +4571,7 @@ function show(id){
     sacredSession:'Sacred Sound',
     hcFatiha:'Al-Fatiha',
     hcLivingQuran:'The Living Qur\'an',
+    hcQuranStudy:'Qur\'an Study',
     downloads:'Offline',
     library:'Library',
     collection:'Library',
@@ -4571,7 +4587,7 @@ function show(id){
     hcReels:'hcReels',
     practices:'practices',human:'practices',humanCategory:'practices',humanSession:'practices',returnJourney:'practices',
     soundHub:'soundHub',soundLab:'soundHub',soundLabPlayer:'soundHub',fearPractice:'soundHub',fearPlayer:'soundHub',
-    sacred:'soundHub',sacredDetail:'soundHub',sacredSession:'soundHub',hcFatiha:'soundHub',hcLivingQuran:'soundHub',
+    sacred:'soundHub',sacredDetail:'soundHub',sacredSession:'soundHub',hcFatiha:'soundHub',hcLivingQuran:'soundHub',hcQuranStudy:'soundHub',
     library:'library',collection:'library',bookAudio:'library',bookReader:'library',downloads:'library',
     settings:'settings',history:'settings'
   };
