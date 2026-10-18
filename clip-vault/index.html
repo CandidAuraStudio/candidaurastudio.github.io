@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0a1928">
+<meta name="description" content="A private phone-friendly helper to organize authorised Reels and send original video files to Google Drive.">
+<link rel="manifest" href="./manifest.webmanifest">
+<title>Clip Vault · Video to Drive</title>
+<style>
+:root{color-scheme:dark;--bg:#081522;--panel:#102739;--panel2:#143147;--line:#34546b;--fg:#f3f8fb;--muted:#bdd0da;--accent:#e9d8ac}
+*{box-sizing:border-box}html{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--fg)}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 85% -5%,#355e78 0,transparent 35%),linear-gradient(180deg,#102d42 0%,#081522 55%);}
+main{max-width:640px;margin:0 auto;padding:calc(env(safe-area-inset-top) + 24px) 18px calc(env(safe-area-inset-bottom) + 44px)}
+header{margin-bottom:26px}header small{letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-size:11px;font-weight:700}
+h1{font-size:clamp(31px,8vw,46px);letter-spacing:-.05em;line-height:1.08;margin:10px 0}h2{margin:0 0 12px;font-size:21px;letter-spacing:-.025em}
+p{line-height:1.62;color:var(--muted);margin:10px 0}small{line-height:1.6}
+.section{background:linear-gradient(165deg,rgba(35,68,88,.83),rgba(9,29,44,.95));border:1px solid rgba(228,242,252,.16);border-radius:22px;padding:18px;margin:15px 0;box-shadow:0 18px 34px #0002}
+.label{display:block;font-size:12px;color:var(--accent);font-weight:750;margin:0 0 9px;letter-spacing:.04em}
+input[type=url],input[type=text]{width:100%;min-height:50px;border-radius:14px;border:1px solid #678195;background:#081c2b;color:white;padding:12px 13px;font:inherit;font-size:16px}
+input:focus,button:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}
+button,.button{display:inline-flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;min-height:48px;border:1px solid #a9c4d5;border-radius:13px;background:#e9f1f5;color:#102633;padding:12px 15px;font:inherit;font-size:14px;font-weight:750;text-decoration:none;flex:1 1 auto;text-align:center}
+button.secondary,.button.secondary{background:#17374b;border-color:#54768a;color:white}
+button:disabled{opacity:.5;cursor:default}
+input[type=file]{display:block;width:100%;font:inherit;color:var(--fg);font-size:13px;line-height:1.6}
+input[type=file]::file-selector-button{border:1px solid #c3d9e5;border-radius:10px;background:#f4f8fb;color:#173043;padding:10px;font-weight:700;margin-right:12px}
+.tip{border-left:3px solid var(--accent);padding:6px 0 6px 13px;font-size:13px;color:#d7e3eb;margin-top:13px}
+.info{font-size:13px;color:#d3e3e9;margin-top:12px;line-height:1.6}
+.tag{display:inline-block;padding:5px 9px;background:#1a465b;border-radius:999px;font-size:11px;color:#e9e2c5;margin-bottom:10px}
+.status{margin-top:13px;padding:12px 13px;border-radius:11px;background:rgba(3,17,25,.6);border:1px solid rgba(228,242,252,.13);font-size:13px;line-height:1.7;white-space:pre-line}
+.status[hidden],.hidden{display:none!important}
+article{border-top:1px solid #526d7c;padding:13px 0}article:first-child{border-top:none}
+article a{color:#e7d7ad;overflow-wrap:anywhere}
+article small{color:#c9d9e2;font-size:11px}
+footer{text-align:center;color:#9bb3c2;font-size:12px;padding:15px}
+kbd{background:#0b2636;padding:2px 5px;border-radius:4px}
+</style>
+</head>
+<body>
+<main>
+<header>
+<small>Candid Aura Studio · Private utility</small>
+<h1>Clip Vault</h1>
+<p>Keep your short-form videos in their available original quality, then send the file into your existing Google Drive <b>Reels</b> folder. Nothing is uploaded to this website.</p>
+</header>
+<section class="section">
+<div class="tag">01 · Paste video link</div>
+<label class="label" for="source">TikTok · Instagram Reels · YouTube · direct MP4</label>
+<input type="url" id="source" placeholder="https://www.instagram.com/reel/..." autocomplete="url" inputmode="url">
+<div class="actions"><button type="button" id="paste" class="secondary">Paste</button><button type="button" id="check">Check link</button></div>
+<div id="linkResult" hidden></div>
+</section>
+<section class="section">
+<div class="tag">02 · Choose video file</div>
+<h2>Keep the original quality</h2>
+<p style="font-size:13px">Once you have a video file from the creator, your own account, or an allowed download, choose it below. Clip Vault never converts, compresses, or removes a watermark.</p>
+<input type="file" id="files" accept="video/*,.mp4,.mov,.webm,.m4v" multiple>
+<div id="fileDetails" class="status" hidden></div>
+<div class="actions">
+<button type="button" id="share" disabled>Send file to Drive</button>
+<button type="button" id="clear" class="secondary">Clear</button>
+</div>
+<div id="shareMessage" class="status" hidden></div>
+<p class="tip"><b>Android:</b> Tap “Send file to Drive,” choose <b>Drive</b> from the Android share sheet, and select your <b>Reels</b> folder. If Drive does not appear, open the folder below and tap <b>New → Upload</b>.</p>
+<a class="button secondary" href="https://drive.google.com/drive/folders/1rBf05zVstCYf_f9GqQL_k7yDu3LL79q9" target="_blank" rel="noopener noreferrer" style="width:100%;margin-top:5px">Open your Drive Reels folder ↗</a>
+</section>
+<section class="section">
+<div class="tag">03 · Keep the source link</div>
+<h2>Recent source links</h2>
+<p style="font-size:13px">Save a link for later even when that platform doesn't permit a video download. The list stays only in this browser, not in Drive.</p>
+<div class="actions"><button type="button" id="remember" class="secondary">Save current link</button><button type="button" id="export" class="secondary">Export link list</button></div>
+<div id="recent" style="margin-top:16px"></div>
+</section>
+<footer>For your own or permitted-to-save videos. This tool cannot unlock private, protected, or download-disabled posts, or guarantee a platform's maximum resolution. It does not store account passwords.</footer>
+</main>
+<script>
+(()=>{
+"use strict";
+const $=id=>document.getElementById(id);
+const FOLDER="https://drive.google.com/drive/folders/1rBf05zVstCYf_f9GqQL_k7yDu3LL79q9";
+const KEY="clipVaultSourceLinksV1";
+let selected=[];
+const safeLink=raw=>{
+try{const u=new URL(String(raw||"").trim());if(u.protocol!=="https:")return null;return u}
+catch{return null}
+};
+const service=u=>{
+const h=u.hostname.toLowerCase().replace(/^www\./,"");
+if(h==="tiktok.com"||h.endsWith(".tiktok.com"))return "tiktok";
+if(h==="instagram.com"||h.endsWith(".instagram.com"))return "instagram";
+if(h==="youtube.com"||h.endsWith(".youtube.com")||h==="youtu.be")return "youtube";
+if(/\.(mp4|webm|mov|m4v)(?:$|\?)/i.test(u.pathname+u.search))return "direct";
+return "other";
+};
+function showNote(where,msg){$(where).hidden=false;$(where).textContent=msg}
+function escaped(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+function buildLinkResult(){
+const result=$("linkResult");result.hidden=false;result.replaceChildren();
+const u=safeLink($("source").value);
+if(!u){result.className="status";result.textContent="Paste a full HTTPS video link first.";return}
+const type=service(u);
+const instructions={
+tiktok:"In TikTok, open the video → Share → Save video, if the creator allows downloads. Then select the saved video file below.",
+instagram:"In Instagram, open the Reel → Share → Download, if that option is enabled. For your own videos, use your saved original or Instagram account export.",
+youtube:"YouTube watch and Shorts links are not MP4 download links. For videos you uploaded, use YouTube Studio → Content → Download or Google Takeout for original uploads. YouTube Premium offline downloads stay in YouTube.",
+direct:"This looks like a direct media file. If the file host permits browser access, Clip Vault can try to save it without changing its quality.",
+other:"This is a website link, not a verified video file. Use an official download option or ask the creator for the original video file."
+};
+const p=document.createElement("p");p.className="info";p.textContent=instructions[type];result.appendChild(p);
+const row=document.createElement("div");row.className="actions";
+const open=document.createElement("a");open.href=u.toString();open.target="_blank";open.rel="noopener noreferrer";open.className="button secondary";open.textContent="Open source ↗";row.appendChild(open);
+if(type==="direct"){
+const dl=document.createElement("button");dl.type="button";dl.textContent="Download direct file";dl.addEventListener("click",()=>downloadDirect(u,dl));row.appendChild(dl);
+}
+result.appendChild(row);
+const status=document.createElement("div");status.id="linkStatus";status.className="status";status.hidden=true;result.appendChild(status);
+}
+async function downloadDirect(url,button){
+const status=$("linkStatus");status.hidden=false;status.textContent="Checking direct file availability…";button.disabled=true;
+try{
+const res=await fetch(url.toString(),{mode:"cors",credentials:"omit",redirect:"follow"});
+if(!res.ok)throw new Error("The file server returned "+res.status);
+const mime=res.headers.get("content-type")||"";
+if(!mime.startsWith("video/")&&!mime.includes("octet-stream"))throw new Error("The link did not return a downloadable video.");
+const size=Number(res.headers.get("content-length")||0);
+if(size>250*1024*1024)throw new Error("This file is over 250 MB. Open the source and download through your browser instead.");
+const blob=await res.blob();
+if(blob.size>250*1024*1024)throw new Error("This file is over 250 MB. Open the source and download through your browser instead.");
+if(!blob.size)throw new Error("The downloaded file is empty.");
+const filename=decodeURIComponent(url.pathname.split("/").pop()||"clip.mp4").replace(/[^a-zA-Z0-9_. -]/g,"_").slice(0,95)||"clip.mp4";
+const downloadURL=URL.createObjectURL(blob);
+const a=document.createElement("a");a.href=downloadURL;a.download=filename;document.body.appendChild(a);a.click();a.remove();
+status.textContent="Download started without re-encoding. Choose this video in Step 02, then send it to Drive.";
+setTimeout(()=>URL.revokeObjectURL(downloadURL),20000);
+}catch(e){status.textContent="Cannot directly download from this site: "+e.message+" Open source instead and use its authorized download option."}
+finally{button.disabled=false}
+}
+const formatSize=n=>n<1024*1024?(n/1024).toFixed(1)+" KB":(n/1024/1024).toFixed(1)+" MB";
+async function checkVideo(file){
+if(!file.type.startsWith("video/")&&!/\.(mp4|mov|webm|m4v)$/i.test(file.name))return "Unsupported file (choose a video).";
+return new Promise(resolve=>{
+const v=document.createElement("video");v.preload="metadata";v.muted=true;const url=URL.createObjectURL(file);
+let done=false;const finish=message=>{if(done)return;done=true;v.removeAttribute("src");v.load();URL.revokeObjectURL(url);resolve(message)};
+v.onloadedmetadata=()=>finish(file.name+"\n"+formatSize(file.size)+" · "+v.videoWidth+" × "+v.videoHeight+" · "+Math.round(v.duration||0)+" seconds");
+v.onerror=()=>finish(file.name+"\n"+formatSize(file.size)+" · video resolution could not be inspected");
+v.src=url;setTimeout(()=>finish(file.name+"\n"+formatSize(file.size)+" · video metadata timed out"),3500);
+});
+}
+$("files").addEventListener("change",async()=>{
+const picked=Array.from($("files").files||[]);
+selected=picked.filter(f=>f.type.startsWith("video/")||/\.(mp4|mov|webm|m4v)$/i.test(f.name));
+$("share").disabled=!selected.length;
+$("shareMessage").hidden=true;
+if(!selected.length){$("fileDetails").hidden=true;return}
+$("fileDetails").hidden=false;$("fileDetails").textContent="Inspecting "+selected.length+" video file(s)…";
+$("fileDetails").textContent=(await Promise.all(selected.map(checkVideo))).join("\n\n");
+});
+$("share").addEventListener("click",async()=>{
+if(!selected.length)return;
+const status=$("shareMessage");
+if(navigator.share&&(!navigator.canShare||navigator.canShare({files:selected}))){
+try{await navigator.share({files:selected,title:"Video files for Google Drive"});showNote("shareMessage","Share sheet completed. Confirm the file appears in the intended Reels folder in Google Drive.");}
+catch(err){if(err.name==="AbortError")showNote("shareMessage","Sharing was cancelled. The video stays on your device.");else showNote("shareMessage","Android could not share this file: "+err.message+" Open your Drive folder, tap New → Upload and choose the original file.");}
+}else showNote("shareMessage","File sharing is not available in this browser. Open the Reels Drive folder above, tap New → Upload and choose the same original file.");
+});
+$("clear").addEventListener("click",()=>{$("files").value="";selected=[];$("share").disabled=true;$("fileDetails").hidden=true;$("shareMessage").hidden=true});
+$("check").addEventListener("click",buildLinkResult);
+$("paste").addEventListener("click",async()=>{try{$("source").value=await navigator.clipboard.readText();buildLinkResult()}catch{showNote("linkResult","Clipboard permission unavailable. Long-press the link field and tap Paste.")}});
+function getLinks(){try{const v=JSON.parse(localStorage.getItem(KEY)||"[]");return Array.isArray(v)?v.filter(x=>safeLink(x.url)).slice(0,50):[]}catch{return []}}
+function drawLinks(){
+const arr=getLinks(),r=$("recent");r.replaceChildren();
+if(!arr.length){const p=document.createElement("p");p.textContent="No links saved on this device yet.";p.style.fontSize="13px";r.appendChild(p);return}
+arr.forEach((item,i)=>{
+const article=document.createElement("article"),a=document.createElement("a");a.href=item.url;a.target="_blank";a.rel="noopener noreferrer";a.textContent=item.url;article.appendChild(a);
+const row=document.createElement("div");row.className="actions";
+const small=document.createElement("small");small.textContent=(item.type||"Video")+" · "+(item.date||"");row.appendChild(small);
+const remove=document.createElement("button");remove.textContent="Remove";remove.className="secondary";remove.style.flex="0 0 auto";remove.style.minHeight="34px";remove.style.padding="6px 10px";remove.addEventListener("click",()=>{const list=getLinks();list.splice(i,1);localStorage.setItem(KEY,JSON.stringify(list));drawLinks()});row.appendChild(remove);article.appendChild(row);r.appendChild(article);
+});
+}
+$("remember").addEventListener("click",()=>{
+const u=safeLink($("source").value);if(!u){showNote("linkResult","Paste a valid HTTPS link before saving it.");return}
+const list=getLinks().filter(x=>x.url!==u.toString());list.unshift({url:u.toString(),type:service(u),date:new Date().toISOString().slice(0,10)});try{localStorage.setItem(KEY,JSON.stringify(list.slice(0,50)))}catch{alert("Browser storage is unavailable.")}drawLinks();
+});
+$("export").addEventListener("click",()=>{
+const list=getLinks();if(!list.length){alert("No saved links to export.");return}
+const blob=new Blob([JSON.stringify({title:"Clip Vault source links",destination:FOLDER,links:list},null,2)],{type:"application/json"});
+const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="clip-vault-source-links.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);
+});
+drawLinks();
+})();
+</script>
+</body>
+</html>
