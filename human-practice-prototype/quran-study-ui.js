@@ -11,7 +11,7 @@ const saved=fetchLocal(POSITION_KEY,{});
 const state={chapter:Number(saved.chapter)||2,start:Number(saved.start)||1,activeRef:"",language:fetchLocal(LANG_KEY,"both"),notes:fetchLocal(KEY,{})};
 if(!["en","ta","both"].includes(state.language))state.language="both";
 const clean=str=>String(str??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
-const bilingual=(en,ta)=>`<div class="hcqs-en">${clean(en)}</div><div class="hcqs-ta" lang="ta">${clean(ta)}</div>`;
+const bilingual=(en,ta)=>`<span class="hcqs-en">${clean(en)}</span><span class="hcqs-ta" lang="ta">${clean(ta)}</span>`;
 const chunkSize=10;
 const getChapter=()=>data.chapters.find(x=>x.number===state.chapter)||data.chapters[0];
 const updatePosition=()=>{try{localStorage.setItem(POSITION_KEY,JSON.stringify({chapter:state.chapter,start:state.start}))}catch(e){}};
