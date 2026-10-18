@@ -118,12 +118,14 @@ if(type==="tiktok"||type==="instagram"){
  });row.appendChild(choose);
  const tip=document.createElement("p");tip.className="info";
  tip.textContent="3 · After choosing the file, tap Send file to Drive. Keep this page open when you return from the video app.";
- result.appendChild(tip);
+ // Step 3 instruction is inserted after action buttons below.
+ result.dataset.clipStep3=tip.textContent;
 }
 if(type==="direct"){
 const dl=document.createElement("button");dl.type="button";dl.textContent="Download direct file";dl.addEventListener("click",()=>downloadDirect(u,dl));row.appendChild(dl);
 }
 result.appendChild(row);
+if(result.dataset.clipStep3){const p=document.createElement("p");p.className="info";p.textContent=result.dataset.clipStep3;result.appendChild(p)}
 const status=document.createElement("div");status.id="linkStatus";status.className="status";status.hidden=true;result.appendChild(status);
 }
 async function downloadDirect(url,button){
