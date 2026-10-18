@@ -107,9 +107,9 @@
     screen.querySelectorAll('[data-hcxe-track]').forEach(btn=>btn.addEventListener('click',()=>switchTrack(btn.dataset.hcxeTrack)));
     byId('hcxeNote').addEventListener('input',saveNote);
     byId('hcxeMark').addEventListener('click',()=>{
-      const s=record();s.done=s.done||{};
+      saveNote();const s=record();s.done=s.done||{};
       const key=noteKey();s.done[key]=!s.done[key];
-      saveNote();save(s);render();
+      save(s);render();
     });
     byId('hcxePrev').addEventListener('click',()=>changeStep(-1));
     byId('hcxeNext').addEventListener('click',()=>changeStep(1));
