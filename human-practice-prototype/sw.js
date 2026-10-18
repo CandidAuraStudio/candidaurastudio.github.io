@@ -1,4 +1,4 @@
-const APP_CACHE='heartclear-v121';
+const APP_CACHE='heartclear-v122';
 const MEDIA_CACHE='heartclear-media-v1';
 
 self.addEventListener('install',event=>{
@@ -8,7 +8,7 @@ self.addEventListener('install',event=>{
       const cache=await caches.open(APP_CACHE);
       await cache.add(new Request('./index.html',{cache:'reload'}));
       // Optional install assets must never prevent the app shell from being cached.
-      await Promise.allSettled(['./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png']
+      await Promise.allSettled(['./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png', './quran-study-data.js?v=122','./quran-study-reflections.js?v=122','./quran-study-ui.js?v=122','./quran-study.css?v=122']
         .map(asset=>cache.add(new Request(asset,{cache:'reload'}))));
     }catch(e){}
     await self.skipWaiting();
