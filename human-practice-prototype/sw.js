@@ -1,4 +1,4 @@
-const APP_CACHE='heartclear-v134';
+const APP_CACHE='heartclear-v135';
 const MEDIA_CACHE='heartclear-media-v1';
 
 self.addEventListener('install',event=>{
