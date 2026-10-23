@@ -45,7 +45,9 @@ const dishes=[
 const css=document.createElement('style');
 css.textContent=[
 ':root{--gold:#c9d4da;--gold2:#a7b9c2}',
-'body:before{opacity:.05!important}',
+'body{background:linear-gradient(180deg,#08141d,#050a10)!important}',
+'body:before,body:after{display:none!important}',
+'.kicker,.eyebrow{color:#cedce2!important}',
 '#home #hcHomeKitchenQuickV155{gap:5px!important;padding:10px 12px!important}',
 '#home #hcHomeKitchenQuickV155 .hcr-small{color:#c8d9df!important}',
 '#home #hcHomeKitchenQuickV155 #hcrMealName,#home #hcHomeKitchenQuickV155 #hcrDosa,#home #hcHomeKitchenQuickV155 #hcrDosaSteps{display:none!important}',
