@@ -33,3 +33,7 @@
 #hcExploreDialog .hcx-summary{white-space:pre-wrap;font:inherit;font-size:12px;line-height:1.65;color:#c5cbcf;max-height:220px;overflow:auto;overflow-wrap:anywhere}
 #hcExploreDialog :focus-visible,#hcExploreOpen:focus-visible{outline:2px solid #fff;outline-offset:3px}
 @media(max-width:360px){#hcExploreDialog .hcx-body{padding:17px 14px}#hcExploreDialog h2{font-size:21px}}
+
+/* Opt-in teaching is intentionally a compact, device-only form. */
+#hcExploreDialog .hcx-body>label{display:block;margin:10px 0;color:#d9e1e4;font-size:12px}
+#hcExploreDialog #hcxTeachName,#hcExploreDialog #hcxTeachCategory{display:block;box-sizing:border-box;width:100%;max-width:100%;min-height:44px;margin-top:5px;padding:9px;border:1px solid #71828a;border-radius:9px;background:#1a2429;color:#fff;font:inherit;font-size:14px}

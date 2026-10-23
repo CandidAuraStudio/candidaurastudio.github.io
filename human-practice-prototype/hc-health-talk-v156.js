@@ -5,7 +5,13 @@
 (function(){
 'use strict';
 const parent=document.getElementById('hcExploreDialog');
-if(!parent||document.getElementById('hcHealthTalk'))return;
+if(document.getElementById('hcHealthTalk'))return;
+const more=document.querySelector('#home .hc-home-more-content')||document.getElementById('settings');
+const healthEntry=document.createElement('button');
+healthEntry.id='hcHealthOpen';healthEntry.type='button';
+healthEntry.textContent='Health · Explain symptoms (not a diagnosis)';
+healthEntry.style.cssText='display:block;width:100%;min-height:44px;margin:10px 0;padding:11px 13px;text-align:left;border:1px solid #6b767e;border-radius:11px;background:#141b20;color:#f5f6f5;font:inherit;font-size:13px;cursor:pointer';
+if(more)more.prepend(healthEntry);
 const label=(en,ta)=>({en,ta});
 const kinds={
  headache:{name:label('Head / headache','தலை / தலைவலி'),pattern:/headache|migraine|head pain|throbbing head|தலை.?வலி|thalai\s*vali|thala\s*vali|thalaivali/i,
@@ -131,7 +137,7 @@ const style=document.createElement('style');style.textContent=[
 function readStatus(){return dlg.querySelector('#hchtStatus')}
 function status(msg){const s=readStatus();if(s)s.textContent=msg}
 function reset(){stopMic();data={complaint:'',kind:null,age:null,duration:null,severity:null,urgent:null,red:null,specific:null};stage='describe';consented=false}
-function exit(){stopMic();dlg.close();reset();if(sourceDialog?.open)sourceDialog.querySelector('[data-mode="health"]')?.focus();sourceDialog=null}
+function exit(){stopMic();dlg.close();reset();healthEntry.focus();sourceDialog=null}
 function intro(){
  return '<div class="languages"><label for="hchtLang">Language / மொழி</label><select id="hchtLang"><option value="both"'+(lang==='both'?' selected':'')+'>English + தமிழ்</option><option value="en"'+(lang==='en'?' selected':'')+'>English</option><option value="ta"'+(lang==='ta'?' selected':'')+'>தமிழ்</option></select></div>';
 }
@@ -257,6 +263,7 @@ function startVoice(){
  current.onend=()=>{if(recognition===current)stopMic()};
  try{current.start();status(tr(label('Listening once…','கேட்கிறேன்…')))}catch(e){stopMic();status(tr(label('Microphone unavailable. Please type.','ஒலிவாங்கி கிடைக்கவில்லை. எழுதவும்.')))}
 }
+healthEntry.addEventListener('click',()=>{reset();render();dlg.showModal();});
 dlg.addEventListener('click',e=>{
  const b=e.target.closest('button');if(!b)return;
  if(b.dataset.example){const input=dlg.querySelector('#hchtComplaint');input.value=b.dataset.example;input.focus();return;}

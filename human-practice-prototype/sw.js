@@ -1,4 +1,4 @@
-const APP_CACHE='heartclear-v176';
+const APP_CACHE='heartclear-v177';
 const MEDIA_CACHE='heartclear-media-v1';
 
 self.addEventListener('install',event=>{
@@ -8,7 +8,7 @@ self.addEventListener('install',event=>{
       const cache=await caches.open(APP_CACHE);
       await cache.add(new Request('./index.html',{cache:'reload'}));
       // Optional install assets must never prevent the app shell from being cached.
-      await Promise.allSettled(['./hc-explore.css?v=154','./hc-explore-core.js?v=161','./hc-explore-ui.js?v=161','./hc-health-talk-v156.js?v=160','./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png', './quran-study-data.js?v=122','./quran-study-reflections.js?v=122','./quran-study-ui.js?v=135','./quran-study.css?v=135','./hc-explorer.js?v=126','./hc-explorer.css?v=126','./hc-inline-audio.js?v=156','./hc-home-one-tap-v139.js?v=145','./hc-family-kitchen-v144.js?v=154','./hc-monthly-kitchen-v145.js?v=165','./hc-kitchen-teaching-v149.js?v=150','./hc-sounds-direct-v149.js?v=152','./hc-quran-home-v153.js?v=168','./hc-home-routine-v155.js?v=155','./hc-genesis-v156.js?v=168','./hc-hindu-scriptures-v162.js?v=170','./hc-gita-original-audio-v163.js?v=172','./hc-kitchen-compact-v163.js?v=167','./hc-playback-one-tap-v174.js?v=174','./hc-accounts-preview-v176.js?v=176']
+      await Promise.allSettled(['./hc-explore.css?v=154','./hc-explore-core.js?v=177','./hc-explore-ui.js?v=177','./hc-explore-routes.json','./hc-health-talk-v156.js?v=177','./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png', './quran-study-data.js?v=122','./quran-study-reflections.js?v=122','./quran-study-ui.js?v=135','./quran-study.css?v=135','./hc-explorer.js?v=126','./hc-explorer.css?v=126','./hc-inline-audio.js?v=156','./hc-home-one-tap-v139.js?v=145','./hc-family-kitchen-v144.js?v=154','./hc-monthly-kitchen-v145.js?v=165','./hc-kitchen-teaching-v149.js?v=150','./hc-sounds-direct-v149.js?v=152','./hc-quran-home-v153.js?v=168','./hc-home-routine-v155.js?v=155','./hc-genesis-v156.js?v=168','./hc-hindu-scriptures-v162.js?v=170','./hc-gita-original-audio-v163.js?v=172','./hc-kitchen-compact-v163.js?v=167','./hc-playback-one-tap-v174.js?v=174','./hc-accounts-preview-v176.js?v=176']
         .map(asset=>cache.add(new Request(asset,{cache:'reload'}))));
     }catch(e){}
     await self.skipWaiting();
@@ -26,41 +26,63 @@ self.addEventListener('activate',event=>{
   })());
 });
 
+/* Serve offline seeks without buffering an entire audio recording in memory. */
 async function cachedMediaResponse(request,cached){
-  if(!cached)return null;
-
-  const range=request.headers.get('range');
-  if(!range || cached.type==='opaque') return cached;
-
-  try{
-    const match=/bytes=(\d+)-(\d*)/.exec(range);
-    if(!match)return cached;
-
-    const buffer=await cached.clone().arrayBuffer();
-    const start=Number(match[1]);
-    const end=match[2] ? Math.min(Number(match[2]),buffer.byteLength-1) : buffer.byteLength-1;
-
-    if(start>=buffer.byteLength || end<start){
-      return new Response(null,{status:416,statusText:'Range Not Satisfiable',
-        headers:{'Content-Range':`bytes */${buffer.byteLength}`,'Accept-Ranges':'bytes'}});
+ if(!cached)return null;
+ const range=request.headers.get('range');
+ if(!range||cached.type==='opaque'||cached.status!==200||!cached.body)return cached;
+ const match=/^bytes=(\d*)-(\d*)$/.exec(range.trim());
+ if(!match||(!match[1]&&!match[2]))return cached;
+ try{
+  const known=Number(cached.headers.get('Content-Length'));
+  const encoded=!!cached.headers.get('Content-Encoding');
+  let total=Number.isSafeInteger(known)&&known>0&&!encoded?known:0;
+  if(!total){
+   // The length must be known for a correct HTTP 206 Content-Range response.
+   // Count decoded bytes as a stream; do not allocate an ArrayBuffer.
+   const reader=cached.clone().body.getReader();
+   try{
+    while(true){
+     const part=await reader.read();if(part.done)break;
+     total+=part.value.byteLength;
     }
-
-    const headers=new Headers(cached.headers);
-    // Cached response bytes are decoded, so remove representation headers incompatible with a byte slice.
-    headers.delete('Content-Encoding');
-    headers.delete('Transfer-Encoding');
-    headers.set('Content-Range',`bytes ${start}-${end}/${buffer.byteLength}`);
-    headers.set('Accept-Ranges','bytes');
-    headers.set('Content-Length',String(end-start+1));
-
-    return new Response(buffer.slice(start,end+1),{
-      status:206,
-      statusText:'Partial Content',
-      headers
-    });
-  }catch(e){
-    return cached;
+   }finally{reader.releaseLock();}
   }
+  let start=match[1]?Number(match[1]):null;
+  let end=match[2]?Number(match[2]):total-1;
+  if(start===null){const suffix=end;start=Math.max(0,total-suffix);end=total-1;}
+  else end=Math.min(end,total-1);
+  if(!Number.isSafeInteger(start)||!Number.isSafeInteger(end)||start>=total||end<start){
+   return new Response(null,{status:416,statusText:'Range Not Satisfiable',
+    headers:{'Content-Range':'bytes */'+total,'Accept-Ranges':'bytes'}});
+  }
+  const reader=cached.body.getReader();let offset=0;
+  const body=new ReadableStream({
+   async pull(controller){
+    try{
+     while(true){
+      const part=await reader.read();
+      if(part.done){controller.close();return;}
+      const bytes=part.value,first=offset,last=offset+bytes.byteLength-1;
+      offset+=bytes.byteLength;
+      if(last<start)continue;
+      if(first>end){controller.close();reader.cancel().catch(()=>{});return;}
+      const chunk=bytes.subarray(Math.max(0,start-first),Math.min(bytes.byteLength,end-first+1));
+      if(chunk.byteLength)controller.enqueue(chunk);
+      if(last>=end){controller.close();reader.cancel().catch(()=>{});}
+      return;
+     }
+    }catch(e){controller.error(e);}
+   },
+   cancel(){reader.cancel().catch(()=>{});}
+  });
+  const headers=new Headers(cached.headers);
+  headers.delete('Content-Encoding');headers.delete('Transfer-Encoding');
+  headers.set('Content-Range','bytes '+start+'-'+end+'/'+total);
+  headers.set('Accept-Ranges','bytes');
+  headers.set('Content-Length',String(end-start+1));
+  return new Response(body,{status:206,statusText:'Partial Content',headers});
+ }catch(e){return cached;}
 }
 
 self.addEventListener('fetch',event=>{

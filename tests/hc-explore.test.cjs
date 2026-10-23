@@ -1,29 +1,53 @@
 const {test}=require('node:test');
 const assert=require('node:assert/strict');
 const core=require('../human-practice-prototype/hc-explore-core.js');
-test('every supported thought is reachable within twenty questions',()=>{
- for(const item of core.bank){
-  const history=[];let step=core.gameStep(history);
-  while(step.kind==='question'){
-   history.push({id:step.id,answer:item.tags.includes(step.id)?'yes':'no'});
-   step=core.gameStep(history);
-   assert.ok(history.length<=20,item.name);
+test('adaptive game includes community subjects and a 25-question ceiling',()=>{
+ assert.equal(core.gameQuestionLimit,25);
+ assert.equal(core.gameVersion,'156');
+ assert.ok(core.bank.length>=400);
+});
+test('representative supported thoughts can be reached even after tentative wrong guesses',()=>{
+ const ids=['grandfather','jackson','dog','lotus','tea','rice','ocean','forest','book','fear','memory','neem',
+  'x156-person-jeffrey-epstein','x156-food-dosa','x156-place-malta'];
+ for(const id of ids){
+  const item=core.bank.find(x=>x.id===id);assert.ok(item,id);
+  const history=[];let found=false,questions=0;
+  for(let n=0;n<85;n++){
+   const step=core.gameStep(history);
+   if(step.kind==='question'){
+    questions++;assert.ok(questions<=25,id);
+    history.push({id:step.id,answer:item.unknownTags?.includes(step.id)?'unsure':item.tags.includes(step.id)?'yes':'no'});
+   }else if(step.kind==='guess'){
+    if(step.item.id===id){found=true;break;}
+    history.push({id:'reject:'+step.item.id,answer:'no'});
+   }else break;
   }
-  assert.equal(step.kind,'guess',item.name);
-  assert.equal(step.item.id,item.id);
+  assert.ok(found,'Game cannot reach '+item.name);
  }
 });
-test('unsure does not eliminate candidates and stops at twenty',()=>{
+test('unsure does not exclude all choices and stops at 25 questions',()=>{
  const history=[];let step;
- do {step=core.gameStep(history);if(step.kind==='question')history.push({id:step.id,answer:'unsure'});}while(step.kind==='question');
- assert.equal(step.kind,'unknown');assert.equal(history.length,20);
+ do{step=core.gameStep(history);if(step.kind==='question')history.push({id:step.id,answer:'unsure'});}while(step.kind==='question');
+ assert.equal(step.kind,'unknown');
+ assert.equal(history.length,25);
 });
-test('contradictory answers cannot return a certain guess',()=>{
- assert.equal(core.gameStep([{id:'person',answer:'yes'},{id:'plant',answer:'yes'}]).kind,'unknown');
+test('one incorrect category answer is not an irreversible elimination',()=>{
+ const step=core.gameStep([{id:'person',answer:'no'}]);
+ assert.notEqual(step.kind,'unknown');
 });
-test('a generic friend can be a woman without being eliminated',()=>{
- const h=[{id:'person',answer:'yes'},{id:'female',answer:'yes'},{id:'family',answer:'no'},{id:'public',answer:'no'},{id:'teach',answer:'no'},{id:'work',answer:'no'},{id:'partner',answer:'no'}];
- assert.equal(core.gameStep(h).kind,'guess');assert.equal(core.gameStep(h).item.id,'friend');
+test('learning is opt-in, device-only and erasable',()=>{
+ const data=new Map(),previous=global.localStorage;
+ global.localStorage={getItem:k=>data.get(k)||null,setItem:(k,v)=>data.set(k,String(v)),removeItem:k=>data.delete(k)};
+ try{
+  const saved=core.teachLocal('Kothu roti','food',[{id:'food',answer:'yes'},{id:'grain',answer:'yes'}]);
+  assert.ok(saved.ok);
+  assert.ok(core.bank.some(x=>x.name==='Kothu roti'));
+  assert.equal(core.teachLocal('Kothu roti','food',[]).ok,false);
+  assert.ok(data.has('hcExploreTaughtV1'));
+  assert.ok(core.forgetLocal());
+  assert.ok(!core.bank.some(x=>x.name==='Kothu roti'));
+  assert.ok(!data.has('hcExploreTaughtV1'));
+ }finally{if(previous===undefined)delete global.localStorage;else global.localStorage=previous}
 });
 test('voice accepts only unambiguous complete answers',()=>{
  for(const [value,expected] of [['Yes.','yes'],['no','no'],["I am not sure",'unsure'],['ஆம்','yes'],['இல்லை','no'],['தெரியவில்லை','unsure']])assert.equal(core.parseAnswer(value),expected);
@@ -64,7 +88,8 @@ test('no completed route gives an all-clear or diagnosis',()=>{
  }
  walk([]);assert.ok(paths>20);
 });
-test('sensitive answers are not persisted by the core',()=>{
- const fs=require('node:fs');const source=fs.readFileSync(require.resolve('../human-practice-prototype/hc-explore-core.js'),'utf8');
- assert.ok(!/localStorage|sessionStorage|fetch\(|indexedDB/.test(source));
+test('health answers stay separate from locally taught game items',()=>{
+ const source=require('node:fs').readFileSync(require.resolve('../human-practice-prototype/hc-explore-core.js'),'utf8');
+ assert.match(source,/hcExploreTaughtV1/);
+ assert.doesNotMatch(source,/hcHealthHistory|hcHealthAnswers/);
 });

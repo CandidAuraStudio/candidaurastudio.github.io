@@ -1,0 +1,77 @@
+{
+  "fear": {
+    "label": "Try Sound Familiarity",
+    "screen": "fearPractice"
+  },
+  "dream": {
+    "label": "Explore Deep Sleep meditation",
+    "screen": "home",
+    "target": "#home .hc-v139-daily"
+  },
+  "love": {
+    "label": "Open reflection practice",
+    "screen": "returnJourney"
+  },
+  "memory": {
+    "label": "Open reflection practice",
+    "screen": "returnJourney"
+  },
+  "ambition": {
+    "label": "Explore your personal journey",
+    "screen": "returnJourney"
+  },
+  "ocean": {
+    "label": "Listen to nature sounds",
+    "screen": "soundLab"
+  },
+  "forest": {
+    "label": "Listen to nature sounds",
+    "screen": "soundLab"
+  },
+  "river": {
+    "label": "Listen to nature sounds",
+    "screen": "soundLab"
+  },
+  "neem": {
+    "label": "Start an observation practice",
+    "screen": "returnJourney"
+  },
+  "lotus": {
+    "label": "Start an observation practice",
+    "screen": "returnJourney"
+  },
+  "jasmine": {
+    "label": "Start an observation practice",
+    "screen": "returnJourney"
+  },
+  "grandmother": {
+    "label": "Explore family cooking",
+    "screen": "home",
+    "target": "#hcHomeKitchenQuickV155"
+  },
+  "mother": {
+    "label": "Explore family cooking",
+    "screen": "home",
+    "target": "#hcHomeKitchenQuickV155"
+  },
+  "grandfather": {
+    "label": "Explore family cooking",
+    "screen": "home",
+    "target": "#hcHomeKitchenQuickV155"
+  },
+  "tea": {
+    "label": "Explore Calm Kitchen",
+    "screen": "home",
+    "target": "#hcHomeKitchenQuickV155"
+  },
+  "rice": {
+    "label": "Explore Calm Kitchen",
+    "screen": "home",
+    "target": "#hcHomeKitchenQuickV155"
+  },
+  "egg": {
+    "label": "Explore Calm Kitchen",
+    "screen": "home",
+    "target": "#hcHomeKitchenQuickV155"
+  }
+}
