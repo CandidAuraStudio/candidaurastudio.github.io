@@ -5408,7 +5408,7 @@ function hcRenderMiniLibrary(){
 }
 function hcMiniMove(direction){
   const state=getActiveMediaState();
-  if(state?.key==='gita'){window.hcGitaStep?.(direction);return;}
+  if(state?.key==='gita'){globalJump(direction*15);return;}
   if(state?.key==='genesis'){window.hcGenesisStep?.(direction);return;}
   if(state?.key==='quran-meaning'){window.hcMeaningStepVerse?.(direction);return;}
   if(state?.key==='soundlab'&&hcPlayableSoundQueue().includes(currentSoundKey)){
@@ -5444,11 +5444,15 @@ function renderGlobalMini(){
   document.getElementById('globalMiniTitle').textContent=state.title;
   document.getElementById('globalMiniMeta').textContent=state.meta;
   document.getElementById('globalMiniPlay').textContent=state.el.paused?'▶':'Ⅱ';
-  const nativeQueue=state.key==='gita'||(state.key==='soundlab'&&hcPlayableSoundQueue().includes(currentSoundKey));
+  const nativeQueue=state.key==='soundlab'&&hcPlayableSoundQueue().includes(currentSoundKey);
   ['hcMiniPrev','hcMiniNext'].forEach(id=>{
     const button=document.getElementById(id);
-    if(button){button.title=nativeQueue?(id==='hcMiniPrev'?'Previous recording':'Next recording'):'Choose a recording';
-      button.setAttribute('aria-label',button.title);}
+    if(button){
+      button.title=state.key==='gita'?(id==='hcMiniPrev'?'Rewind 15 seconds':'Fast forward 15 seconds'):
+         (nativeQueue?(id==='hcMiniPrev'?'Previous recording':'Next recording'):'Choose a recording');
+      button.setAttribute('aria-label',button.title);
+      button.textContent=state.key==='gita'?(id==='hcMiniPrev'?'↶15':'15↷'):(id==='hcMiniPrev'?'⏮':'⏭');
+    }
   });
   const progress=document.getElementById('hcGlobalMiniProgressFill');
   if(progress){
@@ -9369,7 +9373,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=170');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=171');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
@@ -9405,7 +9409,7 @@ const heartclearAutoInstallPrompt=false;
 <script src="./hc-home-routine-v155.js?v=155"></script>
 <script src="./hc-genesis-v156.js?v=168"></script>
 <script src="./hc-hindu-scriptures-v162.js?v=170"></script>
-<script src="./hc-gita-original-audio-v163.js?v=170"></script>
+<script src="./hc-gita-original-audio-v163.js?v=171"></script>
 
 <script src="./hc-kitchen-compact-v163.js?v=167"></script>
 </body>
