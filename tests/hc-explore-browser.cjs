@@ -9,7 +9,7 @@ const base='http://127.0.0.1:8765/human-practice-prototype/';
  deadline.unref();
  const context=await browser.newContext({viewport:{width:360,height:800}});
  const page=await context.newPage();
- const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ const errors=[];page.on('pageerror',e=>errors.push(e.stack||e.message));
  await page.route('**/*',route=>route.request().url().startsWith('http://127.0.0.1:8765/')?route.continue():route.abort());
  await page.addInitScript(()=>{
   localStorage.setItem('heartclearConsentV1','1');
