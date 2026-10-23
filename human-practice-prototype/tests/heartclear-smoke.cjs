@@ -196,18 +196,24 @@ const assert = require('node:assert/strict');
     console.log('PASS: auto-load on swipe and replay watched reels');
 
     // Intercept source APIs, validating the app's parsing and layouts without third-party outages.
-    await page.route('https://api.alquran.cloud/v1/surah',route=>route.fulfill({
-      status:200,contentType:'application/json',headers:{'access-control-allow-origin':'*'},
-      body:JSON.stringify({data:Array.from({length:114},(_,i)=>({number:i+1,englishName:'Surah '+(i+1),numberOfAyahs:i===4?2:7}))})
-    }));
-    await page.route('https://api.alquran.cloud/v1/surah/5/quran-uthmani',route=>route.fulfill({
-      status:200,contentType:'application/json',headers:{'access-control-allow-origin':'*'},
-      body:JSON.stringify({data:{ayahs:[{text:'بِسْمِ اللَّهِ'},{text:'الْحَمْدُ لِلَّهِ'}]}})
-    }));
-    await page.route('https://quranenc.com/api/v1/translation/sura/**',route=>{
-      const url=route.request().url(),isTamil=url.includes('tamil_omar'),five=url.endsWith('/5');
-      return route.fulfill({status:200,contentType:'application/json',headers:{'access-control-allow-origin':'*'},
-        body:JSON.stringify([{sura:five?5:41,aya:five?1:7,translation:isTamil?'தமிழ் பொருள் சோதனை':'English source translation test'}])});
+    // Stub fetch inside the page, before the installed PWA service worker intercepts requests.
+    await page.evaluate(()=>{
+      window.hcPreTestFetch=window.fetch;
+      window.fetch=(input,opts)=>{
+        const url=String(typeof input==='string'?input:input.url);
+        if(url==='https://api.alquran.cloud/v1/surah'){
+          const chapters=Array.from({length:114},(_,i)=>({number:i+1,englishName:'Surah '+(i+1),numberOfAyahs:i===4?2:7}));
+          return Promise.resolve(new Response(JSON.stringify({data:chapters}),{status:200,headers:{'Content-Type':'application/json'}}));
+        }
+        if(url==='https://api.alquran.cloud/v1/surah/5/quran-uthmani'){
+          return Promise.resolve(new Response(JSON.stringify({data:{ayahs:[{text:'بِسْمِ اللَّهِ'},{text:'الْحَمْدُ لِلَّهِ'}]}}),{status:200,headers:{'Content-Type':'application/json'}}));
+        }
+        if(url.startsWith('https://quranenc.com/api/v1/translation/sura/')){
+          const tamil=url.includes('tamil_omar'),five=url.endsWith('/5');
+          return Promise.resolve(new Response(JSON.stringify([{sura:five?5:41,aya:five?1:7,translation:tamil?'தமிழ் பொருள் சோதனை':'English source translation test'}]),{status:200,headers:{'Content-Type':'application/json'}}));
+        }
+        return window.hcPreTestFetch(input,opts);
+      };
     });
     await page.evaluate(()=>hcOpenQuranStudy(41,7));
     await page.waitForFunction(()=>document.querySelector('#hcqs-verse-41-7 .hcqs-translation-columns')?.textContent.includes('English source translation test'),null,{timeout:15000});
@@ -218,6 +224,7 @@ const assert = require('node:assert/strict');
     await page.locator('#hcqs-surah-select').selectOption('5');
     await page.waitForFunction(()=>!!document.querySelector('#hcqs-verse-5-1 .hcqs-arabic')?.textContent.includes('اللَّهِ'),null,{timeout:15000});
     assert.ok((await page.locator('#hcqs-verse-5-1 .hcqs-translation-columns').innerText()).includes('English source translation test'));
+    await page.evaluate(()=>{window.fetch=window.hcPreTestFetch});
     console.log('PASS: 114 surahs, QuranEnc English/Tamil, Arabic source and two-column layout');
 
     await page.locator('[data-nav="soundHub"]').evaluate(el=>el.click());
