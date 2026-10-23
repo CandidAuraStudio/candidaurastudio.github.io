@@ -77,11 +77,11 @@ styles.textContent=[
 '#hcHinduHome :is(button,select):focus-visible,#hcHinduScriptures :is(button,summary,select,a):focus-visible{outline:2px solid #fff;outline-offset:2px}'
 ].join('\n');document.head.append(styles);
 const homeBar=document.createElement('div');homeBar.id='hcHinduHome';homeBar.setAttribute('aria-label','Hindu wisdom one-tap listening');
-homeBar.innerHTML='<span class="hc-hindu-info"><b>Gita · 2.47</b><small>Hindu wisdom · teaching audio</small></span><select class="hc-hindu-lang" aria-label="Gita listening language"></select><button class="hc-hindu-play" type="button" aria-label="Play or pause Gita teaching">▶</button><button class="hc-hindu-open" type="button" aria-label="Explore Hindu scriptures">›</button>';
+homeBar.innerHTML='<span class="hc-hindu-info"><b>Gita · Chapter 2</b><small>Original human voice · 18 chapters</small></span><select class="hc-hindu-lang" aria-label="Gita listening language"></select><button class="hc-hindu-play" type="button" aria-label="Play or pause Gita teaching">▶</button><button class="hc-hindu-open" type="button" aria-label="Explore Hindu scriptures">›</button>';
 listens.after(homeBar);
 const shelf=document.createElement('section');shelf.id='hcHinduScriptures';shelf.hidden=true;shelf.setAttribute('aria-label','Hindu scripture learning library');
 dest.querySelector('.hc-sacred-learn')?.before(shelf);
-shelf.innerHTML='<div class="hc-hindu-row"><div><h3>Hindu Scriptures</h3><small>கீதை · வேதம் · புராணம் · गीता · वेद · पुराण</small></div><select class="hc-hindu-lang" aria-label="Scripture listening language"></select></div><p class="hc-hindu-lead">Sanskrit source passages with short original explanations in English, தமிழ் and नेपाली. Audio reads the explanations through your device voice—not an original recitation or formal translation.</p><div class="hc-hindu-groups"></div><p class="hc-hindu-status" id="hcHinduShelfStatus" role="status" aria-live="polite"></p><p class="hc-hindu-lead">Primary-text citations accompany every lesson. Full sacred works and licensed professional recordings are not yet embedded.</p>';
+shelf.innerHTML='<div class="hc-hindu-row"><div><h3>Hindu Scriptures</h3><small>கீதை · வேதம் · புராணம் · गीता · वेद · पुराण</small></div><select class="hc-hindu-lang" aria-label="Scripture listening language"></select></div><p class="hc-hindu-lead">Sanskrit source passages with short original explanations in English, தமிழ் and नेपाली. Audio commentary is provided only where a human recording is verified. Gita chanting, translations, and personal reflections are distinct.</p><div class="hc-hindu-groups"></div><p class="hc-hindu-status" id="hcHinduShelfStatus" role="status" aria-live="polite"></p><p class="hc-hindu-lead">Primary-text citations accompany every lesson. Full sacred works and licensed professional recordings are not yet embedded.</p>';
 const status=document.createElement('p');status.className='hc-hindu-status';status.id='hcHinduHomeStatus';homeBar.after(status);
 function saveLang(){try{localStorage.setItem(PREF,lang)}catch(e){}}
 function populateSelect(select){
@@ -103,7 +103,7 @@ for(const w of works){
   const source=document.createElement('p');source.className='hc-hindu-source';source.lang='sa';source.textContent=l.sanskrit;article.append(source);
   const meaning=document.createElement('p');meaning.className='hc-hindu-meaning';meaning.textContent=l[lang];article.append(meaning);
   const action=document.createElement('div');action.className='hc-hindu-lesson-actions';
-  const play=document.createElement('button');play.type='button';play.dataset.speak=l.id;play.textContent='▶ Listen';play.setAttribute('aria-label','Play lesson '+l.enTitle);
+  const play=document.createElement('button');play.type='button';play.dataset.speak=l.id;play.textContent=l.id.startsWith('gita')?'▶ Human voice':'Read only';play.setAttribute('aria-label',l.id.startsWith('gita')?'Listen to human-voiced Gita chapter':'No approved human voice available');
   const original=document.createElement('a');original.href=l.url;original.target='_blank';original.rel='noopener noreferrer';original.textContent='Read source ↗';
   action.append(play,original);article.append(action);
   play.addEventListener('click',()=>toggle(l.id));
@@ -140,6 +140,14 @@ function pauseOtherPlayers(){
 }
 function toggle(id){
  const l=all.find(x=>x.id===id);if(!l)return;
+ if(l.work.id==='gita'){
+   const chapter=Number(l.ref.split('.')[0])||2;
+   if(typeof window.hcOpenGitaVoice==='function')window.hcOpenGitaVoice(chapter);
+   else update('Human narration is not ready. Please refresh HeartClear.');
+   return;
+ }
+ update('A verified human recording is not available for this lesson. The source text and reference remain available.');
+ return;
  if(!('speechSynthesis' in window)||!('SpeechSynthesisUtterance' in window)){update('This browser cannot read aloud. The lessons are available in text.');return}
  if(active?.id===id&&playing){
   if(paused){try{speechSynthesis.resume();paused=false;update('Resuming '+names[lang]+' teaching.')}catch(e){update('Could not resume audio.')}}else{speechSynthesis.pause();paused=true;update('Paused.')}
@@ -155,7 +163,10 @@ function toggle(id){
  try{speechSynthesis.speak(u);update('Playing '+l.work.en+' '+l.ref+' · '+names[lang]+' · device voice ('+voice.name+').')}catch(e){stop();update('Audio could not start.')}
  try{localStorage.setItem(LAST,l.id)}catch(e){}
 }
-homeBar.querySelector('.hc-hindu-play').addEventListener('click',()=>toggle('gita247'));
+homeBar.querySelector('.hc-hindu-play').addEventListener('click',()=>{
+ if(typeof window.hcOpenGitaVoice==='function')window.hcOpenGitaVoice(2);
+ else update('Please refresh HeartClear to load original Gita audio.');
+});
 homeBar.querySelector('.hc-hindu-open').addEventListener('click',()=>{
  if(typeof openSacred==='function')openSacred('hindu');
  const group=shelf.querySelector('[data-scripture="gita"]');if(group)group.open=true;
