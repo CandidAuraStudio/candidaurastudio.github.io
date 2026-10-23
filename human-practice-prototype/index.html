@@ -2257,6 +2257,11 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
 #hcDriveMedia.hc-drive-docked .hc-drive-view-toggle{display:none!important}
 #hcDriveMedia.hc-drive-docked .hc-drive-actions button:focus-visible,.hc-minimize-audio:focus-visible{outline:2px solid #fff;outline-offset:2px}
 @media(max-width:390px){#hcDriveMedia.hc-drive-docked{width:min(264px,calc(100vw - 20px))!important}}
+/* Compact Drive audio preview for the new voice recording. Retain the original video player. */
+#hcDriveMedia.hc-drive-master-audio .hc-drive-video-wrap{height:170px;aspect-ratio:auto;max-width:640px;margin:16px auto}
+#hcDriveMedia.hc-drive-master-audio .hc-drive-video-wrap iframe{width:100%;height:100%}
+#hcDriveMedia.hc-drive-master-audio #hcDriveViewToggle{display:none!important}
+#hcDriveMedia.hc-drive-master-audio .hc-drive-expand{display:none!important}
 </style>
 <link rel="stylesheet" href="./quran-study.css?v=133">
 </head>
@@ -2468,6 +2473,11 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
   <span class="practice-art" aria-hidden="true"><span class="hc-art-center">☾</span></span>
   <span class="practice-copy"><b>Allahu Meditation · Hu Hu Allah</b><small>Islamic · Sufi-style dhikr · listening</small><span class="hc-practice-markers" aria-hidden="true"></span></span>
   <span class="duration">VIDEO</span>
+</button>
+<button class="choice practice-card hc-shared-session" data-kind="sacred" data-session="islamHuAkmal" data-tags="sacred deep" aria-label="Open Allahu Hu Breath Reflection audio by Akmal" onclick="openHcDriveMedia('islamHuAkmal','practices')">
+  <span class="practice-art" aria-hidden="true"><span class="hc-art-center">◌</span></span>
+  <span class="practice-copy"><b>Allahu Hu · Breath Reflection — Akmal</b><small>24:32 · Audio only · Devotional listening</small></span>
+  <span class="duration">AUDIO</span>
 </button></div></section>
 <section class="hc-practice-group" data-group="guided"><div class="kicker hc-group-heading">GUIDED BREATH</div><div class="library-list">
 <button class="choice practice-card hc-shared-session" data-session="wake" data-kind="short" data-tags="short breath" aria-label="View Deep Wake Up session · 10 minutes" onclick="hcStartGuidedByTitle('Deep Wake Up')">
@@ -6158,7 +6168,7 @@ function openOmVideo(){
   if(frame)frame.src='https://drive.google.com/file/d/11ogtK6FopRz-g8o-gHLY6-TV4fTJ5GjN/preview';
 }
 function closeOmVideo(){show('sacredDetail');openSacred('hindu')}
-const HC_DRIVE_COLLECTIONS=[{"key":"generalIndianRaga","name":"Indian Classical Raga · Long Listening","section":"general","type":"Indian classical music · uploader-described","id":"1Ec2jsCaK-7arZZBshGMjT0BCtcMNDyZW","note":"User describes this 451 MB Drive recording as Indian Raga music. Exact raga, performer and reuse rights remain unverified; categorized separately from Hindu devotional chanting."},{"key":"islamDhir120","name":"Islamic Dhikr · Extended Playlist","section":"islamic","type":"Devotional dhikr · 120 min","id":"1AJCfNPgTdq2cOc4rtjFcAh0ixnyKMm_C","note":"Two-hour video titled DHIKR with twelve remembrance phrases. The uploader, performance and reuse rights are not verified. Not Quran recitation."},{"key":"islamSufiDrum","name":"Sufi Devotional Music · Frame Drum","section":"islamic","type":"Sufi-style music · 52 min","id":"13HiHCfsS2EH5muCrp9-v-veKOEUraHdp","note":"Devotional-themed music with a frame-drum image. Exact instrumentation and reuse rights require independent verification. Not Quran recitation."},{"key":"hinduKrishnaFlute","name":"Krishna Flute · Long Listening","section":"hindu","type":"Hindu-inspired flute music · 66 min","id":"1jyI0O3Tib36sKTdhohU4iQ2CbUuSJLCc","note":"Video titled Cortisol Reset with Krishna playing flute. Cortisol claims are not medically verified. Original music and licence not verified."},{"key":"islamLa","name":"La Ilaha Illallah","section":"islamic","type":"Dhikr · uploaded recording","id":"1_TQu-U5o0mTKds6W-NliHq59QzZPYrkH","note":"Remembrance of God's oneness. Exact performance style not independently checked."},{"key":"islamHu","name":"Hu Hu Hu Allah","section":"islamic","type":"Sufi-style dhikr · uploaded recording","id":"11Sgca-PXcd4-5DRaPQPslynyc7QtkVYx","note":"Devotional remembrance. This is not labelled Quran recitation."},{"key":"islamNaat","name":"Taksim ve Naat-ı Mevlâna","section":"islamic","type":"Sufi devotional performance · instrumental and vocal","id":"1Tih27JXlqpkz5X_vfE2_vLO9EiD6JCEu","note":"Traditional devotional music. Not Quran recitation or a standalone dhikr instruction."},{"key":"islamMorning","name":"Morning Adhkar · Drive recording","section":"islamic","type":"Morning supplications · uploaded recording","id":"1nTyMwDveS6Z4gQDaEMb2MAfcbghpabgd","note":"Separate Drive video; the existing HeartClear Morning Adhkar audio is also preserved."},{"key":"hinduOm","name":"OM Chanting & Singing Bowls","section":"hindu","type":"OM contemplation · uploaded video","id":"11ogtK6FopRz-g8o-gHLY6-TV4fTJ5GjN","note":"Traditional OM practice with singing bowls. Frequency-related benefits are not medically verified."},{"key":"generalDuduk","name":"Echoes of the Divine · Duduk","section":"general","type":"Sufi-inspired instrumental · not dhikr","id":"1o7d2xUS53vM0NiJhe3M-GH6gfKHCJZ47","note":"Duduk meditation music with Rumi-inspired presentation; kept separate from Quran and dhikr."},{"key":"generalAmbient","name":"Inner Balance · Ambient Listening","section":"general","type":"Ambient music · uploaded recording","id":"1Lx_e-fTNlQx7q9aXuDqX23kZV24DkfR4","note":"Ambient listening only. Claims about 432Hz, 111Hz or healing are not endorsed."}];
+const HC_DRIVE_COLLECTIONS=[{"key":"generalIndianRaga","name":"Indian Classical Raga · Long Listening","section":"general","type":"Indian classical music · uploader-described","id":"1Ec2jsCaK-7arZZBshGMjT0BCtcMNDyZW","note":"User describes this 451 MB Drive recording as Indian Raga music. Exact raga, performer and reuse rights remain unverified; categorized separately from Hindu devotional chanting."},{"key":"islamDhir120","name":"Islamic Dhikr · Extended Playlist","section":"islamic","type":"Devotional dhikr · 120 min","id":"1AJCfNPgTdq2cOc4rtjFcAh0ixnyKMm_C","note":"Two-hour video titled DHIKR with twelve remembrance phrases. The uploader, performance and reuse rights are not verified. Not Quran recitation."},{"key":"islamSufiDrum","name":"Sufi Devotional Music · Frame Drum","section":"islamic","type":"Sufi-style music · 52 min","id":"13HiHCfsS2EH5muCrp9-v-veKOEUraHdp","note":"Devotional-themed music with a frame-drum image. Exact instrumentation and reuse rights require independent verification. Not Quran recitation."},{"key":"hinduKrishnaFlute","name":"Krishna Flute · Long Listening","section":"hindu","type":"Hindu-inspired flute music · 66 min","id":"1jyI0O3Tib36sKTdhohU4iQ2CbUuSJLCc","note":"Video titled Cortisol Reset with Krishna playing flute. Cortisol claims are not medically verified. Original music and licence not verified."},{"key":"islamLa","name":"La Ilaha Illallah","section":"islamic","type":"Dhikr · uploaded recording","id":"1_TQu-U5o0mTKds6W-NliHq59QzZPYrkH","note":"Remembrance of God's oneness. Exact performance style not independently checked."},{"key":"islamHu","name":"Hu Hu Hu Allah","section":"islamic","type":"Sufi-style dhikr · uploaded recording","id":"11Sgca-PXcd4-5DRaPQPslynyc7QtkVYx","note":"Devotional remembrance. This is not labelled Quran recitation."},{"key":"islamHuAkmal","name":"Allahu Hu · Breath Reflection — Akmal","section":"islamic","type":"Audio reflection · 24 min 32 sec · Voice: Akmal","audio":true,"id":"1RNesVJOTxngkZ6qE40htqfRnk4gsTvQg","note":"Recorded voice and breathing by Akmal mixed with the Hu Hu Hu Allah chant. This is devotional listening, not Qur'an recitation or a breathing instruction. Musical accompaniment rights are not independently verified."},{"key":"islamNaat","name":"Taksim ve Naat-ı Mevlâna","section":"islamic","type":"Sufi devotional performance · instrumental and vocal","id":"1Tih27JXlqpkz5X_vfE2_vLO9EiD6JCEu","note":"Traditional devotional music. Not Quran recitation or a standalone dhikr instruction."},{"key":"islamMorning","name":"Morning Adhkar · Drive recording","section":"islamic","type":"Morning supplications · uploaded recording","id":"1nTyMwDveS6Z4gQDaEMb2MAfcbghpabgd","note":"Separate Drive video; the existing HeartClear Morning Adhkar audio is also preserved."},{"key":"hinduOm","name":"OM Chanting & Singing Bowls","section":"hindu","type":"OM contemplation · uploaded video","id":"11ogtK6FopRz-g8o-gHLY6-TV4fTJ5GjN","note":"Traditional OM practice with singing bowls. Frequency-related benefits are not medically verified."},{"key":"generalDuduk","name":"Echoes of the Divine · Duduk","section":"general","type":"Sufi-inspired instrumental · not dhikr","id":"1o7d2xUS53vM0NiJhe3M-GH6gfKHCJZ47","note":"Duduk meditation music with Rumi-inspired presentation; kept separate from Quran and dhikr."},{"key":"generalAmbient","name":"Inner Balance · Ambient Listening","section":"general","type":"Ambient music · uploaded recording","id":"1Lx_e-fTNlQx7q9aXuDqX23kZV24DkfR4","note":"Ambient listening only. Claims about 432Hz, 111Hz or healing are not endorsed."}];
 let hcDriveActiveKey=null;
 let hcDriveBackScreen='sacredDetail';
 let hcDriveDocked=false;
@@ -6194,8 +6204,9 @@ function openHcDriveMedia(key,sourceScreen=null){
   hcDriveDocked=false;
   document.getElementById('hcDriveMedia').classList.remove('hc-drive-docked');
   document.getElementById('hcDriveMedia').classList.add('hc-drive-audio-view');
+  document.getElementById('hcDriveMedia').classList.toggle('hc-drive-master-audio',!!item.audio);
  const viewBtn=document.getElementById('hcDriveViewToggle');
- if(viewBtn){viewBtn.textContent='Show full video controls';viewBtn.setAttribute('aria-pressed','false');}
+ if(viewBtn){viewBtn.hidden=!!item.audio;viewBtn.textContent=item.audio?'Audio player':'Show full video controls';viewBtn.setAttribute('aria-pressed','false');}
  hcDriveBackScreen=sourceScreen==='practices'?'practices':item.section==='meditation'?'practices':item.section==='general'?'soundLab':'sacredDetail';
   document.getElementById('hcDriveVideoTitle').textContent=key==='islamHu'&&sourceScreen==='practices'?'Allahu Meditation · Hu Hu Allah':item.name;
   document.getElementById('hcDriveVideoCategory').textContent=key==='islamHu'&&sourceScreen==='practices'?'Islamic devotional listening · Sufi-style dhikr':item.type;
@@ -6203,8 +6214,9 @@ function openHcDriveMedia(key,sourceScreen=null){
   const dockName=document.getElementById('hcDriveMiniName');if(dockName)dockName.textContent=key==='islamHu'?'Allahu · Hu Hu Allah':item.name;
   const link=document.getElementById('hcDriveOpenSource');
   link.href=hcDriveSourceUrl(item.id);
-  document.getElementById('hcDriveVideoStatus').textContent='Opening recording…';
+  document.getElementById('hcDriveVideoStatus').textContent=item.audio?'Opening audio recording…':'Opening recording…';
   const frame=document.getElementById('hcDriveVideoFrame');
+  frame.title=item.audio?'Audio reflection recording':'Listening video';
   if(!same)frame.removeAttribute('src');
   if(hcMixRunning||hcMixDecks.length)hcMixStop(false);
   for(const el of [audio,adhkarAudio,fearAudio,soundLabAudio,bookAudioEl,humanSoundAudio,hcPrivateIslamAudio,hcPrivateIslamVideo]){
@@ -8909,7 +8921,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=133');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=134');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
