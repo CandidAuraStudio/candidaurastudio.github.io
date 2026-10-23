@@ -6549,7 +6549,6 @@ function hcDriveCard(item){
     btn.addEventListener('click',()=>{if(typeof window.hcOpenOmVoice==='function')window.hcOpenOmVoice();else openSacred('hindu')});
   }else if(item.key==='generalDuduk'){
     ico.textContent='♫';arrow.textContent='▶';
-    btn.dataset.playSound='dudukApril';
     btn.setAttribute('aria-label','Play Duduk April Improvisation audio directly in HeartClear');
     btn.addEventListener('click',()=>hcPlaySoundFromRow('dudukApril'));
   }else if(item.key==='islamHuAkmal'){
