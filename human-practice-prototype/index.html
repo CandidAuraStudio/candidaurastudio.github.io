@@ -2289,6 +2289,29 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
 [data-inline-audio]{touch-action:manipulation}
 @media(max-width:380px){.hc-simple-start h2{font-size:24px}.hc-simple-play{width:40px;height:40px}}
 
+
+/* HeartClear v139: concise Islamic access + keep third-party videos out of the mini-player. */
+#hcDriveMedia.hc-drive-docked{display:none!important}
+#hcDriveMedia .hc-drive-minimize,#hcDriveMedia .hc-drive-expand,#hcDriveViewToggle{display:none!important}
+#hcDriveMedia .hc-drive-shell{padding:14px;max-width:650px}
+#hcDriveMedia .hc-drive-actions{justify-content:space-between;margin-bottom:12px}
+#hcDriveMedia .hc-drive-actions button{min-height:44px;padding:8px 14px}
+#hcDriveMedia .hc-drive-long-info h2{font-size:20px;line-height:1.25}
+#hcDriveMedia .hc-drive-description,#hcDriveMedia .hc-drive-type{font-size:11px}
+#hcDriveMedia .hc-drive-audio-card{display:none!important}
+#hcDriveMedia:not(.hc-drive-master-audio) .hc-drive-video-wrap{aspect-ratio:16/9;height:auto;max-height:55vh}
+#hcDriveMedia:not(.hc-drive-master-audio) .hc-drive-video-wrap iframe{position:static;width:100%;height:100%}
+#hcDriveMedia .hc-drive-source-details{margin-top:10px}
+#hcSacredDriveLibrary .hc-sacred-quick{display:flex;align-items:center;gap:12px;width:100%;margin:0 0 10px;padding:12px;border-radius:17px;border:1px solid rgba(205,230,239,.17);background:rgba(6,23,34,.75);font:inherit;color:#f3f7f7;text-align:left;min-height:72px}
+#hcSacredDriveLibrary .hc-sacred-quick[hidden]{display:none!important}
+#hcSacredDriveLibrary .hc-sacred-quick-icon{display:grid;place-items:center;flex:none;width:52px;height:52px;border-radius:13px;background:#103041;color:#dcb773;font-size:20px}
+#hcSacredDriveLibrary .hc-sacred-quick b{display:block;font-size:15px}
+#hcSacredDriveLibrary .hc-sacred-quick small{display:block;margin-top:4px;color:#b1c4ce;font-size:11px}
+#hcSacredDriveLibrary .hc-sacred-quick-status{margin-left:auto;color:#ddbd80;font-size:12px}
+#hcSacredDriveLibrary .hc-more-recordings summary{font-size:13px}
+#home .hc-simple-paths button{min-height:52px}
+#hcDriveMedia .hc-drive-mini-label{display:none!important}
+
 /* Compact Drive audio preview for the new voice recording. Retain the original video player. */
 #hcDriveMedia.hc-drive-master-audio .hc-drive-video-wrap{height:230px;aspect-ratio:auto;max-width:640px;margin:14px auto}
 #hcDriveMedia.hc-drive-master-audio .hc-drive-video-wrap iframe{position:absolute;top:0;bottom:auto;width:100%;height:100%}
@@ -2393,11 +2416,13 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
       <button type="button" onclick="hcQuickPlaySound('bansuri15')"><span><b>Organic Bansuri</b><small>15 minutes · Flute</small></span><span class="hc-simple-play">▶</span></button>
       <button type="button" data-inline-audio="allahuAkmal" onclick="hcQuickPlaySound('allahuAkmal')"><span><b>Allahu Hu · Akmal</b><small>24:32 · Your recording</small></span><span class="hc-simple-play">▶</span></button>
     </div>
-    <div class="hc-simple-paths" aria-label="Explore">
-      <button type="button" onclick="show('practices')">Practice <span>›</span></button>
-      <button type="button" onclick="openSoundLab()">Sounds <span>›</span></button>
+    <div class="hc-simple-paths" aria-label="Explore HeartClear">
+      <button type="button" onclick="openSacred('islamic')">Islamic <span>›</span></button>
+      <button type="button" onclick="show('practices')">Meditation <span>›</span></button>
+      <button type="button" onclick="hcOpenReels()">Reels <span>›</span></button>
       <button type="button" onclick="hcOpenQuranStudy()">Qur'an <span>›</span></button>
       <button type="button" onclick="show('library')">Books <span>›</span></button>
+      <button type="button" onclick="openSoundLab()">All sounds <span>›</span></button>
     </div>
   </section>
   <details class="hc-home-more" id="hcHomeMore">
@@ -3174,9 +3199,11 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
     <h2 id="sacredTitle">Islamic</h2>
     <p id="sacredDescription">Dua, dhikr and contemplative listening.</p>
     <div id="hcSacredDriveLibrary" style="display:none;margin-top:16px">
-      <h3 id="hcSacredDriveTitle" style="font-size:18px;margin:0 0 10px">Tap to listen</h3>
+      <h3 id="hcSacredDriveTitle" style="font-size:18px;margin:0 0 10px">Listen</h3>
+      <button class="hc-sacred-quick" id="hcIslamicAdhkarQuick" type="button" onclick="hcInlineToggleAdhkar()" aria-label="Play or pause Morning Adhkar" aria-pressed="false">
+        <span class="hc-sacred-quick-icon">▶</span><span><b>Morning Adhkar</b><small>28:18 · Audio</small></span><span class="hc-sacred-quick-status">Play</span>
+      </button>
       <div id="hcSacredDriveCards" class="soundlab-grid"></div>
-      <small class="hc-drive-short-note">Drive recordings need internet. Some may need another Play tap.</small>
     </div>
     <details class="hc-sacred-learn"><summary>Prayer, readings &amp; other options</summary>
 
@@ -3276,10 +3303,8 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
   <div class="glass hc-drive-shell">
     <div class="hc-drive-actions">
       <span class="hc-drive-mini-label"><span id="hcDriveMiniName">Drive listening</span><small>Expand to pause or seek</small></span>
-      <button class="hc-drive-back" onclick="hcExitDriveMedia()" aria-label="Back to recording collection">← Back to collection</button>
-      <button class="hc-drive-minimize" onclick="hcMinimizeDriveVideo('home')" aria-label="Minimize video and continue in HeartClear">▾ Minimize</button>
-      <button class="hc-drive-expand" onclick="hcExpandDriveVideo()" aria-label="Expand listening video">↗ Expand</button>
-      <button class="hc-drive-stop" onclick="hcStopDriveVideo()" aria-label="Stop video and close player">■ Stop</button>
+      <button class="hc-drive-back" onclick="hcExitDriveMedia()" aria-label="Back to Islamic listening">← Back to Islamic</button>
+      <button class="hc-drive-stop" onclick="hcExitDriveMedia()" aria-label="Close this video">✕ Close</button>
     </div>
     <div class="hc-drive-long-info">
       <div class="kicker">HEARTCLEAR · LISTENING</div>
@@ -3463,7 +3488,12 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
       <button type="button" onclick="hcQuickPlaySound('bansuri15')"><span><b>Organic Bansuri</b><small>15-minute flute</small></span><span class="hc-simple-play">▶</span></button>
       <button type="button" data-inline-audio="allahuAkmal" onclick="hcQuickPlaySound('allahuAkmal')"><span><b>Allahu Hu · Akmal</b><small>24:32 · Your recording</small></span><span class="hc-simple-play">▶</span></button>
     </div>
-    <button class="hc-simple-browse" type="button" onclick="openSoundLab()">Browse all sounds ›</button>
+    <div class="hc-simple-paths hc-sounds-paths">
+      <button type="button" onclick="openSacred('islamic')">Islamic <span>›</span></button>
+      <button type="button" onclick="openSoundLab()">All sounds <span>›</span></button>
+      <button type="button" onclick="hcOpenReels()">Reels <span>›</span></button>
+      <button type="button" onclick="show('sacred')">Other sacred <span>›</span></button>
+    </div>
     <details class="hc-sounds-more"><summary>Other collections</summary>
     <div class="hc-sounds-hub-grid">
       <button class="hc-sounds-hub-card" onclick="openSoundLab()"><span>≈</span><b>Nature & ambient</b><small>Birds, fire, rain, ocean, thunder and quiet sound beds.</small></button>
@@ -4504,12 +4534,8 @@ function hcRestorePreviousScreen(){
     }else show('fearPractice');
     break;
    case 'hcDriveMedia':
-    if(HC_DRIVE_COLLECTIONS.some(item=>item.key===saved.driveKey)){
-     openHcDriveMedia(saved.driveKey,saved.driveFrom==='practices'?'practices':null);success=true;
-     const status=document.getElementById('hcDriveVideoStatus');
-     if(status)status.textContent='Recording restored. If needed, tap Play inside the video.';
-    }else show('sacred');
-    break;
+    // Do not unexpectedly reopen an archived Google Drive video on launch.
+    show('home');success=true;break;
    case 'hcReels':show('home');success=true;break;
    case 'omVideo':show('sacred');success=true;break;
    case 'sacredDetail':openSacred('islamic');success=true;break;
@@ -4737,10 +4763,9 @@ window.addEventListener('pagehide',()=>{
 });
 
 function show(id){
-  if(currentScreenId==='hcDriveMedia'&&id!=='hcDriveMedia'&&hcDriveActiveKey&&!hcDriveDocked){
-    hcDriveDocked=true;
-    document.getElementById('hcDriveMedia')?.classList.add('hc-drive-docked');
-  }
+  // Google Drive embeds have no reliable external Pause control.
+  // Close archived video playback when navigating; never leave a large floating player.
+  if(id!=='hcDriveMedia' && hcDriveActiveKey)hcStopDriveVideo(true);
   if(id==='hcDriveMedia'&&hcDriveDocked){
     hcDriveDocked=false;
     document.getElementById('hcDriveMedia')?.classList.remove('hc-drive-docked');
@@ -5165,6 +5190,35 @@ function hcMinimizeNativeAudio(key){
   show('home');
   renderGlobalMini();
 }
+async function hcInlineToggleAdhkar(){
+  if(!adhkarAudio.paused){
+    adhkarAudio.pause();renderGlobalMini();return;
+  }
+  if(hcDriveActiveKey)hcStopDriveVideo(true);
+  if(hcMixRunning||hcMixDecks.length)hcMixStop(false);
+  for(const el of [audio,bookAudioEl,soundLabAudio,fearAudio,humanSoundAudio,hcPrivateIslamAudio,hcPrivateIslamVideo]){
+    if(el&&!el.paused)el.pause();
+  }
+  setAdhkarMediaSession();
+  try{
+    await adhkarAudio.play();
+    rememberActiveMedia('adhkar');hcMiniPinnedKey='adhkar';
+  }catch(e){
+    const button=document.getElementById('hcIslamicAdhkarQuick');
+    if(button)button.setAttribute('title','Audio could not play. Check your connection.');
+  }
+  renderGlobalMini();
+}
+function hcSyncInlineAdhkarButtons(){
+  const el=document.getElementById('hcIslamicAdhkarQuick');
+  if(!el)return;
+  const playing=!adhkarAudio.paused;
+  const mark=el.querySelector('.hc-sacred-quick-icon');
+  const status=el.querySelector('.hc-sacred-quick-status');
+  if(mark)mark.textContent=playing?'Ⅱ':'▶';
+  if(status)status.textContent=playing?'Pause':'Play';
+  el.setAttribute('aria-pressed',String(playing));
+}
 function hcSyncInlineAudioButtons(){
   if(typeof soundLabAudio==='undefined')return;
   document.querySelectorAll('[data-inline-audio]').forEach(btn=>{
@@ -5179,6 +5233,7 @@ function hcSyncInlineAudioButtons(){
 }
 function renderGlobalMini(){
   hcSyncInlineAudioButtons();
+  hcSyncInlineAdhkarButtons();
   const mini=document.getElementById('globalMini');
   if(!mini)return;
   const state=getActiveMediaState();
@@ -6294,7 +6349,9 @@ function hcDriveCard(item){
     btn.setAttribute('aria-label','Play or pause Allahu Hu Breath Reflection by Akmal');
     btn.addEventListener('click',()=>hcQuickPlaySound('allahuAkmal'));
   }else{
-    arrow.textContent='Open ›';
+    ico.textContent='▣';
+    arrow.textContent='Video ›';
+    btn.setAttribute('aria-label','Open video recording '+item.name);
     btn.addEventListener('click',()=>openHcDriveMedia(item.key));
   }
   return btn;
@@ -6313,7 +6370,7 @@ function hcRenderDriveCards(section,containerId){
       const details=document.createElement('details');
       details.className='hc-more-recordings';
       const summary=document.createElement('summary');
-      summary.textContent='More recordings ('+rest.length+')';
+      summary.textContent='Older videos ('+rest.length+')';
       details.appendChild(summary);
       const inside=document.createElement('div');
       inside.className='hc-extra-recordings';
@@ -6331,10 +6388,10 @@ function openHcDriveMedia(key,sourceScreen=null){
   hcDriveActiveKey=key;
   hcDriveDocked=false;
   document.getElementById('hcDriveMedia').classList.remove('hc-drive-docked');
-  document.getElementById('hcDriveMedia').classList.add('hc-drive-audio-view');
+  document.getElementById('hcDriveMedia').classList.toggle('hc-drive-audio-view',!!item.audio);
   document.getElementById('hcDriveMedia').classList.toggle('hc-drive-master-audio',!!item.audio);
  const viewBtn=document.getElementById('hcDriveViewToggle');
- if(viewBtn){viewBtn.hidden=!!item.audio;viewBtn.textContent=item.audio?'Audio player':'Show full video controls';viewBtn.setAttribute('aria-pressed','false');}
+ if(viewBtn){viewBtn.hidden=true;viewBtn.setAttribute('aria-pressed','false');}
  hcDriveBackScreen=sourceScreen==='home'?'home':sourceScreen==='practices'?'practices':item.section==='meditation'?'practices':item.section==='general'?'soundLab':'sacredDetail';
   document.getElementById('hcDriveVideoTitle').textContent=key==='islamHu'&&sourceScreen==='practices'?'Allahu Meditation · Hu Hu Allah':item.name;
   document.getElementById('hcDriveVideoCategory').textContent=key==='islamHu'&&sourceScreen==='practices'?'Islamic devotional listening · Sufi-style dhikr':item.type;
@@ -6368,14 +6425,12 @@ function hcLoadDrivePreview(){
   const frame=document.getElementById('hcDriveVideoFrame');
   const wanted=hcDrivePreviewUrl(item.id)+'?autoplay=1';
   if(frame.getAttribute('src')!==wanted)frame.src=wanted;
-  document.getElementById('hcDriveVideoStatus').textContent='Listening view ready. If audio does not begin, tap Play in the compact Drive controls or expand the original player.';
+  document.getElementById('hcDriveVideoStatus').textContent='Original video · tap Play in the video.';
 }
 function hcMinimizeDriveVideo(destination='home'){
-  if(!hcDriveActiveKey)return;
-  hcDriveDocked=true;
-  document.getElementById('hcDriveMedia').classList.add('hc-drive-docked');
-  if(currentScreenId!==destination)show(destination);
-  hcCaptureReturnState(true);
+  // Compatibility with older on-page controls: no large Google Drive floating dock.
+  hcStopDriveVideo(true);
+  show(destination);
 }
 function hcExpandDriveVideo(){
   if(!hcDriveActiveKey)return;
@@ -6415,7 +6470,7 @@ function openSacred(kind){
     islamic:{
       kicker:'Islamic',
       title:'Dua · Dhikr · Quranic Sound',
-      description:'Prayer, remembrance and Quranic contemplation presented with meaning and respectful context.',
+      description:'Listen or read.',
       meaning:'Listen or recite with attention to meaning and a comfortable natural breath.'
     },
     hindu:{
@@ -6455,7 +6510,9 @@ function openSacred(kind){
     const enabled=kind==='islamic'||kind==='hindu';
     media.style.display=enabled?'block':'none';
     if(enabled){
-      document.getElementById('hcSacredDriveTitle').textContent=kind==='islamic'?'Tap to listen':'Recorded listening';
+      document.getElementById('hcSacredDriveTitle').textContent=kind==='islamic'?'Islamic listening':'Recorded listening';
+      const adhkarBtn=document.getElementById('hcIslamicAdhkarQuick');
+      if(adhkarBtn)adhkarBtn.hidden=kind!=='islamic';
       hcRenderDriveCards(kind,'hcSacredDriveCards');
     }
   }
@@ -9066,7 +9123,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=140');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=141');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
