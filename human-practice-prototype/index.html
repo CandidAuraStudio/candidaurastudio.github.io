@@ -2426,7 +2426,7 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
       <p>Swipe the right edge ↑ ↓</p>
    </div>
    <div class="hc-reels-stage" id="hcReelsStage" aria-label="Swipe up for next reel, down for previous">
-     <button id="hcReelPoster" class="hc-reel-drive-poster" type="button" onclick="hcReelToggle()" aria-label="Load selected uploaded video"><span class="hc-reel-playmark" aria-hidden="true">▶</span><strong>Ready to watch</strong><span>Tap here to load your uploaded short inside HeartClear.</span></button>
+     <button id="hcReelPoster" class="hc-reel-drive-poster" type="button" onclick="hcReelToggle()" aria-label="Play or retry current reel"><span class="hc-reel-playmark" aria-hidden="true">▶</span><strong>Play this reel</strong><span>Videos load when you open Reels or swipe. Tap if your browser requires a playback gesture.</span></button>
      <iframe id="hcReelFrame" class="hc-reel-drive-frame" title="Google Drive reel video player" loading="eager" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="no-referrer-when-downgrade" hidden></iframe>
       <div id="hcReelSwipeRail" class="hc-reel-swipe-rail" aria-label="Swipe up and down or use small arrows to change reels">
         <button type="button" class="hc-reel-rail-btn" aria-label="Previous unwatched reel" onclick="hcReelRailTap('previous')">↑</button>
@@ -2435,7 +2435,7 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
       </div>
      <div class="hc-reels-screen-shade" aria-hidden="true"></div>
      <div class="hc-reels-progress" aria-hidden="true"><span id="hcReelProgress"></span></div>
-     <div class="hc-reel-all-seen" id="hcReelAllSeen" hidden role="status"><h3>All caught up</h3><p>You've opened all available reels on this device. New reels will appear here when added.</p><button type="button" onclick="hcCloseReels()">Back to Home</button></div>
+     <div class="hc-reel-all-seen" id="hcReelAllSeen" hidden role="status"><h3>All caught up</h3><p>You've opened all available reels on this device. You can replay older reels or return when new ones are uploaded.</p><button type="button" onclick="hcReelReplayAll()">Watch again · மீண்டும் பார்க்க</button><button type="button" onclick="hcCloseReels()">Back to Home</button></div>
      <div class="hc-reels-badge" id="hcReelNumber">1 / 78</div>
      <div class="hc-reels-copy">
        <div class="hc-reels-kicker" id="hcReelKicker">UPLOADED REEL</div>
@@ -4458,7 +4458,7 @@ function hcPauseOtherAudioForReels(){
 }
 let hcReelIndex=0,hcReelTouchStart=0,hcReelAutoload=false,hcReelSwipeStart=0;
 let hcReelFrameLoaded=false;
-let hcReelShuffleOrder=[],hcReelShuffleCursor=0;
+let hcReelShuffleOrder=[],hcReelShuffleCursor=0,hcReelReplayMode=false;
 /* Fisher–Yates shuffle without replacement. Keep the order in memory so
  * swiping down revisits the actually watched reel. */
 /* A Drive iframe cannot confirm full playback. We mark an opened reel as seen
@@ -4490,14 +4490,20 @@ function hcMarkCurrentReelSeen(){
  try{localStorage.setItem(HC_REELS_SEEN_KEY,JSON.stringify([...seen]))}catch(e){}
  hcUpdateReelsHomeMeta();return true;
 }
-function hcReelShuffle(){
+function hcReelShuffle(includeSeen=false){
+ hcReelReplayMode=includeSeen;
  const seen=hcReelSeenIds();
- const order=hcReelItems.map((item,i)=>seen.has(item.id)?-1:i).filter(i=>i>=0);
+ const order=hcReelItems.map((item,i)=>includeSeen||!seen.has(item.id)?i:-1).filter(i=>i>=0);
  for(let i=order.length-1;i>0;i--){
   const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]];
  }
  hcReelShuffleOrder=order;hcReelShuffleCursor=0;
  if(order.length)hcReelIndex=order[0];
+}
+function hcReelReplayAll(){
+ hcReelShuffle(true);
+ hcReelAutoload=true;
+ hcReelRender();
 }
 function hcReelAllSeen(){
  hcReelStop();
@@ -4549,7 +4555,7 @@ function hcReelRender(){
  hcReelIndex=(hcReelIndex+hcReelItems.length)%hcReelItems.length;
  hcReelStop();
  const item=hcReelItems[hcReelIndex];hcRememberReel();
- const count=document.getElementById('hcReelNumber');if(count)count.textContent=hcReelUnseenCount()+' unseen';
+ const count=document.getElementById('hcReelNumber');if(count)count.textContent=hcReelReplayMode?'Replay · '+(hcReelShuffleCursor+1)+' / '+hcReelShuffleOrder.length:hcReelUnseenCount()+' unseen';
  const kicker=document.getElementById('hcReelKicker');if(kicker)kicker.textContent='UPLOADED REEL';
  const title=document.getElementById('hcReelTitle');if(title)title.textContent='Reel';
  const caption=document.getElementById('hcReelCaption');if(caption)caption.textContent='Swipe up or down to change';
@@ -4559,7 +4565,7 @@ function hcReelRender(){
  if(hcReelAutoload)hcReelToggle();
 }
 function hcOpenReels(){
- hcReelShuffle();hcReelAutoload=false;
+ hcReelShuffle();hcReelAutoload=true;
  hcPauseOtherAudioForReels();show('hcReels');
 }
 function hcCloseReels(){
