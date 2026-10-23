@@ -196,6 +196,16 @@ const assert = require('node:assert/strict');
     console.log('PASS: auto-load on swipe and replay watched reels');
 
     // Intercept source APIs, validating the app's parsing and layouts without third-party outages.
+    // Optional real-provider probe; the functional checks below still use local stubs.
+    const sourceProbe=await page.evaluate(async()=>{
+      const urls=['https://api.alquran.cloud/v1/surah/1/quran-uthmani','https://quranenc.com/api/v1/translation/sura/english_saheeh/1','https://quranenc.com/api/v1/translation/sura/tamil_omar/1'];
+      return Promise.all(urls.map(async url=>{
+        const ctrl=new AbortController();const stop=setTimeout(()=>ctrl.abort(),5000);
+        try{const r=await fetch(url,{signal:ctrl.signal});return {url,status:r.status,ok:r.ok,sample:(await r.text()).slice(0,120)}}
+        catch(e){return {url,error:e.name+': '+e.message}}finally{clearTimeout(stop)}
+      }));
+    });
+    console.log('QURAN_LIVE_SOURCES',JSON.stringify(sourceProbe));
     // Stub fetch inside the page, before the installed PWA service worker intercepts requests.
     await page.evaluate(()=>{
       window.hcPreTestFetch=window.fetch;
