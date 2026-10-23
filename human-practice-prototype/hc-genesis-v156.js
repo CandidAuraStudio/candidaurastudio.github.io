@@ -22,6 +22,7 @@ root.innerHTML='<div class="hc-gen-top"><span>OLD TESTAMENT · GENESIS</span><b 
  '<div class="hc-gen-now"><button type="button" id="hcGenPrevious" aria-label="Previous chapter">‹</button><div><strong id="hcGenTitle">Creation</strong><small id="hcGenChapterMeta">Chapter 1 · The beginning</small></div><button type="button" id="hcGenNext" aria-label="Next chapter">›</button></div>'+
  '<div class="hc-gen-language hc-gen-langtop"><button type="button" data-genlang="en">English</button><button type="button" data-genlang="ta">தமிழ்</button></div>'+
  '<div class="hc-gen-actions"><button id="hcGenPlay" type="button"><span id="hcGenIcon">▶</span><span id="hcGenPlayLabel">Listen to Genesis</span></button><button id="hcGenRead" type="button" aria-expanded="false">Read</button></div>'+
+ '<button id="hcGenShortTamil" type="button" hidden>எளிய தமிழ்க் கதை · குரலில் கேளுங்கள்</button>'+
  '<div id="hcGenReading" hidden>'+
  '<div class="hc-gen-read-heading"><b id="hcGenReadMode">Story in everyday language</b><button id="hcGenOriginal" type="button">Full English verses</button></div>'+
  '<div id="hcGenReadText" class="hc-gen-text"></div><p id="hcGenReadNote"></p>'+
@@ -34,6 +35,8 @@ const css=[
  '#hcGenesisCard .hc-gen-langtop button{width:100%;min-height:42px;display:grid;place-items:center}',
  '#hcGenesisCard .hc-gen-langtop button[aria-pressed=true]{background:#f5f6f2;color:#071e28;border-color:white;font-weight:750}',
  '#hcGenesisCard #hcGenStatus{max-width:100%;line-height:1.4}',
+ '#hcGenesisCard #hcGenShortTamil{width:100%;min-height:40px;border:1px solid #496373;background:#173643;color:#edf4f5;border-radius:10px;margin:7px 0 0;font-size:12px}',
+ '#hcGenesisCard #hcGenShortTamil[hidden]{display:none!important}',
  '#hcTamilMini[hidden]{display:none!important}',
  '#hcTamilMini{position:fixed;bottom:calc(88px + env(safe-area-inset-bottom,0px));z-index:113;left:50%;transform:translateX(-50%);max-width:430px;width:calc(100% - 28px);background:#0b2533;color:white;border:1px solid #718088;box-shadow:0 7px 24px rgba(0,0,0,.45);border-radius:17px;padding:10px 12px;display:flex;align-items:center;gap:9px}',
  '#hcTamilMini strong{flex:1;min-width:0;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}',
@@ -149,7 +152,13 @@ for(let n=1;n<=50;n++){
  const opt=document.createElement('option');opt.value=String(n);opt.textContent=String(n).padStart(2,'0')+' · '+stories[n-1][0];$('hcGenSelect').appendChild(opt);
 }
 function remember(){try{localStorage.setItem('hcGenesisProgressV1',JSON.stringify({chapter,language}))}catch(e){}}
-function url(n){return 'https://ebible.org/engwebu/mp3/02_GEN_'+String(n).padStart(2,'0')+'.mp3'}
+function url(n){
+ if(language==='ta'){
+  const code=String(n).padStart(3,'0');
+  return 'https://info2.sermon-online.com/tamil/Bible/Tamil-Audio_Bible_Complete_OT_NT_MP3/01'+code+'-The_Book_Of_Genesis_Chapter-'+code+'.mp3';
+ }
+ return 'https://ebible.org/engwebu/mp3/02_GEN_'+String(n).padStart(2,'0')+'.mp3';
+}
 function sync(){
  $('hcGenChapter').textContent=chapter+' / 50';
  $('hcGenTitle').textContent=stories[chapter-1][0];
@@ -157,7 +166,9 @@ function sync(){
  $('hcGenSelect').value=String(chapter);
  const isActive=language==='ta'?tamilSpeaking&&!tamilPaused:!audio.paused;
  $('hcGenIcon').textContent=isActive?'Ⅱ':'▶';
- $('hcGenPlayLabel').textContent=language==='ta'?(tamilSpeaking?(tamilPaused?'தமிழில் தொடரவும்':'தமிழில் நிறுத்து'):'தமிழில் கதையைக் கேளுங்கள்'):(!audio.paused?'Pause':audio.getAttribute('src')?'Resume':'Listen in English');
+ $('hcGenPlayLabel').textContent=!audio.paused?'Pause':audio.getAttribute('src')?'Resume':(language==='ta'?'தமிழில் முழு அதிகாரம் கேளுங்கள்':'Listen in English');
+ $('hcGenShortTamil').hidden=language!=='ta';
+ $('hcGenShortTamil').textContent=tamilSpeaking?(tamilPaused?'எளிய தமிழ்க் கதை · தொடரவும்':'எளிய தமிழ்க் கதை · நிறுத்து'):'எளிய தமிழ்க் கதை · குரலில் கேளுங்கள்';
  root.querySelectorAll('[data-genlang]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.genlang===language)));
 }
 function stop(clear=false){
@@ -176,7 +187,7 @@ function focusAudio(){
 function mediaSession(){
  if(!('mediaSession' in navigator)||typeof MediaMetadata==='undefined')return;
  try{
- navigator.mediaSession.metadata=new MediaMetadata({title:'Genesis '+chapter+' · '+stories[chapter-1][0],artist:'Basil Sands · Public-domain recording',album:'Old Testament · Genesis'});
+ navigator.mediaSession.metadata=new MediaMetadata({title:'Genesis '+chapter+' · '+stories[chapter-1][0],artist:language==='ta'?'Sermon-Online · Tamil Audio Bible':'Basil Sands · Public-domain recording',album:language==='ta'?'ஆதியாகமம் · முழு அதிகாரம்':'Old Testament · Genesis'});
  navigator.mediaSession.setActionHandler('play',()=>audio.play().catch(()=>{}));
  navigator.mediaSession.setActionHandler('pause',()=>audio.pause());
  navigator.mediaSession.setActionHandler('nexttrack',()=>window.hcGenesisStep(1));
@@ -188,11 +199,10 @@ function loadChapterAndPlay(){
  audio.src=url(chapter);audio.load();audio.volume=1;audio.playbackRate=0.97;isLoaded=true;
  remember();mediaSession();$('hcGenStatus').textContent='Loading Genesis '+chapter+'…';
  const token=requestId;
- audio.play().then(()=>{if(token===requestId){$('hcGenStatus').textContent='Playing · English original';hcMiniPinnedKey='genesis';renderGlobalMini();sync();}})
+ audio.play().then(()=>{if(token===requestId){$('hcGenStatus').textContent=language==='ta'?'தமிழ் வேதாகமம் · முழு அதிகாரம் · Sermon-Online':'English Bible · Basil Sands';hcMiniPinnedKey='genesis';renderGlobalMini();sync();}})
  .catch(()=>{if(token===requestId){$('hcGenStatus').textContent='Could not play. Check connection or tap Play again.';sync();}});
 }
 function toggle(){
- if(language==='ta'){toggleTamil();return;}
  if(audio.getAttribute('src')&&isLoaded){
   if(audio.paused){focusAudio();audio.play().catch(()=>{$('hcGenStatus').textContent='Audio unavailable. Check internet.'});}
   else audio.pause();
@@ -201,9 +211,10 @@ function toggle(){
 }
 window.hcGenesisStep=delta=>{
  const next=chapter+Number(delta);if(next<1||next>50)return;
- const wasPlaying=language==='ta'?tamilSpeaking&&!tamilPaused:!audio.paused;
+ const wasPlaying=!audio.paused||tamilSpeaking&&!tamilPaused;
+ const oldSimple=tamilSpeaking;
  stop(true);chapter=next;isLoaded=false;remember();sync();drawText();
- if(wasPlaying){if(language==='ta')startTamil();else loadChapterAndPlay();}
+ if(wasPlaying){if(oldSimple)startTamil();else loadChapterAndPlay();}
 };
 async function loadEnglishVerses(n,token){
  const box=$('hcGenReadText');box.textContent='Loading original English verses…';
@@ -224,17 +235,26 @@ function drawText(){
  $('hcGenOriginal').textContent=mode==='story'?'Full English verses':'Simple story';
  if(mode==='verses'){const token=requestId;loadEnglishVerses(chapter,token);return;}
  $('hcGenReadText').textContent=stories[chapter-1][language==='ta'?2:1];
- $('hcGenReadNote').textContent=language==='ta'?'இது அத்தியாயத்தின் சுருக்கமான, எளிய தமிழ்க் கதை. நேரடி பைபிள் வசன மொழிபெயர்ப்பு அல்ல.':'Original short story summary. This is an editorial retelling, not the biblical text. Choose Full English verses for the original source.';
+ $('hcGenReadNote').textContent=language==='ta'?'இது அத்தியாயத்தின் சுருக்கமான, எளிய தமிழ்க் கதை. நேரடி பைபிள் வசன மொழிபெயர்ப்பு அல்ல. முழு தமிழ் அதிகாரத்தின் குரல் தனியாகக் கேட்கலாம்.':'Original short story summary. This is an editorial retelling, not the biblical text. Choose Full English verses for the original source.';
 }
 audio.addEventListener('playing',()=>{hcMiniPinnedKey='genesis';sync();renderGlobalMini()});
 audio.addEventListener('pause',()=>{sync();renderGlobalMini()});
 audio.addEventListener('ended',()=>{if(autonext&&chapter<50){stop(true);chapter++;isLoaded=false;remember();sync();drawText();loadChapterAndPlay();}else {$('hcGenStatus').textContent='Chapter complete.';sync()}});
-audio.addEventListener('error',()=>{$('hcGenStatus').textContent='English chapter audio unavailable. Check internet.'});
+audio.addEventListener('error',()=>{$('hcGenStatus').textContent=language==='ta'?'Tamil recording unavailable. Try the simple Tamil story voice.':'English chapter audio unavailable. Check internet.'});
 audio.addEventListener('waiting',()=>{$('hcGenStatus').textContent='Buffering…'});
 audio.addEventListener('timeupdate',()=>{if(Math.floor(audio.currentTime)%10===0)remember()});
 if(typeof attachGlobalMiniEvents==='function')attachGlobalMiniEvents(audio,'genesis');
-document.addEventListener('play',e=>{if(e.target!==audio&&e.target instanceof HTMLMediaElement&&!audio.paused)audio.pause()},true);
+document.addEventListener('play',e=>{
+ if(e.target!==audio&&e.target instanceof HTMLMediaElement){
+  if(!audio.paused)audio.pause();
+  if(tamilSpeaking)stopTamil();
+ }
+},true);
 $('hcGenPlay').addEventListener('click',toggle);
+$('hcGenShortTamil').addEventListener('click',()=>{
+ if(!audio.paused)audio.pause();
+ toggleTamil();
+});
 $('hcGenRead').addEventListener('click',()=>{
  const opened=$('hcGenReading').hidden;$('hcGenReading').hidden=!opened;
  $('hcGenRead').setAttribute('aria-expanded',String(opened));
@@ -242,9 +262,9 @@ $('hcGenRead').addEventListener('click',()=>{
 });
 root.querySelectorAll('[data-genlang]').forEach(btn=>btn.addEventListener('click',()=>{
  if(language!==btn.dataset.genlang){
-  stopTamil();audio.pause();
+  stop(true);isLoaded=false;
   language=btn.dataset.genlang;mode='story';remember();
-  $('hcGenStatus').textContent=language==='ta'?'Tamil: free device narration of the short story, not full Bible verses.':'English: human-read original Genesis chapter.';
+  $('hcGenStatus').textContent=language==='ta'?'தமிழ் · மனிதர் வாசித்த முழு அதிகாரம். கீழே எளிய கதையும் உண்டு.':'English · Human narration by Basil Sands.';
  }
  sync();drawText();
 }));
