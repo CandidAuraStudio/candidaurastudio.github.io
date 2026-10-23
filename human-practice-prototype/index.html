@@ -9364,7 +9364,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=167');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=168');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
@@ -9391,14 +9391,14 @@ const heartclearAutoInstallPrompt=false;
 <script src="./hc-monthly-kitchen-v145.js?v=165"></script>
 <script src="./hc-kitchen-teaching-v149.js?v=150"></script>
 <script src="./hc-sounds-direct-v149.js?v=152"></script>
-<script src="./hc-quran-home-v153.js?v=153"></script>
+<script src="./hc-quran-home-v153.js?v=168"></script>
 
 <link rel="stylesheet" href="./hc-explore.css?v=154">
 <script src="./hc-explore-core.js?v=161"></script>
 <script src="./hc-explore-ui.js?v=161"></script>
 <script src="./hc-health-talk-v156.js?v=160"></script>
 <script src="./hc-home-routine-v155.js?v=155"></script>
-<script src="./hc-genesis-v156.js?v=164"></script>
+<script src="./hc-genesis-v156.js?v=168"></script>
 <script src="./hc-hindu-scriptures-v162.js?v=163"></script>
 <script src="./hc-gita-original-audio-v163.js?v=163"></script>
 
