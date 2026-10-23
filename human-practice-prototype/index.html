@@ -5343,7 +5343,10 @@ function hcRenderMiniLibrary(){
     btn.addEventListener('click',()=>{
       hcCloseMiniLibrary();
       if(item.kind==='audio'){
-        hcPlaySoundFromRow(item.key);hcMiniPinnedKey='soundlab';renderGlobalMini();
+        if(item.category==='quran'&&typeof hcPlayQuranSurah==='function'){
+          hcPlayQuranSurah(Number(item.key.slice(7)));
+        }else hcPlaySoundFromRow(item.key);
+        hcMiniPinnedKey='soundlab';renderGlobalMini();
       }else if(item.kind==='practice')item.el.click();
       else openHcDriveMedia(item.key);
     });
@@ -9307,7 +9310,7 @@ const heartclearAutoInstallPrompt=false;
 </script>
 <script src="./hc-explorer.js?v=126"></script>
 <script src="./hc-inline-audio.js?v=138"></script>
-<script src="./hc-home-one-tap-v139.js?v=139"></script>
+<script src="./hc-home-one-tap-v139.js?v=143"></script>
 
 </body>
 </html>
