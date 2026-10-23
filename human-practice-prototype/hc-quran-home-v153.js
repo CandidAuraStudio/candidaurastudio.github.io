@@ -58,7 +58,8 @@ const recommendedIndex=()=>{const d=new Date(),day=Math.round(Date.UTC(d.getFull
 const index=()=>manual===null?recommendedIndex():manual;
 const number=()=>order[index()];
 const title=n=>typeof soundLabTracks!=='undefined'&&soundLabTracks['hcSurah'+n]?.title||'Surah '+n;
-const nowPlaying=()=>active?.n===number()&&active.lang===lang&&(lang==='ar'?(/^hcSurah\d+$/.test(currentSoundKey)&&!soundLabAudio.paused):!audio.paused);
+const arabicSelected=n=>currentSoundKey==='hcSurah'+n&&!!soundLabAudio.getAttribute('src');
+const nowPlaying=()=>lang==='ar'?(arabicSelected(number())&&!soundLabAudio.paused):(active?.n===number()&&active.lang===lang&&!audio.paused);
 function render(){
  const n=number(),d=new Date(),time=['Morning','Afternoon','Evening','Night'][slot(d)];
  $('hcqName').textContent=title(n);$('hcqMeta').textContent=(spoken[lang]||spoken.en)+' · '+counts[n-1]+' verses';
@@ -66,7 +67,8 @@ function render(){
  $('hcqSelect').value=String(n);
  panel.querySelectorAll('[data-hcq]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.hcq===lang)));
  $('hcqIcon').textContent=nowPlaying()?'Ⅱ':'▶';
- $('hcqAction').textContent=nowPlaying()?'Pause':lang==='ar'?'Listen in Arabic':lang==='ta'?'தமிழில் கேளுங்கள்':'Listen in English';
+ $('hcqAction').textContent=nowPlaying()?'Pause':lang==='ar'?(arabicSelected(n)?'Resume':'Listen in Arabic'):lang==='ta'?'தமிழில் கேளுங்கள்':'Listen in English';
+ $('hcqPlay').setAttribute('aria-pressed',String(nowPlaying()));
 }
 for(let i=1;i<=114;i++){const opt=document.createElement('option');opt.value=String(i);opt.textContent=String(i).padStart(3,'0')+' · '+title(i);$('hcqSelect').appendChild(opt);}
 function clearMeaning(){
@@ -141,12 +143,21 @@ function start(n,l){
 function toggle(){
  const n=number();
  if(lang==='ar'){
+  if(arabicSelected(n)){
+   if(soundLabAudio.paused){
+    focus();active={n,lang:'ar',verse:1};
+    if(typeof setSoundLabMediaSession==='function')setSoundLabMediaSession();
+    soundLabAudio.play().catch(()=>{$('hcqAction').textContent='Tap Play again';});
+    hcMiniPinnedKey='soundlab';renderGlobalMini();
+   }else soundLabAudio.pause();
+   render();return;
+  }
   clearMeaning();focus();active={n,lang:'ar',verse:1};$('hcqLive').hidden=true;
   if(typeof hcPlayQuranSurah==='function')hcPlayQuranSurah(n);
   render();return;
  }
  if(active?.n===n&&active.lang===lang&&audio.getAttribute('src')){
-  if(audio.paused)audio.play().catch(()=>{$('hcqStatus').textContent='Cannot play audio';});
+  if(audio.paused){focus();setupSession();audio.play().catch(()=>{$('hcqStatus').textContent='Cannot play audio';});}
   else audio.pause();
   render();return;
  }
@@ -158,7 +169,7 @@ window.hcMeaningStepVerse=delta=>{
  if(v>=1&&v<=counts[active.n-1]){audio.pause();playVerse(v);}
 };
 audio.addEventListener('play',()=>{$('hcqStatus').textContent='Playing';render();});
-audio.addEventListener('pause',render);
+audio.addEventListener('pause',()=>{if(active?.lang!=='ar'&&audio.getAttribute('src'))$('hcqStatus').textContent='Paused';render();});
 audio.addEventListener('waiting',()=>{$('hcqStatus').textContent='Buffering…';});
 audio.addEventListener('error',()=>{$('hcqStatus').textContent='Audio unavailable · check internet';});
 audio.addEventListener('ended',()=>{
@@ -167,6 +178,8 @@ audio.addEventListener('ended',()=>{
  playVerse(active.verse+1);
 });
 if(typeof attachGlobalMiniEvents==='function')attachGlobalMiniEvents(audio,'quran-meaning');
+// Arabic surahs use the shared Sounds player. Synchronize this card on all playback changes.
+for(const event of ['play','pause','ended','emptied','loadedmetadata'])soundLabAudio.addEventListener(event,render);
 document.addEventListener('play',e=>{
  if(e.target!==audio&&e.target instanceof HTMLMediaElement&&!audio.paused)audio.pause();
 },true);
