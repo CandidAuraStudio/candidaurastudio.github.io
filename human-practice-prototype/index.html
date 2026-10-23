@@ -9402,7 +9402,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=173');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=174');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
@@ -9441,6 +9441,7 @@ const heartclearAutoInstallPrompt=false;
 <script src="./hc-gita-original-audio-v163.js?v=172"></script>
 
 <script src="./hc-kitchen-compact-v163.js?v=167"></script>
+<script src="./hc-playback-one-tap-v174.js?v=174"></script>
 </body>
 </html>
 
