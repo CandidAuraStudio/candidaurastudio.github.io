@@ -2223,6 +2223,21 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
 .hc-audio-pref span{display:block;line-height:1.4}
 .hc-audio-pref strong{display:block;font-size:13px}
 .hc-audio-pref small{display:block;color:#bdcdd3;font-size:11px;line-height:1.5;margin-top:5px}
+/* v128: small family welcome and audio-focused Google Drive listening. */
+#home .hc-daily-family{font-size:11px;color:#bfced4;letter-spacing:.01em;margin-top:4px;line-height:1.35}
+#home .hc-home-greeting-copy{min-width:0;display:flex;flex-direction:column}
+#hcDriveMedia .hc-drive-audio-card{display:flex;align-items:center;gap:13px;padding:17px 16px;margin:15px 0 9px;border-radius:17px;background:linear-gradient(145deg,rgba(13,44,58,.9),rgba(6,24,35,.9));border:1px solid rgba(222,237,244,.17)}
+#hcDriveMedia .hc-drive-audio-disc{display:grid;place-items:center;border:1px solid rgba(235,241,244,.35);border-radius:50%;width:54px;height:54px;flex:none;background:radial-gradient(circle,rgba(209,232,240,.2),transparent)}
+#hcDriveMedia .hc-drive-audio-disc svg{width:28px;height:28px;stroke:#e5edf2;fill:none;stroke-width:1.5}
+#hcDriveMedia .hc-drive-audio-card b{font-size:14px;display:block;color:#f1f6f7}
+#hcDriveMedia .hc-drive-audio-card small{display:block;font-size:11px;line-height:1.5;margin-top:5px;color:#b5c9d3}
+#hcDriveMedia .hc-drive-view-toggle{min-height:44px;padding:9px 14px;border-radius:11px;background:rgba(8,28,40,.85);border:1px solid rgba(221,236,242,.32);color:white;font:inherit;font-size:12px}
+#hcDriveMedia.hc-drive-audio-view .hc-drive-video-wrap{position:relative;aspect-ratio:auto;height:118px;overflow:hidden;background:#040e16}
+#hcDriveMedia.hc-drive-audio-view .hc-drive-video-wrap iframe{position:absolute;bottom:0;top:auto;left:0;width:100%;height:240px;border:0}
+#hcDriveMedia:not(.hc-drive-audio-view) .hc-drive-audio-card{display:none}
+#hcDriveMedia.hc-drive-docked .hc-drive-audio-card{display:none}
+#hcDriveMedia.hc-drive-docked.hc-drive-audio-view .hc-drive-video-wrap{height:100px;aspect-ratio:auto}
+#hcDriveMedia.hc-drive-docked.hc-drive-audio-view .hc-drive-video-wrap iframe{height:220px}
 </style>
 <link rel="stylesheet" href="./quran-study.css?v=122">
 </head>
@@ -2279,7 +2294,7 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
 
 <section class="screen active" id="home">
   <div class="hc-home-greeting-row">
-    <div class="home-greeting" id="timeGreeting">Welcome</div>
+    <div class="hc-home-greeting-copy"><div class="home-greeting" id="timeGreeting">Welcome</div><div class="hc-daily-family">Welcome to Mastar Alim family</div></div>
     <button class="hc-home-install-link" id="hcHomeInstallBtn" onclick="showInstallSheet(true)" type="button" aria-label="Install HeartClear on your phone">Install app <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v4h16v-4"/></svg></button>
   </div>
   <script>
@@ -2302,11 +2317,11 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
       <div class="eyebrow" id="homeRecommendedEyebrow">Recommended now</div>
       <strong id="homeRecommendedTitle">Deep Sleep</strong>
       <small id="homeRecommendedMeta">Night · guided practice</small>
-      <button class="hc-home-primary-btn" onclick="openHomeSessionSheet(hcHomeRecommendedTitle)">Begin</button>
+      <button class="hc-home-primary-btn" onclick="hcStartGuidedByTitle(hcHomeRecommendedTitle)">Begin</button>
     </div>
   </div>
 
-  <div style="display:grid;gap:7px;margin:12px 0"><button class="choice" onclick="show('hcFatiha')" style="margin:0"><b>Al-Fatiha · ஸூரத்துல் ஃபாத்திஹா</b><small>Read in தமிழ் &amp; English · Seven verses</small></button><button class="choice" onclick="openAdhkar('listen')" style="margin:0"><b>Morning Adhkar · காலை திக்ர்</b><small>Listen · 28:18 · Morning supplications</small></button></div>
+  <div style="display:grid;gap:7px;margin:12px 0"><button class="choice" onclick="show('hcFatiha')" style="margin:0"><b>Al-Fatiha · ஸூரத்துல் ஃபாத்திஹா</b><small>Read in தமிழ் &amp; English · Seven verses</small></button><button class="choice" onclick="hcPlayAdhkar('listen')" style="margin:0"><b>Morning Adhkar · காலை திக்ர்</b><small>Listen · 28:18 · Morning supplications</small></button></div>
   <button class="choice" onclick="hcOpenQuranStudy()" style="margin:0 0 12px"><b>Qur'an &amp; Inner Journey · குர்ஆனும் உள்ளார்ந்த பயணமும்</b><small>Al-Baqarah 286 · An-Nisa 176 · Fussilat 54 · An-Nas 6 · My reflections</small></button>
   <button class="choice" onclick="show('hcLivingQuran')" style="margin:0 0 12px"><b>The Living Qur'an · மூன்று குல் ஸூராக்கள்</b><small>Arabic · Tamil · English · Gentle recitation &amp; 5-minute daily habit</small></button>
   <div class="hc-home-secondary-resumes">
@@ -2332,16 +2347,16 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
   </div>
 
   <div class="hc-quick-grid" aria-label="Quick start">
-    <button class="hc-quick-tile" onclick="openHomeTimerSheet('quiet',3)">
+    <button class="hc-quick-tile" onclick="hcQuickStartTimer('quiet',3)">
       <span>3</span><b>3-min calm</b><small>Quiet</small>
     </button>
-    <button class="hc-quick-tile" onclick="openHomeTimerSheet('breath',5)">
+    <button class="hc-quick-tile" onclick="hcQuickStartTimer('breath',5)">
       <span>◌</span><b>Breath</b><small>Gentle pace</small>
     </button>
-    <button class="hc-quick-tile" onclick="openHomeTimerSheet('quiet',10)">
+    <button class="hc-quick-tile" onclick="hcQuickStartTimer('quiet',10)">
       <span>◷</span><b>Timer</b><small>Choose time</small>
     </button>
-    <button class="hc-quick-tile" onclick="openHomeSessionSheet('Deep Sleep')">
+    <button class="hc-quick-tile" onclick="hcStartGuidedByTitle('Deep Sleep')">
       <span>☾</span><b>Sleep</b><small>Night practice</small>
     </button>
   </div>
@@ -2426,36 +2441,36 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
 <button class="category-chip" data-practice-filter="human" onclick="filterPractices('human',this)" aria-pressed="false">Human <span class="hc-filter-num"></span></button>
 <button class="category-chip" data-practice-filter="sacred" onclick="filterPractices('sacred',this)" aria-pressed="false">Sacred <span class="hc-filter-num"></span></button>
 </div></header>
-<section class="hc-practice-group" data-group="sacred"><div class="kicker hc-group-heading">MORNING · SACRED LISTENING / காலை திக்ர்</div><div class="library-list"><button class="choice practice-card hc-shared-session" data-kind="sacred" data-session="adhkar" data-tags="sacred morning" onclick="openAdhkar('listen')"><span class="practice-art" aria-hidden="true"><span class="hc-art-center">☾</span></span><span class="practice-copy"><b>Morning Adhkar · காலை திக்ர்</b><small>Supplication and remembrance</small></span><span class="duration">28:18</span></button><button class="choice practice-card hc-shared-session" data-kind="sacred" data-session="fatiha" data-tags="sacred morning" onclick="show('hcFatiha')"><span class="practice-art" aria-hidden="true"><span class="hc-art-center">✦</span></span><span class="practice-copy"><b>Surah Al-Fatiha · ஃபாத்திஹா</b><small>Arabic · தமிழ் · English</small></span><span class="duration">READ</span></button></div></section>
+<section class="hc-practice-group" data-group="sacred"><div class="kicker hc-group-heading">MORNING · SACRED LISTENING / காலை திக்ர்</div><div class="library-list"><button class="choice practice-card hc-shared-session" data-kind="sacred" data-session="adhkar" data-tags="sacred morning" onclick="hcPlayAdhkar('listen')"><span class="practice-art" aria-hidden="true"><span class="hc-art-center">☾</span></span><span class="practice-copy"><b>Morning Adhkar · காலை திக்ர்</b><small>Supplication and remembrance</small></span><span class="duration">28:18</span></button><button class="choice practice-card hc-shared-session" data-kind="sacred" data-session="fatiha" data-tags="sacred morning" onclick="show('hcFatiha')"><span class="practice-art" aria-hidden="true"><span class="hc-art-center">✦</span></span><span class="practice-copy"><b>Surah Al-Fatiha · ஃபாத்திஹா</b><small>Arabic · தமிழ் · English</small></span><span class="duration">READ</span></button></div></section>
 <button class="choice practice-card hc-shared-session" data-kind="sacred" data-session="livingQuran" data-tags="sacred morning" onclick="show('hcLivingQuran')" style="margin-bottom:12px" aria-label="Open the Three Qul Surahs and recitation routine"><span class="practice-art" aria-hidden="true"><span class="hc-art-center">✦</span></span><span class="practice-copy"><b>Three Qul · மூன்று குல்</b><small>Surahs 112, 113, 114 · Recite &amp; reflect</small></span><span class="duration">READ</span></button>
-<div class="hc-practice-timer hc-shared-session"><span class="hc-timer-thumb" aria-hidden="true">◷</span><span><b>Quiet Timer</b><small>Set your time · gentle bells optional</small></span><button onclick="openHomeTimerSheet('quiet',10)">Set time</button></div>
+<div class="hc-practice-timer hc-shared-session"><span class="hc-timer-thumb" aria-hidden="true">◷</span><span><b>Quiet Timer</b><small>Set your time · gentle bells optional</small></span><button onclick="hcQuickStartTimer('quiet',10)">Set time</button></div>
 <section class="hc-practice-group" data-group="guided"><div class="kicker hc-group-heading">GUIDED BREATH</div><div class="library-list">
-<button class="choice practice-card hc-shared-session" data-session="wake" data-kind="short" data-tags="short breath" aria-label="View Deep Wake Up session · 10 minutes" onclick="openHomeSessionSheet('Deep Wake Up')">
+<button class="choice practice-card hc-shared-session" data-session="wake" data-kind="short" data-tags="short breath" aria-label="View Deep Wake Up session · 10 minutes" onclick="hcStartGuidedByTitle('Deep Wake Up')">
  <span class="practice-art" aria-hidden="true"><span class="hc-art-center">☀</span></span>
  <span class="practice-copy"><b>Deep Wake Up</b><small>Morning · guided breath</small><span class="hc-practice-markers" aria-hidden="true"></span></span>
  <span class="duration">10:00</span>
  </button>
-<button class="choice practice-card hc-shared-session" data-session="noon" data-kind="deep" data-tags="deep breath" aria-label="View Noon Reset session · 40 minutes" onclick="openHomeSessionSheet('Noon Reset')">
+<button class="choice practice-card hc-shared-session" data-session="noon" data-kind="deep" data-tags="deep breath" aria-label="View Noon Reset session · 40 minutes" onclick="hcStartGuidedByTitle('Noon Reset')">
  <span class="practice-art" aria-hidden="true"><span class="hc-art-center">◌</span></span>
  <span class="practice-copy"><b>Noon Reset</b><small>Midday · longer guided practice</small><span class="hc-practice-markers" aria-hidden="true"></span></span>
  <span class="duration">40:00</span>
  </button>
-<button class="choice practice-card hc-shared-session" data-session="evening" data-kind="release" data-tags="deep breath" aria-label="View Evening Release session · 60 minutes" onclick="openHomeSessionSheet('Evening Release')">
+<button class="choice practice-card hc-shared-session" data-session="evening" data-kind="release" data-tags="deep breath" aria-label="View Evening Release session · 60 minutes" onclick="hcStartGuidedByTitle('Evening Release')">
  <span class="practice-art" aria-hidden="true"><span class="hc-art-center">☾</span></span>
  <span class="practice-copy"><b>Evening Release</b><small>Evening · guided practice</small><span class="hc-practice-markers" aria-hidden="true"></span></span>
  <span class="duration">60:00</span>
  </button>
 </div></section>
-<section class="hc-practice-group" data-group="short"><div class="kicker hc-group-heading">SHORT & FLEXIBLE · UNGUIDED</div><div class="library-list"><button class="choice practice-card hc-shared-session hc-quiet-card" data-session="quiet5" data-kind="short" data-tags="short breath" onclick="openHomeTimerSheet('quiet',5)" aria-label="Morning Quiet, 5 minute unguided timer">
+<section class="hc-practice-group" data-group="short"><div class="kicker hc-group-heading">SHORT & FLEXIBLE · UNGUIDED</div><div class="library-list"><button class="choice practice-card hc-shared-session hc-quiet-card" data-session="quiet5" data-kind="short" data-tags="short breath" onclick="hcQuickStartTimer('quiet',5)" aria-label="Morning Quiet, 5 minute unguided timer">
 <span class="practice-art" aria-hidden="true"><span class="hc-art-center">☼</span></span>
 <span class="practice-copy"><b>Morning Quiet</b><small>Morning · unguided quiet</small></span><span class="duration">5:00</span></button>
-<button class="choice practice-card hc-shared-session hc-quiet-card" data-session="quiet10" data-kind="short" data-tags="short breath" onclick="openHomeTimerSheet('quiet',10)" aria-label="Midday Pause, 10 minute unguided timer">
+<button class="choice practice-card hc-shared-session hc-quiet-card" data-session="quiet10" data-kind="short" data-tags="short breath" onclick="hcQuickStartTimer('quiet',10)" aria-label="Midday Pause, 10 minute unguided timer">
 <span class="practice-art" aria-hidden="true"><span class="hc-art-center">◌</span></span>
 <span class="practice-copy"><b>Midday Pause</b><small>Noon · unguided attention</small></span><span class="duration">10:00</span></button>
-<button class="choice practice-card hc-shared-session hc-quiet-card" data-session="quiet20" data-kind="short" data-tags="short breath" onclick="openHomeTimerSheet('quiet',20)" aria-label="Evening Quiet, 20 minute unguided timer">
+<button class="choice practice-card hc-shared-session hc-quiet-card" data-session="quiet20" data-kind="short" data-tags="short breath" onclick="hcQuickStartTimer('quiet',20)" aria-label="Evening Quiet, 20 minute unguided timer">
 <span class="practice-art" aria-hidden="true"><span class="hc-art-center">☾</span></span>
 <span class="practice-copy"><b>Evening Quiet</b><small>Evening · unguided quiet</small></span><span class="duration">20:00</span></button></div></section>
-<section class="hc-practice-group" data-group="sleep"><div class="kicker hc-group-heading">SLEEP</div><div class="library-list"><button class="choice practice-card hc-shared-session" data-session="sleep" data-kind="sleep" data-tags="sleep" aria-label="View Deep Sleep session · 60 minutes" onclick="openHomeSessionSheet('Deep Sleep')">
+<section class="hc-practice-group" data-group="sleep"><div class="kicker hc-group-heading">SLEEP</div><div class="library-list"><button class="choice practice-card hc-shared-session" data-session="sleep" data-kind="sleep" data-tags="sleep" aria-label="View Deep Sleep session · 60 minutes" onclick="hcStartGuidedByTitle('Deep Sleep')">
  <span class="practice-art" aria-hidden="true"><span class="hc-art-center">✧</span></span>
  <span class="practice-copy"><b>Deep Sleep</b><small>Night · restful listening</small><span class="hc-practice-markers" aria-hidden="true"></span></span>
  <span class="duration">60:00</span>
@@ -2962,7 +2977,7 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
     <div><b>3 · 1 min</b><p data-living-lang="en">Pause for quiet remembrance; optional gentle “Allahu.”</p><p data-living-lang="ta" lang="ta">அமைதியாக இறைவனை நினைவுகூருங்கள்; விருப்பமெனில் மெதுவாக “அல்லாஹு” சொல்லுங்கள்.</p></div>
     <div><b>4 · 1 min</b><p data-living-lang="en">Choose one small act of truthfulness, kindness or patience today.</p><p data-living-lang="ta" lang="ta">இன்று உண்மை, கருணை அல்லது பொறுமையுடன் செய்ய ஓர் எளிய செயலைத் தேர்ந்தெடுங்கள்.</p></div>
    </div>
-   <button class="hc-living-button" onclick="openHomeTimerSheet('quiet',5)">Open 5-minute quiet timer / ஐந்து நிமிட நேரக்கணிப்பான்</button>
+   <button class="hc-living-button" onclick="hcQuickStartTimer('quiet',5)">Open 5-minute quiet timer / ஐந்து நிமிட நேரக்கணிப்பான்</button>
    <p class="hc-living-note" data-living-lang="en">Repeat when useful, with no pressure to complete a streak. Ordinary meals, hydration and rest support wellbeing; this practice requires no fasting or dietary restriction.</p>
    <p class="hc-living-note" data-living-lang="ta" lang="ta">நிர்பந்தமின்றி விருப்பப்படி தினமும் செய்யலாம். வழக்கமான உணவு, தண்ணீர், ஓய்வு முக்கியம். இதற்கு நோன்போ உணவுக் கட்டுப்பாடோ தேவையில்லை.</p>
   </div>
@@ -3058,11 +3073,11 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
       <p id="sacredMeaning">Understand the meaning and context, then listen or recite naturally without forcing the breath.</p>
     </div>
 
-    <div class="sacred-feature" id="islamicFeatured"><button class="hc-living-button" onclick="hcOpenQuranStudy()" style="display:block;width:100%;padding:13px;margin:0 0 12px;background:#fff;color:#10212e;border:0;border-radius:14px;font:inherit;font-size:13px;font-weight:700;text-align:left">Full Qur'an study · Al-Baqarah 286 / An-Nisa / Fussilat / An-Nas · தமிழ் →</button><button class="hc-living-button" onclick="show('hcLivingQuran')" style="display:block;width:100%;padding:13px;margin:0 0 14px;background:white;color:#10212e;border:0;border-radius:14px;font:inherit;font-size:13px;font-weight:700;text-align:left">The Living Qur'an · மூன்று குல் ஸூராக்கள் / Voice &amp; stillness →</button><b>Surah Al-Fatiha · ஸூரத்துல் ஃபாத்திஹா</b><small>Seven verses. Meaning and life reflections in Tamil and English.</small><div class="sacred-feature-actions"><button onclick="show('hcFatiha')">Read · தமிழ் / English</button><button onclick="openAdhkar('listen')">Morning Adhkar</button></div><div style="height:1px;background:var(--line);margin:15px 0"></div>
+    <div class="sacred-feature" id="islamicFeatured"><button class="hc-living-button" onclick="hcOpenQuranStudy()" style="display:block;width:100%;padding:13px;margin:0 0 12px;background:#fff;color:#10212e;border:0;border-radius:14px;font:inherit;font-size:13px;font-weight:700;text-align:left">Full Qur'an study · Al-Baqarah 286 / An-Nisa / Fussilat / An-Nas · தமிழ் →</button><button class="hc-living-button" onclick="show('hcLivingQuran')" style="display:block;width:100%;padding:13px;margin:0 0 14px;background:white;color:#10212e;border:0;border-radius:14px;font:inherit;font-size:13px;font-weight:700;text-align:left">The Living Qur'an · மூன்று குல் ஸூராக்கள் / Voice &amp; stillness →</button><b>Surah Al-Fatiha · ஸூரத்துல் ஃபாத்திஹா</b><small>Seven verses. Meaning and life reflections in Tamil and English.</small><div class="sacred-feature-actions"><button onclick="show('hcFatiha')">Read · தமிழ் / English</button><button onclick="hcPlayAdhkar('listen')">Morning Adhkar</button></div><div style="height:1px;background:var(--line);margin:15px 0"></div>
       <b>Morning Adhkar · 28 min</b>
       <small>Use it as a standalone listening session or after a gentle practice. Choose quiet listening or recite along at a comfortable voice and pace.</small>
       <div class="sacred-feature-actions">
-        <button onclick="openAdhkar('listen')">Listen</button>
+        <button onclick="hcPlayAdhkar('listen')">Listen</button>
         <button onclick="openAdhkar('recite')">Recite Along</button>
       </div>
       <div class="hub-note" style="margin-top:12px">Morning Adhkar is a remembrance and supplication session, not a Quran translation.</div>
@@ -3093,7 +3108,7 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
       <b>Before chanting · Meaning and context</b>
       <small>Identify the chant, its Buddhist tradition, language, pronunciation and translation, then listen comfortably. Properly attribute the original recording.</small>
       <div class="hub-note">Try a gentle quiet session. A verified Buddhist chant recording has not been added yet.</div>
-      <button class="btn secondary" onclick="openHomeTimerSheet('quiet',5)">5-minute quiet listening</button>
+      <button class="btn secondary" onclick="hcQuickStartTimer('quiet',5)">5-minute quiet listening</button>
     </div>
 
     <div id="hcSacredDriveLibrary" style="display:none;margin-top:17px">
@@ -3162,6 +3177,11 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
       <p id="hcDriveVideoCategory" class="hc-drive-type"></p>
       <p id="hcDriveVideoDescription" class="hc-drive-description"></p>
     </div>
+    <div class="hc-drive-audio-card" aria-label="Audio-focused listening">
+      <span class="hc-drive-audio-disc" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M5 12v8M10 7v18M16 3v26M22 8v16M27 12v8" stroke-linecap="round"/></svg></span>
+      <span><b>Now listening</b><small>Focus on sound. Playback uses the original Google Drive file.</small></span>
+    </div>
+    <button class="hc-drive-view-toggle" id="hcDriveViewToggle" type="button" onclick="hcToggleDrivePlayerView()" aria-pressed="false">Show full video controls</button>
     <div class="hc-drive-video-wrap">
       <iframe id="hcDriveVideoFrame" title="Listening video" loading="eager" referrerpolicy="no-referrer" allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe>
     </div>
@@ -3170,7 +3190,7 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
       <details class="hc-drive-source-details">
         <summary>Recording source and playback information</summary>
         <a id="hcDriveOpenSource" href="#" target="_blank" rel="noopener noreferrer">View original in Google Drive ↗</a>
-        <p>Google Drive controls the embedded playback. Minimize keeps the same video visible while you navigate HeartClear; screen-off playback depends on Android and Drive and is not guaranteed.</p>
+        <p>Google Drive controls playback. Audio-focused view crops most of the picture, but you may need to expand the full player for its controls. Independent audio controls require a separate audio file. Screen-off playback is not guaranteed.</p>
       </details>
     </div>
   </div>
@@ -3733,7 +3753,7 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
     <div class="player-status" id="natureAfterNote">Nature sounds start automatically when the guided audio ends · 3 min</div>
     <button class="btn secondary" onclick="finish()" id="finishBtn">Finish</button>
   </div>
-  <div class="footer">HeartClear · video introduction flows directly into the meditation</div>
+  <div class="footer">HeartClear · begin once, then listen, pause or continue</div>
   <audio id="audio" preload="metadata" playsinline></audio>
 </section>
 
@@ -3799,7 +3819,7 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
       <label class="hc-quiet-check"><input type="checkbox" id="hcTimerSheetPacer"> Gentle breath pacing (no holds)</label>
     </div>
     <div class="hc-sheet-actions">
-      <button class="primary" onclick="beginHomeTimer()">Set time</button>
+      <button class="primary" onclick="beginHomeTimer()">Begin</button>
       <button class="secondary" onclick="closeHomeSheets()">Cancel</button>
     </div>
   </div>
@@ -8778,7 +8798,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=126');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=128');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
