@@ -12,6 +12,10 @@ Adds one compact Home Explore button with Guess my thought and Help me explain. 
 - Final integrated browser run: https://github.com/CandidAuraStudio/candidaurastudio.github.io/actions/runs/39969778204
 - Independent code review completed. A menu test selector issue was corrected. Browser testing also exposed an existing Kitchen script writing to a removed optional label; that write now checks for the element.
 
+## Existing broader regression check
+
+The separate legacy `HeartClear Browser and Offline Regression` run 39969971199 fails while reading removed Settings controls `hcPrefAnonymous`, `hcPrefSync` and `hcPrefAdmin` (heartclear-smoke.cjs:45). These controls were absent before Explore; the legacy suite also contains old player navigation expectations. This failure is not reported as a passing full-app suite. Explore-specific integrated checks and the Pages deployment passed, and the live Home/Explore menu were verified in a browser.
+
 ## Practical limits
 
 - The game supports 81 familiar subjects. Guesses require confirmation and may be wrong; private identities, arbitrary dreams and universal coverage are not offered.
