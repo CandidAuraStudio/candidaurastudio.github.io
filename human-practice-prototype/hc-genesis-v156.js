@@ -141,7 +141,7 @@ function drawText(){
 }
 audio.addEventListener('playing',()=>{hcMiniPinnedKey='genesis';sync();renderGlobalMini()});
 audio.addEventListener('pause',()=>{sync();renderGlobalMini()});
-audio.addEventListener('ended',()=>{if(autonext&&chapter<50)window.hcGenesisStep(1);else {$('hcGenStatus').textContent='Chapter complete.';sync()}});
+audio.addEventListener('ended',()=>{if(autonext&&chapter<50){stop(true);chapter++;isLoaded=false;remember();sync();drawText();loadChapterAndPlay();}else {$('hcGenStatus').textContent='Chapter complete.';sync()}});
 audio.addEventListener('error',()=>{$('hcGenStatus').textContent='English chapter audio unavailable. Check internet.'});
 audio.addEventListener('waiting',()=>{$('hcGenStatus').textContent='Buffering…'});
 audio.addEventListener('timeupdate',()=>{if(Math.floor(audio.currentTime)%10===0)remember()});
