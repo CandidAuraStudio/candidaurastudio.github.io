@@ -6,28 +6,37 @@ if(document.getElementById('hcGitaOriginalPanel'))return;
 const sacred=document.getElementById('sacredDetail');
 const root=sacred&&sacred.querySelector('.glass');
 if(!root)return;
-const labels={sa:'Sanskrit · संस्कृत',en:'English',hi:'Hindi · हिन्दी',ta:'Tamil · தமிழ்',
+const labels={sa:'Sanskrit · संस्कृत',en:'English',hi:'Hindi · हिन्दी',ta:'Tamil · தமிழ்',ne:'Nepali · नेपाली',
 te:'Telugu · తెలుగు',kn:'Kannada · ಕನ್ನಡ',ml:'Malayalam · മലയാളം',bn:'Bengali · বাংলা',
 gu:'Gujarati · ગુજરાતી',mr:'Marathi · मराठी',de:'German',pa:'Punjabi',ur:'Urdu'};
 const srcPages={
 sa:'https://www.rkmathharipad.org/audio/bhajans/bhagvad-gita-chanting-mp3/',
 en:'https://bhagavadgitaclass.com/bhagavad-gita-narration-in-english-by-his-holiness-purnachandra-goswami/',
 hi:'https://bhagavadgitaclass.com/bhagavad-gita-narration-in-hindi-by-his-grace-savyasachi-prabhu/',
-ta:'https://yatharthgeeta.com/yatharth-geeta-audio/yatharth-geeta-audio-tamil/'
+ta:'https://bhagavadgitaclass.com/bhagavad-gita-recitation-in-sanskrit-with-tamil-translations/'
 };
 const otherSource='https://yatharthgeeta.com/yatharth-geeta-audio/';
-const names={sa:'Swami Devrupananda',en:'Purnachandra Goswami',hi:'Savyasachi Prabhu'};
+const nepaliSource='https://www.gitab.com.np/2019/04/the-bhagavad-gita-audio-book.html';
+const names={sa:'Swami Devrupananda',en:'Purnachandra Goswami',hi:'Savyasachi Prabhu',ta:'Sanskrit recitation with Tamil translations'};
 const pad=n=>String(n).padStart(2,'0');
 function url(lang,n){
  if(lang==='sa')return 'https://ramakrishnamath.in/Gita/BhagvadGitaChantingSwamiDevrupananda/'+pad(n)+'%20GITA%20CHAPTER%20%20'+n+'.mp3';
  if(lang==='en')return 'https://bhagavadgitaclass.com/wp-content/audio/Bhagavad-Gita-Narration/Bhagavad_Gita_Narration_in_English_by_HH_Purnachandra_Goswami/Bhagavad_Gita_Narration_Chapter-'+pad(n)+'_in_English_by_HH_Purnachandra_Goswami.mp3';
  if(lang==='hi')return 'https://bhagavadgitaclass.com/wp-content/audio/Bhagavad-Gita-Narration/Bhagavad_Gita_Narration_in_Hindi_by_HG_Savyasachi_Prabhu/Bhagavad_Gita_Narration_Chapter-'+pad(n)+'_in_Hindi_by_HG_Savyasachi_Prabhu.mp3';
+ if(lang==='ta')return 'https://bhagavadgitaclass.com/wp-content/audio/Bhagavad-Gita-Recitation/Bhagavad_Gita_Recitation_in_Sanskrit_with_Tamil_Translations/Bhagavad_Gita_Recitation_Chapter-'+pad(n)+'_in_Sanskrit_with_Tamil_Translations.mp3';
  return '';
 }
 const omUrl='https://upload.wikimedia.org/wikipedia/commons/3/31/Om.ogg';
 const omSource='https://commons.wikimedia.org/wiki/File:Om.ogg';
 const omDrive='https://drive.google.com/file/d/11ogtK6FopRz-g8o-gHLY6-TV4fTJ5GjN/view';
 const css=[
+'#hcGitaOriginalPanel{max-width:100%;box-shadow:none!important}',
+'#hcGitaOriginalPanel h3{font-size:16px}',
+'#hcGitaOriginalPanel .hcg-caption{font-size:10px}',
+'#hcGitaOriginalPanel #hcgNow{font-size:12px}',
+'#hcGitaOriginalPanel .hcg-buttons button{min-height:39px}',
+'#hcGitaOriginalPanel details.hcg-extras{border-top:1px solid #34424b;padding-top:8px;font-size:11px}',
+'#hcGitaOriginalPanel .hcg-extras summary{cursor:pointer;color:#c8d7dd}',
 '#hcGitaOriginalPanel[hidden]{display:none!important}',
 '#hcGitaOriginalPanel{background:#0a0e11;border:1px solid #536069;border-radius:17px;color:#fff;padding:14px;margin:14px 0;display:grid;gap:10px}',
 '#hcGitaOriginalPanel .hcg-row{display:flex;justify-content:space-between;align-items:center;gap:9px}',
@@ -48,9 +57,9 @@ panel.innerHTML='<div class="hcg-row"><h3 id="hcgHeader">Bhagavad Gita</h3><butt
 '<div id="hcgNow" class="hcg-internal">Original human voice</div>'+
 '<div class="hcg-buttons"><button id="hcgPrev" aria-label="Previous chapter">⏮</button><button id="hcgPlay" aria-label="Play or pause">▶</button><button id="hcgNext" aria-label="Next chapter">⏭</button></div>'+
 '<p id="hcgStatus" class="hcg-caption" role="status" aria-live="polite">Choose a recording</p>'+
-'<a id="hcgSource" target="_blank" rel="noopener noreferrer">Original recording & credit ↗</a>'+
+'<details class="hcg-extras"><summary>Sources & details</summary><div style="display:grid;gap:8px;margin:9px 0"><a id="hcgSource" target="_blank" rel="noopener noreferrer">Original recording & credit ↗</a>'+
 '<a id="hcgLongOm" target="_blank" rel="noopener noreferrer" href="'+omDrive+'" hidden>OM Chanting & Singing Bowls · Open original Drive recording ↗</a>'+
-'<p id="hcgNotice" class="hcg-caption"></p>';
+'<p id="hcgNotice" class="hcg-caption"></p></div></details>';
 const shelf=document.getElementById('hcHinduScriptures');
 if(shelf)shelf.insertAdjacentElement('beforebegin',panel);
 else root.append(panel);
@@ -73,12 +82,12 @@ function update(){
  el('hcgPrev').disabled=!isPlayable;
  el('hcgNext').disabled=!isPlayable;
  el('hcgPlay').setAttribute('aria-label',isPlayable?'Play or pause original recording':'Open human-voiced recording at publisher');
- el('hcgSource').href=mode==='om'?omSource:(srcPages[lang]||otherSource);
+ el('hcgSource').href=mode==='om'?omSource:(lang==='ne'?nepaliSource:(srcPages[lang]||otherSource));
  el('hcgSource').textContent=mode==='om'?'Source & CC0 licence ↗':(isPlayable?'Original source & credit ↗':'Listen in '+labels[lang]+' at source ↗');
  el('hcgLongOm').hidden=mode!=='om';
  el('hcgNotice').textContent=mode==='om'?'The licensed pronunciation is short; it is not the long singing-bowls session. The original long recording opens in Google Drive.':
-  (isPlayable?'At the end of each chapter, the next starts automatically when the source permits. These human recordings are streamed, not copied.':
-  'Authentic spoken audio is available on the provider website. Direct MP3s are not verified here, so automatic Next is not available in this language yet.');
+  (isPlayable?'Next automatically follows the 18 Gita chapters. Streams original human recordings.':
+  'This language has no verified direct MP3 playlist yet, so playback is unavailable.');
  el('hcgPlay').textContent=playing?'Ⅱ':'▶';
  if(!isPlayable)notice('Tap the source link for '+labels[lang]+' voice recordings.');
 }
@@ -88,13 +97,13 @@ function exclusivity(){
  document.querySelectorAll('audio,video').forEach(a=>{if(!a.paused)try{a.pause()}catch(e){}});
 }
 async function play(){
- if(!panel.hidden&&mode!=='om'&&!url(lang,chapter)){notice('Opening '+labels[lang]+' human-voiced recordings at the original website.');window.open(srcPages[lang]||otherSource,'_blank','noopener');return}
+ if(!panel.hidden&&mode!=='om'&&!url(lang,chapter)){notice(labels[lang]+' audio is not connected yet. Choose Tamil, Sanskrit, English or Hindi to listen here.');return}
  const wanted=mode==='om'?omUrl:url(lang,chapter);
  if(!wanted)return;
  if(!audio.paused&&src===wanted){audio.pause();return}
  if(src!==wanted){stop();exclusivity();src=wanted;audio.src=wanted;audio.load()}
  const ticket=++playToken;notice('Opening original human recording…');
- try{await audio.play();if(ticket===playToken){playing=true;el('hcgPlay').textContent='Ⅱ';notice('Playing original recording');}}
+ try{await audio.play();if(ticket===playToken){playing=true;el('hcgPlay').textContent='Ⅱ';notice('Playing original recording');try{localStorage.setItem('heartclearActiveMedia','gita')}catch(e){};if(typeof renderGlobalMini==='function')renderGlobalMini();}}
  catch(e){if(ticket===playToken){playing=false;el('hcgPlay').textContent='▶';notice('Source unavailable inside HC. Open the original recording using the link below.');}}
 }
 function next(direction){
@@ -116,10 +125,19 @@ el('hcgPrev').addEventListener('click',()=>next(-1));
 el('hcgNext').addEventListener('click',()=>next(1));
 el('hcgPlay').addEventListener('click',play);
 el('hcgClose').addEventListener('click',()=>{stop();panel.hidden=true});
-audio.addEventListener('pause',()=>{playing=false;el('hcgPlay').textContent='▶'});
+audio.addEventListener('pause',()=>{playing=false;el('hcgPlay').textContent='▶';if(typeof renderGlobalMini==='function')renderGlobalMini()});
 audio.addEventListener('ended',()=>{playing=false;if(mode==='gita'&&chapter<18&&url(lang,chapter))next(1);else{stop();notice('Finished.')}});
+audio.addEventListener('timeupdate',()=>{if(typeof renderGlobalMini==='function')renderGlobalMini()});
 audio.addEventListener('error',()=>{playing=false;el('hcgPlay').textContent='▶';notice('Cannot play this audio stream. Use the original source link.');});
 document.addEventListener('play',event=>{if(event.target instanceof HTMLMediaElement&&event.target!==audio&&!audio.paused)audio.pause()},true);
+window.hcGitaPlayerState=()=>{
+ if(panel.hidden||!audio.getAttribute('src'))return null;
+ return {key:'gita',el:audio,title:mode==='om'?'OM · Voice':'Bhagavad Gita · '+labels[lang]+' · Chapter '+chapter,
+ meta:mode==='om'?'OM · audio':'Gita · '+chapter+' / 18 · '+(typeof fmt==='function'?fmt(audio.currentTime||0):''),
+ screen:'sacredDetail'};
+};
+window.hcGitaStep=direction=>next(direction);
+window.hcGitaStop=()=>{stop();try{localStorage.removeItem('heartclearActiveMedia')}catch(e){};if(typeof renderGlobalMini==='function')renderGlobalMini()};
 window.hcOpenGitaVoice=chapterNum=>open('gita',chapterNum);
 window.hcOpenOmVoice=()=>open('om');
 const previous=window.openHcDriveMedia;
