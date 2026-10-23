@@ -1,4 +1,4 @@
-/* HeartClear · audio-only compact collection playback v138 */
+/* HeartClear · native audio + safe Drive video preview routing v156 */
 (function(){
 'use strict';
 const css=[
@@ -58,7 +58,22 @@ media.addEventListener('error',()=>{if(active&&mode==='native')drivePlayer(activ
 toggle.addEventListener('click',()=>{if(mode==='error'&&active){const key=active.key;stop();open(key);return}if(mode!=='native'||!active)return;if(media.paused)media.play().catch(e=>{if(e&&e.name==='NotAllowedError')status.textContent='Tap Play again';else drivePlayer(active,ticket)});else media.pause()});
 get('hcCompactStop').addEventListener('click',stop);
 seek.addEventListener('input',()=>{if(mode==='native'&&Number.isFinite(media.duration)&&media.duration>0)media.currentTime=media.duration*Number(seek.value)/1000});
-// Existing Sacred Sound and Practice buttons use this handler. Keep the current page.
-window.openHcDriveMedia=function(key){open(key)};
+// Keep Google Drive videos in Drive's own embedded video player.
+// The Drive download URL is not a stable native audio endpoint, especially for MP4.
+// Use the already-built player in index.html, not the broken compact HTMLAudio attempt.
+const hcOriginalDrivePreview=window.openHcDriveMedia;
+window.openHcDriveMedia=function(key,sourceScreen){
+ const item=(typeof HC_DRIVE_COLLECTIONS!=='undefined'?HC_DRIVE_COLLECTIONS:[]).find(x=>x.key===key);
+ if(!item)return;
+ stop(); // Dismiss any old failed compact audio strip.
+ if(item.key==='islamHuAkmal'&&typeof hcQuickPlaySound==='function'){
+   hcQuickPlaySound('allahuAkmal');return;
+ }
+ if(typeof hcOriginalDrivePreview==='function'){
+   return hcOriginalDrivePreview(key,sourceScreen);
+ }
+ // Only if the in-app preview is unavailable, open Google's first-party player.
+ window.open('https://drive.google.com/file/d/'+encodeURIComponent(item.id)+'/view','_blank','noopener');
+};
 window.hcStopCompactDriveAudio=stop;
 })();
