@@ -1,4 +1,4 @@
-/* HeartClear · compact collection playback v137 */
+/* HeartClear · audio-only compact collection playback v138 */
 (function(){
 'use strict';
 const css=[
@@ -28,15 +28,15 @@ dock.innerHTML='<div class="hc-small-row"><div class="hc-small-name"><strong id=
 '<div id="hcCompactFallback" hidden><small>Google Drive playback · tap Play below if needed.</small><iframe id="hcCompactFrame" title="Drive recording player" referrerpolicy="no-referrer" allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe></div>';
 document.body.appendChild(dock);
 const get=id=>document.getElementById(id);
-const status=get('hcCompactStatus'),toggle=get('hcCompactToggle'),track=get('hcCompactTrack'),seek=get('hcCompactSeek'),fallback=get('hcCompactFallback'),frame=get('hcCompactFrame');
+const status=get('hcCompactStatus'),toggle=get('hcCompactToggle'),track=get('hcCompactTrack'),seek=get('hcCompactSeek'),fallback=get('hcCompactFallback');
 const media=document.createElement('audio');media.preload='metadata';media.style.display='none';dock.appendChild(media);
 let active=null,mode=null,ticket=0,timer=null;
 function format(s){if(!Number.isFinite(s)||s<0)return '--:--';const n=Math.floor(s),m=Math.floor(n/60);return m>=60?Math.floor(m/60)+':'+String(m%60).padStart(2,'0')+':'+String(n%60).padStart(2,'0'):m+':'+String(n%60).padStart(2,'0')}
 function progress(){const d=media.duration;get('hcCompactElapsed').textContent=format(media.currentTime||0);get('hcCompactDuration').textContent=format(d);seek.disabled=!(Number.isFinite(d)&&d>0);if(!seek.disabled)seek.value=String(Math.round(1000*(media.currentTime||0)/d))}
 function state(playing){toggle.textContent=playing?'Ⅱ':'▶';toggle.setAttribute('aria-label',playing?'Pause recording':'Play recording');status.textContent=playing?'Playing':(media.ended?'Finished':'Paused')}
 function cancelTimer(){if(timer!==null){clearTimeout(timer);timer=null}}
-function stop(){ticket++;cancelTimer();media.pause();media.removeAttribute('src');media.load();frame.removeAttribute('src');active=null;mode=null;dock.hidden=true;fallback.hidden=true;track.hidden=false;toggle.hidden=false;document.body.classList.remove('hc-compact-open');if('mediaSession' in navigator)try{navigator.mediaSession.metadata=null}catch(e){}}
-function drivePlayer(item,token){if(token!==ticket||!active||item.key!==active.key)return;cancelTimer();media.pause();media.removeAttribute('src');media.load();mode='drive';fallback.hidden=false;track.hidden=true;toggle.hidden=true;status.textContent='Drive player · controls below';frame.src='https://drive.google.com/file/d/'+encodeURIComponent(item.id)+'/preview?autoplay=1'}
+function stop(){ticket++;cancelTimer();media.pause();media.removeAttribute('src');media.load();active=null;mode=null;dock.hidden=true;fallback.hidden=true;track.hidden=false;toggle.hidden=false;document.body.classList.remove('hc-compact-open');if('mediaSession' in navigator)try{navigator.mediaSession.metadata=null}catch(e){}}
+function drivePlayer(item,token){if(token!==ticket||!active||item.key!==active.key)return;cancelTimer();media.pause();media.removeAttribute('src');media.load();mode='error';fallback.hidden=true;track.hidden=true;toggle.hidden=false;toggle.textContent='↻';toggle.setAttribute('aria-label','Retry recording');status.textContent='Audio unavailable · retry';}
 function stopOtherAudio(){if(typeof hcStopDriveVideo==='function')hcStopDriveVideo(true);document.querySelectorAll('audio,video').forEach(el=>{if(el!==media&&!el.paused)el.pause()});if(typeof hcMixStop==='function'&&typeof hcMixRunning!=='undefined'&&hcMixRunning)hcMixStop(false)}
 function mediaSession(item){if(!('mediaSession' in navigator)||typeof MediaMetadata==='undefined')return;try{navigator.mediaSession.metadata=new MediaMetadata({title:item.name,artist:'HeartClear · Sacred Sound'});navigator.mediaSession.setActionHandler('play',()=>{if(mode==='native')media.play().catch(()=>{})});navigator.mediaSession.setActionHandler('pause',()=>{if(mode==='native')media.pause()});navigator.mediaSession.setActionHandler('stop',stop);navigator.mediaSession.setActionHandler('seekto',e=>{if(mode==='native'&&Number.isFinite(media.duration))media.currentTime=e.seekTime})}catch(e){}}
 function open(key){
@@ -55,7 +55,7 @@ media.addEventListener('waiting',()=>{if(mode==='native')status.textContent='Buf
 media.addEventListener('durationchange',progress);media.addEventListener('timeupdate',progress);
 media.addEventListener('ended',()=>{if(mode==='native')state(false)});
 media.addEventListener('error',()=>{if(active&&mode==='native')drivePlayer(active,ticket)});
-toggle.addEventListener('click',()=>{if(mode!=='native'||!active)return;if(media.paused)media.play().catch(e=>{if(e&&e.name==='NotAllowedError')status.textContent='Tap Play again';else drivePlayer(active,ticket)});else media.pause()});
+toggle.addEventListener('click',()=>{if(mode==='error'&&active){const key=active.key;stop();open(key);return}if(mode!=='native'||!active)return;if(media.paused)media.play().catch(e=>{if(e&&e.name==='NotAllowedError')status.textContent='Tap Play again';else drivePlayer(active,ticket)});else media.pause()});
 get('hcCompactStop').addEventListener('click',stop);
 seek.addEventListener('input',()=>{if(mode==='native'&&Number.isFinite(media.duration)&&media.duration>0)media.currentTime=media.duration*Number(seek.value)/1000});
 // Existing Sacred Sound and Practice buttons use this handler. Keep the current page.
