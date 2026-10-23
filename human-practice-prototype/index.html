@@ -4970,7 +4970,7 @@ function hcStartPathActivity(){
   openQuietTimer();
   document.getElementById('hcTimerMode').value=day.type==='breath'?'breath':'quiet';
   document.getElementById('hcTimerMinutes').value=String(day.minutes);
-  hcTimerModeChanged();document.getElementById('hcTimerClock').textContent=fmt(day.minutes*60);
+  hcTimerModeChanged();document.getElementById('hcTimerClock').textContent=fmt(day.minutes*60);hcTimerToggle();
  }else if(day.type==='sound')openSoundTrack(day.key);
  else if(day.type==='meditation'){
    const card=hcFindPracticeCard(day.key);
@@ -6147,7 +6147,10 @@ function openHcDriveMedia(key,sourceScreen=null){
   hcDriveActiveKey=key;
   hcDriveDocked=false;
   document.getElementById('hcDriveMedia').classList.remove('hc-drive-docked');
-  hcDriveBackScreen=sourceScreen==='practices'?'practices':item.section==='meditation'?'practices':item.section==='general'?'soundLab':'sacredDetail';
+  document.getElementById('hcDriveMedia').classList.add('hc-drive-audio-view');
+ const viewBtn=document.getElementById('hcDriveViewToggle');
+ if(viewBtn){viewBtn.textContent='Show full video controls';viewBtn.setAttribute('aria-pressed','false');}
+ hcDriveBackScreen=sourceScreen==='practices'?'practices':item.section==='meditation'?'practices':item.section==='general'?'soundLab':'sacredDetail';
   document.getElementById('hcDriveVideoTitle').textContent=key==='islamHu'&&sourceScreen==='practices'?'Allahu Meditation · Hu Hu Allah':item.name;
   document.getElementById('hcDriveVideoCategory').textContent=key==='islamHu'&&sourceScreen==='practices'?'Islamic devotional listening · Sufi-style dhikr':item.type;
   document.getElementById('hcDriveVideoDescription').textContent=item.note;
@@ -6166,13 +6169,19 @@ function openHcDriveMedia(key,sourceScreen=null){
   if(!same||!frame.getAttribute('src'))hcLoadDrivePreview();
   hcCaptureReturnState(true);
 }
+function hcToggleDrivePlayerView(){
+ const panel=document.getElementById('hcDriveMedia');
+ const audioView=panel.classList.toggle('hc-drive-audio-view');
+ const button=document.getElementById('hcDriveViewToggle');
+ if(button){button.textContent=audioView?'Show full video controls':'Use compact audio view';button.setAttribute('aria-pressed',String(!audioView));}
+}
 function hcLoadDrivePreview(){
   const item=HC_DRIVE_COLLECTIONS.find(i=>i.key===hcDriveActiveKey);
   if(!item)return;
   const frame=document.getElementById('hcDriveVideoFrame');
   const wanted=hcDrivePreviewUrl(item.id)+'?autoplay=1';
   if(frame.getAttribute('src')!==wanted)frame.src=wanted;
-  document.getElementById('hcDriveVideoStatus').textContent='Video opened. If it does not play automatically, tap Play inside the video once.';
+  document.getElementById('hcDriveVideoStatus').textContent='Listening view ready. If audio does not begin, tap Play in the compact Drive controls or expand the original player.';
 }
 function hcMinimizeDriveVideo(destination='home'){
   if(!hcDriveActiveKey)return;
@@ -7204,6 +7213,10 @@ function setAdhkarMediaSession(){
   }catch(e){}
 }
 
+function hcPlayAdhkar(mode='listen'){
+ openAdhkar(mode);
+ toggleAdhkarAudio();
+}
 function openAdhkar(mode){
   // Exactly one listening source should have audio focus. The nature mixer uses
   // separate HTMLAudioElements and must be stopped explicitly.
@@ -7764,6 +7777,12 @@ function hcSetAudioOnly(value){
  try{localStorage.setItem(HC_AUDIO_ONLY_KEY,String(hcAudioOnly))}catch(e){}
  hcRefreshAudioOnly();
 }
+function hcStartGuidedByTitle(title){
+ const card=hcFindPracticeCard(title);
+ const key=card?.dataset?.session;
+ if(!['wake','noon','evening','sleep'].includes(key)){show('practices');return}
+ hcStartExistingGuidedSession(key);
+}
 function choosePractice(seconds,url,kicker,title,introUrl,visualUrl){
   if(bookAudioEl && !bookAudioEl.paused) bookAudioEl.pause();
   if(soundLabAudio && !soundLabAudio.paused) soundLabAudio.pause();
@@ -7788,7 +7807,8 @@ function choosePractice(seconds,url,kicker,title,introUrl,visualUrl){
   preparePlayer();
   updateHeartClearFavouriteButtons();
   try{localStorage.setItem('sufiLastPractice',chosenKicker)}catch(e){}
-  showSessionReady();
+  // Begin now requests audio directly; optional settings remain in the player.
+   finishIntro();
 }
 
 function showSessionReady(){
@@ -7956,7 +7976,7 @@ function preparePlayer(){
   playCore.textContent='▶';
   document.getElementById('sessionKicker').textContent=chosenKicker;
   document.getElementById('sessionTitle').textContent=chosenTitle;
-  document.getElementById('playerNote').textContent='Press Play when you are ready.';
+  document.getElementById('playerNote').textContent='Starting audio…';
   optionsPanel.classList.remove('open');
   loadResumePoint();
   setMediaSession();
@@ -8139,6 +8159,20 @@ function beginHomeSheetPractice(){
   setSleepTimer(selectedSleep);
 }
 
+function hcQuickStartTimer(mode='quiet',minutes=10){
+ openQuietTimer();
+ const mins=document.getElementById('hcTimerMinutes'),kind=document.getElementById('hcTimerMode');
+ if(mins){
+  if(![...mins.options].some(o=>Number(o.value)===Number(minutes))){
+   const option=document.createElement('option');option.value=String(minutes);option.textContent=minutes+' minutes';mins.append(option);
+  }
+  mins.value=String(minutes);
+ }
+ if(kind)kind.value=mode==='breath'?'breath':'quiet';
+ hcTimerModeChanged();
+ document.getElementById('hcTimerClock').textContent=fmt(minutes*60);
+ hcTimerToggle();
+}
 function openHomeTimerSheet(mode='quiet',minutes=10){
   hcHomeTimerMode=mode==='breath'?'breath':'quiet';
   hcHomeTimerMinutes=Number(minutes)||10;
@@ -8177,6 +8211,7 @@ function beginHomeTimer(){
   const interval=document.getElementById('hcTimerInterval');if(interval)interval.value=document.getElementById('hcTimerSheetInterval')?.value||'0';
   hcTimerModeChanged();
   const clock=document.getElementById('hcTimerClock');if(clock)clock.textContent=fmt(hcHomeTimerMinutes*60);
+ hcTimerToggle();
 }
 
 function closeHomeSheets(){
@@ -8210,6 +8245,7 @@ function hcResumeAdhkar(){
   const t=hcGetAdhkarPosition();
   openAdhkar('listen');
   if(t>0)hcSeekRestored(adhkarAudio,t,syncAdhkar);
+ toggleAdhkarAudio();
 }
 adhkarAudio.addEventListener('pause',()=>{hcRememberAdhkarPosition();hcRenderAdhkarResume()});
 adhkarAudio.addEventListener('timeupdate',()=>{
