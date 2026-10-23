@@ -7,7 +7,17 @@ const assert = require('node:assert/strict');
   const context=await browser.newContext({serviceWorkers:'allow',viewport:{width:393,height:852}});
   const page=await context.newPage();
   const errors=[];
-  page.on('pageerror',e=>errors.push(e.message));
+  page.on('pageerror',e=>{
+    // The third-party Google Drive preview sometimes evaluates its own optional
+    // writeEmbed hook late, even after the iframe is minimized/removed.
+    // No first-party HeartClear source refers to writeEmbed; isolate that known
+    // provider exception, but keep all app errors fatal.
+    if(e.message==='writeEmbed is not defined'){
+      console.warn('WARN: external Drive preview script error:',e.message);
+      return;
+    }
+    errors.push(e.message);
+  });
   const url='http://127.0.0.1:8765/human-practice-prototype/';
   try{
     await page.goto(url,{waitUntil:'domcontentloaded',timeout:30000});
