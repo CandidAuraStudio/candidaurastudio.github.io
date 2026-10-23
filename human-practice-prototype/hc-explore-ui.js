@@ -34,7 +34,7 @@
    html='<h2 id="hcxTitle" tabindex="-1">A little discovery.</h2>'+
     '<button class="hcx-choice" data-mode="game">Guess my thought<small>People, nature &amp; everyday things · up to 20 questions</small></button>'+
     '<button class="hcx-choice" data-mode="health">Help me explain<small>Private symptom notes · adults · urinary &amp; general concerns</small></button>'+
-    '<p>The game knows '+core.bank.length+' familiar subjects. It guesses from your answers; it cannot read minds or identify private names.</p>';
+    '<p>The game includes '+core.bank.length+' subjects, including '+core.bank.filter(x=>x.tags.includes('music')).length+' musicians. Each guess is tentative. Choose “That is not it” to exclude a wrong candidate; some answers may be outside the collection.</p>';
   }else{
    step=mode==='game'?core.gameStep(history):core.healthStep(history);
    html='<p class="hcx-meta">'+(mode==='game'?'Guess my thought · '+history.length+' / 20':'Help me explain · not a diagnosis')+'</p>';
@@ -45,7 +45,7 @@
      '<div class="hcx-tools"><button data-action="speak" aria-label="Speak an answer">Speak</button><label>Voice <select aria-label="Voice language"><option value="en-US"'+(language==='en-US'?' selected':'')+'>English</option><option value="ta-IN"'+(language==='ta-IN'?' selected':'')+'>Tamil</option></select></label></div>'+
      '<div class="hcx-voice-panel" id="hcxVoicePanel" hidden></div><div class="hcx-status" id="hcxVoiceStatus" role="status" aria-live="polite"></div>';
    }else if(step.kind==='guess'){
-    html+='<h2 id="hcxTitle" tabindex="-1">'+escape(step.message)+'</h2><div class="hcx-tools"><button data-action="correct">That is right</button><button data-action="incorrect">That is not it</button></div>';
+    html+='<h2 id="hcxTitle" tabindex="-1">'+escape(step.message)+'</h2><div class="hcx-tools"><button data-action="correct">That is right</button><button data-action="incorrect">That is not it · try another</button></div><p class="hcx-meta">A wrong answer is removed from this round; no repeated guess.</p>';
    }else if(step.kind==='unknown'){
     html+='<h2 id="hcxTitle" tabindex="-1">I do not know yet.</h2><p>'+escape(step.message)+'</p><button class="hcx-primary" data-action="restart">Start again</button>';
    }else{
@@ -111,7 +111,7 @@
    case 'restart':history=[];finished=false;render();break;
    case 'back':history.pop();finished=false;render();break;
    case 'correct':finished=true;render();break;
-   case 'incorrect':stopVoice();step={kind:'unknown'};dialog.querySelector('#hcxTitle').textContent='Thanks for correcting me.';dialog.querySelector('.hcx-body').innerHTML='<h2 id="hcxTitle" tabindex="-1">Thanks for correcting me.</h2><p>Your thought may be outside my collection, or a question may not have fit. I will not claim that guess was right.</p><div class="hcx-tools"><button data-action="back">Change an answer</button><button data-action="restart">Start again</button><button data-action="menu">Explore menu</button></div>';dialog.querySelector('#hcxTitle').focus();break;
+   case 'incorrect':{stopVoice();if(mode==='game'&&step?.kind==='guess'&&step.item?.id){history.push({id:'identity:'+step.item.id,answer:'no'});finished=false;render();}else{step={kind:'unknown'};render();}break;}
    case 'speak':speak();break;
    case 'enable':voiceAllowed=true;speak();break;
    case 'confirmVoice':{const proposal=pending;if(proposal&&proposal.id===step?.id)answer(proposal.value);break;}
