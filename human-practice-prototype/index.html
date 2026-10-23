@@ -2487,6 +2487,7 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
       <button type="button" onclick="openSoundLab()">Sounds <span>›</span></button>
       <button type="button" onclick="hcOpenQuranStudy()">Qur'an <span>›</span></button>
       <button type="button" onclick="show('library')">Books <span>›</span></button>
+      <button type="button" onclick="document.getElementById('hcGenesisCard')?.scrollIntoView({behavior:'smooth',block:'center'})">Genesis <span>›</span></button>
     </div>
   </section>
   <details class="hc-home-more" id="hcHomeMore">
@@ -4938,6 +4939,12 @@ function show(id){
 function getActiveMediaState(){
   const options=[
     {
+      key:'genesis',el:document.getElementById('hcGenesisAudio'),
+      title:'Genesis · '+(document.getElementById('hcGenTitle')?.textContent||'Old Testament'),
+      meta:'Bible · '+fmt(document.getElementById('hcGenesisAudio')?.currentTime||0),
+      screen:'home'
+    },
+    {
       key:'quran-meaning',el:document.getElementById('hcQuranMeaningAudio'),
       title:window.hcQuranMeaningNowTitle||'Spoken Qur’an meaning',
       meta:'Qur’an translation · '+fmt(document.getElementById('hcQuranMeaningAudio')?.currentTime||0),
@@ -5389,6 +5396,7 @@ function hcRenderMiniLibrary(){
 }
 function hcMiniMove(direction){
   const state=getActiveMediaState();
+  if(state?.key==='genesis'){window.hcGenesisStep?.(direction);return;}
   if(state?.key==='quran-meaning'){window.hcMeaningStepVerse?.(direction);return;}
   if(state?.key==='soundlab'&&hcPlayableSoundQueue().includes(currentSoundKey)){
     return playNextSoundLab(true,direction);
@@ -5417,7 +5425,7 @@ function renderGlobalMini(){
   // then reveal it after the user scrolls down so Pause/Resume stays reachable.
   const sameScreen=currentScreenId===state.screen;
   const scrolledAway=window.scrollY>180;
-  mini.classList.toggle('show',state.key==='quran-meaning'||!sameScreen||scrolledAway);
+  mini.classList.toggle('show',state.key==='genesis'||state.key==='quran-meaning'||!sameScreen||scrolledAway);
   mini.classList.toggle('is-mix',state.key==='mix');
 
   document.getElementById('globalMiniTitle').textContent=state.title;
@@ -5468,6 +5476,7 @@ function stopGlobalMedia(){
   const state=getActiveMediaState();
   if(!state)return;
   if(state.key==='mix'){hcMixStop();return}
+  if(state.key==='genesis'){window.hcStopGenesis?.();return}
   if(state.key==='quran-meaning'){window.hcStopQuranMeaning?.();return}
   if(state.key==='meditation'&&playbackPhase==='nature'){finishNature();return;}
   if(state.key==='book'){
@@ -5489,6 +5498,7 @@ function stopGlobalMedia(){
 
 function openActiveMediaPlayer(){
   const state=getActiveMediaState();
+  if(state?.key==='genesis'){show('home');return;}
   if(state?.key==='quran-meaning'){show('home');return;}
   if(state?.key==='soundlab'&&currentSoundKey==='allahuAkmal'){show('home');return;}
   if(state)show(state.screen);
@@ -9325,7 +9335,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=155');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=156');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
@@ -9358,6 +9368,7 @@ const heartclearAutoInstallPrompt=false;
 <script src="./hc-explore-core.js?v=154"></script>
 <script src="./hc-explore-ui.js?v=154"></script>
 <script src="./hc-home-routine-v155.js?v=155"></script>
+<script src="./hc-genesis-v156.js?v=156"></script>
 
 </body>
 </html>
