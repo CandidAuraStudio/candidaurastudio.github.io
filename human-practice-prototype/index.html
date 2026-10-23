@@ -2238,6 +2238,25 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
 #hcDriveMedia.hc-drive-docked .hc-drive-audio-card{display:none}
 #hcDriveMedia.hc-drive-docked.hc-drive-audio-view .hc-drive-video-wrap{height:100px;aspect-ratio:auto}
 #hcDriveMedia.hc-drive-docked.hc-drive-audio-view .hc-drive-video-wrap iframe{height:220px}
+/* v132 — single compact mini experience for native audio and a Drive fallback strip. */
+.hc-minimize-audio{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:44px;padding:10px 13px;border-radius:12px;border:1px solid rgba(218,235,242,.32);color:#f2f7f9;background:rgba(11,36,49,.8);font:inherit;font-size:12px;font-weight:700;cursor:pointer}
+.hc-native-toolbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin:0 0 13px}
+.hc-native-toolbar .collection-back{margin:0}
+#player .hc-minimize-audio{flex:0 0 auto;margin:3px 0 0}
+#hcDriveMedia .hc-drive-mini-label{display:none}
+#hcDriveMedia.hc-drive-docked{display:block!important;position:fixed!important;bottom:calc(86px + env(safe-area-inset-bottom,0px))!important;right:10px!important;width:min(286px,calc(100vw - 20px))!important;height:68px!important;min-height:0!important;padding:0!important;margin:0!important;overflow:hidden!important;z-index:105!important}
+#hcDriveMedia.hc-drive-docked .hc-drive-shell{position:relative;isolation:isolate;width:100%;height:100%;padding:7px 8px;display:flex;align-items:center}
+#hcDriveMedia.hc-drive-docked .hc-drive-actions{position:relative;z-index:3;display:flex;align-items:center;justify-content:flex-end;gap:6px;flex-wrap:nowrap;margin:0;width:100%}
+#hcDriveMedia.hc-drive-docked .hc-drive-mini-label{display:flex;flex:1;flex-direction:column;min-width:0;line-height:1.25;color:#eaf4f6;font-size:11px;font-weight:700}
+#hcDriveMedia.hc-drive-docked .hc-drive-mini-label small{font-weight:400;font-size:10px;color:#bccbd2;margin-top:4px}
+#hcDriveMedia.hc-drive-docked .hc-drive-expand,#hcDriveMedia.hc-drive-docked .hc-drive-stop{display:flex!important;flex:0 0 40px;align-items:center;justify-content:center;min-width:40px;width:40px;max-width:40px;min-height:44px;padding:0!important;font-size:0!important;margin:0!important}
+#hcDriveMedia.hc-drive-docked .hc-drive-expand::after{content:"↗";font-size:21px}
+#hcDriveMedia.hc-drive-docked .hc-drive-stop::after{content:"×";font-size:23px}
+#hcDriveMedia.hc-drive-docked .hc-drive-video-wrap,#hcDriveMedia.hc-drive-docked.hc-drive-audio-view .hc-drive-video-wrap{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;margin:0!important;border:0!important;opacity:.01!important;overflow:hidden!important;pointer-events:none!important;z-index:0!important}
+#hcDriveMedia.hc-drive-docked .hc-drive-video-wrap iframe,#hcDriveMedia.hc-drive-docked.hc-drive-audio-view .hc-drive-video-wrap iframe{position:absolute!important;top:0!important;left:0!important;width:100%!important;height:100%!important;pointer-events:none!important}
+#hcDriveMedia.hc-drive-docked .hc-drive-view-toggle{display:none!important}
+#hcDriveMedia.hc-drive-docked .hc-drive-actions button:focus-visible,.hc-minimize-audio:focus-visible{outline:2px solid #fff;outline-offset:2px}
+@media(max-width:390px){#hcDriveMedia.hc-drive-docked{width:min(264px,calc(100vw - 20px))!important}}
 </style>
 <link rel="stylesheet" href="./quran-study.css?v=122">
 </head>
@@ -2795,7 +2814,7 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
 
 <section class="screen" id="fearPlayer">
   <div class="glass fear-player">
-    <button class="collection-back" onclick="show('fearPractice')">‹ Fear</button>
+    <div class="hc-native-toolbar"><button class="collection-back" onclick="show('fearPractice')">‹ Fear</button><button class="hc-minimize-audio" onclick="hcMinimizeNativeAudio('fear')">▾ Minimize</button></div>
     <div class="fear-orb"></div>
     <div class="kicker" id="fearLevelLabel">Easy</div>
     <h2 id="fearTitle">Ocean Familiarity</h2>
@@ -3128,7 +3147,7 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
 
 <section class="screen" id="sacredSession">
   <div class="glass adhkar-shell">
-    <button class="collection-back" onclick="show('sacredDetail')">‹ Islamic</button>
+    <div class="hc-native-toolbar"><button class="collection-back" onclick="show('sacredDetail')">‹ Islamic</button><button class="hc-minimize-audio" onclick="hcMinimizeNativeAudio('adhkar')">▾ Minimize</button></div>
     <div class="kicker">Islamic · Sacred Sound</div>
     <h2>Morning Adhkar</h2>
     <p>28:18 · remembrance and supplication</p>
@@ -3167,6 +3186,7 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
 <section class="screen" id="hcDriveMedia">
   <div class="glass hc-drive-shell">
     <div class="hc-drive-actions">
+      <span class="hc-drive-mini-label"><span id="hcDriveMiniName">Drive listening</span><small>Expand to pause or seek</small></span>
       <button class="hc-drive-back" onclick="hcExitDriveMedia()" aria-label="Back to recording collection">← Back to collection</button>
       <button class="hc-drive-minimize" onclick="hcMinimizeDriveVideo('home')" aria-label="Minimize video and continue in HeartClear">▾ Minimize</button>
       <button class="hc-drive-expand" onclick="hcExpandDriveVideo()" aria-label="Expand listening video">↗ Expand</button>
@@ -3293,7 +3313,7 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
 
 <section class="screen" id="bookAudio">
   <div class="glass audiobook-player-shell">
-    <button class="collection-back" onclick="show('collection')">‹ Audiobooks</button>
+    <div class="hc-native-toolbar"><button class="collection-back" onclick="show('collection')">‹ Audiobooks</button><button class="hc-minimize-audio" onclick="hcMinimizeNativeAudio('book')">▾ Minimize</button></div>
 
     <div class="audiobook-identity">
       <div class="audiobook-cover-v2" aria-label="Shadows of Truth cover">
@@ -3407,7 +3427,7 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
 
 <section class="screen" id="soundLabPlayer">
   <div class="glass soundlab-player">
-    <button class="collection-back" onclick="show('soundLab')">‹ Sounds</button>
+    <div class="hc-native-toolbar"><button class="collection-back" onclick="show('soundLab')">‹ Sounds</button><button class="hc-minimize-audio" onclick="hcMinimizeNativeAudio('soundlab')">▾ Minimize</button></div>
     <div class="soundlab-orb"></div>
     <div class="kicker">HeartClear · Sounds</div>
     <h2 id="soundLabTitle">Horizon</h2>
@@ -3650,6 +3670,7 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
   <div class="glass center" style="max-width:440px;margin:auto;width:100%">
     <div class="kicker">HeartClear · After meditation</div>
     <h2>Stay a little longer.</h2>
+    <button class="hc-minimize-audio" onclick="hcMinimizeNativeAudio('meditation')" aria-label="Minimize nature sound and continue on Home">▾ Minimize to Home</button>
     <p>The guided practice is complete. Remain comfortable and listen to nature sounds.</p>
     <div class="player-orb" aria-hidden="true"><div class="play-core">♪</div></div>
     <div class="clock" id="natureElapsed">00:00</div>
@@ -3667,6 +3688,7 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
         <div class="kicker" id="sessionKicker">Deep Wake Up</div>
         <h2 id="sessionTitle">Morning · guided breath</h2>
       </div>
+      <button class="hc-minimize-audio" onclick="hcMinimizeNativeAudio('meditation')" aria-label="Minimize meditation while audio continues on Home">▾ Minimize</button>
       <button class="icon-btn" id="optionsBtn" onclick="toggleOptions()" aria-label="Player options">⋯</button>
     </div>
 
@@ -5028,13 +5050,26 @@ function rememberActiveMedia(key){
   hcCaptureReturnState(true);
 }
 
+let hcMiniPinnedKey=null;
+function hcMinimizeNativeAudio(key){
+  const state=getActiveMediaState();
+  // A selected paused track should remain controllable after minimizing.
+  // Do not start a different recording or create a fake playback indicator.
+  if(state && state.key===key && state.el?.getAttribute('src')){
+    hcMiniPinnedKey=key;
+    try{localStorage.setItem('heartclearActiveMedia',key)}catch(e){}
+  }
+  show('home');
+  renderGlobalMini();
+}
 function renderGlobalMini(){
   const mini=document.getElementById('globalMini');
   if(!mini)return;
   const state=getActiveMediaState();
   // Paused audio is accessible through the Home Continue cards and source player.
   // Never let a paused 00:00 (or an old audiobook) cover another screen.
-  if(!state || state.el.paused || (state.key==='mix'&&!hcMixRunning) || currentScreenId==='hcReels'){
+  const keepPaused=!!(state && hcMiniPinnedKey===state.key && state.el?.getAttribute('src'));
+  if(!state || (state.el.paused&&!keepPaused) || (state.key==='mix'&&!hcMixRunning) || currentScreenId==='hcReels'){
     mini.classList.remove('show');mini.classList.remove('is-mix');
     return;
   }
@@ -5083,6 +5118,7 @@ function globalJump(delta){
 }
 
 function stopGlobalMedia(){
+  hcMiniPinnedKey=null;
   const state=getActiveMediaState();
   if(!state)return;
   if(state.key==='mix'){hcMixStop();return}
@@ -6157,6 +6193,7 @@ function openHcDriveMedia(key,sourceScreen=null){
   document.getElementById('hcDriveVideoTitle').textContent=key==='islamHu'&&sourceScreen==='practices'?'Allahu Meditation · Hu Hu Allah':item.name;
   document.getElementById('hcDriveVideoCategory').textContent=key==='islamHu'&&sourceScreen==='practices'?'Islamic devotional listening · Sufi-style dhikr':item.type;
   document.getElementById('hcDriveVideoDescription').textContent=item.note;
+  const dockName=document.getElementById('hcDriveMiniName');if(dockName)dockName.textContent=key==='islamHu'?'Allahu · Hu Hu Allah':item.name;
   const link=document.getElementById('hcDriveOpenSource');
   link.href=hcDriveSourceUrl(item.id);
   document.getElementById('hcDriveVideoStatus').textContent='Opening recording…';
@@ -8459,6 +8496,7 @@ function recordSession(completed){
 }
 
 function completeSession(completed=false){
+  hcMiniPinnedKey=null;
   if(document.getElementById('completion').classList.contains('active'))return;
   const t=completed?chosenSeconds:Math.max(0,Math.min(chosenSeconds,audio.currentTime||0));
   audio.pause();
@@ -8857,7 +8895,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=131');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=132');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
