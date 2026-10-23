@@ -3794,7 +3794,7 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
         </div>
       </details>
     </div>
-    <div class="app-version">HeartClear · Version 1.3.11 · HC v176</div>
+    <div class="app-version">HeartClear · Version 1.3.11 · HC v177</div>
   </div>
 </section>
 
@@ -9404,7 +9404,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=176');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=177');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
@@ -9444,7 +9444,7 @@ const heartclearAutoInstallPrompt=false;
 
 <script src="./hc-kitchen-compact-v163.js?v=167"></script>
 <script src="./hc-playback-one-tap-v174.js?v=174"></script>
-<script src="./hc-accounts-preview-v176.js?v=176"></script>
+<script src="./hc-accounts-preview-v176.js?v=177"></script>
 </body>
 </html>
 
