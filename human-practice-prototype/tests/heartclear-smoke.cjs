@@ -181,6 +181,45 @@ const assert = require('node:assert/strict');
     assert.match(sacredDrive,/Hu Hu Hu Allah/,'Original Islamic video entry must remain');
     console.log('PASS: Allahu one-tap playback, Sacred filter, return and original Islamic entry');
 
+    await page.evaluate(()=>hcOpenReels());
+    const initialReel=await page.locator('#hcReelFrame').getAttribute('src');
+    assert.ok(initialReel?.includes('drive.google.com/file/d/'),'Reel should load on opening');
+    await page.evaluate(()=>hcReelNext());
+    const nextReel=await page.locator('#hcReelFrame').getAttribute('src');
+    assert.ok(nextReel?.includes('drive.google.com/file/d/'));
+    assert.notEqual(nextReel,initialReel,'Next reel must automatically load a different video');
+    await page.evaluate(()=>hcReelAllSeen());
+    assert.equal(await page.locator('#hcReelAllSeen button').filter({hasText:'Watch again'}).count(),1);
+    await page.evaluate(()=>hcReelReplayAll());
+    assert.ok(await page.locator('#hcReelFrame').getAttribute('src'),'Replay must restore video');
+    await page.evaluate(()=>hcCloseReels());
+    console.log('PASS: auto-load on swipe and replay watched reels');
+
+    // Intercept source APIs, validating the app's parsing and layouts without third-party outages.
+    await page.route('https://api.alquran.cloud/v1/surah',route=>route.fulfill({
+      status:200,contentType:'application/json',headers:{'access-control-allow-origin':'*'},
+      body:JSON.stringify({data:Array.from({length:114},(_,i)=>({number:i+1,englishName:'Surah '+(i+1),numberOfAyahs:i===4?2:7}))})
+    }));
+    await page.route('https://api.alquran.cloud/v1/surah/5/quran-uthmani',route=>route.fulfill({
+      status:200,contentType:'application/json',headers:{'access-control-allow-origin':'*'},
+      body:JSON.stringify({data:{ayahs:[{text:'بِسْمِ اللَّهِ'},{text:'الْحَمْدُ لِلَّهِ'}]}})
+    }));
+    await page.route('https://quranenc.com/api/v1/translation/sura/**',route=>{
+      const url=route.request().url(),isTamil=url.includes('tamil_omar'),five=url.endsWith('/5');
+      return route.fulfill({status:200,contentType:'application/json',headers:{'access-control-allow-origin':'*'},
+        body:JSON.stringify([{sura:five?5:41,aya:five?1:7,translation:isTamil?'தமிழ் பொருள் சோதனை':'English source translation test'}])});
+    });
+    await page.evaluate(()=>hcOpenQuranStudy(41,7));
+    await page.waitForFunction(()=>document.querySelector('#hcqs-verse-41-7 .hcqs-translation-columns')?.textContent.includes('English source translation test'),null,{timeout:15000});
+    assert.equal(await page.locator('#hcqs-surah-select option').count(),114);
+    assert.ok((await page.locator('#hcqs-verse-41-7 .hcqs-translation-columns').innerText()).includes('தமிழ் பொருள் சோதனை'));
+    const cols=await page.locator('#hcqs-verse-41-7 .hcqs-translation-columns').evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(' ').filter(Boolean).length);
+    assert.equal(cols,2,'English and Tamil should be two columns on mobile');
+    await page.locator('#hcqs-surah-select').selectOption('5');
+    await page.waitForFunction(()=>!!document.querySelector('#hcqs-verse-5-1 .hcqs-arabic')?.textContent.includes('اللَّهِ'),null,{timeout:15000});
+    assert.ok((await page.locator('#hcqs-verse-5-1 .hcqs-translation-columns').innerText()).includes('English source translation test'));
+    console.log('PASS: 114 surahs, QuranEnc English/Tamil, Arabic source and two-column layout');
+
     await page.locator('[data-nav="soundHub"]').evaluate(el=>el.click());
     await page.locator('button[data-filter="flute"]').evaluate(el=>el.click());
     const fluteRows=await page.locator('#hcSoundTrackList .hc-sound-row').count();
