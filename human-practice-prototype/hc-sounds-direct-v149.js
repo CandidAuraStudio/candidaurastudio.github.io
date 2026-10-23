@@ -102,9 +102,9 @@ sacredButton.setAttribute('aria-expanded','false');sacredButton.setAttribute('ar
 sacredButton.setAttribute('aria-label','Sacred listening — show direct sound choices');
 sacredButton.addEventListener('click',()=>{direct.hidden=!direct.hidden;sacredButton.setAttribute('aria-expanded',String(!direct.hidden));});
 function playChoice(key){
- if(key==='mantra'){hcQuickPlaySound('mantra');return;}
+ if(key==='mantra'){if(typeof hcMixStop==='function'&&(hcMixRunning||hcMixDecks.length))hcMixStop(false);hcQuickPlaySound('mantra');return;}
  if(key==='adhkar'){hcInlineToggleAdhkar();return;}
- if(key==='allahu'){hcQuickPlaySound('allahuAkmal');return;}
+ if(key==='allahu'){if(typeof hcMixStop==='function'&&(hcMixRunning||hcMixDecks.length))hcMixStop(false);hcQuickPlaySound('allahuAkmal');return;}
  if(key==='om'){openHcDriveMedia('hinduOm');return;}
  if(key==='library'){show('sacred');return;}
 }
