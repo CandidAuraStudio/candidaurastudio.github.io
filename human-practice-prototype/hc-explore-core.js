@@ -42,7 +42,7 @@
   ['food','Are you thinking of something to eat or drink?'],['drink','Is it a drink?'],
   ['fruit','Is it a fruit?'],['grain','Is it a grain or mainly made from grain?'],
   ['hot','Is this drink usually served hot?'],['milk','Is milk its main ingredient?'],
-  ['banana','Is this fruit normally long and curved?'],['bread','Is it baked bread?'],
+  ['banana','Is this fruit normally long and curved?'],['bread','Is it baked bread?'],['animalfood','Does this food normally come from an animal?'],['rootveg','Is this food an underground-growing vegetable?'],
   ['place','Are you thinking of a place or natural feature?'],['built','Is it made by people?'],
   ['learning','Is it a place for learning?'],['medical','Is it a place for medical care?'],
   ['worship','Is it a place of worship?'],['salt','Is it a large body of salt water?'],
@@ -119,7 +119,7 @@
  group('food',[
   ['tea','tea','drink hot'],['coffee','coffee','drink hot'],['waterdrink','drinking water','drink'],['milkdrink','milk','drink milk'],
   ['bananafruit','a banana','fruit banana'],['apple','an apple','fruit'],['rice','rice','grain'],['breadfood','bread','grain bread'],
-  ['egg','an egg',''],['potato','a potato','']
+  ['egg','an egg','animalfood'],['potato','a potato','rootveg']
  ]);
  group('place',[
   ['school','a school','built learning'],['hospital','a hospital','built medical'],['home','a home','built'],
