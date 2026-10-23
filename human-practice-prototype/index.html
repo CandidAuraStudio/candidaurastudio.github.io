@@ -3497,7 +3497,7 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
       <p>Names are only labels in this browser, not verified accounts. Google/email login and cross-device recovery are not available in Phase 1.</p>
       <div class="hc-local-divider" aria-hidden="true"></div>
       <h3>Sharing preferences</h3>
-      <p>These are draft preferences for possible future features, not active sharing permissions. Optional community participation below is separate and only starts when you explicitly join.</p>
+      <p>These are draft preferences for possible future features, not active sharing permissions. There is no remote participation reporting on this public release.</p>
       <label class="hc-privacy-option" for="hcPrefAnonymous">
         <input id="hcPrefAnonymous" type="checkbox" onchange="hcSavePrivacyPreferences()">
         <span><b>Anonymous usage statistics</b><small>Potentially share total sessions and app feature usage, without your name.</small></span>
@@ -3510,26 +3510,11 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
         <input id="hcPrefAdmin" type="checkbox" onchange="hcSavePrivacyPreferences()">
         <span><b>Share limited activity with HeartClear</b><small>Would show your chosen display name and broad session counts/minutes to a private administrator, only after renewed consent.</small></span>
       </label>
-      <p id="hcPrivacyPreferenceStatus" class="hc-profile-status" role="status" aria-live="polite">These three future-feature preferences start off. Community reporting has its own separate consent.</p>
+      <p id="hcPrivacyPreferenceStatus" class="hc-profile-status" role="status" aria-live="polite">These three future-feature preferences start off. No remote participation reporting is active.</p>
       <p class="hc-local-caution">Your personal recordings, mood check-ins, journal notes, and religious listening choices remain private. Clearing this browser can remove a local profile; use Export my data first.</p>
     </section>
 
-    <section class="hc-playback-diagnostics" id="hcParticipationPanel" aria-label="Optional public participation">
-      <h3>Community participation · optional</h3>
-      <p id="hcParticipationIntro">No public activity sharing is active. An optional display name is enough.</p>
-      <p>For visitors who actively agree, HeartClear shares your chosen name, broad activity category, and whole minutes practiced with the private administrator. It does not include religious listening choices, private notes, exact location, phone number or device fingerprints in its activity records. The hosting provider may process connection information such as IP addresses. This is not a verified account and does not sync progress across phones.</p>
-      <label for="hcParticipationName">Name or nickname</label>
-      <input id="hcParticipationName" type="text" maxlength="40" placeholder="How would you like to appear?" autocomplete="nickname" style="width:100%;min-height:44px;background:#122d3d;color:white;border:1px solid #718b9c;border-radius:10px;padding:10px;font:inherit">
-      <label class="hc-audio-pref" for="hcParticipationConsent">
-        <input type="checkbox" id="hcParticipationConsent">
-        <span><strong>I agree to share my display name and broad practice totals</strong><small>Optional. You can keep using HeartClear without joining. Sharing starts only after you join.</small></span>
-      </label>
-      <div class="hc-check-actions">
-        <button type="button" id="hcParticipationSignup" onclick="hcParticipationJoin()">Join community reporting</button>
-        <button type="button" id="hcParticipationStop" onclick="hcParticipationStop()" hidden>Stop sharing &amp; request removal</button>
-      </div>
-      <p id="hcParticipationStatus" role="status">Not joined · no activity sent</p>
-    </section>
+    
     <div class="settings-list">
       <label class="hc-audio-pref" for="hcAudioOnlySettings">
         <input id="hcAudioOnlySettings" type="checkbox" checked onchange="hcSetAudioOnly(this.checked)">
@@ -5600,7 +5585,7 @@ function completeHumanPractice(auto=false){
   const items=getHistory();
   items.push({practice:currentHumanPractice.title,title:currentHumanPractice.category,category:currentHumanPractice.category,listenedSeconds:used,targetSeconds:currentHumanPractice.seconds,completed:auto,endedAt:Date.now(),reflection:''});
   saveHistory(items);
-  if(typeof hcParticipationLog==='function')hcParticipationLog('human_practice',used);
+  
   document.getElementById('completionSummary').textContent='You practiced for '+friendlyDuration(used)+'.';
   document.getElementById('completionPractice').textContent=currentHumanPractice.title;
   completionHistoryIndex=items.length-1;
@@ -6421,7 +6406,7 @@ function hcTimerTick(){
   }
   document.getElementById('hcTimerStatus').textContent='In progress · stop whenever you need to.';
   if(remain<=0){
-    if(typeof hcParticipationLog==='function')hcParticipationLog('quiet_timer',duration);
+    
     hcTimerStop(true);hcBell();
     document.getElementById('hcTimerClock').textContent='00:00';
     document.getElementById('hcTimerPhase').textContent='Finished';
@@ -8467,7 +8452,7 @@ function recordSession(completed){
   };
   items.push(entry);
   saveHistory(items);
-  if(typeof hcParticipationLog==='function')hcParticipationLog('meditation',t);
+  
   sessionRecorded=true;
   completionHistoryIndex=items.length-1;
   return completionHistoryIndex;
@@ -8872,7 +8857,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=130');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=131');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
@@ -8893,6 +8878,6 @@ if('serviceWorker' in navigator){
 const heartclearAutoInstallPrompt=false;
 </script>
 <script src="./hc-explorer.js?v=126"></script>
-<script src="./hc-participation.js?v=130"></script>
+
 </body>
 </html>
