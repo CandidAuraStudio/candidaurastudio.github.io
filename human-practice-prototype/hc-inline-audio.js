@@ -16,8 +16,8 @@ const css=[
 '#hcCompactTrack span{font-size:10px;color:#c2cbd1;font-variant-numeric:tabular-nums}',
 '#hcCompactSeek{flex:1;min-width:0;accent-color:#eabf7c;margin:0}',
 '#hcCompactFallback{margin-top:8px}',
-'#hcCompactFallback iframe{display:block;width:100%;height:146px;border:1px solid rgba(200,214,223,.2);border-radius:12px;background:#101b23;margin-top:7px}',
-'body.hc-compact-open .app{padding-bottom:calc(190px + env(safe-area-inset-bottom,0px))}',
+
+'body.hc-compact-open .app{padding-bottom:calc(140px + env(safe-area-inset-bottom,0px))}',
 '@media(max-width:380px){#hcCompactDock{bottom:calc(78px + env(safe-area-inset-bottom,0px));padding:10px}#hcCompactDock .hc-small-btn{width:36px;height:36px;flex-basis:36px}}'
 ].join('\n');
 const style=document.createElement('style');style.textContent=css;document.head.appendChild(style);
@@ -25,7 +25,7 @@ const dock=document.createElement('section');dock.id='hcCompactDock';dock.hidden
 dock.setAttribute('role','region');dock.setAttribute('aria-label','Small HeartClear audio player');
 dock.innerHTML='<div class="hc-small-row"><div class="hc-small-name"><strong id="hcCompactTitle">Recording</strong><small id="hcCompactStatus" role="status" aria-live="polite">Loading…</small></div><button class="hc-small-btn" id="hcCompactToggle" type="button" aria-label="Pause recording">Ⅱ</button><button class="hc-small-btn" id="hcCompactStop" type="button" aria-label="Stop and close recording">×</button></div>'+
 '<div id="hcCompactTrack"><span id="hcCompactElapsed">0:00</span><input id="hcCompactSeek" aria-label="Recording progress" type="range" min="0" max="1000" value="0" disabled><span id="hcCompactDuration">--:--</span></div>'+
-'<div id="hcCompactFallback" hidden><small>Google Drive playback · tap Play below if needed.</small><iframe id="hcCompactFrame" title="Drive recording player" referrerpolicy="no-referrer" allow="autoplay;fullscreen;picture-in-picture" allowfullscreen></iframe></div>';
+'<div id="hcCompactFallback" hidden></div>';
 document.body.appendChild(dock);
 const get=id=>document.getElementById(id);
 const status=get('hcCompactStatus'),toggle=get('hcCompactToggle'),track=get('hcCompactTrack'),seek=get('hcCompactSeek'),fallback=get('hcCompactFallback');
