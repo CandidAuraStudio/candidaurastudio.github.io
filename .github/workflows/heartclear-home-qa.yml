@@ -31,4 +31,4 @@ jobs:
         if: always()
         with:
           name: home-resume-bible
-          path: tests/home-resume-bible.png
+          path: tests/home-resume-*.png

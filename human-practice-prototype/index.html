@@ -2487,7 +2487,7 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
       <button type="button" onclick="openSoundLab()">Sounds <span>›</span></button>
       <button type="button" onclick="hcOpenQuranStudy()">Qur'an <span>›</span></button>
       <button type="button" onclick="show('library')">Books <span>›</span></button>
-      <button type="button" onclick="document.getElementById('hcGenesisCard')?.scrollIntoView({behavior:'smooth',block:'center'})">Genesis <span>›</span></button>
+      <button type="button" onclick="document.getElementById('hcGenesisCard')?.scrollIntoView({behavior:'smooth',block:'center'})">Bible · Genesis <span>›</span></button>
     </div>
   </section>
   <details class="hc-home-more" id="hcHomeMore">
@@ -9335,7 +9335,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=156');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=157');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
@@ -9367,9 +9367,8 @@ const heartclearAutoInstallPrompt=false;
 <link rel="stylesheet" href="./hc-explore.css?v=154">
 <script src="./hc-explore-core.js?v=154"></script>
 <script src="./hc-explore-ui.js?v=154"></script>
-<script src="./hc-home-routine-v155.js?v=155"></script>
-<script src="./hc-genesis-v156.js?v=156"></script>
+<script src="./hc-home-routine-v155.js?v=157"></script>
+<script src="./hc-genesis-v156.js?v=157"></script>
 
 </body>
 </html>
-

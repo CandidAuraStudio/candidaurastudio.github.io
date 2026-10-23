@@ -1,4 +1,4 @@
-const APP_CACHE='heartclear-v156';
+const APP_CACHE='heartclear-v157';
 const MEDIA_CACHE='heartclear-media-v1';
 
 self.addEventListener('install',event=>{
@@ -8,7 +8,7 @@ self.addEventListener('install',event=>{
       const cache=await caches.open(APP_CACHE);
       await cache.add(new Request('./index.html',{cache:'reload'}));
       // Optional install assets must never prevent the app shell from being cached.
-      await Promise.allSettled(['./hc-explore.css?v=154','./hc-explore-core.js?v=154','./hc-explore-ui.js?v=154','./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png', './quran-study-data.js?v=122','./quran-study-reflections.js?v=122','./quran-study-ui.js?v=135','./quran-study.css?v=135','./hc-explorer.js?v=126','./hc-explorer.css?v=126','./hc-inline-audio.js?v=138','./hc-home-one-tap-v139.js?v=145','./hc-family-kitchen-v144.js?v=154','./hc-monthly-kitchen-v145.js?v=148','./hc-kitchen-teaching-v149.js?v=150','./hc-sounds-direct-v149.js?v=152','./hc-quran-home-v153.js?v=153','./hc-home-routine-v155.js?v=155','./hc-genesis-v156.js?v=156']
+      await Promise.allSettled(['./hc-explore.css?v=154','./hc-explore-core.js?v=154','./hc-explore-ui.js?v=154','./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png', './quran-study-data.js?v=122','./quran-study-reflections.js?v=122','./quran-study-ui.js?v=135','./quran-study.css?v=135','./hc-explorer.js?v=126','./hc-explorer.css?v=126','./hc-inline-audio.js?v=138','./hc-home-one-tap-v139.js?v=145','./hc-family-kitchen-v144.js?v=154','./hc-monthly-kitchen-v145.js?v=148','./hc-kitchen-teaching-v149.js?v=150','./hc-sounds-direct-v149.js?v=152','./hc-quran-home-v153.js?v=153','./hc-home-routine-v155.js?v=157','./hc-genesis-v156.js?v=157']
         .map(asset=>cache.add(new Request(asset,{cache:'reload'}))));
     }catch(e){}
     await self.skipWaiting();

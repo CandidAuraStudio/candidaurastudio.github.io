@@ -15,6 +15,9 @@ style.textContent=[
 '#home .hcr-actions button,#home #hcHomeKitchenQuickV155 button{font:inherit;cursor:pointer;min-height:44px;border-radius:10px;padding:9px;font-size:13px}',
 '#home #hcrBegin{background:#f6f6f2;color:#0b2431;border:0;font-weight:750}',
 '#home #hcrYoga{background:#193541;color:white;border:1px solid #587482;font-weight:650}',
+'#home #hcrForNow{display:block;width:100%;margin:8px 0 0;min-height:36px;padding:7px 10px;border:1px solid #4e6c7b;border-radius:9px;background:#14303e;color:#e8f0f3;font:inherit;font-size:12px;text-align:left;cursor:pointer}',
+'#home #hcrForNow[hidden]{display:none!important}',
+'#home.hcr-promoted-resume #homeResumeCard{display:none!important}',
 '#home #hcrYogaSteps[hidden],#home #hcrDosaSteps[hidden]{display:none!important}',
 '#home #hcrYogaSteps,#home #hcrDosaSteps{border:1px solid #49636f;background:#132f3c;border-radius:10px;padding:9px 11px;margin-top:9px;font-size:12px;line-height:1.65;color:#e3edf0}',
 '#home #hcrYogaSteps p,#home #hcrDosaSteps p{margin:6px 0}',
@@ -51,7 +54,8 @@ style.textContent=[
 ].join('\n');document.head.appendChild(style);
 const focus=document.createElement('section');focus.id='hcHomeRoutineV155';focus.setAttribute('aria-label','Meditation and gentle yoga');
 focus.innerHTML='<span id="hcrPeriod" class="hcr-small">YOUR DAY · MEDITATION</span><h2 id="hcrTitle">Evening Release</h2><p id="hcrSubtitle" class="hcr-sub">A comfortable pause.</p>'+
- '<div class="hcr-actions"><button id="hcrBegin" type="button">▶ <span id="hcrBeginText">Begin meditation</span></button><button id="hcrYoga" type="button" aria-expanded="false">Yoga · Movement</button></div>'+
+ '<div class="hcr-actions"><button id="hcrBegin" type="button"><span id="hcrBeginIcon" aria-hidden="true">▶</span> <span id="hcrBeginText">Begin meditation</span></button><button id="hcrYoga" type="button" aria-expanded="false">Yoga · Movement</button></div>'+
+ '<button id="hcrForNow" type="button" hidden></button>'+
  '<div id="hcrYogaSteps" hidden><b>Gentle yoga · a few minutes</b><p>From a comfortable seated or standing position, gently move your shoulders, wrists and arms. Avoid forcing a stretch. Keep breathing naturally and stop if it hurts.</p><p>This is an original written guide. A Sandy Yoga audio recording has not been connected yet.</p></div>'+
  '<details class="hcr-extra"><summary>Other meditation times</summary><div class="hcr-extra-row"><button type="button" data-time="wake">Morning</button><button type="button" data-time="noon">Midday</button><button type="button" data-time="evening">Evening</button><button type="button" data-time="sleep">Night</button></div></details>';
 greeting.insertAdjacentElement('afterend',focus);
@@ -69,10 +73,35 @@ const periods={
 };
 function timeKey(){const h=new Date().getHours();return h>=5&&h<11?'wake':h>=11&&h<17?'noon':h>=17&&h<21?'evening':'sleep';}
 let activeKey=timeKey();
+function savedSession(){
+ try{
+  const s=JSON.parse(localStorage.getItem('clearWithinLastSession')||'null');
+  if(s&&typeof s.url==='string'&&s.url&&Number.isFinite(Number(s.time))&&Number.isFinite(Number(s.seconds))&&Number(s.time)>20&&Number(s.time)<Number(s.seconds)-20){
+   return {kicker:String(s.kicker||'Meditation'),time:Number(s.time),seconds:Number(s.seconds),current:false,playing:false};
+  }
+ }catch(e){}
+ return null;
+}
+function resumeSession(){
+ const player=byId('audio');
+ if(player&&player.getAttribute('src')&&!player.ended&&typeof chosenKicker!=='undefined'&&typeof chosenSeconds!=='undefined'&&Number(chosenSeconds)>0&&(!player.paused||Number(player.currentTime)>0)){
+  return {kicker:String(chosenKicker||'Meditation'),time:Number(player.currentTime)||0,seconds:Number(chosenSeconds),current:true,playing:!player.paused};
+ }
+ return savedSession();
+}
+function clock(value){
+ const s=Math.max(0,Math.floor(Number(value)||0));return (s>=3600?Math.floor(s/3600)+':':'')+String(Math.floor(s/60)%60).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+}
 function update(){
- activeKey=timeKey();const p=periods[activeKey];
- byId('hcrPeriod').textContent=p[0]+' · MEDITATION & YOGA';
- byId('hcrTitle').textContent=p[1];byId('hcrBeginText').textContent=p[2];byId('hcrSubtitle').textContent=p[3];
+ activeKey=timeKey();const p=periods[activeKey],resume=resumeSession();
+ home.classList.toggle('hcr-promoted-resume',Boolean(resume));
+ byId('hcrPeriod').textContent=resume?(resume.playing?'NOW PLAYING':'CONTINUE MEDITATION'):p[0]+' · MEDITATION & YOGA';
+ byId('hcrTitle').textContent=resume?resume.kicker:p[1];
+ byId('hcrBeginText').textContent=resume?(resume.playing?'Pause':'Continue'):p[2];
+ byId('hcrBeginIcon').textContent=resume?.playing?'Ⅱ':'▶';
+ byId('hcrSubtitle').textContent=resume?(resume.playing?'Playing · ':'Continue from ')+clock(resume.time)+' · '+clock(resume.seconds):p[3];
+ const alternative=byId('hcrForNow');alternative.hidden=!resume||resume.kicker===p[1];
+ alternative.textContent=p[0].charAt(0)+p[0].slice(1).toLowerCase()+' · '+p[1]+'  ›';
  const m=activeKey==='wake'?0:activeKey==='noon'?1:2;
  const label=['Breakfast','Lunch','Dinner'][m];
  const available=byId('hcMonthlyKitchen')?.querySelectorAll('#hcmMeals > .meal')[m]?.querySelector('small')?.textContent;
@@ -82,7 +111,19 @@ function play(key){
  if(typeof window.hcHomePlayGuided==='function')window.hcHomePlayGuided(key);
  else if(typeof hcStartExistingGuidedSession==='function')hcStartExistingGuidedSession(key);
 }
-byId('hcrBegin').addEventListener('click',()=>play(activeKey));
+byId('hcrBegin').addEventListener('click',()=>{
+ const resume=resumeSession();
+ if(!resume){play(activeKey);update();return;}
+ if(resume.current){
+  const player=byId('audio');
+  if(!player.paused)player.pause();
+  else player.play().then(()=>{if(typeof rememberActiveMedia==='function')rememberActiveMedia('meditation');if(typeof renderGlobalMini==='function')renderGlobalMini();update();})
+   .catch(()=>{byId('hcrSubtitle').textContent='Tap Continue again if your browser blocked audio.';});
+ }else if(typeof window.hcHomeResumeMeditation==='function')window.hcHomeResumeMeditation();
+ else if(typeof continueLastSession==='function'){continueLastSession();if(typeof show==='function')show('home');}
+ update();
+});
+byId('hcrForNow').addEventListener('click',()=>{play(timeKey());update();});
 focus.querySelectorAll('[data-time]').forEach(b=>b.addEventListener('click',()=>play(b.dataset.time)));
 byId('hcrYoga').addEventListener('click',()=>{
  const p=byId('hcrYogaSteps'),v=p.hidden;p.hidden=!v;byId('hcrYoga').setAttribute('aria-expanded',String(v));
@@ -102,5 +143,11 @@ if(live){
  b.addEventListener('click',()=>{const v=live.classList.toggle('hcq-verse-open');b.textContent=v?'Hide verse':'Show verse';b.setAttribute('aria-expanded',String(v));});
 }
 update();window.addEventListener('focus',update);document.addEventListener('visibilitychange',()=>{if(!document.hidden)update()});
+const meditation=byId('audio');
+if(meditation){
+ for(const event of ['play','pause','playing','ended','emptied','loadedmetadata','seeked'])meditation.addEventListener(event,update);
+ let tick=-1;meditation.addEventListener('timeupdate',()=>{const second=Math.floor(meditation.currentTime||0);if(second!==tick){tick=second;update();}});
+}
+window.addEventListener('storage',event=>{if(event.key==='clearWithinLastSession')update();});
 setInterval(update,120000);
 })();
