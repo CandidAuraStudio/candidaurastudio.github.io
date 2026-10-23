@@ -2258,7 +2258,7 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
 #hcDriveMedia.hc-drive-docked .hc-drive-actions button:focus-visible,.hc-minimize-audio:focus-visible{outline:2px solid #fff;outline-offset:2px}
 @media(max-width:390px){#hcDriveMedia.hc-drive-docked{width:min(264px,calc(100vw - 20px))!important}}
 </style>
-<link rel="stylesheet" href="./quran-study.css?v=122">
+<link rel="stylesheet" href="./quran-study.css?v=133">
 </head>
 <body>
 <div class="update-banner" id="updateBanner">
@@ -2341,7 +2341,7 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
   </div>
 
   <div style="display:grid;gap:7px;margin:12px 0"><button class="choice" onclick="show('hcFatiha')" style="margin:0"><b>Al-Fatiha · ஸூரத்துல் ஃபாத்திஹா</b><small>Read in தமிழ் &amp; English · Seven verses</small></button><button class="choice" onclick="hcPlayAdhkar('listen')" style="margin:0"><b>Morning Adhkar · காலை திக்ர்</b><small>Listen · 28:18 · Morning supplications</small></button></div>
-  <button class="choice" onclick="hcOpenQuranStudy()" style="margin:0 0 12px"><b>Qur'an &amp; Inner Journey · குர்ஆனும் உள்ளார்ந்த பயணமும்</b><small>Al-Baqarah 286 · An-Nisa 176 · Fussilat 54 · An-Nas 6 · My reflections</small></button>
+  <button class="choice" onclick="hcOpenQuranStudy()" style="margin:0 0 12px"><b>Qur'an &amp; Inner Journey · குர்ஆனும் உள்ளார்ந்த பயணமும்</b><small>114 surahs · Arabic · English · தமிழ் · Reflections</small></button>
   <button class="choice" onclick="show('hcLivingQuran')" style="margin:0 0 12px"><b>The Living Qur'an · மூன்று குல் ஸூராக்கள்</b><small>Arabic · Tamil · English · Gentle recitation &amp; 5-minute daily habit</small></button>
   <div class="hc-home-secondary-resumes">
     <div class="home-resume library-resume hc-secondary-resume" id="homeLibraryResumeCard">
@@ -2900,7 +2900,7 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
   <button class="hc-library-offline-link" onclick="show('downloads')">Offline downloads →</button>
 
   <div class="hub-grid">
-    <button class="hub-card" onclick="hcOpenQuranStudy()"><span class="hub-icon">۞</span><span><b>Qur'an &amp; Inner Journey · குர்ஆன்</b><small>Four full Arabic surahs, selected Tamil and English meaning drafts, personal reflection editor.</small></span><span class="hub-arrow">›</span></button>
+    <button class="hub-card" onclick="hcOpenQuranStudy()"><span class="hub-icon">۞</span><span><b>Qur'an &amp; Inner Journey · குர்ஆன்</b><small>114 surahs online · original Arabic, English/Tamil translations and your private notes.</small></span><span class="hub-arrow">›</span></button>
     <button class="hub-card" onclick="openCollection('english')">
       <span class="hub-icon">EN</span>
       <span><b>English Audiobooks</b><small>Long-form listening, reflection and learning.</small></span>
@@ -3872,7 +3872,7 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
 
 <script src="./quran-study-data.js?v=122"></script>
 <script src="./quran-study-reflections.js?v=122"></script>
-<script src="./quran-study-ui.js?v=122"></script>
+<script src="./quran-study-ui.js?v=133"></script>
 <script>
 function hcSetLivingLanguage(lang){
   if(!['both','ta','en'].includes(lang))lang='both';
@@ -8909,7 +8909,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=132');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=133');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
