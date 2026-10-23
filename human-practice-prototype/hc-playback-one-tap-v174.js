@@ -92,10 +92,11 @@ if(typeof originalReels==='function')window.hcOpenReels=function(){
 document.addEventListener('play',event=>{
  const target=event.target;
  if(!(target instanceof HTMLMediaElement))return;
+ if(target.tagName==='VIDEO'&&(target.muted||target.volume===0))return;
  if(typeof hcMixDecks!=='undefined'&&hcMixDecks.some(deck=>deck.audio===target))return;
  closeDrive();
  try{if(typeof hcMixStop==='function'&&typeof hcMixDecks!=='undefined'&&hcMixDecks.length)hcMixStop(false)}catch(e){}
- document.querySelectorAll('audio,video').forEach(el=>{if(el!==target&&!el.paused)try{el.pause()}catch(e){}});
+ document.querySelectorAll('audio,video').forEach(el=>{if(el!==target&&!el.paused&&(el.tagName!=='VIDEO'||(!el.muted&&el.volume>0)))try{el.pause()}catch(e){}});
  queueMicrotask(()=>{
   if(target.paused)return;
   if(typeof getActiveMediaState==='function'){

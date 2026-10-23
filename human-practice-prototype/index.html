@@ -3794,7 +3794,7 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
         </div>
       </details>
     </div>
-    <div class="app-version">HeartClear · Version 1.3.12</div>
+    <div class="app-version">HeartClear · Version 1.3.12 · HC v176</div>
   </div>
 </section>
 
@@ -8238,7 +8238,9 @@ function hcSavePrivacyPreferences(){
 }
 
 function hcOwnStorageKey(key){
-  return typeof key==='string' && /^(heartclear|clearWithin|sufi)/.test(key);
+  // HC modules introduced after v1.3.11 also save data under hc + capitalized names.
+  // Only HeartClear prefixes on this GitHub Pages origin are included; do not export login credentials.
+  return typeof key==='string' && /^(?:heartclear|clearWithin|sufi|hc[A-Z])/.test(key);
 }
 function hcPersonalDataSnapshot(){
   const result={};
@@ -9402,7 +9404,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=173');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=176');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
@@ -9422,7 +9424,6 @@ if('serviceWorker' in navigator){
 // No automatic install modal on load or resume. Open it from Settings only.
 const heartclearAutoInstallPrompt=false;
 </script>
-<script src="./hc-audio-coordinator.js?v=174"></script>
 <script src="./hc-explorer.js?v=126"></script>
 <script src="./hc-inline-audio.js?v=156"></script>
 <script src="./hc-home-one-tap-v139.js?v=145"></script>
@@ -9433,15 +9434,16 @@ const heartclearAutoInstallPrompt=false;
 <script src="./hc-quran-home-v153.js?v=168"></script>
 
 <link rel="stylesheet" href="./hc-explore.css?v=154">
-<script src="./hc-explore-core.js?v=174"></script>
-<script src="./hc-explore-ui.js?v=174"></script>
-<script src="./hc-health-talk-v156.js?v=174"></script>
+<script src="./hc-explore-core.js?v=176"></script>
+<script src="./hc-explore-ui.js?v=176"></script>
+<script src="./hc-health-talk-v156.js?v=176"></script>
 <script src="./hc-home-routine-v155.js?v=155"></script>
 <script src="./hc-genesis-v156.js?v=168"></script>
 <script src="./hc-hindu-scriptures-v162.js?v=170"></script>
 <script src="./hc-gita-original-audio-v163.js?v=172"></script>
 
 <script src="./hc-kitchen-compact-v163.js?v=167"></script>
+<script src="./hc-playback-one-tap-v174.js?v=174"></script>
 </body>
 </html>
 
