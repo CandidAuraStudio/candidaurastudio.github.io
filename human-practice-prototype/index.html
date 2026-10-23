@@ -9364,7 +9364,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=163');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=164');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
@@ -9398,7 +9398,7 @@ const heartclearAutoInstallPrompt=false;
 <script src="./hc-explore-ui.js?v=161"></script>
 <script src="./hc-health-talk-v156.js?v=160"></script>
 <script src="./hc-home-routine-v155.js?v=155"></script>
-<script src="./hc-genesis-v156.js?v=156"></script>
+<script src="./hc-genesis-v156.js?v=164"></script>
 <script src="./hc-hindu-scriptures-v162.js?v=163"></script>
 <script src="./hc-gita-original-audio-v163.js?v=163"></script>
 
