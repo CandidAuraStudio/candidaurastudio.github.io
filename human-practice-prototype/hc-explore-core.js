@@ -87,16 +87,18 @@
   ['dream','a dream during sleep','sleep'],['ambition','a future ambition','future'],
   ['love','love','emotion affection'],['fear','fear','emotion'],['memory','a memory','']
  ]);
+ // Generic roles do not imply a gender; avoid eliminating or asking about an unspecified trait.
+ for(const item of bank)item.unknownTags=['friend','colleague','teacher','partner'].includes(item.id)?['female']:[];
  // Identity questions resolve subjects with the same broad attributes. They remain guesses, not claimed knowledge.
  for(const item of bank){const id='identity:'+item.id;item.tags.push(id);questions.push({id,text:'Are you thinking of '+item.name+'?'});}
  function gameStep(history){
-  const candidates=bank.filter(item=>history.every(h=>h.answer==='unsure'||item.tags.includes(h.id)===(h.answer==='yes')));
+  const candidates=bank.filter(item=>history.every(h=>h.answer==='unsure'||item.unknownTags.includes(h.id)||item.tags.includes(h.id)===(h.answer==='yes')));
   if(!candidates.length)return {kind:'unknown',message:'I could not match those answers. Your thought may be outside this small collection, or an earlier answer may need changing.'};
   if(candidates.length===1)return {kind:'guess',item:candidates[0],message:'My guess is '+candidates[0].name+'. Is that right?'};
   if(history.length>=20)return {kind:'unknown',message:'I have reached 20 questions without a clear match. I do not know yet.'};
   const used=new Set(history.map(h=>h.id));let best=null,score=0;
   for(const q of questions){
-   if(used.has(q.id))continue;
+   if(used.has(q.id)||candidates.some(c=>c.unknownTags.includes(q.id)))continue;
    const yes=candidates.filter(c=>c.tags.includes(q.id)).length;
    const split=Math.min(yes,candidates.length-yes);
    if(split>score){score=split;best=q;}
@@ -111,7 +113,9 @@
   return null;
  }
  const healthQuestions={
-  emergency:'Right now, do you have severe trouble breathing; sudden chest pain that does not go away, spreads to your arm, neck, jaw or back, or comes with sweating, sickness or breathlessness; or sudden confusion, slurred speech, face drooping or weakness on one side?',
+  emergency:'Are you having severe trouble breathing right now?',
+  emergencyChest:'Do you have chest pain with any of these warning signs?',
+  emergencyStroke:'Have you suddenly developed any of these symptoms?',
   adult:'Are you aged 18 or older?',
   urinary:'Is your concern about passing urine, your penis, or your testicles?',
   retention:'Are you unable to pass urine at all, despite needing to?',
@@ -127,6 +131,10 @@
   persistent:'Have these symptoms persisted or kept coming back?',
   pain:'Are you experiencing pain or discomfort?'
  };
+ const healthHelp={
+  emergencyChest:'Pain that is sudden and does not go away; spreads to your arm, neck, jaw, stomach or back; or comes with sweating, sickness, light-headedness or breathlessness.',
+  emergencyStroke:'Face drooping, weakness on one side, confusion or slurred speech. Answer Yes even if these signs have stopped within the past 24 hours.'
+ };
  const sources=[
   {name:'NHS · Urinary symptoms',url:'https://www.nhs.uk/conditions/urinary-tract-infections-utis/'},
   {name:'NHS · Prostate symptoms',url:'https://www.nhs.uk/conditions/prostatitis/'},
@@ -137,10 +145,11 @@
  const result=(level,title,message)=>({kind:'result',level,title,message});
  function healthStep(history){
   const answers=Object.fromEntries(history.map(h=>[h.id,h.answer]));
-  const ask=id=>({kind:'question',id,text:healthQuestions[id]});
-  if(!answers.emergency)return ask('emergency');
-  if(answers.emergency==='yes')return result('emergency','Get emergency help now','Call your local emergency number or go to an emergency department. Do not drive yourself. Stop this check-in and get help.');
-  if(answers.emergency==='unsure')return result('urgent','Get help assessing this now','HC cannot rule out an emergency. Contact an urgent medical service now; if an emergency symptom may be present, call your local emergency number.');
+  const ask=id=>({kind:'question',id,text:healthQuestions[id],help:healthHelp[id]||''});
+  const emergencyIds=['emergency','emergencyChest','emergencyStroke'];
+  if(emergencyIds.some(id=>answers[id]==='yes'))return result('emergency','Get emergency help now','Call your local emergency number or go to an emergency department. Do not drive yourself. Stop this check-in and get help.');
+  if(emergencyIds.some(id=>answers[id]==='unsure'))return result('urgent','Get help assessing this now','HC cannot rule out an emergency. Contact an urgent medical service now; if an emergency symptom may be present, call your local emergency number.');
+  for(const id of emergencyIds)if(!answers[id])return ask(id);
   if(!answers.adult)return ask('adult');
   if(answers.adult!=='yes')return result('advice','Ask a clinician or trusted adult','This check-in is for adults. A child or teenager needs age-appropriate advice from a clinician, with a trusted adult if possible. This short check cannot rule out serious illness.');
   if(!answers.urinary)return ask('urinary');
@@ -162,5 +171,5 @@
   if(!answers.pain)return ask('pain');
   return result('advice','Your answers can help start a conversation','This limited check-in does not cover all symptoms or rule out illness. Contact a clinician if symptoms persist, recur, worry you or change. You can copy your answers to explain what is happening.');
  }
- return {bank,questions,gameStep,parseAnswer,healthQuestions,healthStep,sources,sourceChecked:'23 October 2026'};
+ return {bank,questions,gameStep,parseAnswer,healthQuestions,healthHelp,healthStep,sources,sourceChecked:'23 October 2026'};
 });

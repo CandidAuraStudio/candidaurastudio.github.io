@@ -41,6 +41,8 @@ const base='http://127.0.0.1:8765/human-practice-prototype/';
  assert.match(await dialog.textContent(),/Get emergency help now/);
  await dialog.getByRole('button',{name:'Start again',exact:true}).click();
  await dialog.locator('[data-answer="no"]').click(); // emergency
+ await dialog.locator('[data-answer="no"]').click(); // emergency chest
+ await dialog.locator('[data-answer="no"]').click(); // emergency stroke
  await dialog.locator('[data-answer="yes"]').click(); // adult
  await dialog.locator('[data-answer="yes"]').click(); // urinary
  await dialog.locator('[data-answer="yes"]').click(); // retention
@@ -68,7 +70,7 @@ const base='http://127.0.0.1:8765/human-practice-prototype/';
  await page.evaluate(()=>window.__voice.at(-1).onerror({error:'not-allowed'}));
  assert.match(await dialog.textContent(),/Microphone access was not granted/);
  await dialog.locator('[data-answer="no"]').click();
- assert.equal(await dialog.locator('[data-question]').getAttribute('data-question'),'adult');
+ assert.equal(await dialog.locator('[data-question]').getAttribute('data-question'),'emergencyChest');
  await dialog.getByRole('button',{name:'Back',exact:true}).click();
  assert.equal(await dialog.locator('[data-question]').getAttribute('data-question'),'emergency');
  assert.ok(await dialog.evaluate(el=>el.scrollWidth<=el.clientWidth),'mobile dialog overflow');

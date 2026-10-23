@@ -34,7 +34,7 @@ jobs:
       - name: Install test browser
         run: |
           npm install --no-save playwright
-          npx playwright install --with-deps chromium
+          npx playwright install chromium
       - name: Check mobile interaction, voice and offline fallback
         run: |
           python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/hc-explore-http.log 2>&1 &

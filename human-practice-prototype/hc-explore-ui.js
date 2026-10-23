@@ -11,7 +11,7 @@
  document.body.append(dialog);
  let mode='menu',history=[],step=null,recognition=null,generation=0,voiceAllowed=false,language='en-US',pending=null,finished=false,voiceTimer=null;
  const labels={yes:'Yes',no:'No',unsure:'Unsure'};
- const questionText=id=>mode==='health'?core.healthQuestions[id]:core.questions.find(q=>q.id===id)?.text||id;
+ const questionText=id=>mode==='health'?core.healthQuestions[id]+(core.healthHelp[id]?' '+core.healthHelp[id]:''):core.questions.find(q=>q.id===id)?.text||id;
  function stopVoice(){
   generation++;clearTimeout(voiceTimer);voiceTimer=null;
   if(recognition){const old=recognition;recognition=null;old.onresult=old.onerror=old.onend=old.onstart=null;try{old.abort()}catch(e){}}
@@ -40,7 +40,7 @@
    html='<p class="hcx-meta">'+(mode==='game'?'Guess my thought · '+history.length+' / 20':'Help me explain · not a diagnosis')+'</p>';
    if(finished){html+='<h2 id="hcxTitle" tabindex="-1">Found it.</h2><p>Your answers helped narrow it down.</p><button class="hcx-primary" data-action="restart">Play again</button>';}
    else if(step.kind==='question'){
-    html+='<h2 id="hcxTitle" tabindex="-1" data-question="'+step.id+'">'+escape(step.text)+'</h2>'+
+    html+='<h2 id="hcxTitle" tabindex="-1" data-question="'+step.id+'">'+escape(step.text)+'</h2>'+(step.help?'<p>'+escape(step.help)+'</p>':'')+
      '<div class="hcx-answers">'+Object.entries(labels).map(([value,label])=>'<button data-answer="'+value+'">'+label+'</button>').join('')+'</div>'+
      '<div class="hcx-tools"><button data-action="speak" aria-label="Speak an answer">Speak</button><label>Voice <select aria-label="Voice language"><option value="en-US"'+(language==='en-US'?' selected':'')+'>English</option><option value="ta-IN"'+(language==='ta-IN'?' selected':'')+'>Tamil</option></select></label></div>'+
      '<div class="hcx-voice-panel" id="hcxVoicePanel" hidden></div><div class="hcx-status" id="hcxVoiceStatus" role="status" aria-live="polite"></div>';
