@@ -1,0 +1,34 @@
+name: HeartClear Home Resume and Bible Checks
+on:
+  push:
+    branches: [main, feature/hc-home-resume-bible]
+    paths:
+      - '.github/workflows/heartclear-home-qa.yml'
+      - 'human-practice-prototype/hc-home-routine-*'
+      - 'human-practice-prototype/hc-genesis-*'
+      - 'human-practice-prototype/index.html'
+      - 'human-practice-prototype/sw.js'
+      - 'tests/hc-home-resume-bible.cjs'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: |
+          npm install --no-save playwright
+          npx playwright install chromium
+      - name: Check saved progress, direct playback and Bible discovery
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/hc-home-http.log 2>&1 &
+          node tests/hc-home-resume-bible.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: home-resume-bible
+          path: tests/home-resume-bible.png
