@@ -5052,10 +5052,11 @@ function rememberActiveMedia(key){
 
 let hcMiniPinnedKey=null;
 function hcMinimizeNativeAudio(key){
-  const state=getActiveMediaState();
-  // A selected paused track should remain controllable after minimizing.
-  // Do not start a different recording or create a fake playback indicator.
-  if(state && state.key===key && state.el?.getAttribute('src')){
+  const tracks={meditation:audio,adhkar:adhkarAudio,soundlab:soundLabAudio,fear:fearAudio,book:bookAudioEl};
+  const source=tracks[key];
+  // The chosen track may still be paused or loading: show honest Play controls
+  // instead of hiding the mini or accidentally selecting a previous recording.
+  if(source?.getAttribute('src')){
     hcMiniPinnedKey=key;
     try{localStorage.setItem('heartclearActiveMedia',key)}catch(e){}
   }
