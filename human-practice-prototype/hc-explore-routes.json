@@ -6,7 +6,7 @@
   "dream": {
     "label": "Explore Deep Sleep meditation",
     "screen": "home",
-    "target": "#hcV139Daily"
+    "target": "#home .hc-v139-daily"
   },
   "love": {
     "label": "Open reflection practice",
