@@ -6,16 +6,75 @@ const annotations=window.HC_QURAN_REFLECTIONS||{};
 const root=document.getElementById("hcQuranStudyRoot");
 if(!root||!data||!Array.isArray(data.chapters))return;
 const KEY="heartclearQuranPrivateReflectionsV1",LANG_KEY="heartclearQuranStudyLanguageV1",POSITION_KEY="heartclearQuranReadingPositionV1";
+// The original offline four-chapter Arabic corpus remains unchanged.
+const offlineChapters=new Map(data.chapters.map(c=>[c.number,c]));
+const liveTranslations=new Map();
+let chapterLoading=false,requestSequence=0,directoryRequested=false;
+const SOURCE_NAME="QuranEnc · English: Noor International Center v1.1.2; Tamil: Omar Sharif v1.0.3";
+const QURANENC_API="https://quranenc.com/api/v1/";
+data.chapters=Array.from({length:114},(_,i)=>offlineChapters.get(i+1)||{
+ number:i+1,name:{en:"Surah "+(i+1),ta:""},verseCount:0,bismillah:"",verses:[]
+});
+async function quranSourceJson(url){
+ const res=await fetch(url,{headers:{Accept:"application/json"}});
+ if(!res.ok)throw Error("Source unavailable "+res.status);
+ return res.json();
+}
+async function hcLoadQuranDirectory(){
+ if(directoryRequested)return;
+ directoryRequested=true;
+ try{
+  const result=await quranSourceJson("https://api.alquran.cloud/v1/surah");
+  for(const item of result.data||[]){
+   const number=Number(item.number),ch=data.chapters[number-1];
+   if(!ch||ch.number!==number)continue;
+   ch.name.en=String(item.englishName||ch.name.en);
+   ch.name.ar=String(item.name||"");
+   ch.verseCount=Number(item.numberOfAyahs)||ch.verses.length;
+  }
+  render();
+ }catch(e){ /* Offline: keep the existing four surahs and source links for all others. */ }
+}
+async function hcLoadQuranChapter(n){
+ const seq=++requestSequence,ch=data.chapters[n-1];if(!ch)return;
+ chapterLoading=true;render();
+ const tasks=[];
+ if(!ch.verses.length)tasks.push(quranSourceJson("https://api.alquran.cloud/v1/surah/"+n+"/quran-uthmani").then(json=>{
+  if(seq!==requestSequence)return;
+  const ayahs=json?.data?.ayahs;
+  if(!Array.isArray(ayahs)||!ayahs.length)throw Error("No Arabic verses");
+  ch.verses=ayahs.map((a,i)=>({ref:n+":"+(i+1),arabic:String(a.text||"")}));
+  ch.verseCount=ch.verses.length;
+ }));
+ for(const [lang,edition] of [["en","english_saheeh"],["ta","tamil_omar"]]){
+  if(liveTranslations.has(n+":"+lang))continue;
+  tasks.push(quranSourceJson(QURANENC_API+"translation/sura/"+edition+"/"+n).then(response=>{
+   const items=Array.isArray(response)?response:(Array.isArray(response?.result)?response.result:response?.data);
+   if(!Array.isArray(items))throw Error("Unknown translation response");
+   const values=new Map();
+   for(const entry of items){
+    const verse=Number(entry.aya||entry.ayah||entry.verse_number);
+    if(verse>0&&typeof entry.translation==="string")values.set(n+":"+verse,entry.translation);
+   }
+   if(!values.size)throw Error("Empty translation");
+   liveTranslations.set(n+":"+lang,values);
+  }));
+ }
+ if(tasks.length)await Promise.allSettled(tasks);
+ if(seq!==requestSequence)return;
+ chapterLoading=false;render();
+}
+
 const fetchLocal=(key,fallback)=>{try{return JSON.parse(localStorage.getItem(key)||"null")||fallback}catch(e){return fallback}};
 const saved=fetchLocal(POSITION_KEY,{});
-const state={chapter:Number(saved.chapter)||2,start:Number(saved.start)||1,activeRef:"",language:fetchLocal(LANG_KEY,"both"),notes:fetchLocal(KEY,{})};
+const state={chapter:Number(saved.chapter)||1,start:Number(saved.start)||1,activeRef:"",language:fetchLocal(LANG_KEY,"both"),notes:fetchLocal(KEY,{})};
 if(!["en","ta","both"].includes(state.language))state.language="both";
 const clean=str=>String(str??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
 const bilingual=(en,ta)=>`<span class="hcqs-en">${clean(en)}</span><span class="hcqs-ta" lang="ta">${clean(ta)}</span>`;
 const chunkSize=10;
 const getChapter=()=>data.chapters.find(x=>x.number===state.chapter)||data.chapters[0];
 const updatePosition=()=>{try{localStorage.setItem(POSITION_KEY,JSON.stringify({chapter:state.chapter,start:state.start}))}catch(e){}};
-const qsName=ch=>`${clean(ch.name.en)} · ${clean(ch.name.ta)}`;
+const qsName=ch=>clean(ch.name.en)+(ch.name.ta?" · "+clean(ch.name.ta):"");
 const statusLabel=status=>({
 "direct-conversation-review":"From your discussion · review wording",
 "prior-discussion-review":"Earlier discussion · approval pending",
@@ -45,7 +104,7 @@ function verseCard(v){
  </article>`;
 }
 function render(){
- const ch=getChapter(),total=ch.verses.length;
+ const ch=getChapter(),total=ch.verses.length||ch.verseCount||1;
  state.start=Math.max(1,Math.min(total,Math.floor((state.start-1)/chunkSize)*chunkSize+1));
  updatePosition();
  const min=state.start,max=Math.min(total,min+chunkSize-1);
@@ -80,7 +139,7 @@ function render(){
  </div>`;
  const section=document.getElementById("hcQuranStudy");if(section)section.dataset.qsLanguage=state.language;
 }
-function goToChapter(n){if(!data.chapters.some(x=>x.number===n))return;state.chapter=n;state.start=1;state.activeRef="";render();root.scrollIntoView({behavior:"auto",block:"start"})}
+function goToChapter(n){if(!data.chapters.some(x=>x.number===n))return;state.chapter=n;state.start=1;state.activeRef="";render();hcLoadQuranChapter(n);root.scrollIntoView({behavior:"auto",block:"start"})}
 function jumpToVerse(n){const max=getChapter().verses.length;const num=Number(n);if(!Number.isInteger(num)||num<1||num>max){alert(`Select a verse between 1 and ${max}.`);return}state.start=Math.floor((num-1)/chunkSize)*chunkSize+1;state.activeRef="";render();const item=document.getElementById(`hcqs-verse-${state.chapter}-${num}`);item?.scrollIntoView({block:"start",behavior:"auto"})}
 function exportNotes(){
  const dataToExport={format:"HeartClear private Qur'an reflections",version:1,exportedAt:new Date().toISOString(),notes:state.notes};
@@ -129,7 +188,16 @@ root.addEventListener("click",ev=>{
  }
  if(action==="export")return exportNotes();
 });
-root.addEventListener("change",ev=>{if(ev.target.id==="hcqs-import"){importNotes(ev.target.files?.[0]);ev.target.value=""}});
-window.hcOpenQuranStudy=function(chapter=0,verse=0){if(data.chapters.some(c=>c.number===Number(chapter))){state.chapter=Number(chapter);if(verse)state.start=Math.floor((Number(verse)-1)/chunkSize)*chunkSize+1}render();if(typeof window.show==="function")window.show("hcQuranStudy");else if(typeof show==="function")show("hcQuranStudy");};
+root.addEventListener("change",ev=>{
+ if(ev.target.id==="hcqs-import"){importNotes(ev.target.files?.[0]);ev.target.value=""}
+ if(ev.target.id==="hcqs-surah-select")goToChapter(Number(ev.target.value));
+});
+window.hcOpenQuranStudy=function(chapter=0,verse=0){
+ if(data.chapters.some(c=>c.number===Number(chapter))){state.chapter=Number(chapter);if(verse)state.start=Math.floor((Number(verse)-1)/chunkSize)*chunkSize+1}
+ render();
+ if(typeof window.show==="function")window.show("hcQuranStudy");else if(typeof show==="function")show("hcQuranStudy");
+ hcLoadQuranDirectory();
+ hcLoadQuranChapter(state.chapter);
+};
 window.hcQuranStudyRender=render;
 })();
