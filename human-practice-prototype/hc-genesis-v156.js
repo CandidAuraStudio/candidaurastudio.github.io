@@ -171,6 +171,7 @@ function sync(){
  const isActive=!audio.paused||(tamilSpeaking&&!tamilPaused);
  $('hcGenIcon').textContent=isActive?'Ⅱ':'▶';
  $('hcGenPlayLabel').textContent=!audio.paused?'Pause':audio.getAttribute('src')?'Resume':(language==='ta'?'தமிழில் முழு அதிகாரம் கேளுங்கள்':'Listen in English');
+ $('hcGenPlay').setAttribute('aria-pressed',String(isActive));
  $('hcGenShortTamil').hidden=language!=='ta';
  $('hcGenShortTamil').textContent=tamilSpeaking?(tamilPaused?'எளிய தமிழ்க் கதை · தொடரவும்':'எளிய தமிழ்க் கதை · நிறுத்து'):'எளிய தமிழ்க் கதை · குரலில் கேளுங்கள்';
  root.querySelectorAll('[data-genlang]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.genlang===language)));
@@ -242,8 +243,8 @@ function drawText(){
  $('hcGenReadText').textContent=stories[chapter-1][language==='ta'?2:1];
  $('hcGenReadNote').textContent=language==='ta'?'இது அத்தியாயத்தின் சுருக்கமான, எளிய தமிழ்க் கதை. நேரடி பைபிள் வசன மொழிபெயர்ப்பு அல்ல. முழு தமிழ் அதிகாரத்தின் குரல் தனியாகக் கேட்கலாம்.':'Original short story summary. This is an editorial retelling, not the biblical text. Choose Full English verses for the original source.';
 }
-audio.addEventListener('playing',()=>{hcMiniPinnedKey='genesis';sync();renderGlobalMini()});
-audio.addEventListener('pause',()=>{sync();renderGlobalMini()});
+audio.addEventListener('playing',()=>{$('hcGenStatus').textContent='Playing · '+(language==='ta'?'Tamil full chapter':'English original');hcMiniPinnedKey='genesis';sync();renderGlobalMini()});
+audio.addEventListener('pause',()=>{if(isLoaded&&audio.getAttribute('src')&&!audio.ended)$('hcGenStatus').textContent='Paused · '+(language==='ta'?'Tamil full chapter':'English original');sync();renderGlobalMini()});
 audio.addEventListener('ended',()=>{if(autonext&&chapter<50){stop(true);chapter++;isLoaded=false;remember();sync();drawText();loadChapterAndPlay();}else {$('hcGenStatus').textContent='Chapter complete.';sync()}});
 audio.addEventListener('error',()=>{$('hcGenStatus').textContent=language==='ta'?'Tamil recording unavailable. Try the simple Tamil story voice.':'English chapter audio unavailable. Check internet.'});
 audio.addEventListener('waiting',()=>{$('hcGenStatus').textContent='Buffering…'});
