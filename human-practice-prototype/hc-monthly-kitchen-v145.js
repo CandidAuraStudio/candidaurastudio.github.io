@@ -31,7 +31,7 @@ function render(){
  '<div class="r"><label for="hcmDate">'+tr('நாளைத் தேர்வு செய்க','Choose date')+'</label><input type="date" id="hcmDate" value="'+day+'"></div>'+
  '<p class="sub">'+days+tr(' நாட்கள் · ',' days · ')+(days*3)+tr(' உணவு நேரங்கள் · ',' mealtimes · ')+(days*15)+tr(' தேர்வுகள்','choices')+'</p><div id="hcmMeals"></div>'+
  '<p class="sub">'+tr('ஐந்து விருப்பங்கள் என்பது ஐந்து முறை சாப்பிட வேண்டும் என்பதல்ல. காலை, மதியம், இரவுக்கு ஒரு விருப்பம் தேர்வு செய்யலாம்.','Five choices are alternatives, not five meals to eat. Choose one for breakfast, lunch and dinner.')+'</p>'+
- '<details><summary>'+tr('உள்ளூர் சந்தை விலை · மீன்','Local market prices · fish')+'</summary><div id="hcmMarket"></div></details>'+
+ 
  '<details><summary>'+tr('பானங்கள் · தேநீர் · காபி','Drinks · tea · coffee')+'</summary><p class="sub">'+tr('தண்ணீர் அல்லது விருப்பப் பானம். தேநீர், காபி கட்டாயம் அல்ல; கஃபைன் இருக்கலாம். குழந்தைகளுக்கு கஃபைன் இல்லாத பானங்கள் சிறந்தவை.','Water or an optional drink. Tea and coffee are not required and may contain caffeine. Choose non-caffeinated drinks for children and teens.')+'</p></details>'+
  '<details><summary>'+tr('மரபும் ஆதாரங்களும்','Traditions and sources')+'</summary><p class="sub">'+tr('இவை பாரம்பரிய உணவுப் பெயர்களால் உருவாக்கப்பட்ட திட்டமிடல் யோசனைகள். அசல் பழைய செய்முறைகள் எனக் கூறவில்லை; முழுச் செய்முறைகளை வெளியிடுவதற்கு முன் சோதிக்க வேண்டும்.','Heritage-inspired menu combinations, not verified ancient recipes or tested cooking instructions. Detailed recipes still need review.')+'</p><p class="sub"><a href="https://www.fisheries.gov.lk/?page_id=8544" target="_blank" rel="noopener noreferrer">Sri Lanka Fisheries</a> · <a href="https://www.statistics.gov.lk/DashBoard/Prices/" target="_blank" rel="noopener noreferrer">Sri Lanka Food Prices</a></p></details>';
  var list=root.querySelector('#hcmMeals'),labels=[tr('காலை','Breakfast'),tr('மதியம்','Lunch'),tr('இரவு','Dinner')];
@@ -56,7 +56,7 @@ function render(){
  drawMarket();
 }
 function drawMarket(){
- var p=root.querySelector('#hcmMarket'),c=market.town==='Malta'?'EUR':'LKR',fish=[['salaya','சாளை','Salaya (sea)'],['hurulla','ஹுருல்லா','Hurulla (sea)'],['balaya','பலயா','Balaya (sea)'],['tilapia','திலாப்பியா','Tilapia (freshwater)']];
+ var p=root.querySelector('#hcmMarket');if(!p)return;var c=market.town==='Malta'?'EUR':'LKR',fish=[['salaya','சாளை','Salaya (sea)'],['hurulla','ஹுருல்லா','Hurulla (sea)'],['balaya','பலயா','Balaya (sea)'],['tilapia','திலாப்பியா','Tilapia (freshwater)']];
  p.innerHTML='<p class="sub">'+tr('நீங்கள் கடையில் நேரில் பார்த்த விலைகளை மட்டும் பதிவு செய்யவும். நேரடி விலைத் தரவு இல்லை.','Enter only prices you personally observed. This is not live market data.')+'</p>'+
  '<div class="r"><label>'+tr('ஊர்','Location')+'</label><select id="hcmTown"><option value="Akkaraipattu">Akkaraipattu</option><option value="Other Sri Lanka">Other Sri Lanka</option><option value="Malta">Malta</option></select></div>'+
  '<p class="sub">'+c+' / kg</p><div class="prices">'+fish.map(function(f){var v=market.prices&&market.prices[f[0]];return '<label>'+esc(tr(f[1],f[2]))+'<input type="number" inputmode="decimal" min="0" step="0.01" data-fish="'+f[0]+'" placeholder="—" value="'+(v?esc(v):'')+'"></label>'}).join('')+'</div>'+
