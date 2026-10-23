@@ -80,7 +80,8 @@ function render(){
  document.getElementById('hckRooms').innerHTML=rooms.map(function(r){return '<div>'+esc(t(r[0],r[1]))+'</div>'}).join('');
  document.getElementById('hckSourcesLabel').textContent=t('சமையல் மரபும் ஆதாரங்களும்','Traditions and sources');
  document.getElementById('hckSources').innerHTML=t('இவை அப்படியே பழைய நூலில் இருந்து எடுத்த செய்முறைகள் அல்ல. வட்டார மாறுபாடுகள் உண்டு.','These are home adaptations, not claimed to be exact ancient recipes.')+' <a href="https://www.srilanka.travel/culinary-tourism/index.php" target="_blank" rel="noopener noreferrer">Sri Lanka Tourism</a> · <a href="https://www.incredibleindia.gov.in/en/tamil-nadu/chennai/a-foodies-guide-to-trying-local" target="_blank" rel="noopener noreferrer">Incredible India</a><p>'+t('குடும்ப நினைவு: மொரக்கொட்டான் கஞ்சி — சரியான செடி மற்றும் செய்முறையை உறுதிசெய்த பின் சேர்க்கலாம்.','Family memory: Morokottan kanji — verify plant and preparation before adding a full recipe.')+'</p>';
- document.getElementById('hckListenLabel').textContent=t('♫ தியானம் · ஒலிகள் · புத்தகங்கள் (திறக்கவும்)','♫ Listening · meditation · sounds · books (open)');
+ var listenLabel=document.getElementById('hckListenLabel');
+ if(listenLabel)listenLabel.textContent=t('♫ தியானம் · ஒலிகள் · புத்தகங்கள் (திறக்கவும்)','♫ Listening · meditation · sounds · books (open)');
 }
 document.getElementById('hckDay').addEventListener('change',function(e){day=Number(e.target.value);openMeal=-1;render()});
 document.getElementById('hckLang').addEventListener('click',function(){lang=lang==='ta'?'en':'ta';try{localStorage.setItem('hcKitchenLangV1',lang)}catch(e){}render()});

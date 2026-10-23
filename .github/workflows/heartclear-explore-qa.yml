@@ -43,4 +43,4 @@ jobs:
         if: always()
         with:
           name: explore-mobile-check
-          path: tests/explore-mobile.png
+          path: tests/explore-*.png
