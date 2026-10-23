@@ -2365,6 +2365,47 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
 .hc-mini-library-item>span:last-child{font-size:17px;padding:7px}
 body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-inset-bottom,0px))}
 @media(max-width:380px){.global-mini{left:7px;right:7px;padding:7px 6px;gap:3px}.global-mini-btn{min-width:30px;height:34px}.global-mini-btn.primary{min-width:39px}.hc-mini-library{left:7px;right:7px}}
+
+/* v150: clear, accessible, distraction-free Settings. Advanced tools remain available on request. */
+#settings .hc-settings-clean{padding:20px 17px 22px;border:1px solid #30373a;border-radius:23px;background:#0b1013;backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:none}
+#settings .hc-settings-clean>.kicker{color:#b1bac0;font-size:10px;letter-spacing:.12em}
+#settings .hc-settings-clean>h2{font-size:29px;line-height:1.15;margin:5px 0 16px;color:#fff}
+#settings .hc-settings-stack{display:grid;gap:8px}
+#settings .hc-settings-section,#settings .setting-row,#settings .hc-settings-toggle{margin:0;min-height:59px;border:1px solid #30373b;border-radius:13px;background:#11191e;color:#f7f8f9}
+#settings .setting-row{padding:12px 14px}
+#settings .setting-row strong,#settings .hc-settings-toggle strong{font-size:14px;color:#fff}
+#settings .setting-row small,#settings .hc-settings-toggle small{font-size:11px;color:#a7b3bb;line-height:1.4}
+#settings .hc-settings-section>summary{list-style:none;cursor:pointer;min-height:59px;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px}
+#settings .hc-settings-section>summary::-webkit-details-marker{display:none}
+#settings .hc-settings-section>summary b{display:block;font-size:14px;font-weight:650}
+#settings .hc-settings-section>summary small{display:block;color:#a7b3bb;margin-top:3px;font-size:11px}
+#settings .hc-settings-chevron{font-size:25px;line-height:1;color:#b9c5cc;transform:rotate(0deg);transition:transform .2s ease}
+#settings .hc-settings-section[open] .hc-settings-chevron{transform:rotate(90deg)}
+#settings .hc-settings-detail{padding:1px 13px 14px;border-top:1px solid #29343a}
+#settings .hc-settings-detail>label{display:block;font-size:12px;color:#d4dce0;margin:13px 0 7px}
+#settings #hcLocalProfileName{display:block;width:100%;min-height:44px;border-radius:11px;border:1px solid #475159;background:#090e11;color:#fff;padding:10px 12px;font:inherit;font-size:15px}
+#settings .hc-profile-actions,#settings .hc-settings-links{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+#settings .hc-profile-actions button,#settings .hc-settings-links button{flex:1 1 120px;min-height:41px;padding:10px;border:1px solid #485156;border-radius:11px;background:#172127;color:white;font:inherit;font-size:12px}
+#settings .hc-profile-actions button:first-child{background:white;color:#10171b;border-color:white;font-weight:650}
+#settings .hc-settings-hint,#settings #hcLocalProfileStatus{font-size:11px;line-height:1.5;color:#a9b5bc;margin:10px 0 2px}
+#settings .hc-settings-toggle{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 14px;cursor:pointer}
+#settings .hc-settings-toggle span{flex:1;min-width:0}
+#settings .hc-settings-toggle small{display:block;margin-top:3px}
+#settings .hc-settings-toggle input{flex:none;width:19px;height:19px;accent-color:#fff;margin:0}
+#settings .switch{background:#384248;flex:none}
+#settings .switch.on{background:#757e84}
+#settings .switch.on:after{background:#fff}
+#settings .setting-row button.offline-action{min-height:39px;padding:8px 12px;background:#fff;color:#0b1013;border-radius:10px;font:inherit;font-size:12px;font-weight:650;border:0}
+#settings .hc-settings-advanced{display:grid;gap:8px;padding-top:10px}
+#settings .hc-settings-advanced .setting-row{background:#0c1418}
+#settings .hc-settings-advanced .hc-playback-diagnostics{margin:0;background:#0c1418}
+#settings .hc-settings-advanced .hc-about-credits{font-size:12px;line-height:1.5;color:#d5e0e6;padding:10px}
+#settings .hc-data-tools{border:0;background:transparent;padding:8px 0 0}
+#settings .hc-data-tools .hc-data-buttons button{min-height:42px;background:#182227;color:#fff}
+#settings .hc-data-tools .hc-data-buttons button:first-child{background:#fff;color:#10171b}
+#settings .danger-btn{margin-top:10px;background:#191315;border-color:#4d383b;color:#efc5c6}
+#settings .app-version{color:#78878f;margin-top:15px}
+@media(max-width:370px){#settings .hc-settings-clean{padding:16px 11px}#settings .hc-settings-detail{padding-left:10px;padding-right:10px}}
 </style>
 <link rel="stylesheet" href="./quran-study.css?v=135">
 </head>
@@ -3648,114 +3689,103 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
 </section>
 
 <section class="screen" id="settings">
-  <div class="glass">
-    <div class="kicker">HeartClear</div>
+  <div class="glass hc-settings-clean">
+    <div class="kicker">HEARTCLEAR</div>
     <h2>Settings</h2>
-    <p>Playback, preferences and your own records.</p>
-    <div class="hc-more-shortcuts" aria-label="Explore HeartClear"><button onclick="show('human')">Human Practice</button><button onclick="show('sacred')">Sacred Sound</button><button onclick="show('history')">History</button><button onclick="show('downloads')">Offline</button></div>
+    <div class="hc-settings-stack">
 
+      <details class="hc-settings-section" id="hcLocalProfileCard">
+        <summary><span><b>Profile</b><small id="hcLocalProfileIdentity">Guest · this device</small></span><span class="hc-settings-chevron" aria-hidden="true">›</span></summary>
+        <div class="hc-settings-detail">
+          <label for="hcLocalProfileName">Display name</label>
+          <input id="hcLocalProfileName" type="text" maxlength="40" autocomplete="nickname" placeholder="Name or nickname">
+          <div class="hc-profile-actions">
+            <button type="button" id="hcLocalProfileSaveBtn" onclick="hcSaveLocalProfile()">Save name</button>
+            <button type="button" id="hcLocalProfileGuestBtn" onclick="hcUseGuestProfile()">Use guest</button>
+          </div>
+          <p id="hcLocalProfileStatus" role="status" aria-live="polite"></p>
+          <p class="hc-settings-hint">No online sign-in yet. Your progress stays on this device.</p>
+        </div>
+      </details>
 
-    <section class="hc-local-profile" id="hcLocalProfileCard" aria-labelledby="hcLocalProfileHeading">
-      <div class="hc-local-tag">Optional · On this device</div>
-      <h3 id="hcLocalProfileHeading">Guest &amp; Profile</h3>
-      <p id="hcLocalProfileIdentity">Guest mode is active. There is no login requirement.</p>
-      <label for="hcLocalProfileName">Display name (optional)</label>
-      <input id="hcLocalProfileName" type="text" maxlength="40" autocomplete="nickname" placeholder="Your name or nickname">
-      <div class="hc-profile-actions">
-        <button type="button" id="hcLocalProfileSaveBtn" onclick="hcSaveLocalProfile()">Save local name</button>
-        <button type="button" id="hcLocalProfileGuestBtn" onclick="hcUseGuestProfile()">Continue as guest</button>
-      </div>
-      <p id="hcLocalProfileStatus" class="hc-profile-status" role="status" aria-live="polite">All existing sessions and listening positions stay on this device.</p>
-      <p>Names are only labels in this browser, not verified accounts. Google/email login and cross-device recovery are not available in Phase 1.</p>
-      <div class="hc-local-divider" aria-hidden="true"></div>
-      <h3>Sharing preferences</h3>
-      <p>These are draft preferences for possible future features, not active sharing permissions. There is no remote participation reporting on this public release.</p>
-      <label class="hc-privacy-option" for="hcPrefAnonymous">
-        <input id="hcPrefAnonymous" type="checkbox" onchange="hcSavePrivacyPreferences()">
-        <span><b>Anonymous usage statistics</b><small>Potentially share total sessions and app feature usage, without your name.</small></span>
-      </label>
-      <label class="hc-privacy-option" for="hcPrefSync">
-        <input id="hcPrefSync" type="checkbox" onchange="hcSavePrivacyPreferences()">
-        <span><b>Sync my progress across devices</b><small>Would require an account and separate permission in a future release.</small></span>
-      </label>
-      <label class="hc-privacy-option" for="hcPrefAdmin">
-        <input id="hcPrefAdmin" type="checkbox" onchange="hcSavePrivacyPreferences()">
-        <span><b>Share limited activity with HeartClear</b><small>Would show your chosen display name and broad session counts/minutes to a private administrator, only after renewed consent.</small></span>
-      </label>
-      <p id="hcPrivacyPreferenceStatus" class="hc-profile-status" role="status" aria-live="polite">These three future-feature preferences start off. No remote participation reporting is active.</p>
-      <p class="hc-local-caution">Your personal recordings, mood check-ins, journal notes, and religious listening choices remain private. Clearing this browser can remove a local profile; use Export my data first.</p>
-    </section>
-
-    
-    <div class="settings-list">
-      <label class="hc-audio-pref" for="hcAudioOnlySettings">
+      <label class="hc-settings-toggle hc-audio-pref" for="hcAudioOnlySettings">
+        <span><strong>Audio only</strong><small>Listen without video</small></span>
         <input id="hcAudioOnlySettings" type="checkbox" checked onchange="hcSetAudioOnly(this.checked)">
-        <span><strong>Audio-only meditation</strong><small>On by default. Skip guided introduction and background videos. Audio, saved listening positions and optional Reels remain available.</small></span>
       </label>
       <div class="setting-row">
-        <div><strong>Reduce motion</strong><small>Turn off floating and breathing animations</small></div>
+        <div><strong>Reduce motion</strong><small>Fewer animations</small></div>
         <button class="switch" id="reduceMotionSwitch" onclick="toggleReduceMotion()" aria-label="Toggle reduced motion"></button>
       </div>
       <div class="setting-row">
-        <div><strong>Keep screen awake</strong><small>Useful while reading instructions or using the player</small></div>
-        <button class="switch" id="wakeLockSwitch" onclick="toggleWakeLock()" aria-label="Toggle keep screen awake"></button>
+        <div><strong>Downloads</strong><small id="offlineStorageText">Saved for offline use</small></div>
+        <button class="offline-action" onclick="show('downloads')">Open</button>
       </div>
       <div class="setting-row">
-        <div style="width:100%">
-          <strong>Listening with the screen off</strong>
-          <small>Use Play before minimizing HeartClear. Android and iPhone sometimes suspend web apps to save battery. If sound stops, reopen HeartClear and use Continue listening, Continue Meditation or Resume Audiobook. Lock-screen controls depend on the browser.</small>
-        </div>
+        <div><strong>History</strong><small>Your listening and practice</small></div>
+        <button class="offline-action" onclick="show('history')">Open</button>
       </div>
       <div class="setting-row">
-        <div><strong>Offline media</strong><small id="offlineStorageText">No saved media yet</small></div>
-        <button class="offline-action" onclick="show('downloads')">View</button>
-      </div>
-      <details class="hc-playback-diagnostics" id="hcPlaybackChecks">
-        <summary>Playback &amp; offline check <small>Check audio links, storage and player support</small></summary>
-        <p class="hc-check-note">Runs only when you tap Test. No recordings are played or uploaded.</p>
-        <div class="hc-check-actions"><button type="button" id="hcRunPlaybackCheckBtn" onclick="hcRunPlaybackChecks()">Test playback setup</button><button type="button" id="hcCopyPlaybackCheckBtn" onclick="hcCopyPlaybackCheck()" disabled>Copy report</button></div>
-        <p id="hcPlaybackCheckStatus" role="status" aria-live="polite">Not tested on this device.</p>
-        <ul id="hcPlaybackCheckResults" aria-label="Audio system test results"></ul>
-      </details>
-      <div class="setting-row">
-        <div><strong>Local time</strong><small id="deviceClockText">Checking device time…</small></div>
-      </div>
-      <div class="setting-row" id="localContextSetting">
-        <div><strong>Local context</strong><small id="localContextSettingText">Optional: use your location for current weather and daylight. HeartClear does not store exact coordinates.</small></div>
-        <button class="offline-action" id="localContextBtn" onclick="toggleLocalContext()">Use location</button>
-      </div>
-      <div class="setting-row">
-        <div style="width:100%">
-          <strong>Optional practice reminder</strong>
-          <small>Add a daily reminder to your own calendar. No account or app notifications are needed.</small>
-          <div class="hc-personal-settings">
-            <label for="hcReminderTime">Local time</label>
-            <input type="time" id="hcReminderTime" value="20:00">
-            <button class="offline-action" onclick="hcDownloadReminder()">Add to calendar</button>
-            <small id="hcReminderStatus" role="status">Your calendar controls the notification.</small>
-          </div>
-        </div>
-      </div>
-      <details class="hc-about-credits">
-        <summary>About · Credits &amp; listening information</summary>
-        <p>HeartClear's nature collection includes credited CC0 field recordings originally linked from BigSoundBank and an acoustic bansuri recording from Wikimedia Commons. Tap the information icon next to any sound for the source link, listed creator and licence. Some existing ambient recordings use a separate media host; their distribution rights are not confirmed by this information panel.</p>
-        <p>Listening is for enjoyment and relaxation, not medical treatment. Mobile browsers can suspend playback when an app is closed or the screen is locked. Downloaded media may work offline where available.</p>
-      </details>
-      <div class="setting-row">
-        <div><strong>Install HeartClear</strong><small>Add HeartClear to this device for a full-screen app experience.</small></div>
+        <div><strong>Install app</strong><small>Use HC from your Home screen</small></div>
         <button class="offline-action" onclick="showInstallSheet(true)">Install</button>
       </div>
-      <div class="hc-data-tools">
-        <strong>Privacy &amp; your data</strong>
-        <p>No online account, advertising or HeartClear activity tracking. Your optional name, sharing preferences, practice history, mood check-ins, notes, favourites and listening positions are stored in this browser. Playback streams may contact the recording's host. Weather uses your location only if you enable it.</p>
-        <p>You control your local information. Export it before clearing or changing devices. Downloaded media is managed separately under Offline downloads; a voice recording saved to your device remains outside HeartClear's storage.</p>
-        <div class="hc-data-buttons">
-          <button onclick="hcExportPersonalData()" aria-label="Export personal HeartClear data as JSON">Export my data</button>
-          <button onclick="hcErasePersonalData()" aria-label="Erase my HeartClear personal data from this browser">Erase personal data</button>
+
+      <details class="hc-settings-section">
+        <summary><span><b>Privacy &amp; data</b><small>Export or erase local information</small></span><span class="hc-settings-chevron" aria-hidden="true">›</span></summary>
+        <div class="hc-settings-detail">
+          <p class="hc-settings-hint">Your notes, progress and display name stay in this browser. Online audio contacts its audio host.</p>
+          <div class="hc-data-tools">
+            <div class="hc-data-buttons">
+              <button onclick="hcExportPersonalData()" aria-label="Export personal HeartClear data as JSON">Export data</button>
+              <button onclick="hcErasePersonalData()" aria-label="Erase my HeartClear personal data from this browser">Erase data</button>
+            </div>
+            <p id="hcDataStatus" role="status" aria-live="polite"></p>
+          </div>
+          <button class="danger-btn" onclick="clearLocalHistory()">Clear practice history only</button>
         </div>
-        <p id="hcDataStatus" role="status" aria-live="polite"></p>
-      </div>
-      <button class="danger-btn" onclick="clearLocalHistory()">Clear meditation history only</button>
+      </details>
+
+      <details class="hc-settings-section">
+        <summary><span><b>More settings</b><small>Optional tools and support</small></span><span class="hc-settings-chevron" aria-hidden="true">›</span></summary>
+        <div class="hc-settings-detail hc-settings-advanced">
+          <div class="setting-row">
+            <div><strong>Keep screen awake</strong></div>
+            <button class="switch" id="wakeLockSwitch" onclick="toggleWakeLock()" aria-label="Toggle keep screen awake"></button>
+          </div>
+          <div class="setting-row">
+            <div><strong>Device time</strong><small id="deviceClockText">Checking…</small></div>
+          </div>
+          <div class="setting-row" id="localContextSetting">
+            <div><strong>Local daylight &amp; weather</strong><small id="localContextSettingText">Off until enabled</small></div>
+            <button class="offline-action" id="localContextBtn" onclick="toggleLocalContext()">Use location</button>
+          </div>
+          <div class="setting-row">
+            <div style="width:100%">
+              <strong>Practice reminder</strong>
+              <div class="hc-personal-settings">
+                <label for="hcReminderTime">Time</label>
+                <input type="time" id="hcReminderTime" value="20:00">
+                <button class="offline-action" onclick="hcDownloadReminder()">Add to calendar</button>
+                <small id="hcReminderStatus" role="status">Saved in your calendar, not HC.</small>
+              </div>
+            </div>
+          </div>
+          <details class="hc-playback-diagnostics" id="hcPlaybackChecks">
+            <summary>Check playback</summary>
+            <p class="hc-check-note">Test audio support without playing or uploading recordings.</p>
+            <div class="hc-check-actions"><button type="button" id="hcRunPlaybackCheckBtn" onclick="hcRunPlaybackChecks()">Run test</button><button type="button" id="hcCopyPlaybackCheckBtn" onclick="hcCopyPlaybackCheck()" disabled>Copy result</button></div>
+            <p id="hcPlaybackCheckStatus" role="status" aria-live="polite">Not tested.</p>
+            <ul id="hcPlaybackCheckResults" aria-label="Audio system test results"></ul>
+          </details>
+          <details class="hc-about-credits">
+            <summary>About &amp; audio credits</summary>
+            <p>Nature audio includes attributed CC0 recordings and selected third-party streams. Some other recordings need further source and rights checks. Mobile browsers may interrupt audio with the screen locked.</p>
+          </details>
+          <div class="hc-settings-links">
+            <button onclick="show('human')">Human Practice</button>
+            <button onclick="show('sacred')">Sacred Sound</button>
+          </div>
+        </div>
+      </details>
     </div>
     <div class="app-version">HeartClear · Version 1.3.11</div>
   </div>
@@ -8105,7 +8135,7 @@ function hcRenderLocalProfile(){
   const profile=hcLocalProfile(),choices=hcPrivacyPreferences();
   const label=document.getElementById('hcLocalProfileIdentity');
   const field=document.getElementById('hcLocalProfileName');
-  if(label)label.textContent=profile.kind==='named'?'Local profile: '+profile.displayName+' · No online account.':'Guest mode is active. There is no login requirement.';
+  if(label)label.textContent=profile.kind==='named'?profile.displayName+' · this device':'Guest · this device';
   if(field)field.value=profile.displayName;
   [['hcPrefAnonymous','anonymous'],['hcPrefSync','sync'],['hcPrefAdmin','admin']].forEach(([id,key])=>{
     const checkbox=document.getElementById(id);
@@ -9286,7 +9316,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=150');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=151');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
