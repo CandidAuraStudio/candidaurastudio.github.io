@@ -41,10 +41,7 @@ if(!nav.querySelector('[data-nav="hcReels"]')){
  nav.insertBefore(button,nav.querySelector('[data-nav="library"]'));
 }
 
-// Move saved progress and the hourly recommendation above the fold without duplicating pages.
-const continueBox=document.createElement('div');continueBox.className='hc-v139-continue';
-const primary=home.querySelector('.hc-home-primary');if(primary)continueBox.append(primary);
-start.insertBefore(continueBox,start.querySelector('.hc-simple-audio-list'));
+// Keep existing Home sections where they were: do not reorder or expand them.
 const recommended=home.querySelector('#homeRecommendedCard button');
 if(recommended)recommended.onclick=()=>window.hcHomePlayGuidedByTitle(hcHomeRecommendedTitle);
 const resumeMeditation=home.querySelector('#homeResumeCard button');
@@ -52,12 +49,12 @@ if(resumeMeditation)resumeMeditation.onclick=()=>window.hcHomeResumeMeditation()
 
 const daily=document.createElement('section');daily.className='hc-v139-daily';
 daily.setAttribute('aria-label','Morning, midday, evening and night meditation');
-daily.innerHTML='<div class="hc-v139-label">Daily listening · one tap</div><div class="hc-v139-daily-grid">'+
+daily.innerHTML='<div class="hc-v139-label">Morning · Midday · Evening · Night</div><div class="hc-v139-daily-grid">'+
  '<button type="button" data-hc-daily="wake">Morning <span>▶</span></button>'+
  '<button type="button" data-hc-daily="noon">Midday <span>▶</span></button>'+
  '<button type="button" data-hc-daily="evening">Evening <span>▶</span></button>'+
  '<button type="button" data-hc-daily="sleep">Night <span>▶</span></button></div>';
-start.insertBefore(daily,start.querySelector('.hc-simple-audio-list'));
+start.querySelector('.hc-simple-audio-list').after(daily);
 const titles={wake:'Deep Wake Up',noon:'Noon Reset',evening:'Evening Release',sleep:'Deep Sleep'};
 function updateDaily(){
  const active=typeof audio!=='undefined'&&!audio.paused?audio:null;
@@ -94,13 +91,8 @@ daily.querySelectorAll('[data-hc-daily]').forEach(b=>b.addEventListener('click',
 if(typeof audio!=='undefined')for(const event of ['play','pause','ended'])audio.addEventListener(event,updateDaily);
 updateDaily();
 
-// All original audiobooks, Sacred Sound and sound progress controls are retained.
-const secondary=document.createElement('div');secondary.className='hc-v139-secondary';
-const resumes=home.querySelector('.hc-home-secondary-resumes');
-if(resumes){secondary.append(resumes);start.insertBefore(secondary,start.querySelector('.hc-simple-paths'))}
-const reels=document.createElement('button');reels.type='button';reels.className='hc-v139-reels';
-reels.innerHTML='<span>Reels <small style="display:block;font-size:11px;color:#bccdd3;font-weight:450;margin-top:3px">Full-screen · swipe to next</small></span><span aria-hidden="true">▶</span>';
-reels.addEventListener('click',()=>hcOpenReels());start.insertBefore(reels,secondary);
+// Leave saved audiobook, Sounds, and Adhkar progress in the original expandable section.
+// Reels is already visible in the bottom navigation and Explore row; do not duplicate a large card.
 
 // Play real recited surahs as native MP3 audio using the existing universal mini-player.
 // Shuffle only the recommended chapter on refresh; preserve canonical verse order.
@@ -150,13 +142,13 @@ let lastNumber=0;try{lastNumber=Number(localStorage.getItem('hcQuranShuffleLastV
 const choices=chapters.filter(([n])=>n!==lastNumber);
 const [surahNumber,surahName]=choices[Math.floor(Math.random()*choices.length)]||chapters[0];
 try{localStorage.setItem('hcQuranShuffleLastV1',String(surahNumber))}catch(e){}
-const quran=document.createElement('div');quran.className='hc-v139-quran';
-quran.innerHTML='<div class="hc-v139-label">Qur’an listening · Arabic audio</div>'+
+const quran=document.createElement('details');quran.className='hc-v139-quran';
+quran.innerHTML='<summary>Qur’an audio · Morning &amp; Surah <span aria-hidden="true">⌄</span></summary>'+
  '<button type="button" id="hcV139MorningQuran"><span>Morning Qur’an<small>Al-Fatihah · listen</small></span><strong>▶</strong></button>'+
  '<button type="button" id="hcV139ShuffledQuran"><span>Surah for now<small></small></span><strong>▶</strong></button>'+
  '<button type="button" id="hcV139Adhkar"><span>Morning Adhkar<small>Supplications · 28 min</small></span><strong>▶</strong></button>'+
  '<button type="button" class="hc-v139-all-surahs" id="hcV139AllSurahs"><span>All 114 Surahs<small>Browse or continue to next chapter</small></span><strong>›</strong></button>';
-start.insertBefore(quran,start.querySelector('.hc-simple-paths'));
+(home.querySelector('.hc-home-more-content')||home).appendChild(quran);
 quran.querySelector('#hcV139ShuffledQuran small').textContent='Surah '+surahName+' · new on refresh';
 quran.querySelector('#hcV139MorningQuran').addEventListener('click',()=>hcPlayQuranSurah(1));
 quran.querySelector('#hcV139ShuffledQuran').addEventListener('click',()=>hcPlayQuranSurah(surahNumber));
@@ -177,4 +169,21 @@ quran.querySelector('#hcV139Adhkar').addEventListener('click',()=>{
 if(typeof hcRenderSoundResume==='function')hcRenderSoundResume();
 if(typeof renderDashboard==='function')renderDashboard();
 if(typeof renderGlobalMini==='function')renderGlobalMini();
+
+// v145: user requested the original simple Home to remain visible.
+// The four quick meditations form one small row underneath the three main tracks.
+const compactStyle=document.createElement('style');
+compactStyle.textContent=[
+ '#home .hc-v139-daily{margin:12px 0 0}',
+ '#home .hc-v139-daily .hc-v139-label{font-size:10px;margin:0 0 6px;color:#aabfc8}',
+ '#home .hc-v139-daily-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}',
+ '#home .hc-v139-daily-grid button{min-height:41px;padding:5px 3px;border-radius:10px;justify-content:center;text-align:center;font-size:10px;flex-direction:column;gap:2px}',
+ '#home .hc-v139-daily-grid button span{font-size:12px}',
+ '#home .hc-v139-quran{margin:12px 0;border-top:1px solid rgba(230,240,245,.17);padding-top:8px}',
+ '#home .hc-v139-quran summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;min-height:42px;padding:8px 11px;background:#0b2331;border:1px solid rgba(230,240,245,.17);border-radius:12px;font-size:13px;font-weight:600}',
+ '#home .hc-v139-quran:not([open])>button{display:none}',
+ '#home .hc-v139-quran[open]>button{margin-top:7px}',
+ '#home .hc-v139-quran summary::-webkit-details-marker{display:none}'
+].join('\n');
+document.head.append(compactStyle);
 })();
