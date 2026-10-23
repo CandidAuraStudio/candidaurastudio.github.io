@@ -1,4 +1,4 @@
-const APP_CACHE='heartclear-v144';
+const APP_CACHE='heartclear-v145';
 const MEDIA_CACHE='heartclear-media-v1';
 
 self.addEventListener('install',event=>{
@@ -8,7 +8,7 @@ self.addEventListener('install',event=>{
       const cache=await caches.open(APP_CACHE);
       await cache.add(new Request('./index.html',{cache:'reload'}));
       // Optional install assets must never prevent the app shell from being cached.
-      await Promise.allSettled(['./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png', './quran-study-data.js?v=122','./quran-study-reflections.js?v=122','./quran-study-ui.js?v=135','./quran-study.css?v=135','./hc-explorer.js?v=126','./hc-explorer.css?v=126','./hc-inline-audio.js?v=138','./hc-home-one-tap-v139.js?v=143','./hc-family-kitchen-v144.js?v=144']
+      await Promise.allSettled(['./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png', './quran-study-data.js?v=122','./quran-study-reflections.js?v=122','./quran-study-ui.js?v=135','./quran-study.css?v=135','./hc-explorer.js?v=126','./hc-explorer.css?v=126','./hc-inline-audio.js?v=138','./hc-home-one-tap-v139.js?v=145','./hc-family-kitchen-v144.js?v=145']
         .map(asset=>cache.add(new Request(asset,{cache:'reload'}))));
     }catch(e){}
     await self.skipWaiting();
