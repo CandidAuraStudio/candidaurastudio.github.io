@@ -86,7 +86,6 @@
   ['billie','Billie Eilish','public music pop female american'],
   ['madonna','Madonna','public music pop female american dance'],
   ['freddie','Freddie Mercury','public music rock british band'],
-  ['queen','Queen (music group)','public music rock british band'],
   ['eminem','Eminem','public music rap american'],
   ['weeknd','The Weeknd','public music pop'],
   ['rihanna','Rihanna','public music pop female'],
@@ -168,7 +167,7 @@
    const item=candidates[0];
    const remaining=questions.filter(q=>!q.id.startsWith('identity:')&&!used.has(q.id)&&item.tags.includes(q.id)&&!item.unknownTags.includes(q.id));
    // Require multiple independent clues, not merely the category "singer".
-   if(factual.length>=4&&affirmed.length>=3 || (factual.length>=3&&affirmed.length>=2&&!remaining.length)){
+   if((factual.length>=4&&affirmed.length>=3) || (factual.length>=3&&affirmed.length>=2&&!remaining.length) || (factual.length>=5&&affirmed.length>=1&&!remaining.length)){
     return {kind:'guess',item,message:'One possible match is '+item.name+'. Is that the answer? This is only a guess from the answers so far.'};
    }
    if(remaining.length){
