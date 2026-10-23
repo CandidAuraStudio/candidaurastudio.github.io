@@ -268,7 +268,7 @@ dlg.addEventListener('click',e=>{
   case 'back':back();break;
   case 'restart':reset();render();break;
   case 'copy':{
-   const text=summary();navigator.clipboard?.writeText(text).then(()=>status(tr(label('Notes copied. Share only with someone you choose.','குறிப்புகள் நகலெடுக்கப்பட்டன. நீங்கள் விரும்பும் நபருடன் மட்டும் பகிரவும்.')))).catch(()=>status(tr(label('Copy unavailable. Open Review the answers to select the text.','நகலெடுக்க முடியவில்லை. பதில்களைத் திறந்து உரையைத் தேர்ந்தெடுக்கவும்.'))));break;
+   const text=summary();if(!navigator.clipboard?.writeText){status(tr(label('Copy unavailable. Open Review the answers to select the text.','நகலெடுக்க முடியவில்லை. பதில்களைத் திறந்து உரையைத் தேர்ந்தெடுக்கவும்.')));break;}navigator.clipboard.writeText(text).then(()=>status(tr(label('Notes copied. Share only with someone you choose.','குறிப்புகள் நகலெடுக்கப்பட்டன. நீங்கள் விரும்பும் நபருடன் மட்டும் பகிரவும்.')))).catch(()=>status(tr(label('Copy unavailable. Open Review the answers to select the text.','நகலெடுக்க முடியவில்லை. பதில்களைத் திறந்து உரையைத் தேர்ந்தெடுக்கவும்.'))));break;
   }
  }
 });
