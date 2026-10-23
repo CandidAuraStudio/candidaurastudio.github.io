@@ -2442,12 +2442,10 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
       <button type="button" data-inline-audio="allahuAkmal" onclick="hcQuickPlaySound('allahuAkmal')"><span><b>Allahu Hu · Akmal</b><small>24:32 · Your recording</small></span><span class="hc-simple-play">▶</span></button>
     </div>
     <div class="hc-simple-paths" aria-label="Explore HeartClear">
-      <button type="button" onclick="openSacred('islamic')">Islamic <span>›</span></button>
-      <button type="button" onclick="show('practices')">Meditation <span>›</span></button>
-      <button type="button" onclick="hcOpenReels()">Reels <span>›</span></button>
+      <button type="button" onclick="show('practices')">Practice <span>›</span></button>
+      <button type="button" onclick="openSoundLab()">Sounds <span>›</span></button>
       <button type="button" onclick="hcOpenQuranStudy()">Qur'an <span>›</span></button>
       <button type="button" onclick="show('library')">Books <span>›</span></button>
-      <button type="button" onclick="openSoundLab()">All sounds <span>›</span></button>
     </div>
   </section>
   <details class="hc-home-more" id="hcHomeMore">
@@ -9288,7 +9286,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=144');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=145');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
@@ -9310,8 +9308,8 @@ const heartclearAutoInstallPrompt=false;
 </script>
 <script src="./hc-explorer.js?v=126"></script>
 <script src="./hc-inline-audio.js?v=138"></script>
-<script src="./hc-home-one-tap-v139.js?v=143"></script>
-<script src="./hc-family-kitchen-v144.js?v=144"></script>
+<script src="./hc-home-one-tap-v139.js?v=145"></script>
+<script src="./hc-family-kitchen-v144.js?v=145"></script>
 
 </body>
 </html>
