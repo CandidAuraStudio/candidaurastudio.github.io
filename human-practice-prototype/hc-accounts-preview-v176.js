@@ -1,11 +1,11 @@
-/* HeartClear v176 — staged private account / invite / owner dashboard UI.
+/* HeartClear v177 — optional one-time lifetime supporter and private invitations.
    Safe rollout: signup remains DISABLED until a dedicated secure backend and
    approved payment method are connected. No old local progress is uploaded. */
 (function(){
 'use strict';
 if(document.getElementById('hcAccountDialog'))return;
 // Configure only after security review of the chosen Supabase project.
-const CONFIG={enabled:false,url:'',publishableKey:'',functionName:'hc-access',priceEUR:'€2.99'};
+const CONFIG={enabled:false,url:'',publishableKey:'',functionName:'hc-access',priceEUR:'€2.99',billing:'one_time_lifetime'};
 let client=null,account=null,entitlement=null;
 const css=document.createElement('style');
 css.textContent=[
@@ -31,7 +31,7 @@ css.textContent=[
 ].join('\n');document.head.append(css);
 const modal=document.createElement('dialog');modal.id='hcAccountDialog';modal.setAttribute('aria-labelledby','hcAccTitle');
 modal.innerHTML='<div class="hc-account-row"><h2 id="hcAccTitle">HeartClear account</h2><button type="button" class="hc-quiet" id="hcAccountClose" aria-label="Close">×</button></div>'+
-'<p id="hcAccountIntro">Private beta access: invitation code or paid access.</p>'+
+'<p id="hcAccountIntro">Continue listening free. An account is optional. Private invitations and lifetime supporter access are being prepared.</p>'+
 '<div id="hcAccountMessage" role="status" aria-live="polite"></div>'+
 '<div class="hc-account-summary" id="hcAccountState">Account sign-in is being prepared. Your existing HeartClear remains usable.</div>'+
 '<div id="hcAccountLogin" hidden><label>Email<input id="hcAccountEmail" type="email" autocomplete="email" inputmode="email" maxlength="200"></label>'+
@@ -39,13 +39,13 @@ modal.innerHTML='<div class="hc-account-row"><h2 id="hcAccTitle">HeartClear acco
 '<label class="hc-account-check"><input type="checkbox" id="hcAccountNotice">I understand that my email and account activity dates will be stored for sign-in and access management. My private HeartClear notes remain on this device.</label>'+
 '<div class="hc-account-actions"><button type="button" id="hcAccountSignIn">Sign in</button><button type="button" class="hc-quiet" id="hcAccountSignUp">Create account</button></div></div>'+
 '<div id="hcAccountSigned" hidden><div class="hc-account-actions"><button type="button" class="hc-quiet" id="hcAccountSignOut">Sign out</button></div></div>'+
-'<h3>Free invitation</h3><p>One-use access codes are checked on the server. Codes are never placed in the public app source.</p>'+
+'<h3>Private invitation</h3><p>Private invite links give free member access after sign-in launches. Codes are checked on the server, not stored in the public app source.</p>'+
 '<label>Invitation code<input id="hcAccountCode" autocomplete="off" inputmode="text" placeholder="HC-XXXXXXXX-XXXXXXXX-XXXXXXXX-XXXXXXXX" maxlength="40"></label>'+
 '<button type="button" id="hcAccountRedeem" disabled>Redeem invitation</button>'+
-'<h3>Paid access</h3><div class="hc-account-summary"><b>€2.99 — planned price</b><p>No payment is being collected. Billing period and payment provider are not yet confirmed.</p></div>'+
+'<h3>Optional lifetime supporter</h3><div class="hc-account-summary"><b>€2.99 once · no subscription</b><p>One payment for lifetime member access while HeartClear operates. Existing users remain free. Checkout is not live, so no payment is collected.</p></div>'+
 '<div id="hcAccountAdmin" hidden><h3>Owner dashboard</h3><div class="hc-account-summary" id="hcAccountStats">Loading counts…</div>'+
 '<div class="hc-account-actions"><button id="hcAccountRefresh" type="button">Refresh counts</button><button id="hcAccountCreateCodes" type="button">Create 10 codes</button></div>'+
-'<p>Each code is single use and expires after 90 days. Copy newly generated codes now: their plain text is not stored.</p><div id="hcAccountNewCodes"></div></div>'+
+'<p>Each invite link is single use. Copy the newly generated links now; only hashed codes are stored on the server.</p><div id="hcAccountNewCodes"></div></div>'+
 '<p><small>Registration counts are available to the owner after activation. Personal reflections, reading history and symptom answers are not uploaded by signing in.</small></p>';
 document.body.append(modal);
 const $=id=>document.getElementById(id);
@@ -58,13 +58,13 @@ function render(){
  set('hcAccountAdmin',enabled&&!!entitlement?.owner);
  $('hcAccountRedeem').disabled=!enabled||!account;
  if(!enabled){
-  $('hcAccountState').textContent='Account foundation built; public sign-in is not enabled yet. Existing listening and private notes stay unchanged.';
-  message('Free invitations and the paid option are not live yet.');
+  $('hcAccountState').textContent='Guest listening is free. Sign-in will be enabled after backend security checks. Existing listening and notes stay unchanged.';
+  message('€2.99 is a planned one-time lifetime payment, not a subscription. Checkout is not available yet.');
  }else if(account){
   $('hcAccountState').textContent='Signed in: '+account.email+' · '+(entitlement?.allowed?'Access active ('+(entitlement?.access||'owner')+')':'Access pending: redeem an invitation or use paid access when available');
   message('');
  }else{
-  $('hcAccountState').textContent='Sign in or create an account. Only activated accounts can receive member access.';
+  $('hcAccountState').textContent='Sign in or create an account to claim private invitation access. Guest listening stays free.';
   message('');
  }
 }
@@ -173,7 +173,7 @@ function handleHash(){
 const settings=document.querySelector('#settings .hc-settings-stack');
 if(settings){
  const row=document.createElement('div');row.className='setting-row';
- const info=document.createElement('div');info.innerHTML='<strong>Account & invitations</strong><small>Private beta · €2.99 paid access planned</small>';
+ const info=document.createElement('div');info.innerHTML='<strong>Account & invitations</strong><small>Continue free · €2.99 lifetime (one-time, planned)</small>';
  const button=document.createElement('button');button.className='offline-action';button.textContent='Open account';button.type='button';
  button.addEventListener('click',open);row.append(info,button);settings.prepend(row);
 }
@@ -181,6 +181,20 @@ const more=document.querySelector('#home .hc-home-more-content');
 if(more){
  const btn=document.createElement('button');btn.type='button';btn.className='choice';
  btn.textContent='Account & invitation code →';btn.addEventListener('click',open);more.append(btn);
+}
+// Small, optional offer; no popup or forced sign-in on launch.
+const home=document.getElementById('home');
+if(home&&!document.getElementById('hcLifetimeHomeNote')){
+ const slot=document.createElement('div');slot.id='hcLifetimeHomeNote';
+ slot.style.cssText='display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:5px 2px 10px;padding:5px 2px;color:inherit;font:12px system-ui,-apple-system,Segoe UI,sans-serif';
+ const caption=document.createElement('span');caption.textContent='Listening stays free · Lifetime supporter €2.99 once (coming soon)';
+ caption.style.cssText='opacity:.85;line-height:1.4;flex:1;min-width:165px';
+ const details=document.createElement('button');details.type='button';details.textContent='Details ›';
+ details.style.cssText='font:inherit;color:inherit;background:transparent;border:0;padding:8px;cursor:pointer;text-decoration:underline;text-underline-offset:3px';
+ details.setAttribute('aria-label','Read about optional lifetime support and private invitations');
+ details.addEventListener('click',open);slot.append(caption,details);
+ const start=home.querySelector('.hc-simple-start');
+ if(start)start.insertAdjacentElement('afterend',slot);
 }
 window.addEventListener('hashchange',handleHash);
 handleHash();
