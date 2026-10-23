@@ -27,7 +27,8 @@ root.innerHTML='<div class="hc-gen-top"><span>OLD TESTAMENT · GENESIS</span><b 
  '<div class="hc-gen-read-heading"><b id="hcGenReadMode">Story in everyday language</b><button id="hcGenOriginal" type="button">Full English verses</button></div>'+
  '<div id="hcGenReadText" class="hc-gen-text"></div><p id="hcGenReadNote"></p>'+
  '</div><div class="hc-gen-bottom"><button id="hcGenJoseph" type="button">Joseph’s story · Ch. 37</button><details><summary>50 chapters</summary><select id="hcGenSelect" aria-label="Choose Genesis chapter"></select></details></div>'+
- '<p id="hcGenStatus" role="status" aria-live="polite"></p>';
+ '<p id="hcGenStatus" role="status" aria-live="polite"></p>'+
+ '<details class="hc-gen-sources"><summary>Audio credits</summary><small>English: World English Bible Updated, narrated by Basil Sands; public domain, eBible.org. Tamil: independent complete Genesis narration from Sermon-Online, distributed free for sharing. The optional simple Tamil story is an original short retelling spoken by the device; quality depends on its installed Tamil voice. Streaming requires internet. No music is mixed into the audio.</small></details>';
 const target=document.getElementById('hcQuranFirst')||greeting;
 target.insertAdjacentElement('afterend',root);
 const css=[
@@ -70,7 +71,10 @@ const css=[
  '#hcGenesisCard .hc-gen-bottom summary{padding:10px 0;cursor:pointer}',
  '#hcGenesisCard #hcGenSelect{width:100%;min-width:150px;min-height:44px;border:1px solid #5a707e;border-radius:10px;background:#1d3a47;color:#fff;font-size:12px;padding:7px}',
  '#hcGenesisCard #hcGenStatus{font-size:11px;color:#b5c9d0;margin:9px 0 0}',
- '#hcGenesisCard #hcGenStatus:empty{display:none}'
+ '#hcGenesisCard #hcGenStatus:empty{display:none}',
+ '#hcGenesisCard .hc-gen-sources{margin-top:6px;color:#9cb3be;font-size:11px;line-height:1.45}',
+ '#hcGenesisCard .hc-gen-sources summary{cursor:pointer;font-size:11px;padding:6px 0}',
+ '#hcGenesisCard .hc-gen-sources small{display:block;font-size:10px;line-height:1.5}'
 ].join('\n');
 const style=document.createElement('style');style.textContent=css;document.head.appendChild(style);
 const $=id=>document.getElementById(id);
@@ -164,7 +168,7 @@ function sync(){
  $('hcGenTitle').textContent=stories[chapter-1][0];
  $('hcGenChapterMeta').textContent='Chapter '+chapter+' · '+(chapter>=37?'Joseph and his family':'Genesis');
  $('hcGenSelect').value=String(chapter);
- const isActive=language==='ta'?tamilSpeaking&&!tamilPaused:!audio.paused;
+ const isActive=!audio.paused||(tamilSpeaking&&!tamilPaused);
  $('hcGenIcon').textContent=isActive?'Ⅱ':'▶';
  $('hcGenPlayLabel').textContent=!audio.paused?'Pause':audio.getAttribute('src')?'Resume':(language==='ta'?'தமிழில் முழு அதிகாரம் கேளுங்கள்':'Listen in English');
  $('hcGenShortTamil').hidden=language!=='ta';
@@ -203,6 +207,7 @@ function loadChapterAndPlay(){
  .catch(()=>{if(token===requestId){$('hcGenStatus').textContent='Could not play. Check connection or tap Play again.';sync();}});
 }
 function toggle(){
+ if(tamilSpeaking)stopTamil();
  if(audio.getAttribute('src')&&isLoaded){
   if(audio.paused){focusAudio();audio.play().catch(()=>{$('hcGenStatus').textContent='Audio unavailable. Check internet.'});}
   else audio.pause();
