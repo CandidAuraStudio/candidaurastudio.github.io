@@ -2257,6 +2257,36 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
 #hcDriveMedia.hc-drive-docked .hc-drive-view-toggle{display:none!important}
 #hcDriveMedia.hc-drive-docked .hc-drive-actions button:focus-visible,.hc-minimize-audio:focus-visible{outline:2px solid #fff;outline-offset:2px}
 @media(max-width:390px){#hcDriveMedia.hc-drive-docked{width:min(264px,calc(100vw - 20px))!important}}
+
+/* v135: progressive disclosure and one-tap audio without hiding any features. */
+#home .hc-simple-start{padding:20px 16px 16px;border:1px solid rgba(232,222,193,.18);border-radius:24px;background:linear-gradient(155deg,rgba(18,44,57,.94),rgba(7,20,31,.96));box-shadow:0 15px 35px rgba(0,0,0,.19);margin:15px 0 16px}
+.hc-simple-start h2{font-size:27px;margin:3px 0 18px;letter-spacing:-.025em}
+.hc-simple-audio-list{display:grid;gap:9px}
+.hc-simple-audio-list>button{width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;background:rgba(6,23,34,.75);border:1px solid rgba(199,225,235,.16);border-radius:17px;min-height:70px;padding:12px 14px;color:#f3f7f7;text-align:left;font:inherit;cursor:pointer}
+.hc-simple-audio-list>button b{display:block;font-size:16px}
+.hc-simple-audio-list>button small{display:block;color:#abc0cb;font-size:12px;margin-top:3px}
+.hc-simple-play{height:43px;width:43px;flex:none;display:grid;place-items:center;border-radius:50%;background:#f5f5f0;color:#0c1c29;font-size:18px;font-weight:700}
+.hc-simple-audio-list>button:focus-visible,.hc-simple-paths button:focus-visible,.hc-simple-browse:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.hc-simple-paths{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:17px}
+.hc-simple-paths button{min-width:0;min-height:52px;text-align:left;padding:12px;border-radius:13px;border:1px solid rgba(196,222,232,.13);background:rgba(21,52,65,.38);color:#e6eeef;font:inherit;font-size:14px;font-weight:650;display:flex;justify-content:space-between;align-items:center}
+.hc-simple-paths button span{font-size:23px;color:#dbb67e}
+.hc-simple-status{font-size:12px;margin:0;color:#e8bf86}.hc-simple-status:empty{display:none}
+.hc-home-more,.hc-sounds-more,.hc-sacred-learn,.hc-more-recordings{border:1px solid rgba(197,226,236,.16);border-radius:16px;margin:13px 0;background:rgba(5,19,28,.30)}
+.hc-home-more>summary,.hc-sounds-more>summary,.hc-sacred-learn>summary,.hc-more-recordings>summary{min-height:48px;padding:13px 15px;cursor:pointer;color:#e4eaf0;font-weight:650;font-size:14px}
+.hc-home-more-content,.hc-extra-recordings{padding:4px 12px 14px}
+.hc-hub-quick{margin:16px 0}
+.hc-simple-browse{width:100%;min-height:48px;padding:12px 14px;border:1px solid rgba(210,225,234,.25);border-radius:14px;background:#142f40;color:#f5f6f7;font:inherit;font-weight:650;text-align:center}
+.hc-sounds-more{margin-top:14px}.hc-sounds-more .hc-sounds-hub-grid{margin:4px 10px 14px}
+.hc-sacred-learn{margin-top:18px}.hc-sacred-learn>*:not(summary){margin-left:12px;margin-right:12px}.hc-sacred-learn[open]{padding-bottom:12px}
+.hc-drive-short-note{display:block;margin-top:10px;color:#aabcc6;font-size:11px}
+#hcSacredDriveLibrary .soundlab-grid{display:grid;gap:9px}
+#hcSacredDriveLibrary .hc-drive-card{min-height:74px;padding:10px 12px;border-radius:16px}
+#hcSacredDriveLibrary .hc-drive-card small{font-size:11px;line-height:1.25;margin-top:4px}
+#hcSacredDriveLibrary .hc-more-recordings{margin:7px 0}
+#hcSacredDriveLibrary .hc-extra-recordings{display:grid;gap:8px}
+#hcSacredDriveLibrary .hc-drive-card .soundlab-icon{min-width:40px}
+@media(max-width:380px){.hc-simple-start h2{font-size:24px}.hc-simple-play{width:40px;height:40px}}
+
 /* Compact Drive audio preview for the new voice recording. Retain the original video player. */
 #hcDriveMedia.hc-drive-master-audio .hc-drive-video-wrap{height:170px;aspect-ratio:auto;max-width:640px;margin:16px auto}
 #hcDriveMedia.hc-drive-master-audio .hc-drive-video-wrap iframe{width:100%;height:100%}
@@ -2329,6 +2359,25 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
     })();
   </script>
 
+  <section class="hc-simple-start" aria-label="Start listening">
+    <span class="kicker">LISTEN NOW</span>
+    <h2>One tap. Just listen.</h2>
+    <p id="hcQuickAudioStatus" class="hc-simple-status" role="status" aria-live="polite"></p>
+    <div class="hc-simple-audio-list">
+      <button type="button" onclick="hcQuickPlaySound('ocean')"><span><b>Ocean</b><small>Natural waves</small></span><span class="hc-simple-play">▶</span></button>
+      <button type="button" onclick="hcQuickPlaySound('bansuri15')"><span><b>Organic Bansuri</b><small>15 minutes · Flute</small></span><span class="hc-simple-play">▶</span></button>
+      <button type="button" onclick="openHcDriveMedia('islamHuAkmal','home')"><span><b>Allahu Hu · Akmal</b><small>24:32 · Open recording</small></span><span class="hc-simple-play">↗</span></button>
+    </div>
+    <div class="hc-simple-paths" aria-label="Explore">
+      <button type="button" onclick="show('practices')">Practice <span>›</span></button>
+      <button type="button" onclick="openSoundLab()">Sounds <span>›</span></button>
+      <button type="button" onclick="hcOpenQuranStudy()">Qur'an <span>›</span></button>
+      <button type="button" onclick="show('library')">Books <span>›</span></button>
+    </div>
+  </section>
+  <details class="hc-home-more" id="hcHomeMore">
+    <summary>More on HeartClear <span aria-hidden="true">⌄</span></summary>
+    <div class="hc-home-more-content">
   <div class="hc-home-primary">
     <div class="home-resume hc-primary-resume" id="homeResumeCard">
       <div class="eyebrow">Continue meditation</div>
@@ -2421,6 +2470,8 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
   <button class="hc-week-line" onclick="show('history')" aria-label="Open this week's history">
     <b>This week</b><span id="homeWeekLine">0 sessions · 0 min</span><i>›</i>
   </button>
+    </div>
+  </details>
 </section>
 
 <section class="screen" id="hcReels" aria-labelledby="hcReelsHeading">
@@ -3097,6 +3148,12 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
     <div class="kicker" id="sacredKicker">Tradition</div>
     <h2 id="sacredTitle">Islamic</h2>
     <p id="sacredDescription">Dua, dhikr and contemplative listening.</p>
+    <div id="hcSacredDriveLibrary" style="display:none;margin-top:16px">
+      <h3 id="hcSacredDriveTitle" style="font-size:18px;margin:0 0 10px">Tap to listen</h3>
+      <div id="hcSacredDriveCards" class="soundlab-grid"></div>
+      <small class="hc-drive-short-note">Drive recordings need internet. Some may need another Play tap.</small>
+    </div>
+    <details class="hc-sacred-learn"><summary>Prayer, readings &amp; other options</summary>
 
     <div class="sacred-context">
       <b id="sacredContextTitle">Before you begin</b>
@@ -3141,11 +3198,8 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
       <button class="btn secondary" onclick="hcQuickStartTimer('quiet',5)">5-minute quiet listening</button>
     </div>
 
-    <div id="hcSacredDriveLibrary" style="display:none;margin-top:17px">
-      <h3 style="font-size:18px;margin:14px 0 9px" id="hcSacredDriveTitle">Recorded listening</h3>
-      <p style="font-size:13px;line-height:1.5;color:#c2ced6">Videos stored in your Google Drive. Playback uses Drive preview and may require internet. Not HeartClear-produced recordings.</p>
-      <div id="hcSacredDriveCards" class="soundlab-grid"></div>
-    </div>
+
+    </details>
     <div class="empty-shelf" style="margin-top:14px">
       <div class="empty-icon">♪</div>
       <strong id="sacredEmptyTitle">Sound practice</strong>
@@ -3379,11 +3433,18 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
     <div class="kicker">Listen</div>
     <h2>Sounds</h2>
     <p>Nature, sacred listening and sound familiarity in one place.</p>
+    <div class="hc-simple-audio-list hc-hub-quick">
+      <button type="button" onclick="hcQuickPlaySound('ocean')"><span><b>Ocean</b><small>Natural waves</small></span><span class="hc-simple-play">▶</span></button>
+      <button type="button" onclick="hcQuickPlaySound('bansuri15')"><span><b>Organic Bansuri</b><small>15-minute flute</small></span><span class="hc-simple-play">▶</span></button>
+      <button type="button" onclick="openHcDriveMedia('islamHuAkmal','home')"><span><b>Allahu Hu · Akmal</b><small>24:32 · Open recording</small></span><span class="hc-simple-play">↗</span></button>
+    </div>
+    <button class="hc-simple-browse" type="button" onclick="openSoundLab()">Browse all sounds ›</button>
+    <details class="hc-sounds-more"><summary>Other collections</summary>
     <div class="hc-sounds-hub-grid">
       <button class="hc-sounds-hub-card" onclick="openSoundLab()"><span>≈</span><b>Nature & ambient</b><small>Birds, fire, rain, ocean, thunder and quiet sound beds.</small></button>
       <button class="hc-sounds-hub-card" onclick="show('sacred')"><span>✦</span><b>Sacred sound</b><small>Islamic, Hindu and Buddhist listening kept in their own traditions.</small></button>
       <button class="hc-sounds-hub-card" onclick="openFearPractice()"><span>◉</span><b>Sound familiarity</b><small>Gradual ocean, storm and distant-thunder practice.</small></button>
-    </div>
+    </div></details>
   </div>
 </section>
 
@@ -5083,9 +5144,10 @@ function renderGlobalMini(){
   const mini=document.getElementById('globalMini');
   if(!mini)return;
   const state=getActiveMediaState();
-  // Paused audio is accessible through the Home Continue cards and source player.
-  // Never let a paused 00:00 (or an old audiobook) cover another screen.
-  const keepPaused=!!(state && hcMiniPinnedKey===state.key && state.el?.getAttribute('src'));
+  // The last started native track stays visible when paused, including on Home.
+  // Never surface unrelated stale tracks at 00:00.
+  const validSrc=!!state?.el?.getAttribute('src');
+  const keepPaused=!!(state && validSrc && (hcMiniPinnedKey===state.key || (Number(state.el.currentTime)>0 && localStorage.getItem('heartclearActiveMedia')===state.key)));
   if(!state || (state.el.paused&&!keepPaused) || (state.key==='mix'&&!hcMixRunning) || currentScreenId==='hcReels'){
     mini.classList.remove('show');mini.classList.remove('is-mix');
     return;
@@ -6194,7 +6256,25 @@ function hcRenderDriveCards(section,containerId){
   const el=document.getElementById(containerId);
   if(!el)return;
   el.replaceChildren();
-  HC_DRIVE_COLLECTIONS.filter(item=>item.section===section).forEach(item=>el.appendChild(hcDriveCard(item)));
+  const items=HC_DRIVE_COLLECTIONS.filter(item=>item.section===section);
+  if(containerId==='hcSacredDriveCards'){
+    const featured=(section==='islamic'?['islamHuAkmal','islamHu','islamLa']:section==='hindu'?['hinduOm']:[]);
+    const primary=featured.map(key=>items.find(item=>item.key===key)).filter(Boolean);
+    primary.forEach(item=>el.appendChild(hcDriveCard(item)));
+    const rest=items.filter(item=>!featured.includes(item.key));
+    if(rest.length){
+      const details=document.createElement('details');
+      details.className='hc-more-recordings';
+      const summary=document.createElement('summary');
+      summary.textContent='More recordings ('+rest.length+')';
+      details.appendChild(summary);
+      const inside=document.createElement('div');
+      inside.className='hc-extra-recordings';
+      rest.forEach(item=>inside.appendChild(hcDriveCard(item)));
+      details.appendChild(inside);
+      el.appendChild(details);
+    }
+  }else items.forEach(item=>el.appendChild(hcDriveCard(item)));
 }
 function openHcDriveMedia(key,sourceScreen=null){
   const item=HC_DRIVE_COLLECTIONS.find(i=>i.key===key);
@@ -6207,7 +6287,7 @@ function openHcDriveMedia(key,sourceScreen=null){
   document.getElementById('hcDriveMedia').classList.toggle('hc-drive-master-audio',!!item.audio);
  const viewBtn=document.getElementById('hcDriveViewToggle');
  if(viewBtn){viewBtn.hidden=!!item.audio;viewBtn.textContent=item.audio?'Audio player':'Show full video controls';viewBtn.setAttribute('aria-pressed','false');}
- hcDriveBackScreen=sourceScreen==='practices'?'practices':item.section==='meditation'?'practices':item.section==='general'?'soundLab':'sacredDetail';
+ hcDriveBackScreen=sourceScreen==='home'?'home':sourceScreen==='practices'?'practices':item.section==='meditation'?'practices':item.section==='general'?'soundLab':'sacredDetail';
   document.getElementById('hcDriveVideoTitle').textContent=key==='islamHu'&&sourceScreen==='practices'?'Allahu Meditation · Hu Hu Allah':item.name;
   document.getElementById('hcDriveVideoCategory').textContent=key==='islamHu'&&sourceScreen==='practices'?'Islamic devotional listening · Sufi-style dhikr':item.type;
   document.getElementById('hcDriveVideoDescription').textContent=item.note;
@@ -6327,7 +6407,7 @@ function openSacred(kind){
     const enabled=kind==='islamic'||kind==='hindu';
     media.style.display=enabled?'block':'none';
     if(enabled){
-      document.getElementById('hcSacredDriveTitle').textContent=kind==='islamic'?'Islamic · Uploaded dhikr and devotional videos':'Hindu · Uploaded mantra listening';
+      document.getElementById('hcSacredDriveTitle').textContent=kind==='islamic'?'Tap to listen':'Recorded listening';
       hcRenderDriveCards(kind,'hcSacredDriveCards');
     }
   }
@@ -7017,6 +7097,27 @@ async function playNextSoundLab(userInitiated=false){
   }catch(e){const st=document.getElementById('soundLabStatus');if(st)st.textContent='Next sound is ready. Tap Play if your device blocked automatic playback.'}
   syncSoundLab();
 }
+async function hcQuickPlaySound(key){
+  const item=soundLabTracks[key];
+  if(!item)return;
+  // One tap uses the real native audio player, never a sample or a nature substitute.
+  if(currentSoundKey===key && soundLabAudio.getAttribute('src')){
+    if(soundLabAudio.paused){
+      try{await soundLabAudio.play();rememberActiveMedia('soundlab')}catch(e){hcQuickPlaybackError(item.title)}
+    }else soundLabAudio.pause();
+  }else{
+    openSoundTrack(key,true);
+    try{await soundLabAudio.play();soundLabPlayRequested=true;rememberActiveMedia('soundlab')}
+    catch(e){hcQuickPlaybackError(item.title)}
+  }
+  hcMiniPinnedKey='soundlab';
+  renderGlobalMini();
+}
+function hcQuickPlaybackError(title){
+  soundLabPlayRequested=false;
+  const label=document.getElementById('hcQuickAudioStatus');
+  if(label)label.textContent=title+' could not play. Check your connection or choose another sound.';
+}
 function openSoundTrack(key,stayInSounds=false){
   if(currentSoundKey==='personal'&&key!=='personal'){
     soundLabAudio.pause();soundLabAudio.removeAttribute('src');soundLabAudio.load();
@@ -7079,21 +7180,12 @@ function openSoundTrack(key,stayInSounds=false){
 let soundLabPlayRequested=false;
 let soundLabFallbackActive=false;
 async function fallbackSoundLab(){
-  if(soundLabFallbackActive||currentSoundKey==='nature'||currentSoundKey==='organicBansuri'||currentSoundKey==='personal')return;
-  soundLabFallbackActive=true;
+  // Do not silently replace an unavailable track with birds or other nature sounds.
+  soundLabPlayRequested=false;
   const status=document.getElementById('soundLabStatus');
-  if(status)status.textContent='This source failed. Loading the offline-capable Nature Weave backup…';
-  try{
-    const src=await loadNatureSound();
-    currentSoundKey='nature';
-    soundLabAudio.src=src;soundLabAudio.volume=.45;soundLabAudio.load();
-    document.getElementById('soundLabTitle').textContent='Nature Weave (backup)';
-    document.getElementById('soundLabDesc').textContent='The requested recording was unavailable · nature mix instead';
-    document.getElementById('soundLabTotal').textContent='03:00';
-    if(soundLabPlayRequested){await soundLabAudio.play();rememberActiveMedia('soundlab')}
-    if(status)status.textContent=soundLabPlayRequested?'Playing Nature Weave backup.':'Nature Weave backup ready · press Play.';
-    setSoundLabMediaSession();
-  }catch(e){if(status)status.textContent='Audio unavailable. Try again with a connection.'}
+  if(status)status.textContent='This track could not play. Choose another sound or check your connection.';
+  const label=document.getElementById('hcQuickAudioStatus');
+  if(label)label.textContent='The selected track could not play. Nothing else was substituted.';
 }
 async function toggleSoundLab(){
   if(soundLabAudio.paused){
@@ -8921,7 +9013,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=134');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=135');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
