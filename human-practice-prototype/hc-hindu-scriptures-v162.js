@@ -60,6 +60,11 @@ styles.textContent=[
 '#hcHinduHome .hc-hindu-open{font-size:19px}',
 '#hcHinduScriptures{border:1px solid rgba(205,230,237,.25);border-radius:16px;margin:13px 0;padding:12px;background:#102631}',
 '#hcHinduScriptures h3{font-size:17px;margin:0 0 6px}',
+'#hcHinduTraditions{margin:7px 0 10px;background:#0b1a21;border:1px solid #41535e;border-radius:12px;padding:10px 12px}',
+'#hcHinduTraditions summary{cursor:pointer;font-size:12px;color:#dce6e9;font-weight:600}',
+'#hcHinduTraditions div{display:grid;gap:2px;padding:9px 1px;border-top:1px solid #2d4450}',
+'#hcHinduTraditions b{font-size:12px}',
+'#hcHinduTraditions small{font-size:11px;color:#b4c1c8;line-height:1.5}',
 '#hcHinduScriptures .hc-hindu-lead{font-size:12px;line-height:1.6;color:#c7d8de;margin:5px 0 12px}',
 '#hcHinduScriptures .hc-hindu-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}',
 '#hcHinduScriptures select{min-height:37px;background:#1b3542;border:1px solid #6b8490;border-radius:9px;color:#fff;padding:7px;font:inherit;font-size:12px}',
@@ -82,6 +87,17 @@ listens.after(homeBar);
 const shelf=document.createElement('section');shelf.id='hcHinduScriptures';shelf.hidden=true;shelf.setAttribute('aria-label','Hindu scripture learning library');
 dest.querySelector('.hc-sacred-learn')?.before(shelf);
 shelf.innerHTML='<div class="hc-hindu-row"><div><h3>Hindu Scriptures</h3><small>கீதை · வேதம் · புராணம் · गीता · वेद · पुराण</small></div><select class="hc-hindu-lang" aria-label="Scripture listening language"></select></div><p class="hc-hindu-lead">Sanskrit source passages with short original explanations in English, தமிழ் and नेपाली. Audio commentary is provided only where a human recording is verified. Gita chanting, translations, and personal reflections are distinct.</p><div class="hc-hindu-groups"></div><p class="hc-hindu-status" id="hcHinduShelfStatus" role="status" aria-live="polite"></p><p class="hc-hindu-lead">Primary-text citations accompany every lesson. Full sacred works and licensed professional recordings are not yet embedded.</p>';
+const map=document.createElement('details');
+map.id='hcHinduTraditions';
+map.className='hc-hindu-map';
+map.innerHTML='<summary>Explore Hindu traditions · கற்றல்</summary>'+
+'<div><b>Bhagavad Gita</b><small>18 chapters, within the Mahabharata · Original chapter audio</small></div>'+
+'<div><b>Four Vedas</b><small>Rigveda · Samaveda · Yajurveda · Atharvaveda · Text samples, not full audio</small></div>'+
+'<div><b>Upanishads</b><small>Philosophical dialogues · Full audio collection not connected</small></div>'+
+'<div><b>Epics</b><small>Mahabharata and Ramayana · Separate works, not Gita chapters</small></div>'+
+'<div><b>Puranas</b><small>Many devotional and narrative works · Bhagavata passage available below</small></div>'+
+'<div><b>Ayurveda</b><small>Traditional health literature, not a fifth Veda or medical instructions</small></div>';
+shelf.querySelector('.hc-hindu-groups')?.before(map);
 const status=document.createElement('p');status.className='hc-hindu-status';status.id='hcHinduHomeStatus';homeBar.after(status);
 function saveLang(){try{localStorage.setItem(PREF,lang)}catch(e){}}
 function populateSelect(select){
@@ -93,7 +109,7 @@ homeBar.querySelectorAll('.hc-hindu-lang').forEach(populateSelect);shelf.querySe
 const groupContainer=shelf.querySelector('.hc-hindu-groups');
 for(const w of works){
  const details=document.createElement('details');
- details.dataset.scripture=w.id;details.open=w.id==='gita';
+ details.dataset.scripture=w.id;details.open=false;
  const summary=document.createElement('summary');summary.textContent=w.en+' · '+w.ta+' · '+w.ne;
  details.append(summary);
  const kicker=document.createElement('p');kicker.className='hc-hindu-lead';kicker.textContent=w.kind;details.append(kicker);
@@ -142,7 +158,7 @@ function toggle(id){
  const l=all.find(x=>x.id===id);if(!l)return;
  if(l.work.id==='gita'){
    const chapter=Number(l.ref.split('.')[0])||2;
-   if(typeof window.hcOpenGitaVoice==='function')window.hcOpenGitaVoice(chapter);
+   if(typeof window.hcOpenGitaVoice==='function')window.hcOpenGitaVoice(chapter,lang);
    else update('Human narration is not ready. Please refresh HeartClear.');
    return;
  }
@@ -164,7 +180,7 @@ function toggle(id){
  try{localStorage.setItem(LAST,l.id)}catch(e){}
 }
 homeBar.querySelector('.hc-hindu-play').addEventListener('click',()=>{
- if(typeof window.hcOpenGitaVoice==='function')window.hcOpenGitaVoice(2);
+ if(typeof window.hcOpenGitaVoice==='function')window.hcOpenGitaVoice(2,lang);
  else update('Please refresh HeartClear to load original Gita audio.');
 });
 homeBar.querySelector('.hc-hindu-open').addEventListener('click',()=>{
