@@ -6456,8 +6456,16 @@ function hcResumeSoundLab(){
     syncSoundLab();
   }catch(e){}};
   if(soundLabAudio.readyState>=1)apply();else soundLabAudio.addEventListener('loadedmetadata',apply,{once:true});
-  // Never silently autostart after a browser process was closed; the explicit Play button remains available.
-  const st=document.getElementById('soundLabStatus');if(st)st.textContent='Position restored. Press Play to continue listening.';
+  // The listener explicitly pressed Resume, so request playback now.
+  const st=document.getElementById('soundLabStatus');
+  if(st)st.textContent='Resuming sound…';
+  try{
+    Promise.resolve(soundLabAudio.play()).then(()=>{
+      soundLabPlayRequested=true;rememberActiveMedia('soundlab');
+      if(st)st.textContent='Playing · '+soundLabTracks[last.key].title;
+      syncSoundLab();renderGlobalMini();
+    }).catch(()=>{if(st)st.textContent='Tap Play if your browser blocked playback.'});
+  }catch(e){if(st)st.textContent='Tap Play to resume.'}
 }
 
 function updateOrganicFluteTools(){
@@ -8353,6 +8361,19 @@ function continueLastSession(){
   const apply=()=>{try{audio.currentTime=target;sync()}catch(e){}};
   if(audio.readyState>=1) apply();
   else audio.addEventListener('loadedmetadata',apply,{once:true});
+  // Resume is a user click: request audio in this same event, not a second Play tap.
+  document.getElementById('playerNote').textContent='Resuming audio…';
+  try{
+    Promise.resolve(audio.play()).then(()=>{
+      rememberActiveMedia('meditation');syncPracticeVisual(true);
+      if(!sessionStartedAt)sessionStartedAt=Date.now();
+      resumeCard.classList.remove('show');
+      document.getElementById('playerNote').textContent='Playing';
+      sync();renderGlobalMini();
+    }).catch(()=>{
+      document.getElementById('playerNote').textContent='Tap Play to resume if your browser blocked audio.';
+    });
+  }catch(e){document.getElementById('playerNote').textContent='Tap Play to resume.'}
 }
 
 function openHistory(){
