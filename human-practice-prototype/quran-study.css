@@ -70,3 +70,28 @@
 #hcQuranStudy button:focus-visible,#hcQuranStudy a:focus-visible,#hcQuranStudy input:focus-visible,#hcQuranStudy textarea:focus-visible{outline:2px solid #fff;outline-offset:3px}
 @media(min-width:480px){#hcQuranStudy .hcqs-verse{padding:20px}#hcQuranStudy .hcqs-shell{padding:25px}}
 @media(max-width:350px){#hcQuranStudy .hcqs-picker{grid-template-columns:1fr}#hcQuranStudy .hcqs-pager{gap:3px}#hcQuranStudy .hcqs-pager button{font-size:11px}}
+
+/* v133 · two reading columns, Arabic first, bilingual meaning and separate commentary. */
+#hcQuranStudy .hcqs-picker{display:flex;flex-direction:column;gap:8px}
+#hcQuranStudy .hcqs-picker label{font-size:12px;color:#ead3a7;font-weight:700}
+#hcQuranStudy #hcqs-surah-select{width:100%;min-height:50px;color:#f2f7f9;background:#0a2333;border:1px solid rgba(220,234,245,.36);border-radius:14px;padding:11px 13px;font:inherit;font-size:14px}
+#hcQuranStudy .hcqs-translation-columns{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;align-items:stretch;margin-top:10px}
+#hcQuranStudy .hcqs-translation-col{min-width:0;border:1px solid rgba(219,235,242,.15);border-radius:13px;padding:12px 10px;background:rgba(18,49,62,.37);overflow-wrap:anywhere}
+#hcQuranStudy .hcqs-translation-col.hcqs-en{display:block}
+#hcQuranStudy .hcqs-translation-col.hcqs-ta{display:block}
+#hcQuranStudy .hcqs-translation-col strong{font-size:11px;line-height:1.6;color:#e2c591;display:block}
+#hcQuranStudy .hcqs-translation-col p{font-size:clamp(11px,3.2vw,14px);line-height:1.75;margin:7px 0 0;white-space:pre-wrap}
+#hcQuranStudy .hcqs-translation-col.hcqs-ta p{line-height:1.9}
+#hcQuranStudy .hcqs-load-status{padding:16px;border:1px solid rgba(227,238,244,.2);border-radius:12px;font-size:12px;color:#d9e7ec;line-height:1.7}
+#hcQuranStudy .hcqs-load-status a{color:#e7d1a8;text-decoration:underline}
+#hcQuranStudy .hcqs-editorial{border-left:3px solid rgba(222,180,110,.58);padding-left:11px;background:rgba(105,79,38,.045)}
+#hcQuranStudy .hcqs-private-note{border-left:3px solid rgba(153,208,194,.7)}
+#hcQuranStudy .hcqs-verse{scroll-margin-top:78px}
+#hcQuranStudy[data-qs-language="en"] .hcqs-translation-columns,
+#hcQuranStudy[data-qs-language="ta"] .hcqs-translation-columns{grid-template-columns:minmax(0,1fr)}
+@media(max-width:380px){
+ #hcQuranStudy .hcqs-translation-columns{gap:6px}
+ #hcQuranStudy .hcqs-translation-col{padding:8px 7px}
+ #hcQuranStudy .hcqs-translation-col strong{font-size:10px}
+ #hcQuranStudy .hcqs-translation-col p{font-size:11px}
+}
