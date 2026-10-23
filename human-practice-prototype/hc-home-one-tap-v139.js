@@ -20,6 +20,8 @@ const css=[
 '#home .hc-v139-quran button{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;min-height:44px;border:1px solid rgba(230,240,245,.18);background:#0b2331;border-radius:12px;color:#fff;font:inherit;text-align:left;font-size:13px;padding:9px 12px}',
 '#home .hc-v139-quran button small{display:block;color:#aec3cc;font-size:11px;line-height:1.3;margin-top:3px}',
 '#home .hc-v139-quran button strong{font-size:18px}',
+'#home .hc-v139-quran .hc-v139-all-surahs{min-height:36px;padding:7px 12px;background:#0a1922;border-style:dashed}',
+'#home .hc-v139-quran .hc-v139-all-surahs small{font-size:10px}',
 '#home .hc-v139-secondary .hc-home-secondary-resumes{margin:10px 0}',
 '@media(max-width:355px){#home .hc-v139-daily-grid button{padding:9px 8px;font-size:12px}}'
 ].join('\n');
@@ -102,13 +104,48 @@ reels.addEventListener('click',()=>hcOpenReels());start.insertBefore(reels,secon
 
 // Play real recited surahs as native MP3 audio using the existing universal mini-player.
 // Shuffle only the recommended chapter on refresh; preserve canonical verse order.
-const chapters=[[1,'Al-Fatihah'],[36,'Ya-Sin'],[55,'Ar-Rahman'],[67,'Al-Mulk'],
- [112,'Al-Ikhlas'],[113,'Al-Falaq'],[114,'An-Nas']];
+const knownSurahs={1:'Al-Fatihah',2:'Al-Baqarah',3:'Ali Imran',18:'Al-Kahf',
+ 36:'Ya-Sin',55:'Ar-Rahman',67:'Al-Mulk',112:'Al-Ikhlas',113:'Al-Falaq',114:'An-Nas'};
+// All 114 Surahs use the provider's whole-Surah files: genuine Arabic recitation,
+// one consistent reciter, canonical chapter and verse order, with no synthetic effects.
+const chapters=Array.from({length:114},(_,i)=>[i+1,knownSurahs[i+1]||String(i+1)]);
 chapters.forEach(([n,label])=>{
  soundLabTracks['hcSurah'+n]={title:'Surah '+label,
-  desc:'Arabic recitation · Mishary Rashid Alafasy · Al Quran Cloud',duration:0,
+  desc:'Arabic recitation · Mishary Rashid Alafasy · Al Quran Cloud · 128 kbps',duration:0,
   url:'https://cdn.islamic.network/quran/audio-surah/128/ar.alafasy/'+n+'.mp3'};
 });
+// Load the official chapter names when online; audio remains available even if names fail.
+fetch('https://api.alquran.cloud/v1/surah',{headers:{Accept:'application/json'}})
+ .then(response=>{if(!response.ok)throw Error('Names unavailable');return response.json()})
+ .then(result=>{
+   const names=result?.data;if(!Array.isArray(names))return;
+   names.forEach(ch=>{
+     const n=Number(ch.number),name=String(ch.englishName||'').trim();
+     if(n<1||n>114||!name||!soundLabTracks['hcSurah'+n])return;
+     soundLabTracks['hcSurah'+n].title='Surah '+name;
+     if(n===surahNumber){
+       const caption=quran.querySelector('#hcV139ShuffledQuran small');
+       if(caption)caption.textContent='Surah '+name+' · new on refresh';
+     }
+     if(currentSoundKey==='hcSurah'+n){
+       const el=document.getElementById('soundLabTitle');if(el)el.textContent='Surah '+name;
+     }
+   });
+   if(typeof hcRenderMiniLibrary==='function'&&!document.getElementById('hcMiniLibrary')?.hidden)hcRenderMiniLibrary();
+   if(typeof renderGlobalMini==='function')renderGlobalMini();
+   if(/^hcSurah\\d+$/.test(currentSoundKey)&&typeof setSoundLabMediaSession==='function')setSoundLabMediaSession();
+ }).catch(()=>{ /* Keep offline numeric names; audio is online-only. */ });
+window.hcPlayQuranSurah=function(n){
+ const number=Number(n),key='hcSurah'+number;
+ if(!Number.isInteger(number)||number<1||number>114||!soundLabTracks[key])return;
+ // Recitations form a continuous listening collection, independent of nature sound loops.
+ if(!soundLabAutoNext){
+   soundLabAutoNext=true;
+   try{localStorage.setItem('heartclearAutoNext','1')}catch(e){}
+   updateSoundLabQueueStatus();
+ }
+ hcQuickPlaySound(key);
+};
 let lastNumber=0;try{lastNumber=Number(localStorage.getItem('hcQuranShuffleLastV1'))||0}catch(e){}
 const choices=chapters.filter(([n])=>n!==lastNumber);
 const [surahNumber,surahName]=choices[Math.floor(Math.random()*choices.length)]||chapters[0];
@@ -117,11 +154,19 @@ const quran=document.createElement('div');quran.className='hc-v139-quran';
 quran.innerHTML='<div class="hc-v139-label">Qur’an listening · Arabic audio</div>'+
  '<button type="button" id="hcV139MorningQuran"><span>Morning Qur’an<small>Al-Fatihah · listen</small></span><strong>▶</strong></button>'+
  '<button type="button" id="hcV139ShuffledQuran"><span>Surah for now<small></small></span><strong>▶</strong></button>'+
- '<button type="button" id="hcV139Adhkar"><span>Morning Adhkar<small>Supplications · 28 min</small></span><strong>▶</strong></button>';
+ '<button type="button" id="hcV139Adhkar"><span>Morning Adhkar<small>Supplications · 28 min</small></span><strong>▶</strong></button>'+
+ '<button type="button" class="hc-v139-all-surahs" id="hcV139AllSurahs"><span>All 114 Surahs<small>Browse or continue to next chapter</small></span><strong>›</strong></button>';
 start.insertBefore(quran,start.querySelector('.hc-simple-paths'));
 quran.querySelector('#hcV139ShuffledQuran small').textContent='Surah '+surahName+' · new on refresh';
-quran.querySelector('#hcV139MorningQuran').addEventListener('click',()=>hcQuickPlaySound('hcSurah1'));
-quran.querySelector('#hcV139ShuffledQuran').addEventListener('click',()=>hcQuickPlaySound('hcSurah'+surahNumber));
+quran.querySelector('#hcV139MorningQuran').addEventListener('click',()=>hcPlayQuranSurah(1));
+quran.querySelector('#hcV139ShuffledQuran').addEventListener('click',()=>hcPlayQuranSurah(surahNumber));
+quran.querySelector('#hcV139AllSurahs').addEventListener('click',()=>{
+ hcSetMiniCategory('quran');
+ const field=document.getElementById('hcMiniSearch');if(field)field.value='';
+ const drawer=document.getElementById('hcMiniLibrary');
+ if(drawer?.hidden)hcToggleMiniLibrary();
+ else hcRenderMiniLibrary();
+});
 quran.querySelector('#hcV139Adhkar').addEventListener('click',()=>{
  try{
   const t=hcGetAdhkarPosition();
