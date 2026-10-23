@@ -68,10 +68,10 @@ for(const [k,v] of Object.entries(labels)){const o=document.createElement('optio
 for(let n=1;n<=18;n++){const o=document.createElement('option');o.value=String(n);o.textContent='Chapter '+n;el('hcgChapter').add(o)}
 let mode='gita',lang='sa',chapter=1,playing=false,src='',playToken=0;
 try{const l=localStorage.getItem('hcGitaVoiceLang');if(labels[l])lang=l;const n=Number(localStorage.getItem('hcGitaVoiceChapter'));if(n>=1&&n<=18)chapter=n}catch(e){}
-const audio=new Audio();audio.preload='none';
+const audio=new Audio();audio.preload='none';audio.hidden=true;audio.playsInline=true;panel.append(audio);
 function notice(txt){el('hcgStatus').textContent=txt}
 function save(){try{localStorage.setItem('hcGitaVoiceLang',lang);localStorage.setItem('hcGitaVoiceChapter',String(chapter))}catch(e){}}
-function stop(){++playToken;audio.pause();audio.removeAttribute('src');audio.load();src='';playing=false;el('hcgPlay').textContent='▶'}
+function stop(){++playToken;audio.pause();audio.removeAttribute('src');audio.load();src='';playing=false;el('hcgPlay').textContent='▶';if(typeof renderGlobalMini==='function')renderGlobalMini()}
 function update(){
  el('hcgHeader').textContent=mode==='om'?'OM · Original voice':'Bhagavad Gita · Original voice';
  el('hcgLangRow').hidden=mode==='om';el('hcgChapterRow').hidden=mode==='om';
@@ -126,12 +126,13 @@ el('hcgNext').addEventListener('click',()=>next(1));
 el('hcgPlay').addEventListener('click',play);
 el('hcgClose').addEventListener('click',()=>{stop();panel.hidden=true});
 audio.addEventListener('pause',()=>{playing=false;el('hcgPlay').textContent='▶';if(typeof renderGlobalMini==='function')renderGlobalMini()});
+audio.addEventListener('play',()=>{playing=true;el('hcgPlay').textContent='Ⅱ';try{localStorage.setItem('heartclearActiveMedia','gita')}catch(e){};if(typeof renderGlobalMini==='function')renderGlobalMini()});
 audio.addEventListener('ended',()=>{playing=false;if(mode==='gita'&&chapter<18&&url(lang,chapter))next(1);else{stop();notice('Finished.')}});
 audio.addEventListener('timeupdate',()=>{if(typeof renderGlobalMini==='function')renderGlobalMini()});
 audio.addEventListener('error',()=>{playing=false;el('hcgPlay').textContent='▶';notice('Cannot play this audio stream. Use the original source link.');});
 document.addEventListener('play',event=>{if(event.target instanceof HTMLMediaElement&&event.target!==audio&&!audio.paused)audio.pause()},true);
 window.hcGitaPlayerState=()=>{
- if(panel.hidden||!audio.getAttribute('src'))return null;
+ if(!audio.getAttribute('src'))return null;
  return {key:'gita',el:audio,title:mode==='om'?'OM · Voice':'Bhagavad Gita · '+labels[lang]+' · Chapter '+chapter,
  meta:mode==='om'?'OM · audio':'Gita · '+chapter+' / 18 · '+(typeof fmt==='function'?fmt(audio.currentTime||0):''),
  screen:'sacredDetail'};
