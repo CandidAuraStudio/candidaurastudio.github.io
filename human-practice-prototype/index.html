@@ -9364,7 +9364,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=164');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=165');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
@@ -9388,7 +9388,7 @@ const heartclearAutoInstallPrompt=false;
 <script src="./hc-inline-audio.js?v=156"></script>
 <script src="./hc-home-one-tap-v139.js?v=145"></script>
 <script src="./hc-family-kitchen-v144.js?v=154"></script>
-<script src="./hc-monthly-kitchen-v145.js?v=148"></script>
+<script src="./hc-monthly-kitchen-v145.js?v=165"></script>
 <script src="./hc-kitchen-teaching-v149.js?v=150"></script>
 <script src="./hc-sounds-direct-v149.js?v=152"></script>
 <script src="./hc-quran-home-v153.js?v=153"></script>
@@ -9402,6 +9402,7 @@ const heartclearAutoInstallPrompt=false;
 <script src="./hc-hindu-scriptures-v162.js?v=163"></script>
 <script src="./hc-gita-original-audio-v163.js?v=163"></script>
 
+<script src="./hc-kitchen-compact-v163.js?v=165"></script>
 </body>
 </html>
 
