@@ -3533,11 +3533,11 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
     <div class="hc-mix-actions"><button class="hc-mix-start" id="hcMixPlayBtn" onclick="hcMixToggle()">Start mix</button><button class="hc-mix-stop" onclick="hcMixStop()">Stop</button></div>
     <div id="hcMixRecent" class="hc-mix-recent" hidden></div>
   </section>
-  <div class="hc-sounds-list-head"><div class="kicker">LISTEN</div><span id="hcSoundCount"></span></div>
-  <div id="hcSoundTrackList" class="hc-sound-track-list" aria-label="Available sounds"></div>
   <div class="hc-sounds-list-head"><div class="kicker">INDIAN CLASSICAL · FROM YOUR DRIVE</div></div>
   <div id="hcGeneralDriveCards" class="hc-sound-track-list" aria-label="Indian classical and instrumental recordings"></div>
-  <p class="hc-mix-status">Drive video previews may need an extra Play tap and cannot be auto-queued until audio is available and cleared for use.</p>
+  <p class="hc-mix-status">Drive video previews cannot use native Auto Next.</p>
+  <div class="hc-sounds-list-head"><div class="kicker">LISTEN</div><span id="hcSoundCount"></span></div>
+  <div id="hcSoundTrackList" class="hc-sound-track-list" aria-label="Available sounds"></div>
 </section>
 
 <div id="hcSoundCreditSheet" class="hc-credit-backdrop" role="dialog" aria-modal="true" aria-label="Recording information" hidden onclick="if(event.target===this)hcHideSoundCredits()">
@@ -6943,6 +6943,8 @@ function hcRenderSoundRows(){
     actions.append(info,play);row.append(symbol,words,duration,actions);list.append(row);
   });
   hcUpdateSoundRowButtons();
+  // Ensure existing Indian Raga and instrumental Drive entries are actually rendered.
+  hcRenderDriveCards('general','hcGeneralDriveCards');
 }
 /* The white circle is an actual Play/Pause control, not another navigation step.
  * Keep the Sounds list visible; use the existing universal mini player for transport. */
