@@ -2292,6 +2292,27 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
 #hcDriveMedia.hc-drive-master-audio .hc-drive-video-wrap iframe{width:100%;height:100%}
 #hcDriveMedia.hc-drive-master-audio #hcDriveViewToggle{display:none!important}
 #hcDriveMedia.hc-drive-master-audio .hc-drive-expand{display:none!important}
+
+/* v135: Sacred Sound study links share the quiet, dark HeartClear palette. */
+#islamicFeatured .hc-sacred-study-link{
+  display:block;width:100%;min-height:52px;
+  padding:15px 17px;margin:0 0 12px;
+  border:1px solid rgba(211,179,117,.24);
+  border-radius:15px;
+  background:linear-gradient(145deg,rgba(18,47,60,.91),rgba(8,28,40,.91));
+  color:#e5edf0;text-align:left;font:inherit;font-size:13px;font-weight:600;
+  line-height:1.65;letter-spacing:0;
+  box-shadow:inset 0 1px 0 rgba(237,226,199,.035);
+  cursor:pointer;
+}
+#islamicFeatured .hc-sacred-study-link:last-of-type{margin-bottom:17px}
+#islamicFeatured .hc-sacred-study-link:hover{
+  background:linear-gradient(145deg,rgba(25,56,68,.97),rgba(10,32,44,.95));
+  border-color:rgba(219,184,116,.4)
+}
+#islamicFeatured .hc-sacred-study-link:focus-visible{
+  outline:2px solid #e2c591;outline-offset:3px
+}
 </style>
 <link rel="stylesheet" href="./quran-study.css?v=133">
 </head>
@@ -3160,7 +3181,7 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
       <p id="sacredMeaning">Understand the meaning and context, then listen or recite naturally without forcing the breath.</p>
     </div>
 
-    <div class="sacred-feature" id="islamicFeatured"><button class="hc-living-button" onclick="hcOpenQuranStudy()" style="display:block;width:100%;padding:13px;margin:0 0 12px;background:#fff;color:#10212e;border:0;border-radius:14px;font:inherit;font-size:13px;font-weight:700;text-align:left">Full Qur'an study · Al-Baqarah 286 / An-Nisa / Fussilat / An-Nas · தமிழ் →</button><button class="hc-living-button" onclick="show('hcLivingQuran')" style="display:block;width:100%;padding:13px;margin:0 0 14px;background:white;color:#10212e;border:0;border-radius:14px;font:inherit;font-size:13px;font-weight:700;text-align:left">The Living Qur'an · மூன்று குல் ஸூராக்கள் / Voice &amp; stillness →</button><b>Surah Al-Fatiha · ஸூரத்துல் ஃபாத்திஹா</b><small>Seven verses. Meaning and life reflections in Tamil and English.</small><div class="sacred-feature-actions"><button onclick="show('hcFatiha')">Read · தமிழ் / English</button><button onclick="hcPlayAdhkar('listen')">Morning Adhkar</button></div><div style="height:1px;background:var(--line);margin:15px 0"></div>
+    <div class="sacred-feature" id="islamicFeatured"><button class="hc-sacred-study-link" onclick="hcOpenQuranStudy()">Full Qur'an study · Al-Baqarah 286 / An-Nisa / Fussilat / An-Nas · தமிழ் →</button><button class="hc-sacred-study-link" onclick="show('hcLivingQuran')">The Living Qur'an · மூன்று குல் ஸூராக்கள் / Voice &amp; stillness →</button><b>Surah Al-Fatiha · ஸூரத்துல் ஃபாத்திஹா</b><small>Seven verses. Meaning and life reflections in Tamil and English.</small><div class="sacred-feature-actions"><button onclick="show('hcFatiha')">Read · தமிழ் / English</button><button onclick="hcPlayAdhkar('listen')">Morning Adhkar</button></div><div style="height:1px;background:var(--line);margin:15px 0"></div>
       <b>Morning Adhkar · 28 min</b>
       <small>Use it as a standalone listening session or after a gentle practice. Choose quiet listening or recite along at a comfortable voice and pace.</small>
       <div class="sacred-feature-actions">
