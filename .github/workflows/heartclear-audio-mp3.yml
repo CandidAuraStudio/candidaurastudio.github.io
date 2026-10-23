@@ -1,0 +1,46 @@
+name: Prepare HeartClear audio-only MP3
+
+on:
+  push:
+    paths:
+      - .github/workflows/heartclear-audio-mp3.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  convert:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout HeartClear
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Download published HeartClear recording
+        shell: bash
+        run: |
+          python -m pip install --quiet gdown
+          mkdir -p human-practice-prototype/audio
+          gdown --fuzzy "https://drive.google.com/file/d/1RNesVJOTxngkZ6qE40htqfRnk4gsTvQg/view" -O "$RUNNER_TEMP/allahu-hu-akmal.m4a"
+          test -s "$RUNNER_TEMP/allahu-hu-akmal.m4a"
+          ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1 "$RUNNER_TEMP/allahu-hu-akmal.m4a"
+      - name: Create MP3 without video
+        shell: bash
+        run: |
+          ffmpeg -hide_banner -loglevel error -y -i "$RUNNER_TEMP/allahu-hu-akmal.m4a" -vn -codec:a libmp3lame -b:a 128k -ar 44100 -id3v2_version 3 -metadata title="Allahu Hu - Breath Reflection" -metadata artist="Akmal" human-practice-prototype/audio/allahu-hu-akmal.mp3
+          test "$(stat -c%s human-practice-prototype/audio/allahu-hu-akmal.mp3)" -gt 1000000
+          ffprobe -v error -show_entries stream=codec_type,codec_name -of compact human-practice-prototype/audio/allahu-hu-akmal.mp3
+      - name: Publish audio to HeartClear site
+        shell: bash
+        run: |
+          git config user.name "HeartClear Audio Automation"
+          git config user.email "actions@users.noreply.github.com"
+          git add human-practice-prototype/audio/allahu-hu-akmal.mp3
+          if git diff --cached --quiet; then
+            echo "Audio already up to date"
+          else
+            git commit -m "Publish original Allahu Hu reflection as audio-only MP3"
+            git push origin HEAD:main
+          fi
