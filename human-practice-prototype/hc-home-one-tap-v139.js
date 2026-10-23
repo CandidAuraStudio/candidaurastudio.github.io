@@ -133,7 +133,7 @@ fetch('https://api.alquran.cloud/v1/surah',{headers:{Accept:'application/json'}}
    });
    if(typeof hcRenderMiniLibrary==='function'&&!document.getElementById('hcMiniLibrary')?.hidden)hcRenderMiniLibrary();
    if(typeof renderGlobalMini==='function')renderGlobalMini();
-   if(/^hcSurah\\d+$/.test(currentSoundKey)&&typeof setSoundLabMediaSession==='function')setSoundLabMediaSession();
+   if(/^hcSurah\d+$/.test(currentSoundKey)&&typeof setSoundLabMediaSession==='function')setSoundLabMediaSession();
  }).catch(()=>{ /* Keep offline numeric names; audio is online-only. */ });
 window.hcPlayQuranSurah=function(n){
  const number=Number(n),key='hcSurah'+number;
