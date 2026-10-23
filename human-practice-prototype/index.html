@@ -2216,6 +2216,13 @@ body.hc-reels-active #updateBanner{display:none!important;pointer-events:none!im
  border-radius:13px;padding:12px 19px;min-height:48px;border:1px solid white;
  font:inherit;font-weight:750;color:#142936;background:#fff
 }
+/* v127: Audio-first guided sessions, original calm artwork preserved. */
+body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-audio-only .adhkar-visual-wrap{display:none!important}
+.hc-audio-pref{display:flex;align-items:flex-start;gap:12px;margin:14px 0;padding:14px;border:1px solid rgba(219,234,240,.22);border-radius:14px;background:rgba(9,31,43,.48);color:#eaf2f4;cursor:pointer}
+.hc-audio-pref input{flex:none;width:20px;height:20px;margin-top:2px;accent-color:#d9bd88}
+.hc-audio-pref span{display:block;line-height:1.4}
+.hc-audio-pref strong{display:block;font-size:13px}
+.hc-audio-pref small{display:block;color:#bdcdd3;font-size:11px;line-height:1.5;margin-top:5px}
 </style>
 <link rel="stylesheet" href="./quran-study.css?v=122">
 </head>
@@ -2566,6 +2573,10 @@ body.hc-reels-active #updateBanner{display:none!important;pointer-events:none!im
         <button onclick="hcChooseBeforeMood('Unsure')" aria-pressed="false">Unsure</button>
       </div>
     </div>
+    <label class="hc-audio-pref" for="hcAudioOnlyReady">
+      <input id="hcAudioOnlyReady" type="checkbox" checked onchange="hcSetAudioOnly(this.checked)">
+      <span><strong>Audio only (recommended)</strong><small>Guided voice without the introduction video or moving background. Uncheck if you want visuals.</small></span>
+    </label>
     <div class="ready-help" id="readyDeviceHelp">Android: swipe down for Quick Settings → Do Not Disturb. iPhone: Control Center → Focus → Do Not Disturb.</div>
 
     <button class="btn" onclick="confirmSessionReady()">Quiet mode is on · Continue</button>
@@ -3483,6 +3494,10 @@ body.hc-reels-active #updateBanner{display:none!important;pointer-events:none!im
     </section>
 
     <div class="settings-list">
+      <label class="hc-audio-pref" for="hcAudioOnlySettings">
+        <input id="hcAudioOnlySettings" type="checkbox" checked onchange="hcSetAudioOnly(this.checked)">
+        <span><strong>Audio-only meditation</strong><small>On by default. Skip guided introduction and background videos. Audio, saved listening positions and optional Reels remain available.</small></span>
+      </label>
       <div class="setting-row">
         <div><strong>Reduce motion</strong><small>Turn off floating and breathing animations</small></div>
         <button class="switch" id="reduceMotionSwitch" onclick="toggleReduceMotion()" aria-label="Toggle reduced motion"></button>
@@ -4500,7 +4515,7 @@ function hcReelRender(){
  if(hcReelAutoload)hcReelToggle();
 }
 function hcOpenReels(){
- hcReelShuffle();hcReelAutoload=true;
+ hcReelShuffle();hcReelAutoload=false;
  hcPauseOtherAudioForReels();show('hcReels');
 }
 function hcCloseReels(){
@@ -4540,7 +4555,7 @@ function hcReelToggle(){
  // Reserve a narrow right-edge gesture zone without blocking central playback.
  // Drive's iframe is cross-origin. Keep a sizeable swipe gesture zone on BOTH edges
  // so the central player remains available for native Play/Pause controls.
- for(const rail of [document.getElementById('hcReelSwipeRail'),document.getElementById('hcReelSwipeLeft')]){
+ for(const rail of [document.getElementById('hcReelSwipeRail')]){
   if(!rail)continue;
   let startY=null,lastStep=0;
   rail.addEventListener('touchstart',event=>{
@@ -6238,7 +6253,7 @@ function updatePipButtons(){
   [['practicePipBtn','practiceVisual'],['adhkarPipBtn','adhkarVisual']].forEach(([bid,vid])=>{
     const b=document.getElementById(bid);
     const v=document.getElementById(vid);
-    if(b)b.classList.toggle('show',supported&&!!v&&typeof v.requestPictureInPicture==='function');
+    if(b)b.classList.toggle('show',!hcAudioOnly&&supported&&!!v&&typeof v.requestPictureInPicture==='function');
   });
 }
 
@@ -7182,7 +7197,7 @@ function openAdhkar(mode){
   adhkarAudio.pause();
   adhkarAudio.currentTime=0;
   const visual=document.getElementById('adhkarVisual');
-  if(visual){visual.currentTime=0;visual.play().catch(()=>{})}
+  if(visual){visual.currentTime=0;if(!hcAudioOnly)visual.play().catch(()=>{});else visual.pause()}
   setAdhkarMode(mode||'listen');
   setAdhkarMediaSession();
   show('sacredSession');
@@ -7213,7 +7228,7 @@ function syncAdhkar(){
   const b=document.getElementById('adhkarPlayBtn');if(b)b.textContent=adhkarAudio.paused?'Play':'Pause';
   const visual=document.getElementById('adhkarVisual');
   if(visual){
-    if(document.hidden){visual.pause()}
+    if(hcAudioOnly||document.hidden){visual.pause()}
     else if(!adhkarAudio.paused && visual.paused)visual.play().catch(()=>{});
     else if(adhkarAudio.paused && !visual.paused)visual.pause();
   }
@@ -7704,6 +7719,31 @@ function clearLocalHistory(){
 }
 
 
+const HC_AUDIO_ONLY_KEY='heartclearAudioOnlyV1';
+let hcAudioOnly=(()=>{
+ try{return localStorage.getItem(HC_AUDIO_ONLY_KEY)!=='false'}catch(e){return true}
+})();
+function hcRefreshAudioOnly(){
+ document.body.classList.toggle('hc-audio-only',hcAudioOnly);
+ for(const id of ['hcAudioOnlyReady','hcAudioOnlySettings']){const c=document.getElementById(id);if(c)c.checked=hcAudioOnly;}
+ const pv=document.getElementById('practiceVisual'),av=document.getElementById('adhkarVisual');
+ if(hcAudioOnly){
+  if(pv){pv.pause();pv.removeAttribute('src');pv.load();}
+  if(av)av.pause();
+ }else{
+  if(pv&&chosenVisualUrl&&!pv.getAttribute('src')){
+   pv.src=chosenVisualUrl;pv.load();
+   if(currentScreenId==='player')syncPracticeVisual(true);
+  }
+  if(av&&currentScreenId==='sacredSession'&&!adhkarAudio.paused)av.play().catch(()=>{});
+ }
+ if(typeof updatePipButtons==='function')updatePipButtons();
+}
+function hcSetAudioOnly(value){
+ hcAudioOnly=!!value;
+ try{localStorage.setItem(HC_AUDIO_ONLY_KEY,String(hcAudioOnly))}catch(e){}
+ hcRefreshAudioOnly();
+}
 function choosePractice(seconds,url,kicker,title,introUrl,visualUrl){
   if(bookAudioEl && !bookAudioEl.paused) bookAudioEl.pause();
   if(soundLabAudio && !soundLabAudio.paused) soundLabAudio.pause();
@@ -7745,6 +7785,7 @@ function showSessionReady(){
 }
 
 function confirmSessionReady(){
+  if(hcAudioOnly)return finishIntro();
   startIntro();
 }
 
@@ -7870,7 +7911,7 @@ function preparePlayer(){
     pv.pause();
     pv.removeAttribute('src');
     pv.load();
-    if(chosenVisualUrl){
+    if(chosenVisualUrl&&!hcAudioOnly){
       pv.src=chosenVisualUrl;
       pv.currentTime=0;
       pv.load();
@@ -8403,7 +8444,7 @@ function fmt(sec){
 
 function syncPracticeVisual(force=false){
   const pv=document.getElementById('practiceVisual');
-  if(!pv || !chosenVisualUrl)return;
+  if(!pv || !chosenVisualUrl || hcAudioOnly){if(pv&&!pv.paused)pv.pause();return;}
   const pipActive=document.pictureInPictureElement===pv;
   if((document.hidden||currentScreenId!=='player') && !pipActive){
     if(!pv.paused)pv.pause();
@@ -8614,6 +8655,7 @@ try{
   else {audio.volume=.85;volume.value=.85}
 }catch(e){audio.volume=.85;volume.value=.85}
 setNatureAfterSeconds(natureAfterSeconds);
+hcRefreshAudioOnly();
 setInterval(sync,500);
 
 const introVideo=document.getElementById('introVideo');
