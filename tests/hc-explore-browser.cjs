@@ -89,7 +89,21 @@ const base='http://127.0.0.1:8765/human-practice-prototype/';
  await dialog.locator('[data-action="close"]').click();
  await page.evaluate(async()=>{await navigator.serviceWorker.ready});
  await page.waitForFunction(()=>navigator.serviceWorker.controller);
+ const offlineFile='./media/cc0-nature/fire_original.mp3';
+ const cached=await page.evaluate(async url=>{
+  await saveOfflineUrl(url);
+  return await cacheHas(url);
+ },offlineFile);
+ assert.ok(cached,'The sample audio must be cached before offline playback');
  await context.setOffline(true);await page.reload({waitUntil:'domcontentloaded'});
+ const offlineSeek=await page.evaluate(async url=>{
+  const response=await fetch(url,{headers:{Range:'bytes=100-999'}});
+  return {status:response.status,range:response.headers.get('Content-Range'),
+   length:(await response.arrayBuffer()).byteLength};
+ },offlineFile);
+ assert.equal(offlineSeek.status,206,'Offline audio seeks must return HTTP 206');
+ assert.equal(offlineSeek.length,900,'Seek response must contain only the requested bytes');
+ assert.match(offlineSeek.range||'',/^bytes 100-999\/\d+$/,'Byte-range header must be exact');
  await page.locator('#hcExploreOpen').click();
  await dialog.locator('[data-mode="game"]').click();
  assert.match(await dialog.textContent(),/Offline/);
@@ -98,6 +112,6 @@ const base='http://127.0.0.1:8765/human-practice-prototype/';
  await page.screenshot({path:path.join(__dirname,'explore-mobile.png')});
  await context.setOffline(false);
  assert.deepEqual(errors,[]);
- console.log('PASS: 25-question scoring, route offer, separate Health, voice, local teaching, offline reload and mobile width');
+ console.log('PASS: 25-question scoring, route offer, separate Health, voice, local teaching, offline HTTP 206 Range, reload and mobile width');
  await browser.close();
 })().catch(e=>{console.error(e);process.exit(1)});
