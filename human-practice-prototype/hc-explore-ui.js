@@ -59,7 +59,7 @@
   }
   html+='<p class="hcx-meta" id="hcxConnection">'+onlineText()+'</p>'+(mode==='health'?sources()+privacy():'');
   dialog.innerHTML='<div class="hcx-top"><b>Explore</b><button class="hcx-close" data-action="close" aria-label="Close Explore">×</button></div><div class="hcx-body">'+html+'</div>';
-  if(mode!=='menu'&&step?.kind==='question'&&!getRecognition()){
+  if(mode!=='menu'&&!teaching&&!finished&&step?.kind==='question'&&!getRecognition()){
    dialog.querySelector('[data-action="speak"]').disabled=true;
    status('Voice is unavailable in this browser. Tap an answer.');
   }
