@@ -16,6 +16,8 @@ const assert = require('node:assert/strict');
     let playing=await page.locator('audio').evaluateAll(els=>els.filter(x=>!x.paused).map(x=>x.id));
     assert.deepEqual(playing,[],'App must be silent on first open');
     console.log('PASS: launch stays silent');
+    assert.equal((await page.locator('.hc-daily-family').innerText()).trim(),'Welcome to Mastar Alim family');
+    console.log('PASS: welcome subtitle is available under the changing daily greeting');
 
     // A phone app must not scale its document in response to accidental pinch/double-tap.
     const viewportContent=await page.locator('meta[name="viewport"]').getAttribute('content');
@@ -92,13 +94,40 @@ const assert = require('node:assert/strict');
     }
     console.log('PASS: five primary bottom navigation routes');
 
+    // An actual Begin click must reach the audio player and request playback once,
+    // without opening additional preparation/intro/instruction steps.
+    await page.evaluate(()=>{
+      window.hcObservedPlay=[];
+      window.hcOldPlay=HTMLMediaElement.prototype.play;
+      HTMLMediaElement.prototype.play=function(){
+        window.hcObservedPlay.push(this.id);
+        return Promise.reject(new DOMException('Test gesture stub','NotAllowedError'));
+      };
+    });
+    await page.locator('#homeRecommendedCard .hc-home-primary-btn').evaluate(el=>el.click());
+    assert.ok(await page.locator('#player').evaluate(el=>el.classList.contains('active')),
+      'Begin should open the full player directly');
+    assert.ok((await page.evaluate(()=>window.hcObservedPlay)).includes('audio'),
+      'Begin must request guided audio immediately');
+    await page.evaluate(()=>{HTMLMediaElement.prototype.play=window.hcOldPlay});
+    console.log('PASS: one-click Begin calls the existing guided audio');
+    await page.evaluate(()=>hcQuickStartTimer('quiet',3));
+    assert.ok(await page.locator('#quietTimer').evaluate(el=>el.classList.contains('active')));
+    assert.equal(await page.evaluate(()=>hcTimerActive),true);
+    assert.equal((await page.locator('#hcTimerStart').innerText()).trim(),'Pause');
+    await page.evaluate(()=>show('home'));
+    console.log('PASS: quick timer starts immediately and exposes Pause');
+
     await page.locator('[data-nav="practices"]').evaluate(el=>el.click());
     await page.locator('#practices [data-practice-filter="sacred"]').evaluate(el=>el.click());
-    assert.equal(await page.locator('#practices [data-group="sacred"] .practice-card').count(),1);
+    assert.ok(await page.locator('#practices [data-group="sacred"] .practice-card').count()>=3,
+      'Sacred practice catalog now includes Adhkar, Fatiha, and Allahu; do not treat growth as a regression');
     assert.equal(await page.locator('#practices [data-group="guided"]').evaluate(el=>el.hidden),true);
     await page.locator('#practices [data-session="islamHu"]').evaluate(el=>el.click());
     assert.ok(await page.locator('#hcDriveMedia').evaluate(el=>el.classList.contains('active')));
     assert.match(await page.locator('#hcDriveVideoTitle').innerText(),/Allahu Meditation/);
+    assert.ok(await page.locator('#hcDriveMedia').evaluate(el=>el.classList.contains('hc-drive-audio-view')),
+      'Drive listening should start in compact audio-focused view');
     assert.equal(await page.locator('#hcDriveVideoFrame').getAttribute('src'),'https://drive.google.com/file/d/11Sgca-PXcd4-5DRaPQPslynyc7QtkVYx/preview?autoplay=1','Allahu video starts only after its card is tapped');
     assert.equal(await page.locator('#hcDriveOpenSource').getAttribute('href'),'https://drive.google.com/file/d/11Sgca-PXcd4-5DRaPQPslynyc7QtkVYx/view');
     await page.locator('#hcDriveMedia button').first().evaluate(el=>el.click());
