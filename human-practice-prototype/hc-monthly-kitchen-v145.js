@@ -72,5 +72,26 @@ function compare(){
  if(values.length<2){out.textContent=tr('ஒப்பிட இரண்டு மீன் விலைகளை எழுதவும்.','Enter at least two fish prices to compare.');return}
  out.textContent=values[0][0]+' · '+(market.town==='Malta'?'EUR':'LKR')+' '+values[0][1]+'/kg · '+tr('நீங்கள் பதிவு செய்தவற்றில் குறைந்த விலை','Lowest of entered quotes')+' · '+(market.date||'');
 }
+// Expose read-only day previews for tomorrow's preparation. Keep the existing
+// rotating menu algorithm, user-selected alternatives and home layout unchanged.
+window.HCKitchenMenu={
+ preview:function(dateStr){
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(dateStr))return null;
+  const selected=read('hcKitchenMenuChoicesV1',{});
+  const swaps=read('hcKitchenDosaIdliV149',{});
+  const otherSwaps=read('hcKitchenMealSwapsV2',{});
+  const groups=[['bVeg','bVeg','bVeg','bVeg','bEgg'],['lVeg','lVeg','lFish','lEgg','lChicken'],['dVeg','dVeg','dFish','dEgg','dChicken']];
+  const q=index(dateStr);
+  return [0,1,2].map(function(m){
+   const option=Math.max(0,Math.min(4,Number(selected[dateStr+'|'+m])||0));
+   const category=groups[m][option],recipes=DATA.cats[category];
+   let base=take(recipes,q+(option===1?Math.floor(recipes.length/2):option*3));
+   const swap=swaps[dateStr+'|'+m]||otherSwaps[dateStr+'|'+m];
+   if(typeof swap==='string'&&swap.trim()&&m===0){if(/idli|இட்லி/i.test(swap))base=['இட்லி','Idli'];else if(/dosa|தோசை/i.test(swap))base=['தோசை','Dosa'];}
+   else if(Array.isArray(swap)&&swap.length===2)base=swap;
+   return {meal:['Breakfast','Lunch','Dinner'][m],mealTa:['காலை','மதியம்','இரவு'][m],base:base.slice(),category:category,side:take(m===0?DATA.sidesB:DATA.sidesM,q*3+option*2+m).slice(),veg:take(DATA.veg,q*7+option*5+m*3).slice(),option:option};
+  });
+ }
+};
 try{render();old.hidden=true}catch(e){root.remove();old.hidden=false}
 })();
