@@ -2340,6 +2340,31 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
 #islamicFeatured .hc-sacred-study-link:focus-visible{
   outline:2px solid #e2c591;outline-offset:3px
 }
+/* HC compact black-and-white listening browser: no glass blur. */
+.global-mini{background:#080c0e;backdrop-filter:none;-webkit-backdrop-filter:none;border-color:#30383d;gap:5px}
+.global-mini-btn{min-width:34px;height:38px;background:#14191d;color:#f7f8f8;border:1px solid #30383d;font-size:16px}
+.global-mini-btn.primary{background:#fff;color:#090d10;min-width:44px;font-size:20px}
+.global-mini-copy{padding:0 2px}
+.global-mini-copy b{font-size:12px}
+.hc-mini-expand{min-width:30px}
+.global-mini-stop{min-width:30px}
+.hc-mini-library[hidden]{display:none!important}
+.hc-mini-library{position:fixed;z-index:61;left:12px;right:12px;bottom:calc(166px + env(safe-area-inset-bottom,0px));max-width:520px;margin:0 auto;max-height:min(54vh,465px);display:flex;flex-direction:column;gap:10px;padding:14px;background:#080c0e;color:#fff;border:1px solid #343c40;border-radius:19px;box-shadow:0 12px 36px rgba(0,0,0,.6)}
+.hc-mini-library-head{display:flex;justify-content:space-between;align-items:center}
+.hc-mini-library-head b{font-size:16px}
+.hc-mini-library-head button{background:#181e21;color:#fff;border:1px solid #343c40;border-radius:9px;width:32px;height:30px}
+#hcMiniSearch{background:#151b1f;color:#fff;border:1px solid #3b4449;border-radius:11px;padding:11px;font:inherit;font-size:14px}
+.hc-mini-library-filters{display:flex;overflow:auto;gap:6px;scrollbar-width:none}
+.hc-mini-library-filters button{flex:0 0 auto;background:#11171b;color:#ddd;border:1px solid #31393f;border-radius:20px;padding:8px 11px;font:inherit;font-size:12px}
+.hc-mini-library-filters button.active{background:#fff;color:#090d10}
+.hc-mini-library-list{overflow:auto;display:grid;gap:4px;overscroll-behavior:contain}
+.hc-mini-library-item{width:100%;min-height:52px;background:transparent;border:0;border-bottom:1px solid #293035;color:#f8f8f8;display:flex;align-items:center;justify-content:space-between;text-align:left;padding:8px 4px;font:inherit}
+.hc-mini-library-item span:first-child{min-width:0}
+.hc-mini-library-item b{display:block;font-size:13px;white-space:normal}
+.hc-mini-library-item small{display:block;color:#a5aeb4;font-size:11px;margin-top:3px}
+.hc-mini-library-item>span:last-child{font-size:17px;padding:7px}
+body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-inset-bottom,0px))}
+@media(max-width:380px){.global-mini{left:7px;right:7px;padding:7px 6px;gap:3px}.global-mini-btn{min-width:30px;height:34px}.global-mini-btn.primary{min-width:39px}.hc-mini-library{left:7px;right:7px}}
 </style>
 <link rel="stylesheet" href="./quran-study.css?v=135">
 </head>
@@ -3537,6 +3562,9 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
     <div class="hc-mix-actions"><button class="hc-mix-start" id="hcMixPlayBtn" onclick="hcMixToggle()">Start mix</button><button class="hc-mix-stop" onclick="hcMixStop()">Stop</button></div>
     <div id="hcMixRecent" class="hc-mix-recent" hidden></div>
   </section>
+  <div class="hc-sounds-list-head"><div class="kicker">INDIAN CLASSICAL · FROM YOUR DRIVE</div></div>
+  <div id="hcGeneralDriveCards" class="hc-sound-track-list" aria-label="Indian classical and instrumental recordings"></div>
+  <p class="hc-mix-status">Drive video previews cannot use native Auto Next.</p>
   <div class="hc-sounds-list-head"><div class="kicker">LISTEN</div><span id="hcSoundCount"></span></div>
   <div id="hcSoundTrackList" class="hc-sound-track-list" aria-label="Available sounds"></div>
 </section>
@@ -3921,11 +3949,25 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
     <b id="globalMiniTitle">HeartClear</b>
     <small id="globalMiniMeta">00:00</small>
   </button>
-  <button class="global-mini-btn hc-mini-skip" onclick="globalJump(-10)" aria-label="Back 10 seconds">↶10</button>
+  <button class="global-mini-btn hc-mini-track" id="hcMiniPrev" onclick="hcMiniMove(-1)" aria-label="Previous audio">⏮</button>
   <button class="global-mini-btn primary" id="globalMiniPlay" onclick="toggleGlobalMedia()" aria-label="Pause or resume">Ⅱ</button>
-  <button class="global-mini-btn hc-mini-skip" onclick="globalJump(10)" aria-label="Forward 10 seconds">10↷</button>
+  <button class="global-mini-btn hc-mini-track" id="hcMiniNext" onclick="hcMiniMove(1)" aria-label="Next audio">⏭</button>
+  <button class="global-mini-btn hc-mini-expand" id="hcMiniExpand" onclick="hcToggleMiniLibrary()" aria-label="Browse all listening" aria-expanded="false">⌃</button>
   <button class="global-mini-btn global-mini-stop" onclick="stopGlobalMedia()" aria-label="Stop playback">×</button>
   <div class="hc-global-mini-progress" aria-hidden="true"><span id="hcGlobalMiniProgressFill"></span></div>
+</div>
+
+<div class="hc-mini-library" id="hcMiniLibrary" hidden aria-label="Browse HeartClear audio">
+  <div class="hc-mini-library-head"><b>All listening</b><button onclick="hcCloseMiniLibrary()" aria-label="Close library">×</button></div>
+  <input id="hcMiniSearch" type="search" placeholder="Find a recording…" aria-label="Search audio library" oninput="hcRenderMiniLibrary()">
+  <div class="hc-mini-library-filters" id="hcMiniLibraryFilters" aria-label="Choose a collection">
+    <button class="active" data-mini-category="all" onclick="hcSetMiniCategory('all')">All</button>
+    <button data-mini-category="sounds" onclick="hcSetMiniCategory('sounds')">Sounds</button>
+    <button data-mini-category="practice" onclick="hcSetMiniCategory('practice')">Practice</button>
+    <button data-mini-category="sacred" onclick="hcSetMiniCategory('sacred')">Sacred</button>
+    <button data-mini-category="raga" onclick="hcSetMiniCategory('raga')">Raga</button>
+  </div>
+  <div id="hcMiniTrackList" class="hc-mini-library-list" aria-live="polite"></div>
 </div>
 
 <div class="hc-home-sheet-backdrop" id="hcHomeSessionSheet" onclick="if(event.target===this)closeHomeSheets()">
@@ -5231,6 +5273,85 @@ function hcSyncInlineAudioButtons(){
     btn.setAttribute('aria-pressed',String(playing));
   });
 }
+/* HC universal listening browser: native audio plays in-place; Drive originals remain previews. */
+let hcMiniCategory='all';
+function hcCloseMiniLibrary(){
+  const p=document.getElementById('hcMiniLibrary'),b=document.getElementById('hcMiniExpand');
+  if(p)p.hidden=true;
+  if(b){b.textContent='⌃';b.setAttribute('aria-expanded','false')}
+}
+function hcToggleMiniLibrary(){
+  const p=document.getElementById('hcMiniLibrary'),b=document.getElementById('hcMiniExpand');
+  if(!p)return;
+  p.hidden=!p.hidden;
+  if(b){b.textContent=p.hidden?'⌃':'⌄';b.setAttribute('aria-expanded',String(!p.hidden))}
+  if(!p.hidden)hcRenderMiniLibrary();
+}
+function hcSetMiniCategory(category){
+  hcMiniCategory=category;
+  document.querySelectorAll('#hcMiniLibraryFilters button').forEach(b=>{
+    b.classList.toggle('active',b.dataset.miniCategory===category);
+  });
+  hcRenderMiniLibrary();
+}
+function hcMiniBrowseItems(){
+  const list=[];
+  hcSoundListKeys.forEach(key=>{
+    const t=soundLabTracks[key];
+    if(t&&(t.url||key==='nature'))list.push({name:t.title,detail:hcSoundCaption(key),category:'sounds',key,kind:'audio'});
+  });
+  const own=soundLabTracks.allahuAkmal;
+  if(own?.url)list.push({name:own.title,detail:'Your voice · audio',category:'sacred',key:'allahuAkmal',kind:'audio'});
+  document.querySelectorAll('#practices .practice-card').forEach(el=>{
+    if(el.dataset.inlineAudio==='allahuAkmal')return; // Already a native track.
+    const title=el.querySelector('.practice-copy b')?.textContent?.trim();
+    const time=el.querySelector('.duration')?.textContent?.trim()||'';
+    const action=el.getAttribute('onclick')||'';
+    if(!title||/^(READ|VIDEO)$/i.test(time)||!/(hcStartGuidedByTitle|hcPlayAdhkar)/.test(action))return;
+    list.push({name:title,detail:time+' · Guided practice',category:action.includes('Adhkar')?'sacred':'practice',kind:'practice',el});
+  });
+  HC_DRIVE_COLLECTIONS.forEach(item=>{
+    if(item.key==='islamHuAkmal')return;
+    list.push({name:item.name,detail:'Drive preview · not native autoplay',
+      category:item.section==='general'?'raga':item.section==='meditation'?'practice':'sacred',
+      key:item.key,kind:'drive'});
+  });
+  return list;
+}
+function hcRenderMiniLibrary(){
+  const root=document.getElementById('hcMiniTrackList');if(!root)return;
+  root.replaceChildren();
+  const search=document.getElementById('hcMiniSearch')?.value?.trim()?.toLowerCase()||'';
+  const visible=hcMiniBrowseItems().filter(x=>
+    (hcMiniCategory==='all'||x.category===hcMiniCategory)&&
+    (!search||(x.name+' '+x.detail).toLowerCase().includes(search)));
+  if(!visible.length){const empty=document.createElement('p');empty.textContent='No matching recordings.';root.appendChild(empty);return}
+  visible.forEach(item=>{
+    const btn=document.createElement('button');btn.type='button';btn.className='hc-mini-library-item';
+    const text=document.createElement('span');const title=document.createElement('b');title.textContent=item.name;
+    const meta=document.createElement('small');meta.textContent=item.detail;
+    text.append(title,meta);
+    const icon=document.createElement('span');icon.textContent=item.kind==='drive'?'↗':'▶';
+    btn.append(text,icon);
+    btn.addEventListener('click',()=>{
+      hcCloseMiniLibrary();
+      if(item.kind==='audio'){
+        hcPlaySoundFromRow(item.key);hcMiniPinnedKey='soundlab';renderGlobalMini();
+      }else if(item.kind==='practice')item.el.click();
+      else openHcDriveMedia(item.key);
+    });
+    root.appendChild(btn);
+  });
+}
+function hcMiniMove(direction){
+  const state=getActiveMediaState();
+  if(state?.key==='soundlab'&&hcPlayableSoundQueue().includes(currentSoundKey)){
+    return playNextSoundLab(true,direction);
+  }
+  // Book, guided practices and Drive previews have different chapter/session
+  // semantics: let the listener choose rather than silently crossing traditions.
+  if(document.getElementById('hcMiniLibrary')?.hidden)hcToggleMiniLibrary();
+}
 function renderGlobalMini(){
   hcSyncInlineAudioButtons();
   hcSyncInlineAdhkarButtons();
@@ -5243,7 +5364,7 @@ function renderGlobalMini(){
   let lastPlayed='';try{lastPlayed=localStorage.getItem('heartclearActiveMedia')||''}catch(e){}
   const keepPaused=!!(state && validSrc && (hcMiniPinnedKey===state.key || (Number(state.el.currentTime)>0 && lastPlayed===state.key)));
   if(!state || (state.el.paused&&!keepPaused) || (state.key==='mix'&&!hcMixRunning) || currentScreenId==='hcReels'){
-    mini.classList.remove('show');mini.classList.remove('is-mix');
+    mini.classList.remove('show');mini.classList.remove('is-mix');hcCloseMiniLibrary();
     return;
   }
 
@@ -5257,6 +5378,12 @@ function renderGlobalMini(){
   document.getElementById('globalMiniTitle').textContent=state.title;
   document.getElementById('globalMiniMeta').textContent=state.meta;
   document.getElementById('globalMiniPlay').textContent=state.el.paused?'▶':'Ⅱ';
+  const nativeQueue=state.key==='soundlab'&&hcPlayableSoundQueue().includes(currentSoundKey);
+  ['hcMiniPrev','hcMiniNext'].forEach(id=>{
+    const button=document.getElementById(id);
+    if(button){button.title=nativeQueue?(id==='hcMiniPrev'?'Previous recording':'Next recording'):'Choose a recording';
+      button.setAttribute('aria-label',button.title);}
+  });
   const progress=document.getElementById('hcGlobalMiniProgressFill');
   if(progress){
     const duration=Number(state.el.duration),pos=Number(state.el.currentTime)||0;
@@ -5291,6 +5418,7 @@ function globalJump(delta){
 }
 
 function stopGlobalMedia(){
+  hcCloseMiniLibrary();
   hcMiniPinnedKey=null;
   const state=getActiveMediaState();
   if(!state)return;
@@ -6871,6 +6999,8 @@ function hcRenderSoundRows(){
     actions.append(info,play);row.append(symbol,words,duration,actions);list.append(row);
   });
   hcUpdateSoundRowButtons();
+  // Show the previously hidden Indian classical recording whenever Sounds opens.
+  hcRenderDriveCards('general','hcGeneralDriveCards');
 }
 /* The white circle is an actual Play/Pause control, not another navigation step.
  * Keep the Sounds list visible; use the existing universal mini player for transport. */
@@ -7123,12 +7253,13 @@ function openSoundLab(){
   show('soundLab');
 }
 
-let soundLabAutoNext=false;
+let soundLabAutoNext=true;
 let hcSoundLoopSetting='auto';
 try{hcSoundLoopSetting=localStorage.getItem('heartclearSoundLoopV2')||'auto'}catch(e){}
 function hcSoundApplyLoop(){
   const track=soundLabTracks[currentSoundKey]||soundLabTracks.horizon;
-  soundLabAudio.loop=hcSoundLoopSetting==='on'||(hcSoundLoopSetting==='auto'&&(track.duration||0)<300);
+  // A short recording must not loop endlessly when the listener has enabled Auto Next.
+  soundLabAudio.loop=hcSoundLoopSetting==='on'||(!soundLabAutoNext&&hcSoundLoopSetting==='auto'&&(track.duration||0)<300);
   const button=document.getElementById('soundLoopBtn');
   if(button){button.textContent=soundLabAudio.loop?'Loop on':'Loop off';button.classList.toggle('active',soundLabAudio.loop)}
   updateSoundLabQueueStatus();
@@ -7137,7 +7268,23 @@ function hcSoundApplyLoop(){
 let soundLabListeningSeconds=0;
 let soundLabListeningLimit=0;
 let soundLabPlaybackStartedAt=0;
-const soundLabQueue=['organicBansuri','nature','rain','foreststream','ocean','birds','windfield','treewind','countryside','fire','nightforest','frogswater','storm','thunder','horizon','stillness2','deep'];
+function hcPlayableSoundQueue(){
+  const all=hcSoundListKeys.filter(key=>{
+    const track=soundLabTracks[key];
+    return !!track && (!!track.url || key==='nature');
+  });
+  // Continue inside the chosen Sounds collection; a Home quick-play uses the full sound list.
+  if(['nature','ambient','flute','mixes'].includes(hcSoundsCurrentFilter)){
+    const scoped=all.filter(key=>hcSoundCategory(key)===hcSoundsCurrentFilter);
+    if(scoped.includes(currentSoundKey))return scoped;
+  }
+  if(hcSoundsCurrentFilter==='favourites'){
+    const favs=new Set(getHeartClearFavourites().filter(item=>item.kind==='soundlab').map(item=>item.key));
+    const scoped=all.filter(key=>favs.has(key));
+    if(scoped.includes(currentSoundKey))return scoped;
+  }
+  return all;
+}
 try{const saved=localStorage.getItem('heartclearAutoNext');if(saved!==null)soundLabAutoNext=saved==='1'}catch(e){}
 function soundLabClockCommit(){
   if(soundLabPlaybackStartedAt){soundLabListeningSeconds+=(Date.now()-soundLabPlaybackStartedAt)/1000;soundLabPlaybackStartedAt=0}
@@ -7161,8 +7308,7 @@ function hcSelectSoundsTimer(seconds){
 function toggleSoundLabAutoNext(){
   soundLabAutoNext=!soundLabAutoNext;
   try{localStorage.setItem('heartclearAutoNext',soundLabAutoNext?'1':'0')}catch(e){}
-  soundLabAudio.loop=false;
-  const loop=document.getElementById('soundLoopBtn');if(loop){loop.textContent='Loop off';loop.classList.remove('active')}
+  hcSoundApplyLoop();
   updateSoundLabQueueStatus();
 }
 function updateSoundLabQueueStatus(){
@@ -7171,7 +7317,7 @@ function updateSoundLabQueueStatus(){
   if(msg)msg.textContent=(soundLabAudio.loop?'This recording loops continuously.':soundLabAutoNext?'Another sound plays when this one ends.':'The recording stops when it ends.')+
     (soundLabListeningLimit?' Timer: '+Math.round(soundLabListeningLimit/60)+' min.':' Endless listening.');
 }
-async function playNextSoundLab(userInitiated=false){
+async function playNextSoundLab(userInitiated=false,direction=1){
   if(currentSoundKey==='personal'){
     if(!userInitiated)return;
     hcClearPersonalNature();
@@ -7179,8 +7325,11 @@ async function playNextSoundLab(userInitiated=false){
   }
   if(!userInitiated && !soundLabAutoNext)return;
   if(soundLabListeningLimit && soundLabListeningSeconds>=soundLabListeningLimit){stopSoundLab();return}
+  const soundLabQueue=hcPlayableSoundQueue();
+  if(!soundLabQueue.length)return;
   const oldIndex=soundLabQueue.indexOf(currentSoundKey);
-  const next=soundLabQueue[(oldIndex+1+soundLabQueue.length)%soundLabQueue.length];
+  if(oldIndex<0){if(userInitiated)hcToggleMiniLibrary();return}
+  const next=soundLabQueue[(oldIndex+direction+soundLabQueue.length)%soundLabQueue.length];
   currentSoundKey=next;
   const item=soundLabTracks[next];
   soundLabFallbackActive=false;
@@ -7208,7 +7357,7 @@ async function hcQuickPlaySound(key){
   const item=soundLabTracks[key];
   if(!item)return;
   // Quick Play always plays the selected title: never jump to birds or another track.
-  soundLabAutoNext=false;
+  // Respect Auto Next on Home too. A one-tap play does not silently disable the playlist.
   updateSoundLabQueueStatus();
   // One tap uses the real native audio player, never a sample or a nature substitute.
   if(currentSoundKey===key && soundLabAudio.getAttribute('src')){
@@ -7379,7 +7528,8 @@ function setSoundLabMediaSession(){
     });
     navigator.mediaSession.setActionHandler('play',()=>{rememberActiveMedia('soundlab');return soundLabAudio.play()});
     navigator.mediaSession.setActionHandler('pause',()=>{soundLabAudio.pause();hcStoreSoundLabPosition();renderGlobalMini()});
-    try{navigator.mediaSession.setActionHandler('nexttrack',()=>playNextSoundLab(true))}catch(e){}
+    try{navigator.mediaSession.setActionHandler('nexttrack',()=>playNextSoundLab(true,1))}catch(e){}
+    try{navigator.mediaSession.setActionHandler('previoustrack',()=>playNextSoundLab(true,-1))}catch(e){}
     navigator.mediaSession.setActionHandler('seekbackward',details=>soundLabJump(-(details.seekOffset||15)));
     navigator.mediaSession.setActionHandler('seekforward',details=>soundLabJump(details.seekOffset||15));
     try{
@@ -9123,7 +9273,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=141');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=142');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
