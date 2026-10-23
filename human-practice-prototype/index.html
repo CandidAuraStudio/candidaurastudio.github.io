@@ -6305,7 +6305,7 @@ function hcRenderDriveCards(section,containerId){
   el.replaceChildren();
   const items=HC_DRIVE_COLLECTIONS.filter(item=>item.section===section);
   if(containerId==='hcSacredDriveCards'){
-    const featured=(section==='islamic'?['islamHuAkmal','islamHu','islamLa']:section==='hindu'?['hinduOm']:[]);
+    const featured=(section==='islamic'?['islamHuAkmal']:section==='hindu'?['hinduOm']:[]);
     const primary=featured.map(key=>items.find(item=>item.key===key)).filter(Boolean);
     primary.forEach(item=>el.appendChild(hcDriveCard(item)));
     const rest=items.filter(item=>!featured.includes(item.key));
