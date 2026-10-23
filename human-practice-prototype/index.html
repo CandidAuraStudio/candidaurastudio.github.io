@@ -3567,10 +3567,10 @@ body.hc-audio-only #practiceVisual,body.hc-audio-only #practicePipBtn,body.hc-au
         <option value="3600">60 minutes</option>
       </select>
       <div class="soundlab-options">
-        <button id="soundLabAutoNextBtn" onclick="toggleSoundLabAutoNext()" aria-pressed="true">Auto-play next: On</button>
+        <button id="soundLabAutoNextBtn" onclick="toggleSoundLabAutoNext()" aria-pressed="false">Next track: Off</button>
         <button onclick="playNextSoundLab(true)">Next sound →</button>
       </div>
-      <p id="soundLabQueueStatus" class="player-status" role="status">Next track plays automatically. Continuous listening uses successive recordings, not a single 60-minute master.</p>
+      <p id="soundLabQueueStatus" class="player-status" role="status">The selected track plays on its own. Turn on Next track if you want a continuous playlist.</p>
     </div>
 
     <p id="hcBgPlaybackStatus" class="hc-sound-runtime-status" role="status" aria-live="polite"></p>
@@ -5170,7 +5170,8 @@ function renderGlobalMini(){
   // The last started native track stays visible when paused, including on Home.
   // Never surface unrelated stale tracks at 00:00.
   const validSrc=!!state?.el?.getAttribute('src');
-  const keepPaused=!!(state && validSrc && (hcMiniPinnedKey===state.key || (Number(state.el.currentTime)>0 && localStorage.getItem('heartclearActiveMedia')===state.key)));
+  let lastPlayed='';try{lastPlayed=localStorage.getItem('heartclearActiveMedia')||''}catch(e){}
+  const keepPaused=!!(state && validSrc && (hcMiniPinnedKey===state.key || (Number(state.el.currentTime)>0 && lastPlayed===state.key)));
   if(!state || (state.el.paused&&!keepPaused) || (state.key==='mix'&&!hcMixRunning) || currentScreenId==='hcReels'){
     mini.classList.remove('show');mini.classList.remove('is-mix');
     return;
@@ -6435,6 +6436,8 @@ function openSacred(kind){
     }
   }
 
+  const shelf=document.querySelector('#sacredDetail .empty-shelf');
+  if(shelf)shelf.style.display=(kind==='islamic'||kind==='hindu')?'none':'';
   const empty=document.getElementById('sacredEmptyTitle');
   const emptyText=document.getElementById('sacredEmptyText');
   if(empty) empty.textContent=kind==='islamic'?'More listening':kind==='hindu'?'More mantra practice':kind==='buddhist'?'Chant audio pending':'Sound practice';
@@ -7039,7 +7042,7 @@ function openSoundLab(){
   show('soundLab');
 }
 
-let soundLabAutoNext=true;
+let soundLabAutoNext=false;
 let hcSoundLoopSetting='auto';
 try{hcSoundLoopSetting=localStorage.getItem('heartclearSoundLoopV2')||'auto'}catch(e){}
 function hcSoundApplyLoop(){
@@ -7123,6 +7126,9 @@ async function playNextSoundLab(userInitiated=false){
 async function hcQuickPlaySound(key){
   const item=soundLabTracks[key];
   if(!item)return;
+  // Quick Play always plays the selected title: never jump to birds or another track.
+  soundLabAutoNext=false;
+  updateSoundLabQueueStatus();
   // One tap uses the real native audio player, never a sample or a nature substitute.
   if(currentSoundKey===key && soundLabAudio.getAttribute('src')){
     if(soundLabAudio.paused){
