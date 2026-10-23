@@ -111,6 +111,12 @@ const assert = require('node:assert/strict');
       'Begin must request guided audio immediately');
     await page.evaluate(()=>{HTMLMediaElement.prototype.play=window.hcOldPlay});
     console.log('PASS: one-click Begin calls the existing guided audio');
+    await page.locator('#finishBtn').evaluate(el=>el.click());
+    assert.ok(await page.locator('#home').evaluate(el=>el.classList.contains('active')),
+      'Finish should go straight to Home, not another Done screen');
+    assert.equal(await page.evaluate(()=>localStorage.getItem('heartclearOptInReportingV1')),null,
+      'Visitor activity must remain unshared until explicitly consented');
+    console.log('PASS: Finish returns Home; reporting remains off by default');
     await page.evaluate(()=>hcQuickStartTimer('quiet',3));
     assert.ok(await page.locator('#quietTimer').evaluate(el=>el.classList.contains('active')));
     assert.equal(await page.evaluate(()=>hcTimerActive),true);
