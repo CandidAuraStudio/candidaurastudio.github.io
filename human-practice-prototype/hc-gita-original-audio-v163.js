@@ -79,8 +79,8 @@ function update(){
  el('hcgNow').textContent=mode==='om'?'OM pronunciation · 1.3 seconds':
   'Chapter '+chapter+' / 18 · '+labels[lang]+' · '+(names[lang]||'official audio provider');
  const isPlayable=mode==='om'||!!url(lang,chapter);
- el('hcgPrev').disabled=!isPlayable;
- el('hcgNext').disabled=!isPlayable;
+ el('hcgPrev').disabled=!isPlayable||mode==='om'||chapter===1;
+ el('hcgNext').disabled=!isPlayable||mode==='om'||chapter===18;
  el('hcgPlay').setAttribute('aria-label',isPlayable?'Play or pause original recording':'Open human-voiced recording at publisher');
  el('hcgSource').href=mode==='om'?omSource:(lang==='ne'?nepaliSource:(srcPages[lang]||otherSource));
  el('hcgSource').textContent=mode==='om'?'Source & CC0 licence ↗':(isPlayable?'Original source & credit ↗':'Listen in '+labels[lang]+' at source ↗');
@@ -139,7 +139,7 @@ window.hcGitaPlayerState=()=>{
 };
 window.hcGitaStep=direction=>next(direction);
 window.hcGitaStop=()=>{stop();try{localStorage.removeItem('heartclearActiveMedia')}catch(e){};if(typeof renderGlobalMini==='function')renderGlobalMini()};
-window.hcOpenGitaVoice=chapterNum=>open('gita',chapterNum);
+window.hcOpenGitaVoice=(chapterNum,language)=>{if(language&&labels[language])lang=language;open('gita',chapterNum)};
 window.hcOpenOmVoice=()=>open('om');
 const previous=window.openHcDriveMedia;
 if(typeof previous==='function')window.openHcDriveMedia=function(key,from){if(key==='hinduOm'){open('om');return}return previous.call(this,key,from)};
