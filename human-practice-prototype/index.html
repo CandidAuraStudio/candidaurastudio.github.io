@@ -6239,14 +6239,21 @@ function hcExpandDriveVideo(){
   hcCaptureReturnState(true);
 }
 function hcStopDriveVideo(silent=false){
+  const wasDocked=hcDriveDocked;
   hcDriveDocked=false;
   document.getElementById('hcDriveMedia').classList.remove('hc-drive-docked');
   const frame=document.getElementById('hcDriveVideoFrame');
   if(frame?.getAttribute('src'))frame.src='about:blank';
   hcDriveActiveKey=null;
-  if(!silent)show(hcDriveBackScreen||'home');
+  // Stop from the mini strip stays on the current page, normally Home.
+  if(!silent && !wasDocked)show(hcDriveBackScreen||'home');
 }
-function hcExitDriveMedia(){hcMinimizeDriveVideo(hcDriveBackScreen)}
+function hcExitDriveMedia(){
+  // Back closes this recording; Minimize is the explicit keep-listening action.
+  const back=hcDriveBackScreen||'home';
+  hcStopDriveVideo(true);
+  show(back);
+}
 // When a native HeartClear recording plays, stop the floating Drive preview.
 // Never stop the native player in response to a Drive panel resize.
 document.querySelectorAll('audio,video').forEach(el=>{
