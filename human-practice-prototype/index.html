@@ -3966,6 +3966,7 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
     <button data-mini-category="practice" onclick="hcSetMiniCategory('practice')">Practice</button>
     <button data-mini-category="sacred" onclick="hcSetMiniCategory('sacred')">Sacred</button>
     <button data-mini-category="raga" onclick="hcSetMiniCategory('raga')">Raga</button>
+    <button data-mini-category="quran" onclick="hcSetMiniCategory('quran')">Qur’an · 114</button>
   </div>
   <div id="hcMiniTrackList" class="hc-mini-library-list" aria-live="polite"></div>
 </div>
@@ -4933,7 +4934,7 @@ function getActiveMediaState(){
     {
       key:'soundlab',el:soundLabAudio,
       title:(soundLabTracks[currentSoundKey]||soundLabTracks.horizon).title,
-      meta:'Sounds · '+fmt(soundLabAudio.currentTime||0),
+      meta:(/^hcSurah\d+$/.test(currentSoundKey)?'Qur’an · ':'Sounds · ')+fmt(soundLabAudio.currentTime||0),
       screen:'soundLabPlayer'
     },
     {
@@ -5310,6 +5311,12 @@ function hcMiniBrowseItems(){
     if(!title||/^(READ|VIDEO)$/i.test(time)||!/(hcStartGuidedByTitle|hcPlayAdhkar)/.test(action))return;
     list.push({name:title,detail:time+' · Guided practice',category:action.includes('Adhkar')?'sacred':'practice',kind:'practice',el});
   });
+  // All chapters remain one tap away behind the Qur’an category; do not crowd All.
+  for(let n=1;n<=114;n++){
+    const key='hcSurah'+n,t=soundLabTracks[key];if(!t?.url)continue;
+    list.push({name:String(n).padStart(3,'0')+' · '+t.title,
+      detail:'Mishary Rashid Alafasy · Arabic recitation',category:'quran',key,kind:'audio'});
+  }
   HC_DRIVE_COLLECTIONS.forEach(item=>{
     if(item.key==='islamHuAkmal')return;
     list.push({name:item.name,detail:'Drive preview · not native autoplay',
@@ -5323,7 +5330,7 @@ function hcRenderMiniLibrary(){
   root.replaceChildren();
   const search=document.getElementById('hcMiniSearch')?.value?.trim()?.toLowerCase()||'';
   const visible=hcMiniBrowseItems().filter(x=>
-    (hcMiniCategory==='all'||x.category===hcMiniCategory)&&
+    (hcMiniCategory==='all'?x.category!=='quran':x.category===hcMiniCategory)&&
     (!search||(x.name+' '+x.detail).toLowerCase().includes(search)));
   if(!visible.length){const empty=document.createElement('p');empty.textContent='No matching recordings.';root.appendChild(empty);return}
   visible.forEach(item=>{
@@ -7259,7 +7266,7 @@ try{hcSoundLoopSetting=localStorage.getItem('heartclearSoundLoopV2')||'auto'}cat
 function hcSoundApplyLoop(){
   const track=soundLabTracks[currentSoundKey]||soundLabTracks.horizon;
   // A short recording must not loop endlessly when the listener has enabled Auto Next.
-  soundLabAudio.loop=hcSoundLoopSetting==='on'||(!soundLabAutoNext&&hcSoundLoopSetting==='auto'&&(track.duration||0)<300);
+  soundLabAudio.loop=!/^hcSurah\d+$/.test(currentSoundKey)&&(hcSoundLoopSetting==='on'||(!soundLabAutoNext&&hcSoundLoopSetting==='auto'&&(track.duration||0)<300));
   const button=document.getElementById('soundLoopBtn');
   if(button){button.textContent=soundLabAudio.loop?'Loop on':'Loop off';button.classList.toggle('active',soundLabAudio.loop)}
   updateSoundLabQueueStatus();
@@ -7269,6 +7276,11 @@ let soundLabListeningSeconds=0;
 let soundLabListeningLimit=0;
 let soundLabPlaybackStartedAt=0;
 function hcPlayableSoundQueue(){
+  // Qur’an chapters are their own ordered 1–114 queue, never followed by unrelated music.
+  // Only chapter selection is randomized elsewhere; recitation and verse order never change.
+  if(/^hcSurah(?:[1-9]|[1-9][0-9]|1(?:0[0-9]|1[0-4]))$/.test(currentSoundKey)){
+    return Array.from({length:114},(_,i)=>'hcSurah'+(i+1)).filter(key=>!!soundLabTracks[key]?.url);
+  }
   const all=hcSoundListKeys.filter(key=>{
     const track=soundLabTracks[key];
     return !!track && (!!track.url || key==='nature');
@@ -7523,7 +7535,7 @@ function setSoundLabMediaSession(){
     navigator.mediaSession.metadata=new MediaMetadata({
       title:t.title,
       artist:'HeartClear',
-      album:'Sounds',
+      album:/^hcSurah\d+$/.test(currentSoundKey)?'Qur’an · Arabic recitation':'Sounds',
       artwork:hcArtwork()
     });
     navigator.mediaSession.setActionHandler('play',()=>{rememberActiveMedia('soundlab');return soundLabAudio.play()});
@@ -9273,7 +9285,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=142');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=143');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
