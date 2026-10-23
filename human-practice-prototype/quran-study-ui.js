@@ -85,8 +85,16 @@ function saveNotes(){
  try{localStorage.setItem(KEY,JSON.stringify(state.notes));return true}catch(e){return false}
 }
 function getMeaning(ref){
- const val=data.meaning?.[ref];if(!val)return bilingual("A local translation draft has not been reviewed for this verse. Use the source link below for translation and tafsir.","இந்த வசனத்துக்கான உள்ளூர் மொழிபெயர்ப்பு இன்னும் சரிபார்க்கப்படவில்லை. பொருள் மற்றும் தஃப்ஸீரை கீழுள்ள மூலத்தில் காணுங்கள்.");
- return bilingual(val.en||"English meaning pending",val.ta||"தமிழ்ப் பொருள் பின்னர்");
+ const ch=Number(ref.split(":")[0]);
+ const liveEn=liveTranslations.get(ch+":en")?.get(ref),liveTa=liveTranslations.get(ch+":ta")?.get(ref);
+ const local=data.meaning?.[ref];
+ const en=liveEn||local?.en||"Online English translation not available. Use the source link above.";
+ const ta=liveTa||local?.ta||"தமிழ் மொழிபெயர்ப்பு ஏற்றப்படவில்லை. மேலே உள்ள மூல இணைப்பைப் பார்க்கவும்.";
+ const enCaption=liveEn?"English · QuranEnc 1.1.2":local?.en?"English · local meaning draft":"English · unavailable";
+ const taCaption=liveTa?"தமிழ் · QuranEnc 1.0.3":local?.ta?"தமிழ் · உள்ளூர் பொருள் வரைவு":"தமிழ் · கிடைக்கவில்லை";
+ return '<div class="hcqs-translation-columns">'+
+ '<section class="hcqs-en hcqs-translation-col" lang="en"><strong>'+clean(enCaption)+'</strong><p>'+clean(en)+'</p></section>'+
+ '<section class="hcqs-ta hcqs-translation-col" lang="ta"><strong>'+clean(taCaption)+'</strong><p>'+clean(ta)+'</p></section></div>';
 }
 function verseCard(v){
  const note=annotations.notes?.[v.ref],n=state.notes?.[v.ref],active=state.activeRef===v.ref;
@@ -97,9 +105,9 @@ function verseCard(v){
   <p class="hcqs-arabic" dir="rtl" lang="ar">${clean(v.arabic)}</p>
   <div class="hcqs-subhead">${bilingual("Meaning · English / Tamil draft","பொருள் · தமிழ் / ஆங்கில வரைவு")}</div>
   <div class="hcqs-meaning">${getMeaning(v.ref)}</div>
-  ${note?`<div class="hcqs-editorial"><div class="hcqs-source-label">${clean(statusLabel(note.status))}</div><strong>${bilingual(note.headline.en,note.headline.ta)}</strong><div>${bilingual(note.text.en,note.text.ta)}</div><small>${clean(note.source||"")}</small><small>Separate personal application — not Qur'anic text or certified tafsir.</small></div>`:`<p class="hcqs-unwritten">${bilingual("Personal commentary is not yet written for this verse.","இந்த வசனத்திற்கான தனிப்பட்ட சிந்தனை இன்னும் எழுதப்படவில்லை.")}</p>`}
+  ${note?`<div class="hcqs-editorial"><div class="hcqs-source-label">Author's reflection · ${clean(statusLabel(note.status))} · not Qur'anic verse</div><strong>${bilingual(note.headline.en,note.headline.ta)}</strong><div>${bilingual(note.text.en,note.text.ta)}</div><small>${clean(note.source||"")}</small><small>Separate personal application — not Qur'anic text or certified tafsir.</small></div>`:`<p class="hcqs-unwritten">${bilingual("Personal commentary is not yet written for this verse.","இந்த வசனத்திற்கான தனிப்பட்ட சிந்தனை இன்னும் எழுதப்படவில்லை.")}</p>`}
   ${n?.text?`<div class="hcqs-private-note"><strong>${bilingual("Your private reflection","உங்கள் தனிப்பட்ட சிந்தனை")}</strong><p>${clean(n.text)}</p><small>Saved only in this browser · ${clean(n.updated||"")}</small></div>`:""}
-  <button type="button" class="hcqs-edit" data-qs-action="edit" data-qs-ref="${clean(v.ref)}">${bilingual(n?.text?"Edit your reflection":"Write your reflection",n?.text?"உங்கள் சிந்தனையைத் திருத்துங்கள்":"உங்கள் சிந்தனையை எழுதுங்கள்")}</button>
+  <button type="button" class="hcqs-edit" data-qs-action="edit" data-qs-ref="${clean(v.ref)}">${bilingual(n?.text?"Edit private note":"Write private note",n?.text?"தனிப்பட்ட குறிப்பைத் திருத்துங்கள்":"தனிப்பட்ட குறிப்பை எழுதுங்கள்")}</button>
   ${active?`<div class="hcqs-editor" data-ref="${clean(v.ref)}"><label for="hcqs-my-note">${bilingual("My reflection · private on this device","என் சிந்தனை · இந்தச் சாதனத்தில் மட்டும்")}</label><textarea id="hcqs-my-note" rows="5" maxlength="3500" placeholder="What does this verse make you question about awareness, habit, society or intention? / இந்த வசனம் உங்களை என்ன சிந்திக்கச் செய்கிறது?">${clean(n?.text||"")}</textarea><div class="hcqs-editor-actions"><button type="button" data-qs-action="save" data-qs-ref="${clean(v.ref)}">Save locally / சேமி</button><button type="button" class="hcqs-cancel" data-qs-action="cancel">Cancel</button></div></div>`:""}
  </article>`;
 }
@@ -108,7 +116,7 @@ function render(){
  state.start=Math.max(1,Math.min(total,Math.floor((state.start-1)/chunkSize)*chunkSize+1));
  updatePosition();
  const min=state.start,max=Math.min(total,min+chunkSize-1);
- const ready=ch.verses.filter(v=>data.meaning?.[v.ref]?.en&&data.meaning?.[v.ref]?.ta).length;
+ const ready=ch.verses.filter(v=>liveTranslations.get(ch.number+":en")?.has(v.ref)&&liveTranslations.get(ch.number+":ta")?.has(v.ref)).length;
  const draftCount=ch.verses.filter(v=>annotations.notes?.[v.ref]).length;
  const savedCount=ch.verses.filter(v=>state.notes?.[v.ref]?.text).length;
  const highlights={2:[1,2,144,156,170],4:[1,135],41:[20,34,53],114:[4,5,6]}[ch.number]||[];
@@ -122,20 +130,20 @@ function render(){
    <button data-qs-action="lang" data-qs-lang="ta" aria-pressed="${state.language==="ta"}">தமிழ்</button>
    <button data-qs-action="lang" data-qs-lang="en" aria-pressed="${state.language==="en"}">English</button>
   </div>
-  <div class="hcqs-picker">${data.chapters.map(x=>`<button type="button" data-qs-action="chapter" data-qs-chapter="${x.number}" aria-pressed="${state.chapter===x.number}"><span>${x.number} · ${qsName(x)}</span><small>${x.verses.length} ${state.language==="ta"?"வசனங்கள்":"verses"}</small></button>`).join("")}</div>
-  <p class="hcqs-caution">${bilingual("Every Arabic verse is included. English/Tamil drafts are available for selected verses only; all others link to source translations and commentaries. Some book-related notes await your review.","அனைத்து அரபு வசனங்களும் சேர்க்கப்பட்டுள்ளன. தேர்ந்தெடுக்கப்பட்ட வசனங்களுக்கு மட்டுமே தமிழ்/ஆங்கிலப் பொருள் வரைவு உள்ளது; மற்றவற்றுக்கு மூல மொழிபெயர்ப்பு இணைப்பு உண்டு. சில நூல் சார்ந்த குறிப்புகள் உங்கள் சரிபார்ப்புக்காக உள்ளன.")}</p>
+  <div class="hcqs-picker"><label for="hcqs-surah-select">Choose from all 114 surahs · 114 ஸூராக்கள்</label><select id="hcqs-surah-select" aria-label="Select surah">${data.chapters.map(x=>`<option value="${x.number}" ${state.chapter===x.number?"selected":""}>${x.number} · ${qsName(x)}</option>`).join("")}</select></div>
+  <p class="hcqs-caution">${bilingual("All 114 surahs can be selected. Complete Arabic and bilingual translations load online by surah. Previously bundled Arabic is available for four surahs offline. Author reflections remain separately labelled and some await approval.","114 ஸூராக்களையும் தேர்வு செய்யலாம். முழு அரபு வசனங்களும் தமிழ்/ஆங்கில மொழிபெயர்ப்புகளும் இணையத்திலிருந்து ஏற்றப்படும். முன்பிருந்த நான்கு ஸூராக்களின் அரபு உரைகள் இணையமின்றி கிடைக்கும். ஆசிரியர் சிந்தனைகள் தனியே காட்டப்படும்.")}</p>
  </div>
- <div class="hcqs-summary"><h3>${qsName(ch)}</h3><p>${total} ${state.language==="ta"?"வசனங்கள்":"verses"} · ${ready} bilingual meaning drafts · ${draftCount} attributed reflections · ${savedCount} private notes</p>
+ <div class="hcqs-summary"><h3>${qsName(ch)}</h3><p>${ch.verseCount||ch.verses.length||"—"} ${state.language==="ta"?"வசனங்கள்":"verses"} · ${ready} source bilingual verse pairs · ${draftCount} author reflection drafts · ${savedCount} private notes</p>
  <p class="hcqs-bismillah" lang="ar" dir="rtl">${clean(ch.bismillah)}</p></div>
  <div class="hcqs-highlights"><div class="hcqs-subhead">${bilingual("Verses connected to your earlier discussions","முந்தைய சிந்தனைகளுடன் இணைந்த வசனங்கள்")}</div>${links}</div>
  <div class="hcqs-pager"><button data-qs-action="prev" ${min===1?"disabled":""}>‹ ${state.language==="ta"?"முந்தையவை":"Previous"}</button><span>${min}–${max} / ${total}</span><button data-qs-action="next" ${max===total?"disabled":""}>${state.language==="ta"?"அடுத்தவை":"Next"} ›</button></div>
- <div class="hcqs-verses">${ch.verses.slice(min-1,max).map(verseCard).join("")}</div>
+ <div class="hcqs-verses">${chapterLoading?'<p class="hcqs-load-status" role="status">Loading Qur’an sources… · அரபு, தமிழ், ஆங்கிலம் ஏற்றப்படுகிறது…</p>':""}${ch.verses.length?ch.verses.slice(min-1,max).map(verseCard).join(""):'<div class="hcqs-load-status">Arabic source is not currently available. <a href="https://quran.com/'+ch.number+'" target="_blank" rel="noopener noreferrer">Read the chapter at Quran.com ↗</a></div>'}</div>
  <div class="hcqs-pager"><button data-qs-action="prev" ${min===1?"disabled":""}>‹ Previous</button><span>${min}–${max} / ${total}</span><button data-qs-action="next" ${max===total?"disabled":""}>Next ›</button></div>
  <div class="hcqs-jump"><label for="hcqs-verse-number">${bilingual("Go directly to verse number","நேரடியாக வசன எண்ணுக்குச் செல்லவும்")}</label><input id="hcqs-verse-number" inputmode="numeric" type="number" min="1" max="${total}" value="${min}" aria-label="Verse number"><button data-qs-action="jumpinput">Go / செல்</button></div>
  <div class="hcqs-private-tools"><h3>${bilingual("Protect your reflections","உங்கள் சிந்தனைகளைப் பாதுகாக்கவும்")}</h3><p>${bilingual("Personal notes stay in this browser only. They are not uploaded, shared, or automatically added to the public lesson. Export a backup before clearing app data or changing phones.","தனிப்பட்ட குறிப்புகள் இந்த உலாவியில் மட்டுமே சேமிக்கப்படும். அவை பகிரப்படவோ பொதுப் பாடத்தில் தானாகச் சேர்க்கப்படவோ மாட்டாது. சாதனத்தை மாற்றுவதற்கு முன் காப்புப் பிரதி சேமிக்கவும்.")}</p>
  <button data-qs-action="export">Export private notes / குறிப்புகளை ஏற்றுமதி செய்</button>
  <label class="hcqs-import-label" for="hcqs-import">Import your saved notes / குறிப்புகளை இறக்குமதி செய்</label><input type="file" id="hcqs-import" accept="application/json,.json">
- <div class="hcqs-license">${clean(data.arabicAttribution)}. Meanings and commentary are editorial learning materials, not certified tafsir. <a href="https://quran.com" target="_blank" rel="noopener noreferrer">Verify Qur'anic text and translations at Quran.com ↗</a></div>
+ <div class="hcqs-license">${clean(data.arabicAttribution)}. English/Tamil translation provider: ${clean(SOURCE_NAME)}. QuranEnc translations are displayed without editorial rewriting; updates, versions and corrections belong to that source. Separate author reflections are not Qur'anic verses or certified tafsir. <a href="https://quran.com" target="_blank" rel="noopener noreferrer">Verify Qur'anic text and translations at Quran.com ↗</a></div>
  </div>`;
  const section=document.getElementById("hcQuranStudy");if(section)section.dataset.qsLanguage=state.language;
 }
@@ -154,7 +162,7 @@ function importNotes(file){
    if(backup.format!=="HeartClear private Qur'an reflections"||!backup.notes||typeof backup.notes!=="object"||Array.isArray(backup.notes))throw Error("Unknown or invalid backup");
    const valid={};
    for(const [ref,item] of Object.entries(backup.notes)){
-    if(!/^(2|4|41|114):\d{1,3}$/.test(ref)||typeof item!=="object"||typeof item.text!=="string"||item.text.length>3500)continue;
+    if(!/^([1-9]|[1-9]\d|10\d|11[0-4]):\d{1,3}$/.test(ref)||typeof item!=="object"||typeof item.text!=="string"||item.text.length>3500)continue;
     const [ch,verse]=ref.split(":").map(Number),found=data.chapters.find(c=>c.number===ch);
     if(!found||verse<1||verse>found.verses.length)continue;
     valid[ref]={text:item.text,updated:String(item.updated||"").slice(0,60)};
