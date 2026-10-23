@@ -17,7 +17,7 @@ ta:'https://bhagavadgitaclass.com/bhagavad-gita-recitation-in-sanskrit-with-tami
 };
 const otherSource='https://yatharthgeeta.com/yatharth-geeta-audio/';
 const nepaliSource='https://www.gitab.com.np/2019/04/the-bhagavad-gita-audio-book.html';
-const names={sa:'Swami Devrupananda',en:'Purnachandra Goswami',hi:'Savyasachi Prabhu',ta:'Sanskrit recitation with Tamil translations'};
+const names={sa:'Swami Devrupananda',en:'Purnachandra Goswami',hi:'Savyasachi Prabhu',ta:'Human-voiced Sanskrit with Tamil translations'};
 const pad=n=>String(n).padStart(2,'0');
 function url(lang,n){
  if(lang==='sa')return 'https://ramakrishnamath.in/Gita/BhagvadGitaChantingSwamiDevrupananda/'+pad(n)+'%20GITA%20CHAPTER%20%20'+n+'.mp3';
@@ -43,7 +43,14 @@ const css=[
 '#hcGitaOriginalPanel h3{font-size:19px;margin:0}',
 '#hcGitaOriginalPanel select{font:inherit;font-size:12px;max-width:70%;border:1px solid #53636d;border-radius:9px;background:#1c2931;color:white;padding:9px}',
 '#hcGitaOriginalPanel button{font:inherit;border:1px solid #586971;border-radius:10px;background:#18252b;color:#fff;min-height:43px;padding:9px}',
-'#hcGitaOriginalPanel .hcg-buttons{display:grid;grid-template-columns:1fr 2fr 1fr;gap:8px}',
+'#hcGitaOriginalPanel .hcg-buttons{display:grid;grid-template-columns:1fr 1.35fr 1fr;gap:8px}',
+'#hcGitaOriginalPanel .hcg-buttons button{font-weight:650;white-space:nowrap}',
+'#hcGitaOriginalPanel .hcg-chapters{display:flex;justify-content:space-between;gap:8px;align-items:center}',
+'#hcGitaOriginalPanel .hcg-chapters button{flex:1;min-width:0;font-size:12px}',
+'#hcGitaOriginalPanel .hcg-seek-row{display:flex;align-items:center;gap:7px;font-size:11px;color:#cedbe0;font-variant-numeric:tabular-nums}',
+'#hcGitaOriginalPanel .hcg-seek-row input{flex:1;min-width:0;width:100%;accent-color:#e1e9ee;cursor:pointer}',
+'#hcGitaOriginalPanel .hcg-seek-row input:disabled{opacity:.45;cursor:default}',
+'#hcGitaOriginalPanel button:disabled{opacity:.45;cursor:not-allowed}',
 '#hcGitaOriginalPanel #hcgPlay{background:white;color:#101519;font-size:20px;font-weight:650}',
 '#hcGitaOriginalPanel a{font-size:12px;color:#dceaf0;text-decoration:underline;text-underline-offset:3px}',
 '#hcGitaOriginalPanel .hcg-caption{font-size:11px;line-height:1.5;color:#becbd0;margin:0}',
@@ -55,7 +62,9 @@ panel.innerHTML='<div class="hcg-row"><h3 id="hcgHeader">Bhagavad Gita</h3><butt
 '<div class="hcg-row" id="hcgLangRow"><label for="hcgLang">Audio language</label><select id="hcgLang"></select></div>'+
 '<div class="hcg-row" id="hcgChapterRow"><label for="hcgChapter">Chapter</label><select id="hcgChapter"></select></div>'+
 '<div id="hcgNow" class="hcg-internal">Original human voice</div>'+
-'<div class="hcg-buttons"><button id="hcgPrev" aria-label="Previous chapter">⏮</button><button id="hcgPlay" aria-label="Play or pause">▶</button><button id="hcgNext" aria-label="Next chapter">⏭</button></div>'+
+'<div class="hcg-buttons"><button id="hcgRewind" type="button" aria-label="Rewind 15 seconds">↶ 15s</button><button id="hcgPlay" type="button" aria-label="Play or pause">▶</button><button id="hcgForward" type="button" aria-label="Fast forward 15 seconds">15s ↷</button></div>'+ 
+'<div class="hcg-seek-row"><span id="hcgElapsed">00:00</span><input id="hcgSeek" type="range" min="0" max="100" step="1" value="0" disabled aria-label="Seek to a different time in the chapter"><span id="hcgTotal">--:--</span></div>'+
+'<div class="hcg-chapters"><button id="hcgPrev" type="button" aria-label="Previous chapter">‹ Previous chapter</button><button id="hcgNext" type="button" aria-label="Next chapter">Next chapter ›</button></div>'+
 '<p id="hcgStatus" class="hcg-caption" role="status" aria-live="polite">Choose a recording</p>'+
 '<details class="hcg-extras"><summary>Sources & details</summary><div style="display:grid;gap:8px;margin:9px 0"><a id="hcgSource" target="_blank" rel="noopener noreferrer">Original recording & credit ↗</a>'+
 '<a id="hcgLongOm" target="_blank" rel="noopener noreferrer" href="'+omDrive+'" hidden>OM Chanting & Singing Bowls · Open original Drive recording ↗</a>'+
@@ -70,8 +79,20 @@ let mode='gita',lang='sa',chapter=1,playing=false,src='',playToken=0;
 try{const l=localStorage.getItem('hcGitaVoiceLang');if(labels[l])lang=l;const n=Number(localStorage.getItem('hcGitaVoiceChapter'));if(n>=1&&n<=18)chapter=n}catch(e){}
 const audio=new Audio();audio.preload='none';audio.hidden=true;audio.playsInline=true;panel.append(audio);
 function notice(txt){el('hcgStatus').textContent=txt}
+function timeLabel(value){if(!Number.isFinite(value)||value<0)return '--:--';const t=Math.floor(value);return (t>=3600?String(Math.floor(t/3600))+':':'')+String(Math.floor(t/60)%60).padStart(2,'0')+':'+String(t%60).padStart(2,'0')}
+function syncSeek(){
+ const seek=el('hcgSeek'),length=Number(audio.duration),current=Number(audio.currentTime)||0;
+ const ready=Number.isFinite(length)&&length>0&&mode!=='om';
+ seek.disabled=!ready;
+ seek.max=ready?String(Math.floor(length)):'100';
+ seek.value=ready?String(Math.min(Math.floor(length),Math.max(0,Math.floor(current)))):'0';
+ el('hcgElapsed').textContent=timeLabel(current);
+ el('hcgTotal').textContent=ready?timeLabel(length):'--:--';
+ el('hcgRewind').disabled=!ready;
+ el('hcgForward').disabled=!ready;
+}
 function save(){try{localStorage.setItem('hcGitaVoiceLang',lang);localStorage.setItem('hcGitaVoiceChapter',String(chapter))}catch(e){}}
-function stop(){++playToken;audio.pause();audio.removeAttribute('src');audio.load();src='';playing=false;el('hcgPlay').textContent='▶';if(typeof renderGlobalMini==='function')renderGlobalMini()}
+function stop(){++playToken;audio.pause();audio.removeAttribute('src');audio.load();src='';playing=false;el('hcgPlay').textContent='▶';syncSeek();if(typeof renderGlobalMini==='function')renderGlobalMini()}
 function update(){
  el('hcgHeader').textContent=mode==='om'?'OM · Original voice':'Bhagavad Gita · Original voice';
  el('hcgLangRow').hidden=mode==='om';el('hcgChapterRow').hidden=mode==='om';
@@ -89,6 +110,7 @@ function update(){
   (isPlayable?'Next automatically follows the 18 Gita chapters. Streams original human recordings.':
   'This language has no verified direct MP3 playlist yet, so playback is unavailable.');
  el('hcgPlay').textContent=playing?'Ⅱ':'▶';
+ syncSeek();
  if(!isPlayable)notice('Tap the source link for '+labels[lang]+' voice recordings.');
 }
 function exclusivity(){
@@ -106,6 +128,17 @@ async function play(){
  try{await audio.play();if(ticket===playToken){playing=true;el('hcgPlay').textContent='Ⅱ';notice('Playing original recording');try{localStorage.setItem('heartclearActiveMedia','gita')}catch(e){};if(typeof renderGlobalMini==='function')renderGlobalMini();}}
  catch(e){if(ticket===playToken){playing=false;el('hcgPlay').textContent='▶';notice('Source unavailable inside HC. Open the original recording using the link below.');}}
 }
+function jump(seconds){
+ if(!audio.getAttribute('src')){notice('Start the recording to seek within a chapter.');return false}
+ const secondsLong=Number(audio.duration);
+ if(!Number.isFinite(secondsLong)||secondsLong<=0){notice('Waiting for the chapter duration.');return false}
+ try{
+  const target=Math.max(0,Math.min(secondsLong,Number(audio.currentTime||0)+Number(seconds)));
+  audio.currentTime=target;
+  syncSeek();if(typeof renderGlobalMini==='function')renderGlobalMini();
+  return true;
+ }catch(e){notice('This recording does not support seeking at the moment.');return false}
+}
 function next(direction){
  if(mode!=='gita'||!url(lang,chapter))return;
  const newChapter=Math.max(1,Math.min(18,chapter+direction));
@@ -121,6 +154,13 @@ function open(which='gita',n){
 }
 el('hcgLang').addEventListener('change',()=>{stop();lang=el('hcgLang').value;save();update()});
 el('hcgChapter').addEventListener('change',()=>{stop();chapter=Number(el('hcgChapter').value)||1;save();update()});
+el('hcgRewind').addEventListener('click',()=>jump(-15));
+el('hcgForward').addEventListener('click',()=>jump(15));
+el('hcgSeek').addEventListener('input',event=>{
+ const to=Number(event.target.value);if(Number.isFinite(to)&&audio.getAttribute('src')&&Number.isFinite(audio.duration)){
+  try{audio.currentTime=Math.min(Math.max(0,to),audio.duration);syncSeek()}catch(e){notice('Seeking is not available yet.')}
+ }
+});
 el('hcgPrev').addEventListener('click',()=>next(-1));
 el('hcgNext').addEventListener('click',()=>next(1));
 el('hcgPlay').addEventListener('click',play);
@@ -128,7 +168,10 @@ el('hcgClose').addEventListener('click',()=>{stop();panel.hidden=true});
 audio.addEventListener('pause',()=>{playing=false;el('hcgPlay').textContent='▶';if(typeof renderGlobalMini==='function')renderGlobalMini()});
 audio.addEventListener('play',()=>{playing=true;el('hcgPlay').textContent='Ⅱ';try{localStorage.setItem('heartclearActiveMedia','gita')}catch(e){};if(typeof renderGlobalMini==='function')renderGlobalMini()});
 audio.addEventListener('ended',()=>{playing=false;if(mode==='gita'&&chapter<18&&url(lang,chapter))next(1);else{stop();notice('Finished.')}});
-audio.addEventListener('timeupdate',()=>{if(typeof renderGlobalMini==='function')renderGlobalMini()});
+audio.addEventListener('loadedmetadata',syncSeek);
+audio.addEventListener('durationchange',syncSeek);
+audio.addEventListener('seeked',syncSeek);
+audio.addEventListener('timeupdate',()=>{syncSeek();if(typeof renderGlobalMini==='function')renderGlobalMini()});
 audio.addEventListener('error',()=>{playing=false;el('hcgPlay').textContent='▶';notice('Cannot play this audio stream. Use the original source link.');});
 document.addEventListener('play',event=>{if(event.target instanceof HTMLMediaElement&&event.target!==audio&&!audio.paused)audio.pause()},true);
 window.hcGitaPlayerState=()=>{
@@ -138,6 +181,7 @@ window.hcGitaPlayerState=()=>{
  screen:'sacredDetail'};
 };
 window.hcGitaStep=direction=>next(direction);
+window.hcGitaJump=seconds=>jump(seconds);
 window.hcGitaStop=()=>{stop();try{localStorage.removeItem('heartclearActiveMedia')}catch(e){};if(typeof renderGlobalMini==='function')renderGlobalMini()};
 window.hcOpenGitaVoice=(chapterNum,language)=>{if(language&&labels[language])lang=language;open('gita',chapterNum)};
 window.hcOpenOmVoice=()=>open('om');
