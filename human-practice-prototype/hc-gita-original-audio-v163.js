@@ -72,6 +72,7 @@ function update(){
  const isPlayable=mode==='om'||!!url(lang,chapter);
  el('hcgPrev').disabled=!isPlayable;
  el('hcgNext').disabled=!isPlayable;
+ el('hcgPlay').setAttribute('aria-label',isPlayable?'Play or pause original recording':'Open human-voiced recording at publisher');
  el('hcgSource').href=mode==='om'?omSource:(srcPages[lang]||otherSource);
  el('hcgSource').textContent=mode==='om'?'Source & CC0 licence ↗':(isPlayable?'Original source & credit ↗':'Listen in '+labels[lang]+' at source ↗');
  el('hcgLongOm').hidden=mode!=='om';
@@ -87,7 +88,7 @@ function exclusivity(){
  document.querySelectorAll('audio,video').forEach(a=>{if(!a.paused)try{a.pause()}catch(e){}});
 }
 async function play(){
- if(!panel.hidden&&mode!=='om'&&!url(lang,chapter)){notice('Choose “Listen at source” for this language.');return}
+ if(!panel.hidden&&mode!=='om'&&!url(lang,chapter)){notice('Opening '+labels[lang]+' human-voiced recordings at the original website.');window.open(srcPages[lang]||otherSource,'_blank','noopener');return}
  const wanted=mode==='om'?omUrl:url(lang,chapter);
  if(!wanted)return;
  if(!audio.paused&&src===wanted){audio.pause();return}
@@ -103,7 +104,8 @@ function next(direction){
  chapter=newChapter;save();stop();update();play();
 }
 function open(which='gita',n){
- stop();mode=which==='om'?'om':'gita';
+ stop();if(typeof openSacred==='function')openSacred('hindu');
+ mode=which==='om'?'om':'gita';
  if(Number.isInteger(n)&&n>0&&n<=18)chapter=n;
  panel.hidden=false;update();notice(mode==='om'?'Tap Play for the OM syllable. The full original is linked below.':'Tap Play or choose a chapter.');
  panel.scrollIntoView({behavior:'smooth',block:'center'});
