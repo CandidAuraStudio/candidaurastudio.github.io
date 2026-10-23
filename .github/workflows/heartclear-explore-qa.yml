@@ -1,0 +1,46 @@
+name: HeartClear Explore Questions and Browser Checks
+on:
+  push:
+    branches: [main, feature/hc-explore-v153]
+    paths:
+      - '.github/workflows/heartclear-explore-qa.yml'
+      - 'human-practice-prototype/hc-explore-*'
+      - 'human-practice-prototype/hc-explore.css'
+      - 'human-practice-prototype/index.html'
+      - 'human-practice-prototype/sw.js'
+      - 'tests/hc-explore*'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/heartclear-explore-qa.yml'
+      - 'human-practice-prototype/hc-explore-*'
+      - 'human-practice-prototype/hc-explore.css'
+      - 'human-practice-prototype/index.html'
+      - 'human-practice-prototype/sw.js'
+      - 'tests/hc-explore*'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check question routing
+        run: node --test tests/hc-explore.test.cjs
+      - name: Install test browser
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Check mobile interaction, voice and offline fallback
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/hc-explore-http.log 2>&1 &
+          node tests/hc-explore-browser.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: explore-mobile-check
+          path: tests/explore-mobile.png
