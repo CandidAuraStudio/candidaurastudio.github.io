@@ -111,6 +111,17 @@ const assert = require('node:assert/strict');
       'Begin must request guided audio immediately');
     await page.evaluate(()=>{HTMLMediaElement.prototype.play=window.hcOldPlay});
     console.log('PASS: one-click Begin calls the existing guided audio');
+    await page.locator('#player .hc-minimize-audio').evaluate(el=>el.click());
+    assert.ok(await page.locator('#home').evaluate(el=>el.classList.contains('active')),
+      'Minimize must return directly Home without stopping the guided session');
+    assert.ok(await page.locator('#globalMini').evaluate(el=>el.classList.contains('show')),
+      'Paused/loading guided audio must leave a visible mini controller on Home');
+    assert.equal((await page.locator('#globalMiniPlay').innerText()).trim(),'▶',
+      'Stopped/blocked audio must show Play, not a false playing state');
+    await page.locator('#globalMini .global-mini-copy').evaluate(el=>el.click());
+    assert.ok(await page.locator('#player').evaluate(el=>el.classList.contains('active')),
+      'Mini title should expand same original player');
+    console.log('PASS: minimized Deep Sleep/meditation returns Home and retains native play/back/forward controls');
     await page.locator('#finishBtn').evaluate(el=>el.click());
     assert.ok(await page.locator('#home').evaluate(el=>el.classList.contains('active')),
       'Finish should go straight to Home, not another Done screen');
@@ -136,6 +147,23 @@ const assert = require('node:assert/strict');
       'Drive listening should start in compact audio-focused view');
     assert.equal(await page.locator('#hcDriveVideoFrame').getAttribute('src'),'https://drive.google.com/file/d/11Sgca-PXcd4-5DRaPQPslynyc7QtkVYx/preview?autoplay=1','Allahu video starts only after its card is tapped');
     assert.equal(await page.locator('#hcDriveOpenSource').getAttribute('href'),'https://drive.google.com/file/d/11Sgca-PXcd4-5DRaPQPslynyc7QtkVYx/view');
+    const beforeDock=await page.locator('#hcDriveVideoFrame').getAttribute('src');
+    await page.locator('#hcDriveMedia .hc-drive-minimize').evaluate(el=>el.click());
+    const dock=await page.locator('#hcDriveMedia').evaluate(el=>{
+      const rect=el.getBoundingClientRect();
+      return {width:rect.width,height:rect.height,docked:el.classList.contains('hc-drive-docked'),
+        iframeStillMounted:!!document.getElementById('hcDriveVideoFrame')?.getAttribute('src'),
+        visibleLabel:getComputedStyle(el.querySelector('.hc-drive-mini-label')).display};
+    });
+    assert.ok(dock.docked && dock.height<=75 && dock.width<=292,
+      'Google Drive floating view should be a short, narrow audio-focused strip');
+    assert.notEqual(dock.visibleLabel,'none');
+    assert.equal(await page.locator('#hcDriveVideoFrame').getAttribute('src'),beforeDock,
+      'Minimizing must not restart or replace original Google Drive frame');
+    await page.locator('#hcDriveMedia .hc-drive-expand').evaluate(el=>el.click());
+    assert.ok(await page.locator('#hcDriveMedia').evaluate(el=>el.classList.contains('active')),
+      'Expand returns to full controls without changing the iframe');
+    console.log('PASS: minimized Drive playback no longer covers Home and stays mounted');
     await page.locator('#hcDriveMedia button').first().evaluate(el=>el.click());
     assert.ok(await page.locator('#practices').evaluate(el=>el.classList.contains('active')),'Return from devotional video should go to Practice');
     await page.evaluate(()=>{show('sacred');openSacred('islamic')});
