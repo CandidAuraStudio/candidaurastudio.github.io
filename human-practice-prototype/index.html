@@ -4938,6 +4938,12 @@ function show(id){
 function getActiveMediaState(){
   const options=[
     {
+      key:'quran-meaning',el:document.getElementById('hcQuranMeaningAudio'),
+      title:window.hcQuranMeaningNowTitle||'Spoken Qur’an meaning',
+      meta:'Qur’an translation · '+fmt(document.getElementById('hcQuranMeaningAudio')?.currentTime||0),
+      screen:'home'
+    },
+    {
       key:'private-islam',el:hcPrivateIslamMedia,
       title:hcPrivateIslamTitle,
       meta:'Private listening · '+fmt(hcPrivateIslamMedia?.currentTime||0),
@@ -5383,6 +5389,7 @@ function hcRenderMiniLibrary(){
 }
 function hcMiniMove(direction){
   const state=getActiveMediaState();
+  if(state?.key==='quran-meaning'){window.hcMeaningStepVerse?.(direction);return;}
   if(state?.key==='soundlab'&&hcPlayableSoundQueue().includes(currentSoundKey)){
     return playNextSoundLab(true,direction);
   }
@@ -5410,7 +5417,7 @@ function renderGlobalMini(){
   // then reveal it after the user scrolls down so Pause/Resume stays reachable.
   const sameScreen=currentScreenId===state.screen;
   const scrolledAway=window.scrollY>180;
-  mini.classList.toggle('show',!sameScreen||scrolledAway);
+  mini.classList.toggle('show',state.key==='quran-meaning'||!sameScreen||scrolledAway);
   mini.classList.toggle('is-mix',state.key==='mix');
 
   document.getElementById('globalMiniTitle').textContent=state.title;
@@ -5461,6 +5468,7 @@ function stopGlobalMedia(){
   const state=getActiveMediaState();
   if(!state)return;
   if(state.key==='mix'){hcMixStop();return}
+  if(state.key==='quran-meaning'){window.hcStopQuranMeaning?.();return}
   if(state.key==='meditation'&&playbackPhase==='nature'){finishNature();return;}
   if(state.key==='book'){
     stopBookAudio();
@@ -5481,6 +5489,7 @@ function stopGlobalMedia(){
 
 function openActiveMediaPlayer(){
   const state=getActiveMediaState();
+  if(state?.key==='quran-meaning'){show('home');return;}
   if(state?.key==='soundlab'&&currentSoundKey==='allahuAkmal'){show('home');return;}
   if(state)show(state.screen);
 }
@@ -9316,7 +9325,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=152');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=153');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
@@ -9343,6 +9352,7 @@ const heartclearAutoInstallPrompt=false;
 <script src="./hc-monthly-kitchen-v145.js?v=148"></script>
 <script src="./hc-kitchen-teaching-v149.js?v=150"></script>
 <script src="./hc-sounds-direct-v149.js?v=152"></script>
+<script src="./hc-quran-home-v153.js?v=153"></script>
 
 </body>
 </html>
