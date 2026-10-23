@@ -3956,7 +3956,10 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
         <div><label>Session</label><small>Start again from 00:00</small></div>
         <button class="option-select" onclick="restart()">Restart</button>
       </div>
-
+      <div class="option-row">
+        <div><strong>Source audio</strong><small>Compare the untouched MP3 outside HC</small></div>
+        <a class="option-select" id="hcGuidedSourceMp3Link" href="#" target="_blank" rel="noopener noreferrer" style="font-size:12px;text-decoration:none;white-space:nowrap">Open MP3 ↗</a>
+      </div>
     </div>
 
     <div class="player-status" id="playerNote">Press Play when you are ready.</div>
@@ -8275,9 +8278,30 @@ function hcStartGuidedByTitle(title){
  if(!['wake','noon','evening','sleep'].includes(key)){show('practices');return}
  hcStartExistingGuidedSession(key);
 }
+/* Play the unchanged source MP3. Exclusivity prevents a background mix,
+   embedded Drive video, or other audio player from masking the guiding voice. */
+function hcStopCompetingAudioForMeditation(){
+  try{if(typeof saveBookBookmark==='function')saveBookBookmark()}catch(e){}
+  try{if(typeof hcStoreSoundLabPosition==='function')hcStoreSoundLabPosition()}catch(e){}
+  try{
+    if(typeof hcMixStop==='function'&&(hcMixRunning||hcMixStarting||hcMixDecks.length))hcMixStop(false);
+  }catch(e){}
+  try{if(typeof hcStopDriveVideo==='function'&&hcDriveActiveKey)hcStopDriveVideo(true)}catch(e){}
+  try{
+    const dock=document.getElementById('hcCompactDock');
+    if(dock&&!dock.hidden&&typeof window.hcStopCompactDriveAudio==='function')window.hcStopCompactDriveAudio();
+  }catch(e){}
+  // Native audio/video across the app, including newly added listening sections.
+  document.querySelectorAll('audio,video').forEach(el=>{
+    if(el!==audio&&!el.paused){try{el.pause()}catch(e){}}
+  });
+  const visual=document.getElementById('practiceVisual');
+  if(visual)visual.muted=true;
+  if(audio.playbackRate!==1)audio.playbackRate=1;
+}
+audio.addEventListener('play',hcStopCompetingAudioForMeditation);
 function choosePractice(seconds,url,kicker,title,introUrl,visualUrl){
-  if(bookAudioEl && !bookAudioEl.paused) bookAudioEl.pause();
-  if(soundLabAudio && !soundLabAudio.paused) soundLabAudio.pause();
+  hcStopCompetingAudioForMeditation();
   chosenSeconds=seconds;
   chosenUrl=url;
   chosenIntroUrl=introUrl || '';
@@ -8449,7 +8473,9 @@ function preparePlayer(){
       pv.load();
     }
   }
-  audio.src=chosenUrl;
+  audio.src=chosenUrl; // Retain the same original recording: no DSP, re-encoding or added effects.
+  const sourceLink=document.getElementById('hcGuidedSourceMp3Link');
+  if(sourceLink)sourceLink.href=chosenUrl;
   audio.currentTime=0;
   audio.load();
   seek.max=chosenSeconds;
@@ -9338,7 +9364,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=158');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=159');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
