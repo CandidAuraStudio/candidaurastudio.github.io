@@ -9042,7 +9042,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=136');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=137');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
@@ -9063,6 +9063,7 @@ if('serviceWorker' in navigator){
 const heartclearAutoInstallPrompt=false;
 </script>
 <script src="./hc-explorer.js?v=126"></script>
+<script src="./hc-inline-audio.js?v=137"></script>
 
 </body>
 </html>
