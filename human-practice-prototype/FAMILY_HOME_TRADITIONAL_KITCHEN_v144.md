@@ -48,3 +48,16 @@ Keep one clear Home experience; avoid duplicating on Home items already in botto
 
 ## Release QA caveat
 Syntax and source linkage can be checked by GitHub; actual device/runtime, screen appearance, speech voices and background playback must be verified separately. 
+## October 23, 2026 — monthly family meal planner v148
+- New additive file: hc-monthly-kitchen-v145.js, loaded after v144. Old seven-day Kitchen module stays as fallback; new planner hides it only after successful rendering.
+- Date selector supports arbitrary days and months. Generates five **alternative** complete menus per breakfast, lunch and dinner (not five meals to eat per mealtime).
+- Each menu displays a culturally inspired main, side, vegetable/greens and optional drink. Each day has 15 suggestions; October's 31 days have 465 suggestions.
+- The planner uses 130 distinct base dish titles in Tamil and English, with grouped vegetarian, fish, egg and chicken choices. Recipe titles and pairings are proposals for further regional review, not historical proof or tested cooking instructions.
+- Checked Oct–Dec 2026, Jan–Feb 2027: no identical **full plate** repeated within any tested month. Ingredients, base staples or main dishes may recur with different complementary food, which helps practical shopping.
+- Saves individual menu choices by date in new localStorage key hcKitchenMenuChoicesV1; respects existing hcKitchenLangV1.
+- Adds manual price notebook for Akkaraipattu, another Sri Lankan location, or Malta: salaya, hurulla, balaya and freshwater tilapia, comparable per-kilogram quote only, stamped at time entered and kept on this device in hcKitchenMarketV1. **Not live market pricing, not verified cheapest across stalls, not a weather-to-price forecast.**
+- Links to Sri Lankan Ministry of Fisheries weekly prices and national Statistics price dashboard for context. Those sources do not guarantee locality-level current quotes.
+- Optional drinks emphasize water and non-caffeinated alternatives. Tea/coffee are not daily nutrition requirements.
+- Existing audio, books, Qur'an, and other features retained; no media data cache deletion. PWA app cache updated to v148.
+- Next: family size and servings, pantry-driven swaps, substitution safety, food allergies, realistic preparation times, independently tested recipe quantities and local community/source attributions; receipts/market timestamps; draft shopping list; then well-sourced traditional oral-history archive.
+- Device/browser runtime and actual Tamil text-to-speech availability remain unverified; only source syntax and module linking checks have been performed.
