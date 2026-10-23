@@ -13,8 +13,24 @@
   ['work','Do you mainly know this person through work?'],['teach','Is this person your teacher?'],
   ['partner','Is this person your romantic partner?'],['public','Is this a well-known public figure?'],
   ['science','Is this person mainly known for science?'],['football','Is this person known for football?'],
-  ['film','Is this person known for films?'],['music','Is this person known mainly as a singer?'],
+  ['film','Is this person known for films?'],['music','Is this person known for music, singing, or composing?'],
   ['tamil','Is this person known for Tamil cinema?'],['argentina','Is this footballer from Argentina?'],
+  ['american','Is this public figure especially associated with the United States?'],
+  ['british','Is this public figure from the United Kingdom?'],
+  ['indian','Is this public figure from India?'],
+  ['pop','Is this musician especially known for pop music?'],
+  ['rock','Is this musician associated with rock music?'],
+  ['rap','Is this musician associated with rap or hip-hop?'],
+  ['dance','Is this performer particularly famous for dancing?'],
+  ['band','Is this performer famous for a band or group?'],
+  ['playback','Is this musician known for singing in Indian films?'],
+  ['composer','Is this musician especially known for composing music?'],
+  ['tamilmusic','Is this musician associated with Tamil-language music?'],
+  ['hollywood','Is this actor primarily known for Hollywood films?'],
+  ['cricket','Is this public figure well known for cricket?'],
+  ['tennis','Is this public figure well known for tennis?'],
+  ['portugal','Is this footballer from Portugal?'],
+  ['brazil','Is this footballer from Brazil?'],
   ['relativity','Is this scientist associated with relativity?'],['silent','Is this actor famous for silent comedy?'],
   ['animal','Are you thinking of an animal?'],['pet','Is it commonly kept as a household pet?'],
   ['bird','Is it a bird?'],['water','Does it normally live in water?'],['insect','Is it an insect?'],
@@ -53,8 +69,43 @@
   ['friend','a friend',''],['colleague','a colleague','work'],['teacher','your teacher','teach'],['partner','your partner','partner'],
   ['einstein','Albert Einstein','public science relativity'],['newton','Isaac Newton','public science'],
   ['curie','Marie Curie','public science female'],['messi','Lionel Messi','public football argentina'],
-  ['ronaldo','Cristiano Ronaldo','public football'],['chaplin','Charlie Chaplin','public film silent'],
-  ['rajini','Rajinikanth','public film tamil'],['jackson','Michael Jackson','public music']
+  ['ronaldo','Cristiano Ronaldo','public football portugal'],['chaplin','Charlie Chaplin','public film silent'],
+  ['rajini','Rajinikanth','public film tamil indian'],
+  ['vijay','Vijay (Tamil actor)','public film tamil indian'],
+  ['kamal','Kamal Haasan','public film tamil indian'],
+  ['suriya','Suriya','public film tamil indian'],
+  ['srk','Shah Rukh Khan','public film indian'],
+  ['tomcruise','Tom Cruise','public film hollywood american'],
+  ['scarlett','Scarlett Johansson','public film hollywood american female'],
+  ['chaplin2','Buster Keaton','public film hollywood silent'],
+  ['jackson','Michael Jackson','public music pop dance american'],
+  ['swift','Taylor Swift','public music pop female american'],
+  ['beyonce','Beyoncé','public music pop female american dance'],
+  ['adele','Adele','public music female british'],
+  ['sheeran','Ed Sheeran','public music pop british'],
+  ['billie','Billie Eilish','public music pop female american'],
+  ['madonna','Madonna','public music pop female american dance'],
+  ['freddie','Freddie Mercury','public music rock british band'],
+  ['queen','Queen (music group)','public music rock british band'],
+  ['eminem','Eminem','public music rap american'],
+  ['weeknd','The Weeknd','public music pop'],
+  ['rihanna','Rihanna','public music pop female'],
+  ['celine','Céline Dion','public music female'],
+  ['shreya','Shreya Ghoshal','public music playback indian female'],
+  ['chithra','K. S. Chithra','public music playback tamilmusic indian female'],
+  ['spb','S. P. Balasubrahmanyam','public music playback tamilmusic indian'],
+  ['sidsriram','Sid Sriram','public music playback tamilmusic'],
+  ['arrahman','A. R. Rahman','public music composer tamilmusic indian'],
+  ['ilaiyaraaja','Ilaiyaraaja','public music composer tamilmusic indian'],
+  ['anirudh','Anirudh Ravichander','public music composer tamilmusic indian'],
+  ['sonu','Sonu Nigam','public music playback indian'],
+  ['neymar','Neymar','public football brazil'],
+  ['sachin','Sachin Tendulkar','public cricket indian'],
+  ['kohli','Virat Kohli','public cricket indian'],
+  ['dhoni','M. S. Dhoni','public cricket indian'],
+  ['serena','Serena Williams','public tennis american female'],
+  ['federer','Roger Federer','public tennis'],
+  ['hawking','Stephen Hawking','public science british']
  ]);
  group('animal',[
   ['dog','a dog','pet bark'],['cat','a cat','pet'],['parrot','a parrot','pet bird'],['goldfish','a goldfish','pet water'],
@@ -92,18 +143,56 @@
  // Identity questions resolve subjects with the same broad attributes. They remain guesses, not claimed knowledge.
  for(const item of bank){const id='identity:'+item.id;item.tags.push(id);questions.push({id,text:'Are you thinking of '+item.name+'?'});}
  function gameStep(history){
-  const candidates=bank.filter(item=>history.every(h=>h.answer==='unsure'||item.unknownTags.includes(h.id)||item.tags.includes(h.id)===(h.answer==='yes')));
-  if(!candidates.length)return {kind:'unknown',message:'I could not match those answers. Your thought may be outside this small collection, or an earlier answer may need changing.'};
-  if(candidates.length===1)return {kind:'guess',item:candidates[0],message:'My guess is '+candidates[0].name+'. Is that right?'};
-  if(history.length>=20)return {kind:'unknown',message:'I have reached 20 questions without a clear match. I do not know yet.'};
-  const used=new Set(history.map(h=>h.id));let best=null,score=0;
+  // A finite, clearly labelled collection. Never claim mind-reading or a diagnosis.
+  const used=new Set(history.map(h=>h.id));
+  const rejected=new Set(history.filter(h=>h.id.startsWith('identity:')&&h.answer==='no').map(h=>h.id.slice(9)));
+  const confirmed=history.find(h=>h.id.startsWith('identity:')&&h.answer==='yes');
+  if(confirmed){
+   const item=bank.find(b=>b.id===confirmed.id.slice(9));
+   return item?{kind:'guess',item,message:'Possible match: '+item.name+'. Is that right?'}:
+    {kind:'unknown',message:'That person is not in this collection.'};
+  }
+  const candidates=bank.filter(item=>{
+   if(rejected.has(item.id))return false;
+   return history.every(h=>{
+    if(h.answer==='unsure'||h.id.startsWith('identity:'))return true;
+    if(item.unknownTags.includes(h.id))return true;
+    return item.tags.includes(h.id)===(h.answer==='yes');
+   });
+  });
+  if(!candidates.length)return {kind:'unknown',message:'I cannot match these answers to my current collection. The answer may be someone or something I do not know. I will not invent a result.'};
+  if(history.length>=25)return {kind:'unknown',message:'I have asked 25 questions and still cannot identify a reliable match. You can change an earlier answer or start again.'};
+  const factual=history.filter(h=>!h.id.startsWith('identity:')&&h.answer!=='unsure');
+  const affirmed=factual.filter(h=>h.answer==='yes');
+  if(candidates.length===1){
+   const item=candidates[0];
+   const remaining=questions.filter(q=>!q.id.startsWith('identity:')&&!used.has(q.id)&&item.tags.includes(q.id)&&!item.unknownTags.includes(q.id));
+   // Require multiple independent clues, not merely the category "singer".
+   if(factual.length>=4&&affirmed.length>=3 || (factual.length>=3&&affirmed.length>=2&&!remaining.length)){
+    return {kind:'guess',item,message:'One possible match is '+item.name+'. Is that the answer? This is only a guess from the answers so far.'};
+   }
+   if(remaining.length){
+    // Verify additional claims about this particular candidate rather than guessing immediately.
+    return {kind:'question',...remaining[0]};
+   }
+   return {kind:'unknown',message:'Only one item remains in my limited collection, but your answers are not sufficient for a trustworthy guess.'};
+  }
+  // Ask meaningful category/feature questions first, delaying identity checks.
+  let best=null,score=0;
   for(const q of questions){
-   if(used.has(q.id)||candidates.some(c=>c.unknownTags.includes(q.id)))continue;
-   const yes=candidates.filter(c=>c.tags.includes(q.id)).length;
+   if(used.has(q.id)||q.id.startsWith('identity:')||candidates.some(x=>x.unknownTags.includes(q.id)))continue;
+   const yes=candidates.filter(x=>x.tags.includes(q.id)).length;
    const split=Math.min(yes,candidates.length-yes);
    if(split>score){score=split;best=q;}
   }
-  return best?{kind:'question',...best}: {kind:'unknown',message:'There is not enough information for a clear match.'};
+  if(best)return {kind:'question',...best};
+  // Subjects can share the same known attributes. A cautious direct candidate
+  // confirmation is allowed only after several facts, and "No" excludes it.
+  if(factual.length>=3&&affirmed.length>=2&&candidates.length<=5){
+   const item=candidates[0];
+   return {kind:'guess',item,message:'One possible match is '+item.name+'. Is that the answer? If not, I will remove this option.'};
+  }
+  return {kind:'unknown',message:'I cannot distinguish these possibilities with reliable questions. I do not know the answer yet.'};
  }
  function parseAnswer(text){
   const value=String(text??'').normalize('NFC').trim().toLowerCase().replace(/[.!?。]+$/u,'').trim();
