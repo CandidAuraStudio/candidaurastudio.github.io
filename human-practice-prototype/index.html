@@ -9512,7 +9512,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=213');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=214');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
@@ -9556,7 +9556,7 @@ const heartclearAutoInstallPrompt=false;
 <script src="./hc-kitchen-world-v205.js?v=206"></script>
 <script src="./hc-kitchen-world-v207.js?v=210"></script>
 <script src="./hc-kitchen-compact-v163.js?v=213"></script>
-<script src="./hc-kitchen-worldwide-v207.js?v=209"></script>
+<script src="./hc-kitchen-worldwide-v207.js?v=214"></script>
 <script src="./hc-playback-one-tap-v174.js?v=178"></script>
 <script src="./hc-accounts-preview-v176.js?v=177"></script>
 <script src="./hc-mini-transport-v185.js?v=187"></script>
