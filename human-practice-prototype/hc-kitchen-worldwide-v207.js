@@ -90,7 +90,7 @@ let token=0,timer=null,active=null,lastMeals=[],visible=8,currentQuery='';
 const stop=new Set(['recipe','recipes','healthy','healthier','homemade','easy','quick','how','make','cook','cooking','please','a','the','with','for','my','give','me']);
 const replacements={mutton:'lamb',aubergine:'eggplant',brinjal:'eggplant',capsicum:'pepper',prawn:'shrimp',curd:'yoghurt',dal:'lentil',dhal:'lentil',saadam:'rice',sadham:'rice',mutta:'egg',kottu:'kothu'};
 const ingredientAlias={eggs:'egg',tomatoes:'tomato',potatoes:'potato',chickpeas:'chickpeas',chicken:'chicken',fish:'salmon',rice:'rice',beef:'beef',lamb:'lamb',shrimp:'shrimp',prawns:'shrimp',mushrooms:'mushrooms',carrot:'carrots',apple:'apple',beans:'beans'};
-const categoryAlias={dessert:'Dessert',desserts:'Dessert',breakfast:'Breakfast',vegetarian:'Vegetarian',vegan:'Vegan',seafood:'Seafood',sides:'Side',starter:'Starter',starters:'Starter'};
+const categoryAlias={fish:'Seafood',dessert:'Dessert',desserts:'Dessert',breakfast:'Breakfast',vegetarian:'Vegetarian',vegan:'Vegan',seafood:'Seafood',sides:'Side',starter:'Starter',starters:'Starter'};
 const areaAlias={indian:'Indian',italian:'Italian',chinese:'Chinese',japanese:'Japanese',thai:'Thai',mexican:'Mexican',french:'French',greek:'Greek',turkish:'Turkish',moroccan:'Moroccan',egyptian:'Egyptian',american:'American',british:'British',vietnamese:'Vietnamese',malaysian:'Malaysian',filipino:'Filipino',jamaican:'Jamaican'};
 function clearRemote(){
  if(active)active.abort();
@@ -140,12 +140,12 @@ function showMeal(m){
   recipe.append(a);
   recipe.scrollIntoView({block:'nearest',behavior:'smooth'});
  };
- if(m.strInstructions){display(m);return}
+ if(m.strInstructions){if(!isAlcoholRecipe(m))display(m);else recipe.replaceChildren(text('p','This recipe is not available in HeartClear.'));return}
  recipe.append(text('p','Loading the full recipe… / முழுச் செய்முறை ஏற்றப்படுகிறது…'));
  const when=token,controller=new AbortController();
  api('lookup.php?i='+encodeURIComponent(m.idMeal),controller).then(rows=>{
   if(when!==token)return;
-  if(rows[0])display(rows[0]);else recipe.replaceChildren(text('p','Full method not available from this source.'));
+  if(rows[0]&&!isAlcoholRecipe(rows[0]))display(rows[0]);else recipe.replaceChildren(text('p','This recipe is not available in HeartClear.'));
  }).catch(()=>{if(when===token)recipe.replaceChildren(text('p','Could not load this recipe. Try again online.'))});
 }
 function render(meals){
@@ -198,7 +198,7 @@ async function findOnline(q,mode=null){
 }
 function schedule(){
  category.value='';area.value='';
- clearTimeout(timer);
+ clearRemote();
  const q=input.value.trim();if(!q){clearRemote();return}
  timer=setTimeout(()=>findOnline(q),550);
 }
