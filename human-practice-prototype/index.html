@@ -4541,7 +4541,7 @@ const HC_RETURN_KEY='heartclearReturnStateV1';
 let hcReturnRestoring=false,hcReturnSaveAt=0;
 const HC_RETURN_SCREENS=new Set(['home','practices','player','sacred','sacredDetail','sacredSession','hcLivingQuran','hcQuranStudy',
  'soundHub','soundLab','soundLabPlayer','fearPractice','fearPlayer','library','collection',
- 'bookAudio','human','humanCategory','downloads','history','settings','hcDriveMedia','omVideo','hcReels']);
+ 'bookAudio','human','humanCategory','humanSession','downloads','history','settings','hcDriveMedia','omVideo','hcReels']);
 function hcCaptureReturnState(force=false){
  if(hcReturnRestoring)return;
  if(!force && Date.now()-hcReturnSaveAt<3500)return;
@@ -4561,6 +4561,9 @@ function hcCaptureReturnState(force=false){
      soundTime:Number(soundLabAudio.currentTime)||0,
      soundKey:currentSoundKey,bookLang:currentBookAudioLang,bookChapter:currentBookChapter,
      fearKey:currentFearKey,fearTime:Number(fearAudio.currentTime)||0,
+      humanKind:currentHumanCategory,humanIndex:(humanPracticeData[currentHumanCategory]?.items||[]).findIndex(x=>x.title===currentHumanPractice?.title),
+      humanChoice:humanSoundChoice,humanTime:Number(humanSoundAudio.currentTime)||0,
+      humanRemaining:Number(humanRemaining)||0,
      driveKey:hcDriveActiveKey||null,driveFrom:hcDriveBackScreen||null};
    if((screen==='player'||item.kind==='meditation')&&chosenUrl){
      item.meditation={url:chosenUrl,seconds:chosenSeconds,introUrl:chosenIntroUrl,
@@ -4609,6 +4612,26 @@ function hcRestorePreviousScreen(){
      openSoundTrack(saved.soundKey);hcSeekRestored(soundLabAudio,saved.soundTime,syncSoundLab);success=true;
     }else show('soundLab');
     break;
+   case 'humanSession':{
+    const kind=['passion','move','observe','attention'].includes(saved.humanKind)?saved.humanKind:'passion';
+    const selected=humanPracticeData[kind]?.items[Number(saved.humanIndex)];
+    if(!selected||selected.journey){show('human');break}
+    openHumanPractice(kind,Number(saved.humanIndex));
+    const choice=['nature','birds','fire','rain','ocean','none'].includes(saved.humanChoice)?saved.humanChoice:'nature';
+    if(choice!=='nature')prepareHumanSound(choice).then(()=>hcSeekRestored(humanSoundAudio,saved.humanTime));
+    else {
+      // openHumanPractice starts preparing the nature recording, wait for that
+      // asynchronous source to finish before applying the bookmark.
+      const ready=()=>hcSeekRestored(humanSoundAudio,saved.humanTime);
+      if(humanSoundAudio.getAttribute('src'))ready();
+      else humanSoundAudio.addEventListener('loadedmetadata',ready,{once:true});
+    }
+    if(Number(saved.humanRemaining)>0&&Number(saved.humanRemaining)<=selected.seconds){
+      humanRemaining=Number(saved.humanRemaining);
+      document.getElementById('humanClock').textContent=fmt(humanRemaining);
+    }
+    success=true;break;
+   }
    case 'fearPlayer':
     if(Object.prototype.hasOwnProperty.call(fearTracks,saved.fearKey)){
      openFearTrack(saved.fearKey);hcSeekRestored(fearAudio,saved.fearTime,syncFear);success=true;
@@ -4622,7 +4645,7 @@ function hcRestorePreviousScreen(){
    case 'sacredDetail':openSacred('islamic');success=true;break;
    default:show(saved.screen);success=true;
   }
-  if(success&&['player','sacredSession','soundLabPlayer','bookAudio','fearPlayer'].includes(currentScreenId)){
+  if(success&&['player','sacredSession','soundLabPlayer','bookAudio','fearPlayer','humanSession'].includes(currentScreenId)){
    hcMiniPinnedKey=saved.kind||null;
     const note=document.getElementById('hcReturnNotice');
    if(note){note.hidden=false;note.textContent='Session restored. Tap Play to continue listening.'}
@@ -9421,7 +9444,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=179');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=180');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
