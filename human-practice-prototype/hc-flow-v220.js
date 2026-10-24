@@ -205,15 +205,15 @@ function sync(){
  if(route==='home'){
   if(home.classList.contains('hc-bubble-detail')){screen.prepend(top);$('hcFlowName').textContent=home.dataset.hcbDetail==='bible'?'Bible':home.dataset.hcbDetail==='feature'?(home.dataset.hcbTitle||'Explore'):'Recipes'}
  }else if(route!=='hcReels'){screen.prepend(top);$('hcFlowName').textContent=names[route]||'HeartClear'}
- for(const [selector,label] of stages)stage(selector,label);
+ /* v237: original galleries stay visible; avoid hiding choices behind single-card pagers. */
  if(route==='practices')screen.hcFlowRefreshPractices?.();
  if(route==='soundLab'){$('hcSoundTrackList')?.hcFlowRefresh?.();$('hcGeneralDriveCards')?.hcFlowRefresh?.()}
  dock.querySelectorAll('button').forEach(b=>b.removeAttribute('aria-current'));
  const navId=route==='home'?'hcFlowDockHome':(['soundLabPlayer','player','bookAudio'].includes(route)?'hcFlowDockListen':null);
  if(navId)$(navId)?.setAttribute('aria-current','page');
 }
-practices();simplifySounds();
-for(const [selector,label] of stages)stage(selector,label);
+/* v237: retain original meditation catalogue and advanced Sounds controls. */
+/* v237: original galleries stay visible; avoid hiding choices behind single-card pagers. */
 const oldShow=window.show;
 if(typeof oldShow==='function')window.show=function(id){
  const before=current(),output=oldShow.apply(this,arguments);

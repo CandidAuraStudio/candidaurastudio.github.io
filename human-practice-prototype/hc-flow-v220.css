@@ -141,9 +141,7 @@ body.hc-flow-modal-open{overflow:hidden}
 #hcFlowPracticeChoice strong{font-size:clamp(29px,7vw,40px)!important;line-height:1.25}
 #hcFlowPracticeChoice #hcFlowPracticeDescription{font-size:clamp(19px,5vw,24px)!important;color:#e0eaeb}
 #hcFlowPracticeChoice em{background:#fff;color:#10222c;border-radius:999px;min-height:60px;min-width:220px;display:grid;place-items:center;padding:12px 18px;font-style:normal;font-size:21px;font-weight:750}
-body.hc-flow-enabled #practices.active > .hc-practice-group,
-body.hc-flow-enabled #practices.active > .practice-card,
-body.hc-flow-enabled #practices.active > .hc-practice-timer{display:none!important}
+/* v237: original practice choices and Quiet Timer are restored. */
 body.hc-flow-enabled #practices.active > .library-intro .category-tabs{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:10px;padding-bottom:12px}
 body.hc-flow-enabled #practices.active > .library-intro .category-tabs button{flex:0 0 auto;min-height:54px;font-size:17px;padding:11px 17px}
 body.hc-flow-enabled #practices.active #hcFlowPracticeDeck .hc-flow-pager{display:flex}
@@ -193,3 +191,29 @@ body.hc-flow-enabled #hcBubbleHome .hcb-brand{display:flex;align-items:center;ga
 body.hc-flow-enabled #hcBubbleHome .hcb-brand h1{margin:0!important}
 body.hc-flow-enabled #hcBubbleHome .hcb-logo{display:grid;place-items:center;flex:none;width:59px;height:59px;border:1.5px solid #fff;background:#050505;border-radius:17px;font-size:51px;line-height:1;font-weight:400;color:#fff}
 @media(max-width:390px){body.hc-flow-enabled #hcBubbleHome .hcb-logo{width:48px;height:48px;font-size:43px}}
+
+/* v237: full catalogue and native guided player controls without hiding features. */
+body.hc-flow-enabled #practices.active .hc-practice-group[hidden],
+body.hc-flow-enabled #practices.active .practice-card.is-hidden{display:none!important}
+body.hc-flow-enabled #practices.active .hc-practice-group{display:block;margin-bottom:14px}
+body.hc-flow-enabled #practices.active .library-list{display:grid;grid-template-columns:1fr;gap:12px}
+body.hc-flow-enabled #practices.active .practice-card{display:grid;grid-template-columns:46px minmax(0,1fr) auto;align-items:center;gap:12px;width:100%;min-height:92px;padding:15px;border-radius:22px!important;text-align:left}
+body.hc-flow-enabled #practices.active .practice-card .duration{font-size:15px!important;white-space:nowrap}
+body.hc-flow-enabled #player #hcGuidedNavigation{display:grid;gap:11px;width:100%;padding:14px 0 6px;border-top:1px solid #6a7b83}
+#hcGuidedNavigation .hc-guided-head{display:flex;justify-content:space-between;gap:10px;align-items:center;color:#fff}
+#hcGuidedNavigation .hc-guided-head strong{font-size:19px}
+#hcGuidedNavigation #hcGuidedProgress{font-size:17px;white-space:nowrap;font-variant-numeric:tabular-nums;color:#f1f2f2}
+#hcGuidedNavigation .hc-guided-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+body.hc-flow-enabled #hcGuidedNavigation button{background:#233540!important;color:#fff!important;border:1.5px solid #81919a!important;border-radius:16px!important;min-height:60px!important;padding:10px!important;font-size:17px!important;font-weight:700;cursor:pointer}
+#hcGuidedNavigation .hc-guided-list button{display:flex;flex-direction:column;align-items:flex-start;text-align:left;justify-content:center;gap:3px}
+#hcGuidedNavigation .hc-guided-list b{font-size:17px!important;line-height:1.22}
+#hcGuidedNavigation .hc-guided-list small{font-size:15px!important;color:inherit!important}
+body.hc-flow-enabled #hcGuidedNavigation button[aria-pressed="true"]{background:#f6f7f7!important;color:#10232c!important;border-color:white!important}
+#hcGuidedNavigation .hc-guided-switch{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+#hcGuidedNavigation .hc-guided-extras{display:flex;flex-wrap:wrap;gap:8px}
+body.hc-flow-enabled #hcGuidedNavigation .hc-guided-extras button{flex:1 1 125px;min-height:51px!important;font-size:14px!important}
+body.hc-flow-enabled #player .player-artwork{max-height:210px!important;margin-top:10px!important}
+body.hc-flow-enabled #player .player-orb{width:100px;height:100px;margin:10px auto 8px}
+body.hc-flow-enabled #player .clock{font-size:38px!important}
+body.hc-flow-enabled #player #seek{min-height:40px!important}
+body.hc-flow-enabled #player .progress-meta{font-size:17px!important;color:#f5f6f6}
