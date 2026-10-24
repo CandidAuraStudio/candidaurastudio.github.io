@@ -22,7 +22,8 @@ const topics=[
  ['water','Water & wudu','நீர் · உளூ'],
  ['food','Food & farming','உணவு · விவசாயம்'],
  ['hair','Hair & family stories','முடி · குடும்பம்'],
- ['whole','Body & everyday life','உடலும் அன்றாட வாழ்வும்']
+ ['whole','Body & everyday life','உடலும் அன்றாட வாழ்வும்'],
+ ['medicine','Medical science · 17 body topics','மருத்துவ அறிவியல் · 17 உடல் தலைப்புகள்']
 ]
 const bodyRows=[
 ['eyes','Eyes & vision','கண்கள் · பார்வை','Why blinking matters','இமைப்பதன் முக்கியம்','Blinking supports the eye’s tear film. Long periods looking at a screen can make eyes uncomfortable. Traditional preparations placed directly in eyes are not automatically safe.','இமைத்தல் கண்ணீர்ப் படலத்திற்கு உதவுகிறது. அதிக நேரம் திரையைப் பார்த்தால் கண்களுக்கு அசௌகரியம் வரலாம். பழைய முறையில் பயன்படுத்திய எல்லா கலவைகளும் கண்களுக்குப் பாதுகாப்பானவை அல்ல.','Rest your eyes, use clean hands, and seek examination for pain or changes in vision.','கண்களுக்கு ஓய்வு, சுத்தமான கைகள்; வலி அல்லது பார்வை மாற்றம் இருந்தால் பரிசோதிக்கவும்.'],
@@ -37,11 +38,12 @@ const bodyRows=[
 ['learning','Lifelong learning','வாழ்நாள் கல்வி','Auntie’s English wish matters','அத்தையின் ஆங்கிலக் கனவும் முக்கியம்','Knowledge is not only about care of the body. Learning to speak, read and participate at any age is part of everyday dignity. Ask what someone actually wants to learn; preserve their own voice.','அறிவு என்பது உடல் பராமரிப்பு மட்டும் அல்ல. எந்த வயதிலும் வாசித்தல், பேசுதல், சமூகத்தில் பங்கேற்றல் முக்கியம். ஒருவர் எதைப் படிக்க விரும்புகிறார் என்று கேட்டு அவர் சொற்களை மதிக்கவும்.','One practical sentence a day is a reasonable start.','தினமும் பயனுள்ள ஒரு வாக்கியம் கற்பது நல்ல தொடக்கம்.']
 ];
 const bodyChapter=x=>({id:x[0],era:'Everyday learning',place:'Family home',title:[x[1],x[2]],summary:[x[3],x[4]],details:[x[5],x[6]],meaning:[x[5],x[6]],apply:[x[7],x[8]],refs:[]});
-const rows=topic=>topic==='whole'?bodyRows.map(bodyChapter):topic==='quran'?verses:data[topic]?.rows||[];
+const medicalRows=()=>{const items=window.HCBodyScienceCatalogV193||[];return items.map(x=>({id:x.id,era:'Medical science · Anatomy',place:'Human body',title:[x.en,x.ta],summary:x.what,details:x.what,meaning:x.daily,apply:x.notice,refs:[{label:'Medical reference · MedlinePlus / NIH',url:x.link}]}))};
+const rows=topic=>topic==='medicine'?medicalRows():topic==='whole'?bodyRows.map(bodyChapter):topic==='quran'?verses:data[topic]?.rows||[];
 const topicLabel=id=>{const x=topics.find(y=>y[0]===id);return x?tr(x[1],x[2]):''};
 const chTitle=x=>tr(x.title?.[0]||x.label?.[0],x.title?.[1]||x.label?.[1]);
 const chShort=x=>tr(x.summary?.[0]||x.detail?.[0],x.summary?.[1]||x.detail?.[1]);
-const allowedHosts=new Set(['ada.org','www.ada.org','loc.gov','www.loc.gov','americanhistory.si.edu','www.americanhistory.si.edu','metmuseum.org','www.metmuseum.org','quran.com','legacy.quran.com','pmc.ncbi.nlm.nih.gov','pubmed.ncbi.nlm.nih.gov','aad.org','www.aad.org','cdc.gov','www.cdc.gov','cambridge.org','www.cambridge.org','www.biblegateway.com','biblegateway.com','heritage.iitk.ac.in','www.gitasupersite.iitk.ac.in','gitasupersite.iitk.ac.in','www.wisdomlib.org','wisdomlib.org','www.carakasamhitaonline.com','carakasamhitaonline.com']);
+const allowedHosts=new Set(['ada.org','www.ada.org','loc.gov','www.loc.gov','americanhistory.si.edu','www.americanhistory.si.edu','metmuseum.org','www.metmuseum.org','quran.com','legacy.quran.com','pmc.ncbi.nlm.nih.gov','pubmed.ncbi.nlm.nih.gov','aad.org','www.aad.org','cdc.gov','www.cdc.gov','cambridge.org','www.cambridge.org','www.biblegateway.com','biblegateway.com','heritage.iitk.ac.in','www.gitasupersite.iitk.ac.in','gitasupersite.iitk.ac.in','www.wisdomlib.org','wisdomlib.org','www.carakasamhitaonline.com','carakasamhitaonline.com','medlineplus.gov','www.medlineplus.gov','www.merckmanuals.com','www.niddk.nih.gov']);
 function href(s){
  if(!s||typeof s.url!=='string')return '';
  try{const u=new URL(s.url);if(u.protocol!=='https:'||!allowedHosts.has(u.hostname.toLowerCase()))return '';
@@ -135,12 +137,12 @@ function render(){
   main.innerHTML='<span class="hc-heritage-kicker">HEARTCLEAR · READ</span><h1>'+tr('Human knowledge, across time','மனித அறிவு · காலங்களின் வழியே')+'</h1>'+
   '<p>'+tr('Explore Qur’an, Bible, Vedas and traditions in their own contexts, alongside everyday knowledge.','குர்ஆன், பைபிள், வேதம், பிற மரபுகள் மற்றும் அன்றாட அறிவை அவற்றின் சொந்தச் சூழலில் அறியலாம்.')+'</p>'+
   '<div class="hc-heritage-list">'+topics.map(t=>'<button type="button" class="hc-heritage-tile" data-topic="'+t[0]+'"><span><strong>'+E(tr(t[1],t[2]))+'</strong><small>'+rows(t[0]).length+' '+tr('articles','கட்டுரைகள்')+'</small></span><span class="chev" aria-hidden="true">›</span></button>').join('')+'</div>'+
-  '<p>'+tr('Centuries are shown only when evidence exists. Gaps are not filled with invented history.','ஆதாரம் இருந்தால் மட்டுமே நூற்றாண்டுகள் குறிப்பிடப்படும். தெரியாத இடங்களில் கற்பனைக் கதை இல்லை.')+'</p>';
+  '<p>'+tr('Medical science uses clinical sources. History is shown only where documented.','மருத்துவ அறிவியலுக்கு மருத்துவ ஆதாரங்கள். வரலாற்றுக்கு ஆவண ஆதாரம் உள்ள இடங்கள் மட்டுமே.')+'</p>';
  }else if(route.level==='topic'){
   if(!chapter.length){navigate('index');return}
   const intro=data[group]?.lead;
   main.innerHTML='<span class="hc-heritage-kicker">'+tr('SUBJECT','தலைப்பு')+'</span><h1>'+E(subject)+'</h1>'+
-   (intro?'<p>'+E(tr(intro[0],intro[1]))+'</p>':'<p>'+tr('Read the Qur’anic verse itself; reflections are clearly separate.','மூல குர்ஆன் வசனத்தை வாசித்து, சிந்தனையைத் தனியாகக் காணலாம்.')+'</p>')+
+   (intro?'<p>'+E(tr(intro[0],intro[1]))+'</p>':group==='medicine'?'<p>'+tr('How organs function, how they connect to everyday life, and when symptoms deserve medical assessment.','உறுப்புகள் எப்படிச் செயல்படுகின்றன, அன்றாட வாழ்வில் அவற்றின் பங்கு, எப்போது மருத்துவ ஆலோசனை தேவை என்பதை அறிக.')+'</p>':'<p>'+tr('Read the Qur’anic verse itself; reflections are clearly separate.','மூல குர்ஆன் வசனத்தை வாசித்து, சிந்தனையைத் தனியாகக் காணலாம்.')+'</p>')+
    '<div class="hc-heritage-list">'+chapter.map((c,i)=>'<button type="button" class="hc-heritage-tile" data-article="'+E(c.id)+'"><span><span class="hc-heritage-when">'+E(c.era||('Qur’an '+c.ref))+'</span><strong>'+E(chTitle(c))+'</strong><small>'+E(chShort(c))+'</small></span><span class="chev" aria-hidden="true">›</span></button>').join('')+'</div>';
  }else{
   const selected=chapter.find(c=>c.id===route.item);
@@ -153,9 +155,9 @@ function render(){
     '<h2>'+tr('Original source','மூல ஆதாரம்')+'</h2><div class="hc-heritage-sources">'+href(selected.source)+'</div>';
   }else{
    main.innerHTML='<span class="hc-heritage-kicker">'+E(selected.era)+' · '+E(selected.place)+'</span><h1>'+E(chTitle(selected))+'</h1>'+
-    '<p>'+E(chShort(selected))+'</p><h2>'+tr('History and context','வரலாறும் பின்னணியும்')+'</h2><p>'+E(tr(...selected.details))+'</p>'+
-    '<h2>'+tr('Why it matters','ஏன் இது முக்கியம்')+'</h2><p>'+E(tr(...selected.meaning))+'</p>'+
-    '<div class="hc-heritage-note"><strong>'+tr('Think or apply','சிந்தித்து செயல்படுத்து')+'</strong><p>'+E(tr(...selected.apply))+'</p></div>'+
+    '<p>'+E(chShort(selected))+'</p><h2>'+(group==='medicine'?tr('How this system works','இந்த மண்டலம் எப்படிச் செயல்படுகிறது'):tr('History and context','வரலாறும் பின்னணியும்'))+'</h2><p>'+E(tr(...selected.details))+'</p>'+
+    '<h2>'+(group==='medicine'?tr('Everyday connection','அன்றாடத் தொடர்பு'):tr('Why it matters','ஏன் இது முக்கியம்'))+'</h2><p>'+E(tr(...selected.meaning))+'</p>'+
+    '<div class="hc-heritage-note"><strong>'+(group==='medicine'?tr('When to seek care','எப்போது மருத்துவ உதவி தேவை'):tr('Think or apply','சிந்தித்து செயல்படுத்து'))+'</strong><p>'+E(tr(...selected.apply))+'</p></div>'+
     '<h2>'+tr('Sources · further reading','ஆதாரம் · மேலதிக வாசிப்பு')+'</h2><div class="hc-heritage-sources">'+(selected.refs?.length?selected.refs.map(href).join(''):'<p>'+tr('Family/practical account; no independent century claim.','குடும்ப/நடைமுறை அறிவு; ஆதாரமின்றி நூற்றாண்டு குறிப்பிடப்படவில்லை.')+'</p>')+'</div>';
   }
   footer.innerHTML='<button type="button" id="hcArticlePrev"'+(idx===0?' disabled':'')+'>'+tr('← Previous','← முந்தையது')+'</button><button type="button" id="hcArticleNext"'+(idx===chapter.length-1?' disabled':'')+'>'+tr('Next →','அடுத்து →')+'</button>';
@@ -168,6 +170,7 @@ function render(){
 back.addEventListener('click',goBack);
 all.addEventListener('click',()=>navigate('index'));
 languageButton.addEventListener('click',()=>{lang=lang==='ta'?'en':'ta';try{localStorage.setItem(ORIGIN,JSON.stringify({language:lang}))}catch(_){}render()});
+window.addEventListener('hc:body-science-ready',()=>{if(route.level==='index'||route.topic==='medicine')render()});
 const launcher=document.getElementById('hcDeepHeritageV185');
 launcher?.addEventListener('click',()=>open());
 const grid=document.querySelector('#library .hub-grid');
