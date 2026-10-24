@@ -7,7 +7,7 @@ const home=$('home');if(!home)return;
 document.body.classList.add('hc-flow-enabled');
 // Start with readable book text while preserving the existing A+/A− adjustments.
 try{if(typeof readerFontSize!=='undefined')readerFontSize=Math.max(22,Number(readerFontSize)||22)}catch(_){}
-const names={home:'Home',practices:'Meditation',human:'Human Practice',humanCategory:'Human Practice',humanSession:'Human Practice',fearPractice:'Sound Familiarity',fearPlayer:'Listening',returnJourney:'Reflection',starterPath:'Starter Practice',quietTimer:'Quiet Timer',library:'Books & Reading',collection:'Audiobooks',bookReader:'Read Book',bookAudio:'Listen to Book',hcQuranStudy:'Qur’an',hcFatiha:'Al-Fatiha',hcLivingQuran:'The Living Qur’an',sacred:'Sacred Sound',sacredDetail:'Sacred Tradition',sacredSession:'Sacred Listening',soundHub:'Sounds',soundLab:'Sounds',soundLabPlayer:'Now Playing',player:'Now Playing',intro:'Introduction',prep:'Preparation',instructions:'Guidance',completion:'Completed',aftercare:'After Listening',hcDriveMedia:'Video Listening',omVideo:'Video',hcReels:'Reels',history:'History',downloads:'Offline',settings:'Settings',chakraGuide:'Practice Guide'};
+const names={home:'Home',practices:'Meditation',human:'Human Practice',humanCategory:'Human Practice',humanSession:'Human Practice',fearPractice:'Sound Familiarity',fearPlayer:'Listening',returnJourney:'Reflection',starterPath:'Starter Practice',quietTimer:'Quiet Timer',library:'Books & Reading',collection:'Audiobooks',bookReader:'Read Book',bookAudio:'Listen to Book',hcQuranStudy:'Qur’an',hcFatiha:'Al-Fatiha',hcLivingQuran:'The Living Qur’an',sacred:'Sacred Sound',sacredDetail:'Sacred Tradition',sacredSession:'Sacred Listening',soundHub:'Sounds',soundLab:'Sounds',soundLabPlayer:'Now Playing',player:'Now Playing',intro:'Introduction',prep:'Preparation',instructions:'Guidance',completion:'Completed',aftercare:'After Listening',hcDriveMedia:'Video Listening',omVideo:'Video',hcReels:'Reels',hcHeritageReader:'Human Knowledge',history:'History',downloads:'Offline',settings:'Settings',chakraGuide:'Practice Guide'};
 const top=document.createElement('div');top.id='hcFlowTop';
 top.innerHTML='<button id="hcFlowBack" type="button">‹ Back</button><span class="hc-flow-name" id="hcFlowName">HeartClear</span><button id="hcFlowHome" type="button">Home ⌂</button>';
 const dock=document.createElement('nav');dock.id='hcFlowDock';dock.setAttribute('aria-label','HeartClear main navigation');
@@ -23,11 +23,32 @@ const experiences=[
  ['Sounds','Choose a sound or create your own mix',()=>typeof window.openSoundLab==='function'?window.openSoundLab():window.show?.('soundLab')],
  ['Sacred Sound','Listen across clearly identified traditions',()=>window.show?.('sacred')],
  ['Reels','Full-screen videos, one at a time',()=>typeof window.hcOpenReels==='function'?window.hcOpenReels():window.show?.('hcReels')],
+ ['Daily Care','Everyday family care and body science',()=>focusHomeFeature('hcEverydayCareV182','Daily Care')],
+ ['Human Knowledge','Traditions, history and preserved texts',()=>{const b=$('hcDeepHeritageV185');if(b)b.click();else window.show?.('library')}],
+ ['Mind Game','Play questions and explore ideas',()=>{const b=$('hcExploreOpen');if(b)b.click();else focusHomeFeature('hcHomeMore','Explore')}],
+ ['Traditional Kitchen','Meals, kitchen plans and heritage foods',()=>focusHomeFeature('hcMonthlyKitchen','Traditional Kitchen')],
  ['Starter Practice','Follow the seven-day introduction',()=>window.show?.('starterPath')],
  ['History','See saved activity and progress',()=>window.show?.('history')],
  ['Offline','Access downloaded recordings',()=>window.show?.('downloads')],
  ['Settings','Display, sound, privacy and preferences',()=>window.show?.('settings')]
 ];
+function focusHomeFeature(id,title){
+ const target=$(id);if(!target){window.hcBubbleHome?.recipe?.('');return}
+ home.querySelectorAll('.hc-flow-feature-path,.hc-flow-feature-target').forEach(node=>node.classList.remove('hc-flow-feature-path','hc-flow-feature-target'));
+ let node=target;
+ while(node&&node!==home){
+  node.classList.add(node===target?'hc-flow-feature-target':'hc-flow-feature-path');
+  node.hidden=false;
+  if(node.tagName==='DETAILS')node.open=true;
+  node=node.parentElement;
+ }
+ if(node!==home){window.show?.('library');return}
+ home.dataset.hcbDetail='feature';home.dataset.hcbTitle=title;
+ home.classList.remove('hc-bubble-mode');home.classList.add('hc-bubble-detail');
+ document.body.classList.add('hc-bubble-on','hc-bubble-detail-on');
+ sync();
+ requestAnimationFrame(()=>{window.scrollTo(0,0);target.scrollIntoView({block:'nearest',behavior:'auto'})});
+}
 const explore=document.createElement('section');explore.id='hcFlowExplore';explore.hidden=true;explore.setAttribute('role','dialog');explore.setAttribute('aria-modal','true');explore.setAttribute('aria-label','All HeartClear experiences');
 explore.innerHTML='<div class="hc-flow-explore-inner"><header><strong>All experiences</strong><button id="hcFlowExploreClose" type="button" aria-label="Close">×</button></header>'+
  '<div class="hc-flow-explore-card" id="hcFlowExploreCard"><span class="hc-flow-explore-orb" aria-hidden="true"></span><h2 id="hcFlowExploreTitle"></h2><p id="hcFlowExploreDesc"></p><button id="hcFlowExploreOpen" type="button">Open ›</button></div>'+
@@ -136,7 +157,7 @@ function sync(){
  const screen=document.querySelector('.screen.active');if(!screen)return;const route=screen.id;
  document.body.dataset.hcFlowRoute=route;
  if(route==='home'){
-  if(home.classList.contains('hc-bubble-detail')){screen.prepend(top);$('hcFlowName').textContent=home.dataset.hcbDetail==='bible'?'Bible':'Recipes'}
+  if(home.classList.contains('hc-bubble-detail')){screen.prepend(top);$('hcFlowName').textContent=home.dataset.hcbDetail==='bible'?'Bible':home.dataset.hcbDetail==='feature'?(home.dataset.hcbTitle||'Explore'):'Recipes'}
  }else if(route!=='hcReels'){screen.prepend(top);$('hcFlowName').textContent=names[route]||'HeartClear'}
  for(const [selector,label] of stages)stage(selector,label);
  if(route==='practices')screen.hcFlowRefreshPractices?.();
