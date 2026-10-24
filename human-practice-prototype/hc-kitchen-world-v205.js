@@ -23,7 +23,7 @@ function refs(x){
  if(/mutton|beef|chicken|egg|fish|prawn|tuna|mayonnaise|burger|dry sprat|maasi/.test(n))return [references.safety,references.hygiene];
  return [references.hygiene];
 }
-function chunks(str){return String(str||'').split(';').map(s=>s.trim()).filter(Boolean)}
+function chunks(str){return String(str||'').split(/(?<=[.!?])\s+(?=[A-Z])/u).map(s=>s.trim()).filter(Boolean)}
 function detail(name){
  const entry=recipes.find(x=>x.en.toLowerCase()===String(name||'').toLowerCase());
  if(!entry)return null;
