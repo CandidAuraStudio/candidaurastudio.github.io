@@ -23,8 +23,8 @@ const experiences=[
  ['Sounds','Choose a sound or create your own mix',()=>typeof window.openSoundLab==='function'?window.openSoundLab():window.show?.('soundLab')],
  ['Sacred Sound','Listen across clearly identified traditions',()=>window.show?.('sacred')],
  ['Reels','Full-screen videos, one at a time',()=>typeof window.hcOpenReels==='function'?window.hcOpenReels():window.show?.('hcReels')],
- ['Daily Care','Everyday family care and body science',()=>focusHomeFeature('hcEverydayCareV182','Daily Care')],
- ['Human Knowledge','Traditions, history and preserved texts',()=>{const b=$('hcDeepHeritageV185');if(b)b.click();else window.show?.('library')}],
+ ['Daily Care','Everyday family care and body science',()=>openKnowledgeFeature('daily')],
+ ['Human Knowledge','Traditions, history and preserved texts',()=>openKnowledgeFeature('knowledge')],
  ['Mind Game','Play questions and explore ideas',()=>{const b=$('hcExploreOpen');if(b)b.click();else focusHomeFeature('hcHomeMore','Explore')}],
  ['Traditional Kitchen','Meals, kitchen plans and heritage foods',()=>focusHomeFeature('hcMonthlyKitchen','Traditional Kitchen')],
  ['Starter Practice','Follow the seven-day introduction',()=>window.show?.('starterPath')],
@@ -32,6 +32,39 @@ const experiences=[
  ['Offline','Access downloaded recordings',()=>window.show?.('downloads')],
  ['Settings','Display, sound, privacy and preferences',()=>window.show?.('settings')]
 ];
+/* Load the optional legacy catalog only when requested, not during Home paint. */
+let knowledgePromise=null;
+function ensureKnowledge(){
+ if(window.HCHeritageReader && $('hcEverydayCareV182'))return Promise.resolve(true);
+ if(knowledgePromise)return knowledgePromise;
+ knowledgePromise=new Promise(resolve=>{
+  let attempts=0;
+  const check=()=>{
+   if(window.HCHeritageReader && $('hcEverydayCareV182')){resolve(true);return}
+   if(++attempts>120){resolve(false);return}
+   setTimeout(check,100);
+  };
+  if($('hcEverydayCareV182')){check();return}
+  const script=document.createElement('script');
+  script.src='./hc-daily-care-v182.js?v=230';
+  script.async=true;
+  script.onload=check;
+  script.onerror=()=>resolve(false);
+  document.body.append(script);
+ }).then(ok=>{if(!ok)knowledgePromise=null;return ok});
+ return knowledgePromise;
+}
+function openKnowledgeFeature(which){
+ ensureKnowledge().then(ok=>{
+  if(!ok){
+   const fallback=$('hcFlowExploreTitle');
+   if(fallback)fallback.textContent='Unable to open the reading library. Please check your connection and try again.';
+   return;
+  }
+  if(which==='knowledge')window.HCHeritageReader.open();
+  else focusHomeFeature('hcEverydayCareV182','Daily Care');
+ });
+}
 function focusHomeFeature(id,title){
  const target=$(id);if(!target){window.hcBubbleHome?.recipe?.('');return}
  home.querySelectorAll('.hc-flow-feature-path,.hc-flow-feature-target').forEach(node=>node.classList.remove('hc-flow-feature-path','hc-flow-feature-target'));
