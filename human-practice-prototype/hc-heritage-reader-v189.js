@@ -29,8 +29,13 @@ const rows=topic=>topic==='whole'?bodyRows.map(bodyChapter):topic==='quran'?vers
 const topicLabel=id=>{const x=topics.find(y=>y[0]===id);return x?tr(x[1],x[2]):''};
 const chTitle=x=>tr(x.title?.[0]||x.label?.[0],x.title?.[1]||x.label?.[1]);
 const chShort=x=>tr(x.summary?.[0]||x.detail?.[0],x.summary?.[1]||x.detail?.[1]);
-const allow=/^https:\/\/(?:[^/]+\.)?(?:ada\.org|loc\.gov|si\.edu|metmuseum\.org|quran\.com|sunnah\.com|nih\.gov|aad\.org|cdc\.gov|cambridge\.org)\//;
-const href=s=>s&&allow.test(s.url)?'<a class="hc-heritage-source" target="_blank" rel="noopener noreferrer" href="'+E(s.url)+'">'+E(s.label)+' ↗</a>':'';
+const allowedHosts=new Set(['ada.org','www.ada.org','loc.gov','www.loc.gov','americanhistory.si.edu','www.americanhistory.si.edu','metmuseum.org','www.metmuseum.org','quran.com','legacy.quran.com','sunnah.com','pmc.ncbi.nlm.nih.gov','pubmed.ncbi.nlm.nih.gov','aad.org','www.aad.org','cdc.gov','www.cdc.gov','cambridge.org','www.cambridge.org']);
+function href(s){
+ if(!s||typeof s.url!=='string')return '';
+ try{const u=new URL(s.url);if(u.protocol!=='https:'||!allowedHosts.has(u.hostname.toLowerCase()))return '';
+ return '<a class="hc-heritage-source" target="_blank" rel="noopener noreferrer" href="'+E(s.url)+'">'+E(s.label)+' ↗</a>';
+ }catch(_){return ''}
+}
 const el=document.createElement('section');el.id='hcHeritageReader';el.className='screen hc-heritage-screen';
 el.innerHTML='<header class="hc-heritage-header"><button type="button" id="hcHeritageBack" aria-label="Back">← <span>Back</span></button><div><strong id="hcHeritageHeaderTitle">Knowledge</strong><small id="hcHeritageTrail">HeartClear</small></div><button type="button" id="hcHeritageAll">All</button></header><main id="hcHeritageMain"></main><footer id="hcHeritageFooter"></footer>';
 home.insertAdjacentElement('afterend',el);
