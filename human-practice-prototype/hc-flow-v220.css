@@ -217,3 +217,10 @@ body.hc-flow-enabled #player .player-orb{width:100px;height:100px;margin:10px au
 body.hc-flow-enabled #player .clock{font-size:38px!important}
 body.hc-flow-enabled #player #seek{min-height:40px!important}
 body.hc-flow-enabled #player .progress-meta{font-size:17px!important;color:#f5f6f6}
+
+/* v238: keep meditation selections stationary so mobile taps never chase a floating card. */
+body.hc-flow-enabled #practices.active .practice-card,
+body.hc-flow-enabled #practices.active .practice-card .practice-art,
+body.hc-flow-enabled #practices.active .practice-card .practice-art::after{
+  animation:none!important;transition:none!important;transform:none!important;
+}
