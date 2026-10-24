@@ -121,5 +121,13 @@ function renderAnimal(){
 panel.querySelectorAll('[data-animal-depth]').forEach(b=>b.addEventListener('click',()=>{animalDepth=b.dataset.animalDepth;renderAnimal()}));
 animalSelect.addEventListener('change',renderAnimal);
 window.addEventListener('focus',renderAnimal);
+root.addEventListener('click',event=>{
+ if(event.target.closest('#hcmLang'))setTimeout(()=>{render(true);renderAnimal()},0);
+});
+const homeMeals=document.getElementById('hcrMeals');
+if(homeMeals)homeMeals.addEventListener('click',()=>{
+ drawer.open=true;
+ setTimeout(()=>lesson.scrollIntoView({block:'start',behavior:'smooth'}),160);
+});
 renderAnimal();
 })();
