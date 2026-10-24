@@ -168,13 +168,29 @@ $('hcBubbleNext').addEventListener('click',()=>move(1));
 $('hcBubbleSwitch').addEventListener('click',legacy);
 classic.addEventListener('click',big);back.addEventListener('click',big);
 const searchInput=$('hcBubbleSearchInput'),results=$('hcBubbleResults');
-let searchReturn=null;
+let searchReturn=null,originalOverflow=null;
 function closeSearch(){
- search.hidden=true;document.body.style.overflow='';
- if(searchReturn?.isConnected)searchReturn.focus({preventScroll:true});
+ search.hidden=true;
+ search.style.removeProperty('display');
+ document.body.classList.remove('hc-search-open');
+ if(originalOverflow!==null){document.body.style.overflow=originalOverflow;originalOverflow=null}
+ if(searchReturn?.isConnected&&searchReturn.getClientRects().length)searchReturn.focus({preventScroll:true});
 }
 function openSearch(){
- searchReturn=document.activeElement;search.hidden=false;document.body.style.overflow='hidden';searchInput.value='';renderSearch();requestAnimationFrame(()=>searchInput.focus({preventScroll:true}));
+ try{
+  if(search.hidden)searchReturn=document.activeElement;
+  if(originalOverflow===null)originalOverflow=document.body.style.overflow;
+  search.hidden=false;
+  search.style.setProperty('display','block','important');
+  document.body.classList.add('hc-search-open');
+  document.body.style.overflow='hidden';
+  searchInput.value='';
+  try{renderSearch()}catch(e){results.replaceChildren();const notice=document.createElement('p');notice.textContent='Search categories are available. Please type a word or try Recipes.';notice.className='hcb-empty';results.append(notice);try{console.warn('HeartClear search index error',e)}catch(_){ }}
+  requestAnimationFrame(()=>{try{searchInput.focus({preventScroll:true})}catch(_){searchInput.focus()}});
+ }catch(error){
+  search.hidden=false;search.style.setProperty('display','block','important');
+  const note=document.createElement('p');note.textContent='Search has opened, but some results may be unavailable. Try the search field again.';results.replaceChildren(note);
+ }
 }
 $('hcBubbleSearch').addEventListener('click',openSearch);
 $('hcBubbleSearchClose').addEventListener('click',closeSearch);
@@ -189,15 +205,21 @@ search.addEventListener('keydown',function(e){if(e.key==='Escape'){e.preventDefa
 function norm(s){return String(s||'').toLocaleLowerCase().normalize('NFKC').trim()}
 function getRecipes(){
  const list=[],seen=new Set();
- const add=(r)=>{
+ const add=r=>{
   if(!r?.en)return;
-  const n=norm(r.en);
-  if(seen.has(n))return;
-  seen.add(n);list.push(r);
+  const key=norm(r.en);
+  if(seen.has(key))return;
+  seen.add(key);list.push(r);
  };
- (window.HCKitchenSearchGuide?.personal||[]).forEach(add);
- (window.HCKitchenWorldRecipes?.catalog?.()||[]).forEach(add);
- (window.HCKitchenMenu?.catalog?.()||[]).forEach(add);
+ // One unavailable recipe collection must never disable the Home search.
+ for(const source of [
+  ()=>window.HCKitchenSearchGuide?.personal||[],
+  ()=>window.HCKitchenWorldRecipes?.catalog?.()||[],
+  ()=>window.HCKitchenMenu?.catalog?.()||[]
+ ]){
+  try{const entries=source();if(Array.isArray(entries))entries.forEach(add)}
+  catch(error){try{console.warn('HeartClear recipe collection unavailable',error)}catch(_){}}
+ }
  return list;
 }
 function result(title,sub,fn){
@@ -231,8 +253,18 @@ function renderSearch(){
  recipes.forEach(x=>result(x.r.en,x.r.ta||'Recipe',()=>recipe(x.r.en)));
  result('Search all recipes for “‘'+q+'”','Use the full Kitchen recipe search',()=>recipe(searchInput.value.trim()));
 }
-searchInput.addEventListener('input',renderSearch);
+searchInput.addEventListener('input',()=>{
+ try{renderSearch()}catch(error){
+  results.replaceChildren();
+  const msg=document.createElement('p');msg.className='hcb-empty';
+  msg.textContent='Some results failed to load. Try Qur’an, Bible, Books, Meditation, Sounds or Recipes.';
+  results.append(msg);
+ }
+});
 searchInput.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();const b=results.querySelector('button');if(b)b.click()}});
+// Search is a standalone full-screen surface: ESC and browser back can always close it.
+window.addEventListener('pageshow',()=>{if(!search.hidden){search.style.setProperty('display','block','important');document.body.classList.add('hc-search-open')}});
+window.hcOpenGlobalSearch=openSearch;window.hcCloseGlobalSearch=closeSearch;
 const observer=new MutationObserver(syncButtons);
 observer.observe(home,{attributes:true,attributeFilter:['class']});
 // The Home tab must always return to the large navigator, not a stale detail page.
