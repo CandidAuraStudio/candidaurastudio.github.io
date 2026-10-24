@@ -122,7 +122,13 @@ function goBack(){
 $('hcFlowBack').addEventListener('click',goBack);
 $('hcFlowHome').addEventListener('click',bigHome);
 $('hcFlowDockHome').addEventListener('click',bigHome);
-$('hcFlowDockSearch').addEventListener('click',()=>{if(!explore.hidden)closeExplore();window.hcBubbleHome?.search?.()});
+$('hcFlowDockSearch').addEventListener('click',()=>{
+ if(!explore.hidden)closeExplore();
+ // Always use the same Home search overlay, even if a navigation layer is stale.
+ if(typeof window.hcOpenGlobalSearch==='function'){window.hcOpenGlobalSearch();return}
+ if(typeof window.hcBubbleHome?.search==='function'){window.hcBubbleHome.search();return}
+ $('hcBubbleSearch')?.click();
+});
 $('hcFlowDockListen').addEventListener('click',()=>{
  try{const m=typeof window.getActiveMediaState==='function'?window.getActiveMediaState():null;if(m&&typeof window.openActiveMediaPlayer==='function'){window.openActiveMediaPlayer();return}}catch(_){}
  if(typeof window.openSoundLab==='function')window.openSoundLab();else window.show?.('soundLab');
