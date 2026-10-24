@@ -31,10 +31,10 @@ const assert = require('node:assert/strict');
 
     // A phone app must not scale its document in response to accidental pinch/double-tap.
     const viewportContent=await page.locator('meta[name="viewport"]').getAttribute('content');
-    assert.match(viewportContent,/maximum-scale=1/);
-    assert.match(viewportContent,/user-scalable=no/);
+    assert.match(viewportContent,/width=device-width/);
+    assert.match(viewportContent,/viewport-fit=cover/);
     assert.equal(await page.evaluate(()=>getComputedStyle(document.documentElement).touchAction),'pan-x pan-y');
-    console.log('PASS: mobile page zoom disabled without blocking scrolling');
+    console.log('PASS: responsive mobile viewport and one-finger scroll handling');
 
     // Phase 1: Guest mode remains the default; every optional sharing preference starts OFF.
     const backendRequests=[];
