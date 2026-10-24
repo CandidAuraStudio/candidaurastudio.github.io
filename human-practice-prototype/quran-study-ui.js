@@ -67,8 +67,9 @@ async function hcLoadQuranChapter(n){
 
 const fetchLocal=(key,fallback)=>{try{return JSON.parse(localStorage.getItem(key)||"null")||fallback}catch(e){return fallback}};
 const saved=fetchLocal(POSITION_KEY,{});
-const state={chapter:Number(saved.chapter)||1,start:Number(saved.start)||1,activeRef:"",language:fetchLocal(LANG_KEY,"both"),notes:fetchLocal(KEY,{})};
+const state={chapter:Number(saved.chapter)||1,start:Number(saved.start)||1,activeRef:"",language:fetchLocal(LANG_KEY,"both"),audioLanguage:fetchLocal("hcQuranReaderAudioLang","ar"),notes:fetchLocal(KEY,{})};
 if(!["en","ta","both"].includes(state.language))state.language="both";
+if(!["ar","en","ta"].includes(state.audioLanguage))state.audioLanguage="ar";
 const clean=str=>String(str??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
 const bilingual=(en,ta)=>`<span class="hcqs-en">${clean(en)}</span><span class="hcqs-ta" lang="ta">${clean(ta)}</span>`;
 const chunkSize=3;
@@ -98,10 +99,9 @@ function getMeaning(ref){
 }
 function verseCard(v){
  const note=annotations.notes?.[v.ref],n=state.notes?.[v.ref],active=state.activeRef===v.ref;
- const verseLink=`https://quran.com/${v.ref.replace(":","/")}`;
  const start=Number(v.ref.split(":")[1]);
  return `<article class="hcqs-verse" id="hcqs-verse-${v.ref.replace(":","-")}">
-  <div class="hcqs-verse-head"><strong>${clean(v.ref)}</strong><a href="${verseLink}" target="_blank" rel="noopener noreferrer">Quran.com · meaning and audio ↗</a></div>
+  <div class="hcqs-verse-head"><strong>${clean(v.ref)}</strong><button type="button" class="hcqs-verse-play" data-qs-action="verse-play" data-qs-verse="${start}">▶ ${state.language==="ta"?"பொருள் கேள்":"Hear meaning"}</button></div>
   <p class="hcqs-arabic" dir="rtl" lang="ar">${clean(v.arabic)}</p>
   <div class="hcqs-subhead">${bilingual("Meaning","பொருள்")}</div>
   <div class="hcqs-meaning">${getMeaning(v.ref)}</div>
@@ -135,6 +135,22 @@ function render(){
  </div>
  <div class="hcqs-summary"><h3>${qsName(ch)}</h3><p>${ch.verseCount||ch.verses.length||"—"} ${state.language==="ta"?"வசனங்கள்":"verses"}${savedCount?" · "+savedCount+" saved reflections":""}</p>
  <p class="hcqs-bismillah" lang="ar" dir="rtl">${clean(ch.bismillah)}</p></div>
+ <section class="hcqs-audio-player" role="region" aria-label="Qur'an audio">
+  <div class="hcqs-audio-top"><strong>Qur’an audio · குர்ஆன் ஒலி</strong><span id="hcqs-audio-status" role="status">Ready</span></div>
+  <div class="hcqs-audio-langs" role="group" aria-label="Listening language">
+   <button data-qs-action="audio-lang" data-qs-lang="ar" aria-pressed="${state.audioLanguage==="ar"}">العربية</button>
+   <button data-qs-action="audio-lang" data-qs-lang="en" aria-pressed="${state.audioLanguage==="en"}">English</button>
+   <button data-qs-action="audio-lang" data-qs-lang="ta" aria-pressed="${state.audioLanguage==="ta"}">தமிழ்</button>
+  </div>
+  <div class="hcqs-audio-controls">
+   <button id="hcqs-audio-toggle" data-qs-action="audio-toggle">▶ Play</button>
+   <button id="hcqs-audio-prev" data-qs-action="audio-prev">‹ Verse</button>
+   <span id="hcqs-audio-verse">Surah</span>
+   <button id="hcqs-audio-next" data-qs-action="audio-next">Verse ›</button>
+  </div>
+  <input id="hcqs-audio-progress" type="range" min="0" max="1000" value="0" disabled aria-label="Audio progress">
+  <div class="hcqs-audio-foot"><span id="hcqs-audio-time">0:00 / 0:00</span><span>Arabic recitation · English / Tamil spoken meanings</span></div>
+ </section>
  ${links?`<details class="hcqs-guide-details hcqs-highlights"><summary>${bilingual("Earlier reflections","முந்தைய சிந்தனைகள்")}</summary><div>${links}</div></details>`:""}
  <div class="hcqs-pager"><button data-qs-action="prev" ${min===1?"disabled":""}>‹ ${state.language==="ta"?"முந்தையவை":"Previous"}</button><span>${min}–${max} / ${total}</span><button data-qs-action="next" ${max===total?"disabled":""}>${state.language==="ta"?"அடுத்தவை":"Next"} ›</button></div>
  <div class="hcqs-verses">${chapterLoading?'<p class="hcqs-load-status" role="status">Loading Qur’an sources… · அரபு, தமிழ், ஆங்கிலம் ஏற்றப்படுகிறது…</p>':""}${ch.verses.length?ch.verses.slice(min-1,max).map(verseCard).join(""):'<div class="hcqs-load-status">Arabic source is not currently available. <a href="https://quran.com/'+ch.number+'" target="_blank" rel="noopener noreferrer">Read the chapter at Quran.com ↗</a></div>'}</div>
@@ -146,7 +162,34 @@ function render(){
  <div class="hcqs-license">${clean(data.arabicAttribution)}. English/Tamil translation provider: ${clean(SOURCE_NAME)}. QuranEnc translations are displayed without editorial rewriting; updates, versions and corrections belong to that source. Separate author reflections are not Qur'anic verses or certified tafsir. <a href="https://quran.com" target="_blank" rel="noopener noreferrer">Verify Qur'anic text and translations at Quran.com ↗</a></div>
  </details>`;
  const section=document.getElementById("hcQuranStudy");if(section)section.dataset.qsLanguage=state.language;
+ syncReaderAudio();
 }
+
+function qsClock(t){const s=Math.max(0,Math.floor(Number(t)||0)),m=Math.floor(s/60);return (m>=60?Math.floor(m/60)+":"+String(m%60).padStart(2,"0"):m)+":"+String(s%60).padStart(2,"0");}
+function syncReaderAudio(){
+ const p=root.querySelector(".hcqs-audio-player");if(!p)return;
+ const current=window.hcQuranReaderState?.();
+ const a=current?.chapter===state.chapter&&current.language===state.audioLanguage?current:null;
+ const playing=!!a?.playing,isMeaning=state.audioLanguage!=="ar";
+ p.querySelectorAll("[data-qs-action=audio-lang]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.qsLang===state.audioLanguage)));
+ p.querySelector("#hcqs-audio-status").textContent=a?.error?"Unavailable · check internet":playing?"Playing":a?"Paused":"Ready";
+ const btn=p.querySelector("#hcqs-audio-toggle");btn.textContent=playing?"Ⅱ Pause":a?"▶ Resume":"▶ Play";btn.setAttribute("aria-pressed",String(playing));
+ const verse=a?.verse||1,total=getChapter().verseCount||getChapter().verses.length;
+ p.querySelector("#hcqs-audio-verse").textContent=isMeaning?verse+" / "+(total||"—"):"Surah";
+ const prev=p.querySelector("#hcqs-audio-prev"),next=p.querySelector("#hcqs-audio-next");
+ prev.hidden=next.hidden=!isMeaning;prev.disabled=!a||verse<=1;next.disabled=!a||!total||verse>=total;
+ const dur=Number(a?.duration)||0,sec=Number(a?.seconds)||0,slider=p.querySelector("#hcqs-audio-progress");
+ slider.disabled=!a||!(dur>0);if(!slider.matches(":active"))slider.value=dur>0?Math.round(1000*Math.min(1,sec/dur)):0;
+ p.querySelector("#hcqs-audio-time").textContent=qsClock(sec)+" / "+qsClock(dur);
+}
+function qsPlay(verse=0){
+ if(!window.hcQuranReaderPlay){root.querySelector("#hcqs-audio-status").textContent="Player loading · try again";return;}
+ const a=window.hcQuranReaderState?.(),same=a?.chapter===state.chapter&&a.language===state.audioLanguage;
+ window.hcQuranReaderPlay(state.chapter,state.audioLanguage,verse||(same?a.verse:state.start)||1);
+ syncReaderAudio();
+}
+window.addEventListener("hcQuranAudioChange",syncReaderAudio);
+window.addEventListener("pageshow",syncReaderAudio);
 function goToChapter(n){if(!data.chapters.some(x=>x.number===n))return;state.chapter=n;state.start=1;state.activeRef="";render();hcLoadQuranChapter(n);root.scrollIntoView({behavior:"auto",block:"start"})}
 function jumpToVerse(n){const max=getChapter().verses.length;const num=Number(n);if(!Number.isInteger(num)||num<1||num>max){alert(`Select a verse between 1 and ${max}.`);return}state.start=Math.floor((num-1)/chunkSize)*chunkSize+1;state.activeRef="";render();const item=document.getElementById(`hcqs-verse-${state.chapter}-${num}`);item?.scrollIntoView({block:"start",behavior:"auto"})}
 function exportNotes(){
@@ -179,6 +222,10 @@ function importNotes(file){
 root.addEventListener("click",ev=>{
  const b=ev.target.closest("[data-qs-action]");if(!b)return;const action=b.dataset.qsAction;
  if(action==="chapter")return goToChapter(Number(b.dataset.qsChapter));
+ if(action==="audio-toggle"){qsPlay();return}
+ if(action==="audio-lang"){state.audioLanguage=b.dataset.qsLang;try{localStorage.setItem("hcQuranReaderAudioLang",JSON.stringify(state.audioLanguage))}catch(e){}qsPlay();return}
+ if(action==="audio-prev"||action==="audio-next"){window.hcQuranReaderStep?.(action==="audio-next"?1:-1);syncReaderAudio();return}
+ if(action==="verse-play"){state.audioLanguage=state.audioLanguage==="ta"?"ta":"en";qsPlay(Number(b.dataset.qsVerse));return}
  if(action==="lang"){state.language=b.dataset.qsLang;try{localStorage.setItem(LANG_KEY,JSON.stringify(state.language))}catch(e){}render();return}
  if(action==="next"||action==="prev"){state.start+=(action==="next"?chunkSize:-chunkSize);state.activeRef="";render();root.scrollIntoView({behavior:"auto",block:"start"});return}
  if(action==="jump")return jumpToVerse(Number(b.dataset.qsNum));
@@ -196,6 +243,7 @@ root.addEventListener("click",ev=>{
  }
  if(action==="export")return exportNotes();
 });
+root.addEventListener("input",ev=>{if(ev.target.id==="hcqs-audio-progress")window.hcQuranReaderSeek?.(Number(ev.target.value)/1000)});
 root.addEventListener("change",ev=>{
  if(ev.target.id==="hcqs-import"){importNotes(ev.target.files?.[0]);ev.target.value=""}
  if(ev.target.id==="hcqs-surah-select")goToChapter(Number(ev.target.value));
