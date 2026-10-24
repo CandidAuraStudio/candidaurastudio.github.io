@@ -50,3 +50,23 @@ body.hc-bubble-on #globalMini .global-mini-copy{min-height:50px}
 @media(min-width:700px){#hcBubbleCard{min-height:440px}}
 @media(prefers-reduced-motion:no-preference){#hcBubbleCard.hcb-enter{animation:hcbArrive .22s ease-out both}@keyframes hcbArrive{from{opacity:.7;transform:translateY(7px) scale(.985)}to{opacity:1;transform:none}}}
 @media(prefers-reduced-motion:reduce){#hcBubbleCard,.hcb-orb{animation:none!important;transition:none!important}}
+
+/* Larger reading text and touch targets across the existing screens. */
+html,body{touch-action:auto}
+body.hc-bubble-on #bottomNav .nav-item{font-size:clamp(11px,2.95vw,14px)!important;min-height:58px!important}
+body.hc-bubble-on #bottomNav .nav-item svg{width:24px;height:24px}
+body.hc-bubble-on .screen.active:not(#hcReels) .collection-back{font-size:18px!important;min-height:50px!important}
+body.hc-bubble-on .screen.active:not(#hcReels) .kicker{font-size:14px!important;letter-spacing:.07em}
+body.hc-bubble-on .screen.active:not(#hcReels):not(#home) p{font-size:clamp(17px,4.5vw,22px);line-height:1.65}
+body.hc-bubble-on #hcQuranStudy .hcqs-arabic{font-size:clamp(31px,8vw,43px)!important;line-height:2.15!important}
+body.hc-bubble-on #hcQuranStudy :is(.hcqs-meaning,.hcqs-editorial,.hcqs-private-note){font-size:clamp(20px,5.3vw,25px)!important;line-height:1.85}
+body.hc-bubble-on #hcQuranStudy :is(.hcqs-subhead,.hcqs-verse-head strong,.hcqs-verse-head a,.hcqs-header>p,.hcqs-summary>p){font-size:17px!important}
+body.hc-bubble-on #hcQuranStudy :is(button,select){font-size:18px!important;min-height:51px}
+body.hc-bubble-on #hcQuranStudy .hcqs-picker span{font-size:18px!important}
+body.hc-bubble-on #hcQuranStudy .hcqs-picker small{font-size:16px!important}
+body.hc-bubble-on #hcQuranStudy .hcqs-caution{font-size:17px!important}
+body.hc-bubble-on #bookReader :is(p,li,#readerText,.reader-paragraph){font-size:clamp(21px,5.2vw,27px)!important;line-height:1.85}
+body.hc-bubble-on :is(#library,#collection,#practices) :is(.choice b,.practice-card b,.hub-card b){font-size:clamp(19px,5vw,23px)!important}
+body.hc-bubble-on :is(#library,#collection,#practices) :is(.choice small,.practice-card small,.hub-card small){font-size:clamp(16px,4.1vw,19px)!important;line-height:1.5}
+body.hc-bubble-on :is(#library,#collection,#practices) button{min-height:50px}
+body.hc-bubble-on #home.hc-bubble-detail :is(#hcKitchenAskReply,#hcKitchenSearchResults){font-size:20px!important;line-height:1.6}
