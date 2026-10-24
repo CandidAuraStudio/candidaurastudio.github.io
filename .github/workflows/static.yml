@@ -22,8 +22,40 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # Single deploy job since we're just deploying
+  verify:
+    name: Check HeartClear before publishing
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Check JavaScript syntax
+        run: find human-practice-prototype -type f -name '*.js' -print0 | xargs -0 -n1 node --check
+      - name: Check referenced local app scripts and styles
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          page=Path('human-practice-prototype')
+          html=(page/'index.html').read_text()
+          paths=re.findall(r'<(?:script|link)\\b[^>]*?(?:src|href)="(\\./[^"?#]+)',html)
+          missing=[p for p in paths if not (page/p[2:]).is_file()]
+          print('Checked local references:',len(paths),'Missing:',missing)
+          if missing:
+              raise SystemExit(1)
+          PY
+      - name: Install Playwright
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Mobile and desktop cross-screen regression
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/heartclear-pages-gate.log 2>&1 &
+          node human-practice-prototype/tests/heartclear-all-screens.cjs
+
+  # Deployment is blocked unless the actual mobile/desktop UI passes.
   deploy:
+    needs: verify
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
