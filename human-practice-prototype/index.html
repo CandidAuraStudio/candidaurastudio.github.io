@@ -3825,7 +3825,7 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
       <div class="stat-tile"><b id="histTotalSessions">0</b><span>all sessions</span></div>
     </div>
     <div class="history-list" id="historyList"></div>
-    <button class="btn secondary" onclick="show('home')">Back</button>
+    <button class="btn secondary" onclick="hcBackFromHistory()">Back</button>
   </div>
 </section>
 
@@ -4266,6 +4266,7 @@ let currentScreenId='home';
 // Keep Settings reversible even when entered from the bottom More tab.
 let hcSettingsReturnScreen='home';
 let hcSettingsReturnScrollY=0;
+let hcHistoryReturnScreen='home';
 let wakeLockEnabled=false;
 let prepIndex=0;
 let prepElapsed=0;
@@ -4906,7 +4907,24 @@ function hcToggleTopSettings(){
   show('settings');
 }
 
+function hcBackFromHistory(){
+  const previous=document.getElementById(hcHistoryReturnScreen)?.classList.contains('screen')
+    && hcHistoryReturnScreen!=='history' ? hcHistoryReturnScreen : 'home';
+  if(previous==='settings'){
+    // Keep the original Settings return destination rather than creating a Settings/History loop.
+    const prior=hcSettingsReturnScreen, scroll=hcSettingsReturnScrollY;
+    show('settings');
+    hcSettingsReturnScreen=prior;hcSettingsReturnScrollY=scroll;
+  }else{
+    show(previous);
+  }
+}
+
 function show(id){
+  if(id==='history' && currentScreenId!=='history'){
+    hcHistoryReturnScreen=document.getElementById(currentScreenId)?.classList.contains('screen')
+      ? currentScreenId : 'home';
+  }
   // Save the actual previous route and scroll position whenever Settings opens,
   // including through bottom More. Do not reset audio or session state.
   if(id==='settings' && currentScreenId!=='settings'){
