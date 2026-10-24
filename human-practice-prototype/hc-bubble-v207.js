@@ -21,8 +21,8 @@ launcher.innerHTML='<div class="hcb-small">ONE THING AT A TIME</div>'+
  '<h1>HeartClear</h1>'+
  '<button id="hcBubbleSearch" type="button" aria-label="Search HeartClear"><svg width="29" height="29" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="10.7" cy="10.7" r="7"></circle><path d="m16 16 5 5"></path></svg><span>What are you looking for?</span></button>'+
  '<button id="hcBubbleCard" type="button" aria-label="Open selected activity"><span class="hcb-orb" aria-hidden="true"></span><span class="hcb-title" id="hcBubbleTitle">Meditation</span><span class="hcb-description" id="hcBubbleDescription"></span><span class="hcb-action" id="hcBubbleAction">Begin listening ↑</span></button>'+
- '<div class="hcb-navigation"><button type="button" id="hcBubblePrev" aria-label="Previous activity">‹</button><div class="hcb-count" id="hcBubbleCount" aria-live="polite"></div><button type="button" id="hcBubbleNext" aria-label="Next activity">›</button></div>'+
- '<p class="hcb-hint">Swipe left or right to browse · Swipe up to open</p>'+
+ '<div class="hcb-navigation"><button type="button" id="hcBubblePrev" aria-label="Previous activity, or swipe down">↓</button><div class="hcb-count" id="hcBubbleCount" aria-live="polite"></div><button type="button" id="hcBubbleNext" aria-label="Next activity, or swipe up">↑</button></div>'+
+ '<p class="hcb-hint">Swipe up for next · down for previous · tap to open</p>'+
  '<button type="button" class="hcb-switch" id="hcBubbleSwitch">All sections · classic layout</button>';
 home.prepend(launcher);
 const search=document.createElement('section');
@@ -31,8 +31,8 @@ search.innerHTML='<div class="hcb-search-body"><div class="hcb-search-top"><stro
  '<label for="hcBubbleSearchInput">What would you like?</label><input type="search" id="hcBubbleSearchInput" placeholder="Food, Qur’an, Bible, sounds…" enterkeyhint="search" autocomplete="off" maxlength="120">'+
  '<div class="hcb-results" id="hcBubbleResults" aria-live="polite"></div><p class="hcb-search-caption">Choose one result to open it.</p></div>';
 document.body.append(search);
-const back=document.createElement('button');back.id='hcBubbleReturn';back.type='button';back.textContent='← Big view';back.hidden=true;document.body.append(back);
-const classic=document.createElement('button');classic.id='hcBubbleClassic';classic.type='button';classic.textContent='Big view';classic.hidden=true;document.body.append(classic);
+const back=document.createElement('button');back.id='hcBubbleReturn';back.type='button';back.textContent='← Big view';back.hidden=true;home.prepend(back);
+const classic=document.createElement('button');classic.id='hcBubbleClassic';classic.type='button';classic.textContent='Big view';classic.hidden=true;home.prepend(classic);
 const $=id=>document.getElementById(id);
 let index=0;
 try{const previous=localStorage.getItem('hcBubbleCategoryV207');const found=categories.findIndex(x=>x.key===previous);if(found>=0)index=found;}catch(_){}
@@ -47,7 +47,13 @@ function setMode(mode,persist){
  home.classList.toggle('hc-bubble-detail',mode==='detail');
  document.body.classList.toggle('hc-bubble-on',mode!=='classic');
  document.body.classList.toggle('hc-bubble-detail-on',mode==='detail');
- if(persist){try{localStorage.setItem('hcBubbleLayoutV207',mode==='classic'?'classic':'big')}catch(_){}}
+ // A chosen recipe/chapter has an ordinary inline Home button, never a floating overlay.
+ if(mode==='detail'){
+   const target=home.dataset.hcbDetail==='recipes'?$('hcHomeKitchenQuickV155'):home.dataset.hcbDetail==='bible'?$('hcGenesisCard'):null;
+   if(target)target.prepend(back);
+ }
+ // Layout changes are limited to this visit: each new opening returns to large Home.
+ if(persist){try{localStorage.removeItem('hcBubbleLayoutV207')}catch(_){}}
  syncButtons();
 }
 function big(){
@@ -56,7 +62,8 @@ function big(){
  window.scrollTo({top:0,behavior:'auto'});
 }
 function legacy(){setMode('classic',true);window.scrollTo({top:0,behavior:'auto'})}
-try{setMode(localStorage.getItem('hcBubbleLayoutV207')==='classic'?'classic':'big',false)}catch(_){setMode('big',false)}
+// Always open the full-sized Home after refresh; never inherit a stale Classic/Detail state.
+setMode('big',false);
 function draw(){
  const c=categories[index];
  $('hcBubbleTitle').textContent=c.title;
@@ -77,7 +84,7 @@ function recipe(query){
    const target=$('hcKitchenAskV163')||$('hcHomeKitchenQuickV155')||$('hcMonthlyKitchen');
    const input=$('hcKitchenAskInput');
    if(input&&query){input.value=query;input.dispatchEvent(new Event('input',{bubbles:true}));$('hcKitchenAskSend')?.click()}
-   else if(!query){$('hcKitchenBrowse')?.click()}
+   else if(!query){input?.focus({preventScroll:true})}
    if(target)target.scrollIntoView({block:'start',behavior:'auto'});
  });
 }
@@ -123,8 +130,8 @@ $('hcBubbleCard').addEventListener('touchend',function(e){
  if(!touchStart)return;
  const t=e.changedTouches[0];if(!t)return;
  const dx=t.clientX-touchStart.x,dy=t.clientY-touchStart.y;touchStart=null;
- if(Math.abs(dx)>65&&Math.abs(dx)>Math.abs(dy)*1.2){ignoreClickUntil=Date.now()+450;move(dx<0?1:-1)}
- else if(dy<-75&&Math.abs(dy)>Math.abs(dx)*1.2){ignoreClickUntil=Date.now()+450;choose(categories[index].key)}
+ if(Math.abs(dy)>55&&Math.abs(dy)>Math.abs(dx)*1.1){ignoreClickUntil=Date.now()+550;move(dy<0?1:-1)}
+ else if(Math.abs(dx)>65&&Math.abs(dx)>Math.abs(dy)*1.2){ignoreClickUntil=Date.now()+550;move(dx<0?1:-1)}
 },{passive:true});
 $('hcBubbleCard').addEventListener('click',function(){if(Date.now()>ignoreClickUntil)choose(categories[index].key)});
 $('hcBubblePrev').addEventListener('click',()=>move(-1));
@@ -199,6 +206,17 @@ searchInput.addEventListener('input',renderSearch);
 searchInput.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();const b=results.querySelector('button');if(b)b.click()}});
 const observer=new MutationObserver(syncButtons);
 observer.observe(home,{attributes:true,attributeFilter:['class']});
+// The Home tab must always return to the large navigator, not a stale detail page.
+const originalShow=window.show;
+if(typeof originalShow==='function')window.show=function(id){
+ const result=originalShow.apply(this,arguments);
+ if(id==='home'){
+  setMode('big',false);
+  requestAnimationFrame(()=>window.scrollTo({top:0,behavior:'auto'}));
+ }
+ return result;
+};
+window.addEventListener('pageshow',()=>{if(isHome()&&!home.classList.contains('hc-bubble-detail'))setMode('big',false)});
 draw();syncButtons();
 window.hcBubbleHome={open:big,classic:legacy,search:openSearch,recipe:recipe};
 })();
