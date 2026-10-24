@@ -64,20 +64,22 @@ function egg(n){
 }
 function dosa(n){
  const withEgg=/egg/i.test(n),withGreens=/greens|moringa/i.test(n);
- return M('dosa','Dosa from prepared batter','தயார் மாவில் தோசை',12,
- P('Use ready fermented dosa batter, kept refrigerated. Making batter from dry grains needs earlier soaking and fermentation.','முன்பே புளிக்கவைத்து குளிராக வைத்த தோசை மாவைப் பயன்படுத்தவும்; புதிதாக அரைக்க பல மணி நேரம் தேவை.'),
- [I('batter','Ready dosa batter','தயார் தோசை மாவு',170),I('dosa-oil','Oil','எண்ணெய்',5,'ml'),...(withEgg?[I('dosa-egg','Egg','முட்டை',1,'pc')]:[]),...(withGreens?[I('dosa-greens','Chopped greens','நறுக்கிய கீரை',30)]:[])],
- [P('Heat a clean flat pan over medium heat. Stir the batter and add chopped greens if using.','சுத்தமான தோசைக்கல்லை மிதமான தீயில் சூடாக்கி மாவைக் கலக்கவும்; கீரை இருந்தால் சேர்க்கவும்.'),
- P('Spread one ladle thinly on the pan and drizzle a little oil.','ஒரு கரண்டி மாவை மெல்லியதாகப் பரப்பி சிறிது எண்ணெய் விடவும்.'),
- ...(withEgg?[P('Add the egg to the dosa surface and cook until the egg is fully set.','தோசையின் மேல் முட்டை சேர்த்து முழுவதும் வேகும் வரை சுடவும்.')]:[]),
- P('Cook until the centre is set and edges lift. Flip if necessary and serve immediately.','நடுப்பகுதி வெந்து ஓரம் பிரியும் வரை சுடவும்; தேவைப்பட்டால் திருப்பிப் போட்டு பரிமாறவும்.')]);
+ return M('dosa','Dosa made from rice and urad dal','அரிசி உளுந்து தோசை',20,
+ P('Soak rice and urad dal 4–6 hours, grind, then ferment 8–12 hours until bubbly. Refrigerate fermented batter.','அரிசி, உளுந்தை 4–6 மணி நேரம் ஊறவைத்து அரைத்து, மாவை 8–12 மணி நேரம் பொங்கும் வரை புளிக்கவிடவும். புளித்த மாவைக் குளிர்விக்கவும்.'),
+ [I('dosa-rice','Raw rice','பச்சரிசி',75),I('dosa-urad','Urad dal','உளுந்து',20),I('dosa-fenugreek','Fenugreek (optional)','வெந்தயம் (விருப்பம்)',0.25),I('dosa-water','Water for soaking and grinding','ஊறவும் அரைக்கவும் நீர்',140,'ml'),I('dosa-oil','Oil','எண்ணெய்',5,'ml'),...(withEgg?[I('dosa-egg','Egg','முட்டை',1,'pc')]:[]),...(withGreens?[I('dosa-greens','Chopped greens','நறுக்கிய கீரை',30)]:[])],
+ [P('Rinse and soak rice and urad separately in water to cover for 4–6 hours. Drain and grind with fresh water little by little to a smooth, thick but pourable batter.','அரிசி, உளுந்தை தனித்தனியாகக் கழுவி 4–6 மணி நேரம் ஊறவைத்து வடிக்கவும். புதிய நீரைச் சிறிதுசிறிதாகச் சேர்த்து அரைக்கவும்.'),
+ P('Cover loosely in a clean roomy bowl and ferment until risen and bubbly, usually 8–12 hours depending on room temperature. Add a pinch of salt and chill the finished batter.','சுத்தமான பாத்திரத்தில் தளர்வாக மூடி அறை வெப்பத்திற்கேற்ப பொதுவாக 8–12 மணி நேரம் மாவு பொங்கும் வரை புளிக்கவிடவும். உப்பு சேர்த்துக் குளிர்விக்கவும்.'),
+ P('Heat a pan over medium heat. Thin the batter with water if needed; mix in chopped greens if desired. Spread one ladle thinly and drizzle with oil.','கல்லை மிதமான தீயில் சூடாக்கவும். தேவையானால் நீரும் விருப்பமெனில் கீரையும் சேர்த்து ஒரு கரண்டி மாவை மெல்லியதாகப் பரப்பி எண்ணெய் விடவும்.'),
+ ...(withEgg?[P('Add the egg and cook until fully set.','முட்டை சேர்த்து முழுவதும் வேகும் வரை சுடவும்.')]:[]),
+ P('Cook about 2–3 minutes until the centre sets and the edge lifts; flip if preferred and serve hot.','சுமார் 2–3 நிமிடம் நடு வெந்து ஓரம் பிரியும் வரை சுட்டு விருப்பப்படி திருப்பவும்.')]);
 }
-function idli(){return M('idli','Steamed idli','ஆவியில் வேக வைத்த இட்லி',20,
- P('Have properly fermented idli batter and a clean steamer ready.','புளித்த இட்லி மாவும் சுத்தமான ஆவிப்பாத்திரமும் தயார் செய்யவும்.'),
- [I('idl-bat','Prepared idli batter','தயார் இட்லி மாவு',190),I('idl-oil','Oil for moulds','தட்டில் தடவ எண்ணெய்',2,'ml'),I('idl-water','Steamer water','ஆவிப்பாத்திர நீர்',250,'ml')],
- [P('Bring water to a simmer in the steamer; grease the idli moulds lightly.','ஆவிப்பாத்திரத்தில் நீர் கொதிக்கவிட்டு இட்லித் தட்டில் எண்ணெய் தடவவும்.'),
- P('Pour batter into moulds and steam about 10–15 minutes until set and cooked through.','மாவை ஊற்றி 10–15 நிமிடம் முழுவதும் வேகும் வரை ஆவியில் வேகவைக்கவும்.'),
- P('Rest a minute, remove gently and serve hot.','ஒரு நிமிடம் ஆறவிட்டு இட்லியை எடுத்துப் பரிமாறவும்.')]);}
+function idli(){return M('idli','Idli from rice and urad dal','அரிசி உளுந்து இட்லி',20,
+ P('Begin a day ahead: soak rice and urad 4–6 hours, grind, and ferment 8–12 hours. Refrigerate fermented batter.','முன்தினமே அரிசி, உளுந்தை 4–6 மணி நேரம் ஊறவைத்து அரைத்து, 8–12 மணி நேரம் புளிக்கவிட்டு குளிர்விக்கவும்.'),
+ [I('idl-rice','Idli rice','இட்லி அரிசி',80),I('idl-urad','Urad dal','உளுந்து',20),I('idl-fenugreek','Fenugreek (optional)','வெந்தயம் (விருப்பம்)',0.25),I('idl-batter-water','Water for soaking and grinding','ஊறவும் அரைக்கவும் நீர்',140,'ml'),I('idl-oil','Oil for moulds','தட்டில் தடவ எண்ணெய்',2,'ml'),I('idl-water','Steamer water','ஆவிப்பாத்திர நீர்',250,'ml')],
+ [P('Wash rice and urad, soak separately for 4–6 hours, then drain. Grind urad fluffy and rice smooth, adding fresh water slowly; mix to a thick spoonable batter.','அரிசி, உளுந்தைத் தனித்தனியாகக் கழுவி 4–6 மணி நேரம் ஊறவைத்து வடிக்கவும். புதிய நீரைச் சிறிதுசிறிதாகச் சேர்த்து கெட்டியான மாவாக அரைக்கவும்.'),
+ P('Cover loosely and ferment in a clean bowl until risen and bubbly, about 8–12 hours depending on warmth. Stir in a pinch of salt.','சுத்தமான பாத்திரத்தில் தளர்வாக மூடி அறை வெப்பத்துக்கு ஏற்ப 8–12 மணி நேரம் மாவு பொங்கும் வரை புளிக்கவிட்டு உப்பு சேர்க்கவும்.'),
+ P('Bring water to a steady simmer below the idli trays. Grease moulds and fill them without reaching the rim.','இட்லித் தட்டிற்குக் கீழே நீரைக் கொதிக்கவிட்டு தட்டில் எண்ணெய் தடவி விளிம்பு வரை நிரப்பாமல் மாவை ஊற்றவும்.'),
+ P('Steam covered 10–15 minutes until firm and cooked through. Rest 1 minute, unmould carefully and serve hot.','10–15 நிமிடம் மூடி ஆவியில் வேகவைத்து ஒரு நிமிடம் ஆறியதும் மெதுவாக எடுத்துப் பரிமாறவும்.')]);}
 function pittu(){return M('pittu','Rice flour pittu','அரிசி மாவுப் பிட்டு',25,
  P('Use pittu flour or appropriately roasted rice flour and a safe steamer.','பிட்டு மாவு அல்லது ஏற்ற வறுத்த அரிசி மாவும் பாதுகாப்பான ஆவிப்பாத்திரமும் தேவை.'),
  [I('pittu-flour','Pittu rice flour','பிட்டு அரிசி மாவு',90),I('pittu-coco','Grated coconut','துருவிய தேங்காய்',35),I('pittu-water','Water (add gradually)','நீர் (சிறிது சிறிதாக)',65,'ml')],
@@ -99,11 +101,18 @@ function roti(n){
  P('Divide and press into even flat rounds. Cook on a medium-hot pan with a little oil.','சம பங்குகளாகப் பிரித்து ரொட்டியாகத் தட்டி மிதமான சூட்டில் சிறிது எண்ணெயுடன் சுடவும்.'),
  P('Turn and cook both sides until fully done.','திருப்பிப் போட்டு இருபுறமும் நன்றாக வேகவைக்கவும்.')]);
 }
-function appam(){return M('appam','Appam from fermented batter','புளித்த ஆப்பம்',15,
- P('Use ready appam batter and an appam pan with lid. Fermentation requires advance preparation.','தயார் புளித்த ஆப்ப மாவும் மூடியுள்ள அப்பச்சட்டியும் தேவை.'),
- [I('appam-batter','Ready fermented appam batter','தயார் புளித்த ஆப்ப மாவு',175),I('appam-oil','Oil','எண்ணெய்',4,'ml')],
- [P('Warm the pan and lightly grease it. Pour in batter and swirl to make thin edges and a thicker centre.','அப்பச்சட்டியைச் சூடாக்கி எண்ணெய் தடவி மாவை ஊற்றி ஓரங்களில் மெல்லியதாகச் சுழற்றவும்.'),
- P('Cover and cook until the middle is fully set and the edges lift. Serve with a cooked side.','மூடி வைத்து நடுப்பகுதி முழுவதும் வெந்ததும் ஓரம் பிரியும் போது எடுத்துக் கறியுடன் வழங்கவும்.')]);}
+function appam(n='Appam'){
+ const isMilk=/milk appam|paal appam/i.test(n);
+ return M('appam',isMilk?'Milk appam (paal appam)':'Rice-flour appam',isMilk?'பால் ஆப்பம்':'அரிசி மாவு ஆப்பம்',110,
+ P('Begin with raw rice flour, not a purchased batter. Yeast activation takes 5–10 minutes; allow 60–90 minutes for the batter to bubble, then 2–4 minutes per appam. Add milk only just before cooking.','தயார் மாவுக்குப் பதில் அரிசி மாவிலிருந்து தொடங்கவும். ஈஸ்ட் செயல்பட 5–10 நிமிடமும், மாவு புளிக்க 60–90 நிமிடமும், சுட ஒவ்வொன்றுக்கும் 2–4 நிமிடமும் தேவை. பாலை இறுதியில் சேர்க்கவும்.'),
+ [I('appam-flour','Rice flour','அரிசி மாவு',70),I('appam-water','Lukewarm water','இளஞ்சூடான நீர்',90,'ml'),I('appam-milk','Coconut milk (regular milk is an alternative)','தேங்காய்ப்பால் (சாதாரண பாலும் மாற்று)',65,'ml'),I('appam-yeast','Dry baking yeast','உலர் ஈஸ்ட்',0.75),I('appam-sugar','Sugar','சர்க்கரை',4),I('appam-salt','Salt','உப்பு',0.75),I('appam-oil','Oil for pan','சட்டிக்கு எண்ணெய்',2.5,'ml')],
+ [P('Whisk two spoonfuls of the measured flour into about half a cup of the measured water. Heat gently for 1–2 minutes until it becomes a thick smooth paste; cool until lukewarm.','அளந்த மாவிலிருந்து 2 கரண்டி எடுத்து அளந்த நீரில் அரை கப்புடன் கலந்து 1–2 நிமிடம் மிதமான தீயில் கெட்டியான கூழாக்கி இளஞ்சூட்டுக்கு ஆறவிடவும்.'),
+ P('Mix yeast and sugar into the remaining lukewarm water, not hot water. Rest 5–10 minutes until lightly foamy; if there are no bubbles, check the yeast.','மீதமுள்ள இளஞ்சூடான நீரில் ஈஸ்ட், சர்க்கரை கலந்து 5–10 நிமிடம் நுரைக்க விடவும். குமிழ்கள் வராவிட்டால் ஈஸ்டைச் சரிபார்க்கவும்.'),
+ P('Whisk the cooled paste, remaining rice flour, salt and yeast water to a smooth, pourable batter. Cover loosely and rest around 60–90 minutes, until small bubbles appear. Refrigerate if delaying cooking.','ஆறிய கூழ், மீதமுள்ள அரிசி மாவு, உப்பு, ஈஸ்ட் நீரைச் சேர்த்து கட்டியில்லாத மாவாக்கவும். மூடி 60–90 நிமிடம் குமிழ்கள் வரும் வரை வைத்து, பிறகு தாமதமானால் குளிர்விக்கவும்.'),
+ P('Stir in coconut milk before cooking (or regular milk for a dairy version). Thin with a spoonful of water if needed: the batter should move easily when you tilt the pan.','சுடும் முன் தேங்காய்ப்பால் அல்லது சாதாரண பால் சேர்க்கவும். மாவு கெட்டியாக இருந்தால் ஒரு கரண்டி நீர் சேர்க்கவும்; சட்டியைச் சாய்த்தால் மாவு பரவ வேண்டும்.'),
+ P('Warm a lidded appam pan over medium heat and wipe it with a little oil. Pour in one ladle and immediately swirl the pan for thin edges and a thicker middle.','மூடியுள்ள அப்பச்சட்டியை மிதமான தீயில் சூடாக்கி எண்ணெய் தடவவும். ஒரு கரண்டி மாவை ஊற்றி சட்டியைச் சுழற்றி ஓரங்களை மெல்லியதாகவும் நடுவைத் தடிமனாகவும் வைக்கவும்.'),
+ P('Cover and cook for about 2–4 minutes until the centre is set and the edges lightly crisp. Do not flip. Lift out and serve warm.','மூடி சுமார் 2–4 நிமிடம் நடு வெந்து ஓரம் மொறுமொறுப்பாகும் வரை சுடவும். திருப்ப வேண்டாம்; சூடாகப் பரிமாறவும்.')]);
+}
 function upma(n){
  const aval=/aval|flattened/i.test(n),vermicelli=/vermicelli/i.test(n);
  const grain=aval?'Flattened rice (aval)':vermicelli?'Vermicelli':'Semolina (rava)';
@@ -151,7 +160,7 @@ function curryVeg(n){
 function otherStaple(n){
  if(/string hopper/.test(n))return stringHoppers();
  if(/pittu/.test(n))return pittu();
- if(/appam/.test(n))return appam();
+ if(/appam/.test(n))return appam(n);
  if(/roti|chapati/.test(n))return roti(n);
  if(/dosa/.test(n))return dosa(n);
  if(/idli/.test(n))return idli();
@@ -184,7 +193,7 @@ function baseModules(name){
  else if(/lemon rice|tomato rice|tamarind rice|coconut rice|curd rice/.test(n))primary=lemonRice(n);
  else if(/pittu/.test(n))primary=pittu();
  else if(/string hopper/.test(n))primary=stringHoppers();
- else if(/appam/.test(n))primary=appam();
+ else if(/appam/.test(n))primary=appam(n);
  else if(/idli/.test(n))primary=idli();
  else if(/dosa/.test(n))primary=dosa(n);
  else if(/adai/.test(n)){
@@ -204,7 +213,8 @@ function baseModules(name){
  [P('Simmer tomato and tamarind in water about 10 minutes.','தக்காளி, புளியை நீரில் 10 நிமிடம் கொதிக்கவிடவும்.'),P('Add crushed pepper and cumin; simmer 3–5 minutes and serve hot.','நசுக்கிய மிளகு, சீரகம் சேர்த்து 3–5 நிமிடம் சமைத்துச் சூடாக வழங்கவும்.')]);secondary=/rice/.test(n)?rice():null;}
  else if(/rice|samba/.test(n)){primary=/curry|kootu|poriyal|greens|pumpkin|okra|brinjal|banana|bean|gourd|yam|mushroom/i.test(n)?curryVeg(n):rice();secondary=primary.id==='vegcurry'?rice():null}
  else if(/curry|kootu/.test(n)){primary=curryVeg(n);secondary=otherStaple(n)}
- else primary=curryVeg(n);
+ else if(/vegetable|veggie|greens|gourd|pumpkin|brinjal|okra|beetroot|mushroom|yam|spinach/.test(n))primary=curryVeg(n);
+ else return [];
  const result=[primary,...(secondary&&secondary.id!==primary.id?[secondary]:[])];
  if(/(?:with |,\s*)sothi/.test(n)&&!result.some(x=>x.id==='sothi')&&!/fish|chicken/.test(n))result.push(sideRecipe('Light sothi','சொதி'));
  if(/egg/.test(n)&&!result.some(x=>x.id==='egg'||x.id==='boiled-egg')&&!/dosa/.test(n))result.push(boiledEggSide());
@@ -265,7 +275,11 @@ function amount(x,num,lang){
  if(/water|நீர்/i.test(name)||x.unit==='ml'&&/water/.test(id))return cups(raw/200);
  if(/oil|ghee/.test(name))return spoons(raw/5);
  if(/lemon juice|lime\/lemon juice/.test(name))return spoons(raw/5);
- if(/coconut milk/.test(name))return cups(raw/200);
+ if(/milk/.test(name))return cups(raw/200);
+ if(/yeast/.test(name))return say(kitchenFraction(raw/3)+' teaspoon',kitchenFraction(raw/3)+' தேக்கரண்டி');
+ if(/sugar/.test(name))return say(kitchenFraction(raw/4)+' teaspoons',kitchenFraction(raw/4)+' தேக்கரண்டி');
+ if(/salt/.test(name))return say(kitchenFraction(raw/6)+' teaspoon',kitchenFraction(raw/6)+' தேக்கரண்டி');
+ if(/fenugreek/.test(name))return say('a pinch','ஒரு சிட்டிகை');
  if(/yoghurt|curd/.test(name))return cups(raw/200);
  if(/dosa batter|idli batter|appam batter/.test(name))return cups(raw/200);
  if(/onion/.test(name))return pieces(raw/80,'small onion','சிறிய வெங்காயம்');
@@ -283,7 +297,7 @@ function amount(x,num,lang){
  if(/pepper|cumin|curry powder|spice/.test(name))return spoons(raw/3);
  if(/grated coconut/.test(name))return handfuls(raw/35);
  if(/flour/.test(name))return cups(raw/120);
- if(/lentil|dhal|moong|gram|bean|rice|millet|kurakkan|semolina|rava|vermicelli|aval|flattened/.test(name)){
+ if(/urad dal|lentil|dhal|moong|gram|bean|rice|millet|kurakkan|semolina|rava|vermicelli|aval|flattened/.test(name)){
   const perCup=/semolina|rava|vermicelli|flattened|aval/.test(name)?130:160;
   return cups(raw/perCup);
  }
@@ -325,6 +339,7 @@ function renderCard(card,meal,plan,force=false){
   '<h4>Shopping list / வாங்க வேண்டியவை</h4>'+
  '<div class="hc-full-ingredients">'+items.map(x=>'<label><input type="checkbox" aria-label="'+e(x.en)+'"><span>'+txt(x.en,x.ta,settings.language)+'</span><strong>'+amount(x,settings.servings,settings.language)+'</strong></label>').join('')+'</div>'+
  modules.map(m=>'<section class="hc-full-module"><h4>'+txt(m.en,m.ta,settings.language)+' <small>~'+m.time+' min</small></h4>'+
+ '<p class="hc-full-prep"><strong>'+txt('Before you cook','சமைக்கும் முன்',settings.language)+'</strong> '+txt(m.prep[0],m.prep[1],settings.language)+'</p>'+
  '<ol>'+m.steps.map(s=>'<li>'+txt(s[0],s[1],settings.language)+'</li>').join('')+'</ol></section>').join('')+
  '';
  d.append(container);
@@ -375,6 +390,7 @@ window.HCKitchenSearchGuide={
   items.forEach(x=>lines.push('• '+x.en+' / '+x.ta+' — '+amount(x,settings.servings,settings.language)));
   mods.forEach(m=>{
    lines.push('\n'+m.en+' / '+m.ta+':');
+   if(m.prep)lines.push('Before you cook / சமைக்கும் முன்:\n'+m.prep[0]+'\n'+m.prep[1]);
    m.steps.forEach((step,i)=>lines.push((i+1)+'. '+step[0]+'\n'+step[1]));
   });
   return {en:requested,ta:ta||'',text:lines.join('\n'),source:'general cooking guide'};
@@ -426,6 +442,7 @@ style.textContent=[
 '#hcMonthlyKitchen .hc-full-module{border-top:1px solid #46606b;padding-top:5px;margin-top:12px}',
 '#hcMonthlyKitchen .hc-full-module h4 small{font-size:11px;color:#bbcbd2;margin-left:6px;font-weight:400}',
 '#hcMonthlyKitchen .hc-full-module ol{padding-left:22px;margin:8px 0}',
+ '#hcMonthlyKitchen .hc-full-prep{font-size:12px;line-height:1.6;margin:8px 0;color:#e1edf0}',
 '#hcMonthlyKitchen .hc-full-module li{padding:3px 0 10px}',
 '#hcMonthlyKitchen .hc-full-body span[lang]{display:block;line-height:1.75}',
 '#hcMonthlyKitchen .hc-full-body span[lang=ta]{color:#e3eced;line-height:1.95}',
