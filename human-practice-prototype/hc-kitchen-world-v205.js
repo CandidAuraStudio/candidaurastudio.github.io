@@ -32,6 +32,7 @@ function detail(name){
  parts.push('Home-style guide · வீட்டுமுறை. Adjust household measures to the recipe; check food safety where needed.');
  return {en:entry.en,ta:entry.ta,text:parts.join('\n'),source:'original household cooking guide',references:refs(entry),category:entry.category};
 }
+const categories=[...new Set(recipes.map(x=>x.category))];
 window.HCKitchenWorldRecipes={catalog:()=>recipes.map(x=>({en:x.en,ta:x.ta,category:x.category,aliases:x.aliases,ingredients:x.ingredients,source:'world'})),detail,refs,recipes:recipes.length,categories};
 try{window.dispatchEvent(new Event('hc:kitchen-world-ready'))}catch(_){}
 })();
