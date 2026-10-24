@@ -128,6 +128,7 @@ function getCatalog(){
  (window.HCKitchenSearchGuide?.personal||[]).forEach(push);
  dishes.forEach(d=>push({en:d.name,ta:d.ta,aliases:d.aliases||'',source:'quick'}));
  (window.HCKitchenWorldRecipes?.catalog?.()||[]).forEach(push);
+ (window.HCKitchenUniversal?.catalog?.()||[]).forEach(push);
  (window.HCKitchenMenu?.catalog?.()||[]).forEach(push);
  return items;
 }
@@ -151,6 +152,10 @@ function getMatches(q){
   .filter(x=>x.score>0).sort((a,b)=>b.score-a.score||a.order-b.order).slice(0,120);
 }
 function showItem(item){
+ if(item?.source==='universal'){
+  const u=window.HCKitchenUniversal?.detail?.(item.en);
+  if(u){output(u.text);return}
+ }
  if(!item)return;
  searchResults.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.recipe===item.en)));
  if(item.source==='world'||(item.source==='personal'&&!window.HCKitchenSearchGuide?.detail?.(item.en,item.ta))){
