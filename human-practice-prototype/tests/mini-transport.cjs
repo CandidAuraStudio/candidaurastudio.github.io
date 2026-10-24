@@ -42,6 +42,8 @@ const assert=require('node:assert/strict');
     renderGlobalMini();
    },id);
    assert.equal(await page.locator('#globalMini').evaluate(el=>el.classList.contains('show')),true,'Mini hidden: '+id);
+   const miniVisible=await page.locator('#hcMiniNext').isVisible();
+   if(!miniVisible){const detail=await page.evaluate(()=>{const e=document.getElementById('globalMini'),button=document.getElementById('hcMiniNext');return {screen:document.querySelector('.screen.active')?.id,body:document.body.className,miniClass:e.className,miniDisplay:getComputedStyle(e).display,miniVisibility:getComputedStyle(e).visibility,buttonDisplay:getComputedStyle(button).display,parentRect:e.getBoundingClientRect().toJSON(),buttonRect:button.getBoundingClientRect().toJSON()}});throw Error('Mini next invisible for '+id+': '+JSON.stringify(detail))}
    await page.locator('#hcMiniNext').click();
    assert.equal(await page.evaluate(id=>window.__testTracks[id].time,id),45,'Forward failed: '+id);
    await page.locator('#hcMiniPrev').click();
