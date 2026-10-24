@@ -20,14 +20,15 @@ raw=json.loads(re.search(r'var people=("(?:\\.|[^"\\])*"),others=',source).group
 names=[line.split('|')[0] for line in raw.split('\n')]
 base=json.loads(subprocess.check_output(['node','-e',"const c=require('./human-practice-prototype/hc-explore-core');process.stdout.write(JSON.stringify(c.bank.filter(x=>x.tags.includes('public')).map(x=>x.name)))"],cwd=ROOT))
 names=list(dict.fromkeys(base+names))
-resolved={}; skipped=[]
+resolved={}; skipped=[]; name_candidates={}
 for name in names:
     search=re.sub(r'\s*\([^)]*\)','',name).strip()
     results=request(action='wbsearchentities',search=search,language='en',uselang='en',type='item',limit=5).get('search',[])
     exact=[r for r in results if normal(r.get('label',''))==normal(search) or normal(r.get('match',{}).get('text',''))==normal(search)]
-    if len(exact)!=1: skipped.append({'name':name,'reason':'ambiguous or absent exact name'});continue
-    resolved.setdefault(exact[0]['id'],name)
-    print('Matched',name,exact[0]['id'],flush=True)
+    if not exact: skipped.append({'name':name,'reason':'absent exact name'});continue
+    name_candidates[name]=[r['id'] for r in exact]
+    for match in exact:resolved.setdefault(match['id'],name)
+    print('Candidates',name,','.join(name_candidates[name]),flush=True)
 def ids(entity,prop):
     return [c.get('mainsnak',{}).get('datavalue',{}).get('value',{}).get('id') for c in entity.get('claims',{}).get(prop,[]) if c.get('rank')!='deprecated' and isinstance(c.get('mainsnak',{}).get('datavalue',{}).get('value'),dict)]
 def year(entity,prop):
@@ -43,21 +44,27 @@ entities={}
 keys=list(resolved)
 for i in range(0,len(keys),25):
     entities.update(request(action='wbgetentities',ids='|'.join(keys[i:i+25]),props='claims|labels|descriptions',languages='en').get('entities',{}))
-occupation_ids=sorted({q for e in entities.values() for q in ids(e,'P106') if q})
+occupation_ids=sorted({q for e in entities.values() for p in ['P106','P27'] for q in ids(e,p) if q})
 labels={}
 for i in range(0,len(occupation_ids),50):
     result=request(action='wbgetentities',ids='|'.join(occupation_ids[i:i+50]),props='labels',languages='en')
     labels.update({q:v.get('labels',{}).get('en',{}).get('value',q) for q,v in result.get('entities',{}).items()})
+eligible=set()
+for name,choices in name_candidates.items():
+    humans=[q for q in choices if 'Q5' in ids(entities.get(q,{}),'P31')]
+    if len(humans)==1:eligible.add(humans[0])
+    else:skipped.append({'name':name,'reason':'ambiguous or absent verified human'})
 items=[]
 for q,e in entities.items():
-    if 'Q5' not in ids(e,'P31'):skipped.append({'name':resolved[q],'reason':'not explicitly classified as human'});continue
+    if q not in eligible:continue
     sex=ids(e,'P21');sex='female' if sex==['Q6581072'] else 'male' if sex==['Q6581097'] else None
     items.append({'id':'wd:'+q,'name':e.get('labels',{}).get('en',{}).get('value',resolved[q]),'description':e.get('descriptions',{}).get('en',{}).get('value',''),
       'source':'https://www.wikidata.org/wiki/'+q,'revision':e.get('lastrevid'),'sex':sex,'birthYear':year(e,'P569'),'deathYear':year(e,'P570'),
       'citizenships':[v for v in ids(e,'P27') if v],'occupations':[{'id':v,'label':labels.get(v,v)} for v in ids(e,'P106') if v]})
 items.sort(key=lambda x:x['name'].casefold())
 if len(items)<100:raise RuntimeError('Too few verified public figures: '+str(len(items)))
-payload={'schema':1,'builtAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'source':'Wikidata CC0; P31, P21, P27, P569, P570, P106','items':items,'skipped':skipped}
+country_labels={q:labels[q] for item in items for q in item['citizenships'] if q in labels}
+payload={'schema':1,'builtAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'source':'Wikidata CC0; P31, P21, P27, P569, P570, P106','items':items,'countryLabels':country_labels,'skipped':skipped}
 out=ROOT/'human-practice-prototype/hc-mind-catalog.js'
 out.write_text('/* Public-figure facts: Wikidata CC0. No user data. */\n(function(r){const d='+json.dumps(payload,ensure_ascii=False,separators=(',',':'))+';if(typeof module==="object"&&module.exports)module.exports=d;else r.HCMindCatalog=d;})(typeof globalThis!=="undefined"?globalThis:this);\n')
 print('CATALOG:',len(items),'people;',len(skipped),'skipped;',out.stat().st_size,'bytes',flush=True)
