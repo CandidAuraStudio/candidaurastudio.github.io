@@ -178,3 +178,8 @@ body.hc-flow-enabled #hcExploreDialog :is(h2,h3){font-size:clamp(27px,6.5vw,34px
 body.hc-flow-enabled #hcExploreDialog :is(p,small,span,label){font-size:clamp(18px,4.6vw,22px)!important;line-height:1.55}
 body.hc-flow-enabled #hcExploreDialog :is(button,input,select,textarea){font-size:20px!important;min-height:52px!important}
 body.hc-flow-enabled #hcExploreDialog button{border-radius:17px!important}
+
+/* Home Search recovery: keep the search surface above every non-native overlay. */
+body.hc-flow-enabled #hcBubbleSearchPanel:not([hidden]),body.hc-search-open #hcBubbleSearchPanel:not([hidden]){position:fixed!important;inset:0!important;display:block!important;z-index:2147483000!important;pointer-events:auto!important;overflow-y:auto!important;overscroll-behavior:contain!important;visibility:visible!important;opacity:1!important}
+body.hc-search-open #hcFlowDock,body.hc-search-open #hcFlowExplore{pointer-events:none}
+body.hc-search-open #hcBubbleSearchPanel button,body.hc-search-open #hcBubbleSearchPanel input{pointer-events:auto!important}
