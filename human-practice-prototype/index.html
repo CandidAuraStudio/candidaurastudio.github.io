@@ -2914,6 +2914,7 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
 <section class="screen" id="humanSession">
   <div class="glass human-session">
     <button class="collection-back" onclick="show('humanCategory')">‹ Back</button>
+    <button type="button" class="hc-minimize-audio" onclick="hcMinimizeNativeAudio('human-sound')" aria-label="Minimize Human Practice audio and continue on Home">▾ Minimize</button>
     <div class="human-session-icon" id="humanSessionIcon">♪</div>
     <div class="kicker" id="humanSessionCategory">Passion</div>
     <h2 id="humanSessionTitle">Music Presence</h2>
@@ -5289,7 +5290,7 @@ function rememberActiveMedia(key){
 
 let hcMiniPinnedKey=null;
 function hcMinimizeNativeAudio(key){
-  const tracks={meditation:audio,adhkar:adhkarAudio,soundlab:soundLabAudio,fear:fearAudio,book:bookAudioEl};
+  const tracks={meditation:audio,adhkar:adhkarAudio,soundlab:soundLabAudio,fear:fearAudio,book:bookAudioEl,'human-sound':humanSoundAudio};
   const source=tracks[key];
   // The chosen track may still be paused or loading: show honest Play controls
   // instead of hiding the mini or accidentally selecting a previous recording.
@@ -9420,7 +9421,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=178');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=179');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
