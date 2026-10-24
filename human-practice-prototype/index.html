@@ -5718,7 +5718,10 @@ function openFearTrack(key){
   document.getElementById('fearTotal').textContent=fmt(t.duration);
   document.getElementById('fearVolume').value=15;
   document.getElementById('fearVolumeLabel').textContent='15%';
-  document.querySelectorAll('#fearBeforeRating button,#fearAfterRating button').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('#fearBeforeRating button,#fearAfterRating button').forEach(b=>{
+    b.classList.remove('active');
+    b.setAttribute('aria-pressed','false');
+  });
 
   const status=document.getElementById('fearAudioStatus');
   if(status)status.textContent='Ready to listen · set a comfortable volume and press Play.';
@@ -5809,6 +5812,13 @@ function setFearMediaSession(){
 }
 
 function finishFearPractice(){
+  const heardSeconds=Math.max(0,Number(fearAudio.currentTime)||0);
+  // Do not record zero-audio visits as completed listening sessions.
+  if(heardSeconds<1){
+    const status=document.getElementById('fearAudioStatus');
+    if(status)status.textContent='Press Play and listen before saving your session.';
+    return;
+  }
   fearPlayRequested=false;fearAudio.pause();
   const t=fearTracks[currentFearKey]||fearTracks.ocean;
   const stats=getFearStats();
@@ -5826,7 +5836,7 @@ function finishFearPractice(){
     practice:t.title,
     title:'Fear',
     category:'Fear',
-    listenedSeconds:Math.round(fearAudio.currentTime||0),
+    listenedSeconds:Math.round(heardSeconds),
     targetSeconds:t.duration,
     completed:true,
     endedAt:Date.now(),
