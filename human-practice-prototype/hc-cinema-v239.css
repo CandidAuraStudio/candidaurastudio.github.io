@@ -1,0 +1,204 @@
+/* HeartClear cinematic v239: one visual system for every route. No feature hiding. */
+body.hc-flow-enabled.hc-cinema{
+  --hc-cinema-ink:#fff;--hc-cinema-muted:#d7d5d2;--hc-cinema-line:#ffffff38;
+  --hc-cinema-panel:rgba(9,12,15,.85);--hc-cinema-soft:rgba(30,32,35,.86);
+  color:var(--hc-cinema-ink)!important;background:#090b0e!important;
+}
+body.hc-cinema #hcCinemaBackdrop{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(180deg,rgba(5,7,10,.28) 0%,rgba(6,7,10,.28) 24%,rgba(6,7,10,.60) 53%,#080a0de8 82%,#080a0df5 100%),url('./hc-cinema-scene-v239.svg');
+  background-size:cover;background-position:center 37%;background-repeat:no-repeat;
+}
+body.hc-cinema[data-hc-cinema-scene="library"] #hcCinemaBackdrop{
+  background-image:linear-gradient(180deg,#100d0eb8 0%,#211711b8 35%,#080a0df2 91%),url('./hc-cinema-scene-v239.svg');
+}
+body.hc-cinema[data-hc-cinema-scene="sacred"] #hcCinemaBackdrop{
+  background-image:linear-gradient(180deg,#03101398 0%,#102f31aa 42%,#080b0ef2 90%),url('./hc-cinema-scene-v239.svg');
+}
+body.hc-cinema[data-hc-cinema-scene="practice"] #hcCinemaBackdrop{
+  background-image:linear-gradient(180deg,#09101666 0%,#17262aa8 43%,#080a0df1 87%),url('./hc-cinema-scene-v239.svg');
+}
+body.hc-cinema[data-hc-cinema-scene="kitchen"] #hcCinemaBackdrop{
+  background-image:linear-gradient(180deg,#21140d7a 0%,#332317b5 44%,#090b0ef2 90%),url('./hc-cinema-scene-v239.svg');
+}
+body.hc-cinema[data-hc-cinema-scene="reels"] #hcCinemaBackdrop{display:none!important}
+body.hc-cinema .app{
+  position:relative;z-index:1;isolation:isolate;max-width:710px!important;
+  padding:calc(12px + env(safe-area-inset-top)) clamp(14px,4vw,28px) calc(185px + env(safe-area-inset-bottom))!important;
+  min-height:100dvh;background:transparent!important;
+}
+body.hc-cinema .screen.active{width:100%;min-width:0;background:transparent!important}
+body.hc-cinema #hcCinemaHero{
+  position:relative;display:flex;flex-direction:column;justify-content:flex-end;
+  width:100%;min-height:clamp(198px,30dvh,310px);padding:26px clamp(18px,5vw,32px) 23px;
+  margin:2px 0 23px;border:1px solid rgba(255,255,255,.17);
+  border-radius:32px;overflow:hidden;color:white;
+  background:linear-gradient(180deg,#0001 0%,#07090a44 35%,#080a0eea 100%),url('./hc-cinema-scene-v239.svg') center 42% /cover no-repeat;
+}
+body.hc-cinema #hcCinemaHero[hidden]{display:none!important}
+body.hc-cinema #hcCinemaHero::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(85deg,rgba(2,5,9,.36),transparent 75%);
+}
+body.hc-cinema #hcCinemaHero>*{position:relative;z-index:1}
+body.hc-cinema #hcCinemaEyebrow{font:700 12px/1.5 system-ui;letter-spacing:.18em;text-transform:uppercase;color:#e4d9cb}
+body.hc-cinema #hcCinemaTitle{font:750 clamp(35px,9vw,60px)/1.06 system-ui;letter-spacing:-.065em;color:white;margin:9px 0 4px;overflow-wrap:anywhere}
+body.hc-cinema #hcCinemaSubtitle{font:450 clamp(15px,3.8vw,18px)/1.45 system-ui;color:#e1e0df;margin:7px 0 0}
+body.hc-cinema[data-hc-cinema-scene="library"] #hcCinemaHero{background-position:center 59%}
+body.hc-cinema[data-hc-cinema-scene="sacred"] #hcCinemaHero{background-position:center 29%}
+body.hc-cinema[data-hc-cinema-scene="kitchen"] #hcCinemaHero{background-position:center 64%}
+body.hc-cinema #hcFlowTop{
+  position:relative;z-index:6;max-width:100%;padding:4px 0 10px;
+  margin:0 0 9px;gap:10px;min-height:60px;
+}
+body.hc-cinema #hcFlowTop button{
+  display:grid;place-items:center;width:58px;min-width:58px;min-height:56px!important;height:56px;
+  background:rgba(11,13,15,.78)!important;color:white!important;
+  border:1px solid rgba(255,255,255,.27)!important;border-radius:21px!important;
+  font-size:0!important;box-shadow:none!important;padding:10px!important;
+}
+body.hc-cinema #hcFlowTop button svg{width:26px;height:26px;stroke:white;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+body.hc-cinema #hcFlowTop .hc-flow-name{font-size:0!important;line-height:0;min-height:54px;display:grid;place-items:center}
+body.hc-cinema #hcFlowTop .hc-flow-name::before{
+  content:'';display:block;width:54px;height:54px;
+  border-radius:15px;background:#050505 url('./icon.svg') center/contain no-repeat;
+}
+body.hc-cinema #hcFlowDock{
+  position:fixed!important;display:grid!important;
+  grid-template-columns:repeat(6,minmax(0,1fr))!important;
+  align-items:center;left:50%!important;right:auto!important;
+  transform:translateX(-50%)!important;bottom:calc(13px + env(safe-area-inset-bottom))!important;
+  width:min(calc(100vw - 24px),560px)!important;max-width:560px!important;
+  min-height:76px;padding:8px 7px!important;gap:2px!important;
+  border:1px solid #ffffff36!important;border-radius:999px!important;
+  background:#111013f5!important;box-shadow:0 9px 25px #000b!important;
+  z-index:900!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+}
+body.hc-cinema #hcFlowDock button{
+  display:grid!important;place-items:center;min-height:58px!important;
+  height:58px!important;min-width:0!important;padding:8px 0!important;
+  border-radius:999px!important;border:0!important;
+  color:#c9c8c9!important;background:transparent!important;font-size:0!important;
+  touch-action:manipulation;
+}
+body.hc-cinema #hcFlowDock button svg{width:27px;height:27px;stroke:currentColor;stroke-width:1.9;fill:none;stroke-linecap:round;stroke-linejoin:round}
+body.hc-cinema #hcFlowDock button img{width:33px;height:33px;display:block;border-radius:10px}
+body.hc-cinema #hcFlowDock button[aria-current="page"]{
+  background:#eee9e4!important;color:#141417!important;
+}
+body.hc-cinema #hcFlowDock button[aria-current="page"] img{filter:invert(1)}
+body.hc-cinema #hcFlowDock button:focus-visible,body.hc-cinema #hcFlowTop button:focus-visible{
+  outline:3px solid #fff!important;outline-offset:3px!important;
+}
+body.hc-cinema:has(#hcReels.active) #hcFlowDock{display:none!important}
+body.hc-cinema:has(#hcReels.active) #hcCinemaHero{display:none!important}
+body.hc-cinema #home.hc-bubble-mode #hcBubbleHome{
+  min-height:calc(100dvh - 125px);display:flex;flex-direction:column;justify-content:center;
+  max-width:630px!important;margin:auto;
+}
+body.hc-cinema #hcBubbleHome .hcb-brand{justify-content:center!important;margin:12px auto 6px!important}
+body.hc-cinema #hcBubbleHome .hcb-brand h1{display:none!important}
+body.hc-cinema #hcBubbleHome .hcb-logo{
+  width:72px!important;height:72px!important;min-width:72px;
+  border-radius:20px!important;border:1px solid #ffffff80!important;
+  background:#030303!important;color:white!important;font-size:58px!important;
+}
+body.hc-cinema #hcBubbleHome .hcb-subtitle{font-size:16px!important;letter-spacing:.05em;color:#eeeded!important}
+body.hc-cinema #hcBubbleCard{
+  min-height:clamp(355px,52dvh,620px)!important;border-radius:34px!important;
+  border:1px solid #ffffff49!important;
+  background-image:linear-gradient(180deg,#060c121a 1%,#080d15a3 52%,#06070ce0 100%),url('./hc-cinema-scene-v239.svg')!important;
+  background-size:cover!important;background-position:center!important;
+  box-shadow:0 12px 40px #0009!important;
+}
+body.hc-cinema #hcBubbleCard .hcb-title{font-size:clamp(38px,10vw,61px)!important;line-height:1.06!important}
+body.hc-cinema #hcBubbleSearch{
+  min-height:62px!important;background:#e9e7e3!important;color:#101316!important;
+  border-radius:999px!important;
+}
+body.hc-cinema .screen.active:not(#hcReels) :is(.glass,.choice,.hub-card,.human-card,.sacred-card,.fear-card,.practice-card,.hc-mix-card,.hc-settings-clean,.hc-settings-section,.hcqs-verse){
+  background:var(--hc-cinema-panel)!important;color:#fafafa!important;
+  border:1px solid var(--hc-cinema-line)!important;
+  border-radius:24px!important;box-shadow:none!important;
+  backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+}
+body.hc-cinema .screen.active:not(#hcReels) .glass{padding:clamp(17px,4vw,28px)!important}
+body.hc-cinema .screen.active:not(#hcReels) :is(.hub-card,.human-card,.sacred-card,.practice-card,.choice){
+  background:linear-gradient(140deg,rgba(46,48,52,.80),rgba(8,10,13,.9))!important;
+  min-height:78px;
+}
+body.hc-cinema .screen.active:not(#hcReels) :is(button,select,input,textarea,summary){
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+}
+body.hc-cinema .screen.active:not(#hcReels) :is(button,summary):not(.switch){
+  min-height:50px;border-radius:18px;
+}
+body.hc-cinema .screen.active:not(#hcReels) :is(p,small,label,li){color:#e5e4e1}
+body.hc-cinema .screen.active:not(#hcReels) :is(.category-tabs,.hcq-langs,.hcqs-langs,.hc-sound-filters){
+  display:flex;max-width:100%;gap:9px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;
+}
+body.hc-cinema .screen.active:not(#hcReels) :is(.category-tabs,.hcq-langs,.hcqs-langs,.hc-sound-filters) > button{
+  flex-shrink:0;scroll-snap-align:start;
+}
+body.hc-cinema .screen.active:not(#hcReels) :is(button,[role=button],summary):focus-visible{
+  outline:3px solid white!important;outline-offset:2px!important;
+}
+body.hc-cinema .screen.active:not(#hcReels) button[aria-pressed="true"],
+body.hc-cinema .screen.active:not(#hcReels) button.active:not(.switch){
+  border-color:#f7f5f0!important;
+}
+body.hc-cinema #settings>.glass{border-radius:32px!important;background:rgba(9,11,14,.82)!important}
+body.hc-cinema #settings>.glass>.kicker,body.hc-cinema #settings>.glass>h2{display:none!important}
+body.hc-cinema #settings .hc-settings-stack{display:grid;gap:12px}
+body.hc-cinema #settings :is(.hc-settings-section,.setting-row,.hc-settings-toggle){
+  position:relative;min-width:0;padding:12px 16px!important;border:1px solid #ffffff31!important;
+  border-radius:22px!important;background:rgba(31,33,35,.77)!important;
+}
+body.hc-cinema #settings .setting-row{display:flex;align-items:center;gap:12px;min-height:75px}
+body.hc-cinema #settings .hc-settings-section{margin:0!important}
+body.hc-cinema #settings .hc-settings-section>summary{
+  min-height:66px!important;padding:11px 2px!important;align-items:center;
+  font-size:clamp(19px,4.6vw,24px)!important;cursor:pointer;
+}
+body.hc-cinema #settings .hc-settings-section[open]{background:rgba(9,12,16,.98)!important}
+body.hc-cinema #settings .hc-settings-detail{max-width:100%;padding:14px 4px 8px!important}
+body.hc-cinema #settings .setting-row strong{font-size:clamp(18px,4.3vw,22px)!important}
+body.hc-cinema #settings .setting-row small{font-size:15px!important;color:#cecac7!important}
+body.hc-cinema #settings .switch{flex:0 0 auto}
+body.hc-cinema #settings input:not([type=checkbox]),body.hc-cinema #settings select{min-width:0;max-width:100%}
+body.hc-cinema :is(#bookReader,#hcQuranStudy,#hcFatiha,#hcLivingQuran) :is(.reader-page,.hcqs-verse,.hcqs-arabic,.hcqs-meaning,.hcqs-ta,.hcqs-en){
+  overflow-wrap:anywhere;max-width:100%;
+}
+body.hc-cinema #hcFlowExplore{
+  background:linear-gradient(#06090ce8,#080a0df8),url('./hc-cinema-scene-v239.svg') center /cover!important;
+}
+body.hc-cinema #hcFlowExplore .hc-flow-explore-card{
+  min-height:50dvh;background:linear-gradient(180deg,#15242b84,#0a0c10ed),url('./hc-cinema-scene-v239.svg') center/cover!important;
+  border:1px solid #ffffff55!important;
+}
+body.hc-cinema #hcBubbleSearchPanel{
+  background:#0a0c0ff5!important;color:#fff!important;
+}
+body.hc-cinema #hcBubbleSearchPanel :is(input,button){min-height:50px}
+body.hc-cinema #player #hcGuidedNavigation{background:transparent}
+body.hc-cinema #player .player-top{max-width:100%}
+body.hc-cinema .global-mini.show{bottom:calc(103px + env(safe-area-inset-bottom))!important;z-index:901!important}
+body.hc-cinema .hc-mini-library{bottom:calc(105px + env(safe-area-inset-bottom))!important;z-index:904!important}
+body.hc-cinema .screen.active:not(#hcReels) :is(.glass,.hc-settings-section) :is(iframe,video,img,canvas){max-width:100%;height:auto}
+body.hc-cinema #hcReels iframe,body.hc-cinema #hcReels video{height:100%!important}
+body.hc-cinema :is(#hcCinemaHero,#hcCinemaBackdrop){animation:none!important;transition:none!important}
+body.hc-cinema.hci-reduce-motion *,body.hc-cinema.hci-reduce-motion *::before{animation:none!important;scroll-behavior:auto!important}
+@media(min-width:800px){
+ body.hc-cinema .app{max-width:770px!important;padding-inline:35px!important}
+ body.hc-cinema #hcCinemaHero{min-height:325px}
+}
+@media(max-width:365px){
+ body.hc-cinema #hcFlowDock{width:calc(100vw - 12px)!important;padding:7px 4px!important}
+ body.hc-cinema #hcFlowDock button{height:52px!important;min-height:52px!important}
+ body.hc-cinema #hcFlowDock button svg{width:24px;height:24px}
+ body.hc-cinema #hcFlowTop button{width:51px;min-width:51px}
+ body.hc-cinema #hcCinemaHero{min-height:190px}
+}
+@media(prefers-reduced-motion:reduce){
+ body.hc-cinema *,body.hc-cinema *::before,body.hc-cinema *::after{animation:none!important;transition-duration:0s!important}
+}
