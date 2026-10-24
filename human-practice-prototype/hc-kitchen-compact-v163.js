@@ -132,12 +132,12 @@ button.addEventListener('click',()=>{section.hidden=!section.hidden;button.setAt
 mealButton?.addEventListener('click',()=>{const drawer=document.getElementById('hcKitchenDrawer');if(drawer)drawer.open=true;const target=document.getElementById('hcMonthlyKitchen');if(target){target.hidden=false;requestAnimationFrame(()=>target.scrollIntoView({block:'start',behavior:'smooth'}));}},true);
 })();
 
-/* Measured, bilingual cooking guides — loaded after the existing Kitchen. */
+/* Household-measure, bilingual cooking guides — loaded after the existing Kitchen. */
 (function(){
   if(document.getElementById('hcKitchenRecipesScriptV181'))return;
   const s=document.createElement('script');
   s.id='hcKitchenRecipesScriptV181';
-  s.src='./hc-kitchen-recipes-v181.js?v=181';
+  s.src='./hc-kitchen-recipes-v181.js?v=182';
   s.async=true;
   document.body.append(s);
 })();
