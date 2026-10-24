@@ -131,3 +131,13 @@ saveBtn.addEventListener('click',()=>{if(!lastPlan)return;save(savedKey,lastPlan
 button.addEventListener('click',()=>{section.hidden=!section.hidden;button.setAttribute('aria-expanded',String(!section.hidden));if(!section.hidden){const p=load(savedKey);if(p?.date===tomorrow()&&!input.value.trim())output(p.text+'\n\nRemembered here / இங்கே சேமிக்கப்பட்டுள்ளது.',p);input.focus();}});
 mealButton?.addEventListener('click',()=>{const drawer=document.getElementById('hcKitchenDrawer');if(drawer)drawer.open=true;const target=document.getElementById('hcMonthlyKitchen');if(target){target.hidden=false;requestAnimationFrame(()=>target.scrollIntoView({block:'start',behavior:'smooth'}));}},true);
 })();
+
+/* Measured, bilingual cooking guides — loaded after the existing Kitchen. */
+(function(){
+  if(document.getElementById('hcKitchenRecipesScriptV181'))return;
+  const s=document.createElement('script');
+  s.id='hcKitchenRecipesScriptV181';
+  s.src='./hc-kitchen-recipes-v181.js?v=181';
+  s.async=true;
+  document.body.append(s);
+})();
