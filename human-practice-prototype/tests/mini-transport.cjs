@@ -28,6 +28,8 @@ const assert=require('node:assert/strict');
     Object.defineProperty(el,'error',{configurable:true,get:()=>null});
     Object.defineProperty(el,'fastSeek',{configurable:true,value:v=>{data.time=Number(v)}});
    }
+   // This test simulates an already playing track. Real HTMLMediaElement play clears fresh-home.
+   document.body.classList.remove('hc-fresh-home');
    localStorage.setItem('heartclearActiveMedia','genesis');
    renderGlobalMini();
   },targets);
