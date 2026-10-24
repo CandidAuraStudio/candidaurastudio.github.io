@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1600" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+<defs>
+<linearGradient id="sky" x2=".2" y2="1"><stop stop-color="#161b20"/><stop offset=".27" stop-color="#33434b"/><stop offset=".5" stop-color="#604b43"/><stop offset=".69" stop-color="#2b3034"/><stop offset="1" stop-color="#06090c"/></linearGradient>
+<radialGradient id="halo"><stop stop-color="#e6c5a9" stop-opacity=".75"/><stop offset=".25" stop-color="#c4a593" stop-opacity=".26"/><stop offset="1" stop-color="#dec0ab" stop-opacity="0"/></radialGradient>
+<linearGradient id="sea" x2="0" y2="1"><stop stop-color="#42413e"/><stop offset=".35" stop-color="#252f33"/><stop offset="1" stop-color="#090e13"/></linearGradient>
+<linearGradient id="veil" x2="0" y2="1"><stop stop-opacity=".1"/><stop offset=".42" stop-opacity=".05"/><stop offset="1" stop-opacity=".93"/></linearGradient>
+</defs>
+<rect width="900" height="1600" fill="url(#sky)"/>
+<ellipse cx="582" cy="465" rx="515" ry="440" fill="url(#halo)"/>
+<circle cx="590" cy="443" r="65" fill="#d5c0b1" opacity=".63"/>
+<path d="M0 807 108 682 200 740 330 590 462 758 600 649 734 736 900 608V1600H0Z" fill="#253136"/>
+<path d="M0 914 147 805 275 841 420 715 553 811 690 754 822 799 900 755V1600H0Z" fill="#171f24"/>
+<path d="M0 962 Q244 907 464 956 T900 926V1600H0Z" fill="url(#sea)"/>
+<g stroke="#c4aaa0" opacity=".17" fill="none">
+<path d="M0 1015Q275 988 489 1014T900 995"/><path d="M20 1068Q360 1035 680 1070T915 1057"/>
+<path d="M0 1153Q230 1133 420 1156T900 1139"/><path d="M0 1286Q260 1260 506 1294T900 1283"/>
+<path d="M60 1390Q340 1365 600 1391T960 1375"/>
+</g>
+<path d="M0 0V1600h103L73 1360 115 1160 70 960 96 590 45 265Z" fill="#080d11" opacity=".7"/>
+<path d="M900 0V1600H794L824 1346 780 1080 829 820 796 445 862 200Z" fill="#080b0e" opacity=".8"/>
+<g stroke="#090d0f" stroke-width="13" opacity=".55" fill="none"><path d="M50 0 Q110 310 60 760"/><path d="M845 0Q772 220 855 650"/><path d="M890 360Q726 410 675 562"/><path d="M15 485Q157 480 220 620"/></g>
+<rect width="900" height="1600" fill="url(#veil)"/>
+</svg>
