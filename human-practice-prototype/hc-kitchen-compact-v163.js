@@ -173,6 +173,8 @@ function rank(d,q){
  const name=foldText(d.en+' '+d.ta),aliases=foldText(d.aliases),ingredients=foldText(d.ingredients),category=foldText(d.category),culture=foldText(traditionTags(d).map(id=>traditionWords[id]||'').join(' ')),en=foldText(d.en),query=foldText(q),t=words(q);
  if(!t.length)return 0;
  const found=t.filter(w=>name.includes(w)||aliases.includes(w)||ingredients.includes(w)||category.includes(w)||culture.includes(w)), coverage=found.length/t.length;
+ const cultureTerms=t.filter(w=>['arab','tamil','chinese','indonesian','malaysian','nepali','bangladeshi','italian','mediterranean','scandinavian','indian'].includes(w));
+ if(cultureTerms.length>1&&cultureTerms.some(w=>![name,aliases,culture].some(part=>part.includes(w))))return 0;
  const named=t.filter(w=>name.includes(w)).length,aliased=t.filter(w=>aliases.includes(w)).length;
  if(!found.length||coverage<Math.min(0.65,1/t.length))return 0;
  let score=coverage*35+named*85+aliased*47+(found.length-named)*8;
@@ -183,7 +185,7 @@ function rank(d,q){
  if(t.length>1&&found.length===1&&t.length>2)score-=35;
  if(d.source==='personal')score+=8;
  // Tamil searches should rank traditional dishes above modern cross-cultural fusion.
- if(t.length===1&&t[0]==='tamil'&&traditionTags(d).includes('fusion'))score-=100;
+ if(t.length===1&&t[0]==='tamil'&&traditionSelect.value!=='fusion'&&traditionTags(d).includes('fusion'))return 0;
  return score;
 }
 function getMatches(q){
