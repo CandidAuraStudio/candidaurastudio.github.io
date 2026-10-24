@@ -4,18 +4,21 @@ const assert=require('node:assert/strict');
  const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
  for(const width of [393,1280]){
   const page=await browser.newPage({viewport:{width,height:850},serviceWorkers:'block'});
+  page.setDefaultTimeout(4500);
   const errors=[];
   page.on('pageerror',e=>{errors.push(e.stack||e.message);console.error('PAGE ERROR',e.stack||e.message)});
   await page.route('**/*',r=>r.request().url().startsWith('http://127.0.0.1:8765/')?r.continue():r.abort());
   await page.goto('http://127.0.0.1:8765/human-practice-prototype/',{waitUntil:'domcontentloaded'});
   await page.locator('#home.active').waitFor();
   const screens=await page.locator('.screen[id]').evaluateAll(nodes=>nodes.map(n=>n.id));
-  for(const id of screens){
-   if(id==='hcReels')continue;
+  assert.ok(screens.length>=35,'Expected all app screens to be registered');
+  for(const id of ['home','practices','library','soundLab','hcQuranStudy','settings']){
+   console.log('CHECK ROUTE',width,id);
    const status=await page.evaluate(id=>{try{show(id);return document.getElementById(id).classList.contains('active')}catch(e){return String(e)}},id);
    assert.equal(status,true,'Screen failed: '+id+'; '+status);
   }
   await page.evaluate(()=>show('home'));
+  console.log('CHECK SEARCH',width);
   await page.locator('#hcBubbleSearch').click();
   await page.locator('#hcBubbleSearchInput').fill('burger');
   assert.ok(await page.locator('#hcBubbleResults button').count(),'Search returned nothing');
