@@ -63,10 +63,16 @@ css.textContent=[
 '#home #hcKitchenAskV163{margin:6px 0 0;border-top:1px solid #415764;padding-top:10px}',
 '#home #hcKitchenAskV163[hidden]{display:none!important}',
 '#home #hcKitchenAskV163 label{display:block;font-size:12px;color:#d2e1e7;margin-bottom:6px}',
-'#home #hcKitchenAskV163 textarea{box-sizing:border-box;width:100%;min-height:56px;border:1px solid #627783;border-radius:9px;padding:10px;background:#162e3b;color:#fff;font:inherit;font-size:13px;line-height:1.5;resize:vertical}',
+'#home #hcKitchenAskV163 input[type=search]{box-sizing:border-box;flex:1;min-width:0;min-height:43px;border:1px solid #627783;border-radius:9px;padding:10px;background:#162e3b;color:#fff;font:inherit;font-size:13px;line-height:1.4}',
 '#home #hcKitchenAskV163 .hc-ask-buttons{display:flex;gap:7px;margin:7px 0;flex-wrap:wrap}',
 '#home #hcKitchenAskV163 button{background:#213a47;border:1px solid #71838b;color:#fff;border-radius:9px;padding:8px 10px;min-height:39px;font:inherit;font-size:12px}',
 '#home #hcKitchenAskV163 .hc-ask-reply{font-size:12px;line-height:1.65;white-space:pre-line;color:#e2eef0;border:1px solid #435f69;border-radius:10px;padding:10px;background:#102733}',
+'#home #hcKitchenAskV163 .hc-search-line{display:flex;gap:7px;align-items:stretch}',
+'#home #hcKitchenAskV163 .hc-kitchen-search-results{display:grid;gap:4px;margin:6px 0 4px;max-height:235px;overflow:auto}',
+'#home #hcKitchenAskV163 .hc-kitchen-search-results[hidden]{display:none}',
+'#home #hcKitchenAskV163 .hc-kitchen-search-results button{width:100%;text-align:left;font-size:12px;min-height:37px;background:#142a35}',
+'#home #hcKitchenAskV163 .hc-kitchen-search-results button[aria-pressed=true]{border-color:#e1edf2;background:#294552}',
+'#home #hcKitchenAskV163 .hc-kitchen-search-results p{font-size:12px;margin:6px 0}',
 '#home #hcKitchenAskV163 .hc-ask-caption{color:#adbec5;font-size:10px;line-height:1.6}',
 '#home #hcKitchenAskV163 .hc-ask-reply[hidden]{display:none}',
 '.bottom-nav .nav-item.active{color:#edf4f6!important}',
@@ -86,35 +92,91 @@ kitchen.querySelector('.hcr-small')?.replaceChildren('FOOD · LEARN / உணவ�
 const title=kitchen.querySelector('strong');if(title)title.textContent='What can we cook? / என்ன சமைக்கலாம்?';
 const buttons=kitchen.querySelector('.hcr-food-actions'),mealButton=document.getElementById('hcrMeals');
 if(mealButton)mealButton.textContent='Meal ideas · உணவுகள்';
-const button=el('button',null,'Ask Kitchen · கேளுங்கள்');button.type='button';button.id='hcKitchenAskToggle';button.setAttribute('aria-expanded','false');
-buttons?.append(button);
-const section=el('div');section.id='hcKitchenAskV163';section.hidden=true;
-section.innerHTML='<label for="hcKitchenAskInput">Ask about a dish, ingredients, or tomorrow’s preparation. / உணவு அல்லது நாளைய தயாரிப்பு பற்றி கேளுங்கள்.</label>'+
- '<textarea id="hcKitchenAskInput" maxlength="350" placeholder="I have eggs and rice… / முட்டையும் அரிசியும் இருக்கிறது…"></textarea>'+
- '<div class="hc-ask-buttons"><button type="button" id="hcKitchenAskSend">Find ideas / யோசனை</button><button type="button" id="hcKitchenTomorrow">Tomorrow / நாளை</button><button type="button" id="hcKitchenSavePlan" hidden>Remember / நினைவில் வை</button></div>'+
- '<div id="hcKitchenAskReply" class="hc-ask-reply" role="status" aria-live="polite" hidden></div>'+
- '<div class="hc-ask-caption">Basic on-device suggestions, not live AI chat. Nothing typed here is uploaded. Saved plans appear when you reopen HC; push notifications are not enabled.</div>';
+// One visible search field: results are drawn from both the meal index and recipe guides.
+const section=el('div');section.id='hcKitchenAskV163';section.hidden=false;
+section.innerHTML='<label for="hcKitchenAskInput">Search recipes / செய்முறை தேடல்</label>'+
+ '<div class="hc-search-line"><input type="search" id="hcKitchenAskInput" maxlength="150" autocomplete="off" placeholder="Butter chicken, curry with rice, பிட்டு…">'+
+ '<button type="button" id="hcKitchenAskSend">Search / தேடு</button></div>'+
+ '<div id="hcKitchenSearchResults" class="hc-kitchen-search-results" hidden></div>'+
+ '<div class="hc-ask-buttons"><button type="button" id="hcKitchenTomorrow">Tomorrow / நாளை</button><button type="button" id="hcKitchenSavePlan" hidden>Remember / நினைவில் வை</button></div>'+
+ '<div id="hcKitchenAskReply" class="hc-ask-reply" role="status" aria-live="polite" hidden></div>';
 kitchen.append(section);
-const reply=section.querySelector('#hcKitchenAskReply'),input=section.querySelector('#hcKitchenAskInput'),saveBtn=section.querySelector('#hcKitchenSavePlan');
-let lastPlan=null;
+const reply=section.querySelector('#hcKitchenAskReply'),input=section.querySelector('#hcKitchenAskInput'),
+      searchResults=section.querySelector('#hcKitchenSearchResults'),saveBtn=section.querySelector('#hcKitchenSavePlan');
+let lastPlan=null, currentSearch=[];
 const output=(txt,plan=null)=>{reply.hidden=false;reply.textContent=txt;lastPlan=plan;saveBtn.hidden=!plan};
-const brief=d=>'• '+d.name+' / '+d.ta;
-function help(){
- const ask=input.value.trim();if(!ask){output('Tell me a dish or an ingredient first. / முதலில் உணவு அல்லது பொருளைக் குறிப்பிடவும்.');return}
- const found=dishes.filter(d=>d.match.test(ask));
- const wantsHelp=/tomorrow|நாளை|prep|prepare|soak|ஊற|tonight|இன்று|before/i.test(ask);
- if(!found.length){
-  const matched=/chicken|கோழி/i.test(ask)?'Chicken curry / கோழிக் கறி':/potato|உருளை/i.test(ask)?'Vegetable curry / காய்கறிக் கறி':'';
-  output((matched?'Try: '+matched+'\n':'')+'I do not have a verified recipe for that exact request yet. Try “dosa”, “rice”, “eggs”, “fish”, “dhal” or “roti”, or open Meal ideas.\nஅந்த உணவுக்கான முழு செய்முறை இன்னும் இல்லை. தோசை, அரிசி, முட்டை, மீன், பருப்பு அல்லது ரொட்டி என்று கேளுங்கள்.');
-  return;
+function foldText(v){return String(v||'').normalize('NFKC').toLocaleLowerCase().replace(/[^\p{L}\p{M}\p{N}]+/gu,' ').trim()}
+function words(s){return foldText(s).split(/\s+/).filter(x=>x&&!['and','with','the','for','a','my','own','recipe','recipes','please','how','make','cook','of','to','or','என்','செய்முறை'].includes(x))}
+function getCatalog(){
+ const items=[],seen=new Set();
+ const push=x=>{
+  if(!x||!x.en)return;
+  const key=foldText(x.en);
+  if(seen.has(key))return;
+  seen.add(key);items.push(x);
+ };
+ // Personal methods, general named guides and rotating family menu all appear.
+ (window.HCKitchenSearchGuide?.personal||[]).forEach(push);
+ dishes.forEach(d=>push({en:d.name,ta:d.ta,source:'quick'}));
+ (window.HCKitchenMenu?.catalog?.()||[]).forEach(push);
+ return items;
+}
+function rank(d,q){
+ const name=foldText(d.en+' '+d.ta),en=foldText(d.en),query=foldText(q),t=words(q);
+ if(!t.length)return 0;
+ const found=t.filter(w=>name.includes(w)), coverage=found.length/t.length;
+ if(!found.length||coverage<Math.min(0.65,1/t.length))return 0;
+ let score=coverage*90 + found.length*7 - Math.max(0,words(d.en).length-found.length)*2;
+ if(en===query||foldText(d.ta)===query)score+=120;
+ if(query.length>3&&en.includes(query))score+=65;
+ if(en.length>3&&query.includes(en))score+=75;
+ // Prefer a named dish over rice-only matches in "rice and butter chicken".
+ if(t.length>1&&found.length===1&&t.length>2)score-=35;
+ if(d.source==='personal')score+=8;
+ return score;
+}
+function getMatches(q){
+ return getCatalog().map((d,i)=>({...d,score:rank(d,q),order:i}))
+  .filter(x=>x.score>0).sort((a,b)=>b.score-a.score||a.order-b.order).slice(0,8);
+}
+function showItem(item){
+ if(!item)return;
+ searchResults.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.recipe===item.en)));
+ const guide=window.HCKitchenSearchGuide?.detail?.(item.en,item.ta);
+ // Original cooking notes override general methods if recorded.
+ if(item.source==='personal'&&guide){output(guide.en+' / '+guide.ta+'\n\n'+guide.text);return}
+ if(item.source!=='quick'&&guide){output(guide.text);return}
+ const quick=dishes.find(d=>foldText(d.name)===foldText(item.en));
+ if(quick){
+  const riceSide=/rice|arisi|saadam|sadham|சோறு|சாதம்|அரிசி/i.test(input.value)&&!quick.generic?
+   '\n\nRice / சாதம்: Rinse 1 cup rice. Use water suited to its variety; cook covered until tender.\nசாதம்: 1 கோப்பை அரிசியைக் கழுவி, அதன் வகைக்கு ஏற்ற நீரில் மூடி வேகவைக்கவும்.':'';
+  const heading=quick.name+' / '+quick.ta;
+  output(heading+'\n\nIngredients / தேவையானவை:\n'+quick.ingredients+'\n'+quick.ingredientsTa+
+   '\n\nCooking / சமைப்பது:\n'+quick.method+'\n'+quick.methodTa+riceSide);
+ }else if(item.source==='personal'){
+  output(item.en+' / '+item.ta+'\n\nYour personal method is not recorded yet. / உங்கள் சொந்த செய்முறை இன்னும் பதிவு செய்யப்படவில்லை.');
+ }else{
+  output('The cooking guide is still loading. Try this recipe again shortly. / சமையல் வழிகாட்டி ஏற்றப்படுகிறது.');
  }
- // Choose a named dish before generic rice, even when the request mentions both.
- const d=found.find(x=>!x.generic)||found[0];
- const riceSide=/\brice\b|arisi|saadam|sadham|சோறு|சாதம்|அரிசி/i.test(ask)&&!d.generic?
-  '\n\nRice / சாதம்: Rinse 1 cup rice. Use water suited to that rice type; cook covered until tender and rest before serving.\nசாதம்: 1 கோப்பை அரிசியைக் கழுவி, அதன் வகைக்கேற்ற நீர் சேர்த்து மூடி வேகவைத்து சிறிது ஓய்வெடுக்க விடவும்.':'';
- output(d.name+' · '+d.ta+'\n\nIngredients / தேவையானவை:\n'+d.ingredients+'\n'+d.ingredientsTa+
-  '\n\n'+(wantsHelp?'Prepare ahead / முன்தயாரிப்பு:\n'+d.ahead+'\n'+d.aheadTa+'\n\n':'')+
-  'Cooking / சமைப்பது:\n'+d.method+'\n'+d.methodTa+riceSide);
+}
+function searchRecipes(openFirst){
+ const q=input.value.trim();
+ if(!q){searchResults.hidden=true;reply.hidden=true;return}
+ currentSearch=getMatches(q);
+ searchResults.replaceChildren();
+ searchResults.hidden=false;
+ if(!currentSearch.length){
+  const empty=el('p',null,'No matching recipe saved yet. / இந்த பெயரில் செய்முறை இன்னும் இல்லை.');
+  searchResults.append(empty);reply.hidden=true;return;
+ }
+ currentSearch.forEach((d,i)=>{
+  const b=el('button','hc-recipe-match',d.en+' · '+d.ta);
+  b.type='button';b.dataset.recipe=d.en;b.setAttribute('aria-pressed','false');
+  b.addEventListener('click',()=>showItem(d));
+  searchResults.append(b);
+ });
+ if(openFirst)showItem(currentSearch[0]);
+ else reply.hidden=true;
 }
 function tomorrowPlan(){
  const date=new Date();date.setDate(date.getDate()+1);
@@ -134,11 +196,11 @@ function tomorrowPlan(){
  const plan={date:dateStr,text:lines.join('\n')};
  output(plan.text,plan);
 }
-section.querySelector('#hcKitchenAskSend').addEventListener('click',help);
-input.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();help()}});
+section.querySelector('#hcKitchenAskSend').addEventListener('click',()=>searchRecipes(true));
+input.addEventListener('input',()=>searchRecipes(false));
+input.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();searchRecipes(true)}});
 section.querySelector('#hcKitchenTomorrow').addEventListener('click',tomorrowPlan);
 saveBtn.addEventListener('click',()=>{if(!lastPlan)return;save(savedKey,lastPlan);output(lastPlan.text+'\n\nSaved on this device / இந்தச் சாதனத்தில் சேமிக்கப்பட்டது.',lastPlan)});
-button.addEventListener('click',()=>{section.hidden=!section.hidden;button.setAttribute('aria-expanded',String(!section.hidden));if(!section.hidden){const p=load(savedKey);if(p?.date===tomorrow()&&!input.value.trim())output(p.text+'\n\nRemembered here / இங்கே சேமிக்கப்பட்டுள்ளது.',p);input.focus();}});
 mealButton?.addEventListener('click',()=>{const drawer=document.getElementById('hcKitchenDrawer');if(drawer)drawer.open=true;const target=document.getElementById('hcMonthlyKitchen');if(target){target.hidden=false;requestAnimationFrame(()=>target.scrollIntoView({block:'start',behavior:'smooth'}));}},true);
 })();
 
@@ -147,7 +209,7 @@ mealButton?.addEventListener('click',()=>{const drawer=document.getElementById('
   if(document.getElementById('hcKitchenRecipesScriptV181'))return;
   const s=document.createElement('script');
   s.id='hcKitchenRecipesScriptV181';
-  s.src='./hc-kitchen-recipes-v181.js?v=193';
+  s.src='./hc-kitchen-recipes-v181.js?v=201';
   s.async=true;
   document.body.append(s);
 })();
