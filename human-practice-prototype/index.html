@@ -9512,7 +9512,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=209');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=212');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
@@ -9541,11 +9541,12 @@ const heartclearAutoInstallPrompt=false;
 <script src="./hc-sounds-direct-v149.js?v=152"></script>
 <script src="./hc-quran-home-v153.js?v=205"></script>
 
-<link rel="stylesheet" href="./hc-explore.css?v=154">
+<link rel="stylesheet" href="./hc-explore.css?v=212">
 <script src="./hc-explore-core.js?v=161"></script>
 <script src="./hc-mind-catalog.js?v=190"></script>
 <script src="./hc-mind-game.js?v=190"></script>
-<script src="./hc-explore-ui.js?v=190"></script>
+<script src="./hc-mind-broader-v207.js?v=212"></script>
+<script src="./hc-explore-ui.js?v=212"></script>
 <script src="./hc-health-talk-v156.js?v=160"></script>
 <script src="./hc-home-routine-v155.js?v=195"></script>
 <script src="./hc-genesis-v156.js?v=188"></script>
