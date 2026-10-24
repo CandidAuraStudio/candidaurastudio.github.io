@@ -110,7 +110,7 @@ setInterval(update,120000);
  if(document.getElementById('hcDailyCareScriptV182'))return;
  const s=document.createElement('script');
  s.id='hcDailyCareScriptV182';
- s.src='./hc-daily-care-v182.js?v=186';
+ s.src='./hc-daily-care-v182.js?v=191';
  s.async=true;
  document.body.append(s);
 })();
