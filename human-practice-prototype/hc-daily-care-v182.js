@@ -155,3 +155,13 @@ function render(){
 }
 render();
 })();
+
+/* Source-backed deeper learning lives above the quick Daily Care routine. */
+(function(){
+ if(document.getElementById('hcDeepHeritageScriptV185'))return;
+ const s=document.createElement('script');
+ s.id='hcDeepHeritageScriptV185';
+ s.async=true;
+ s.src='./hc-deep-heritage-v185.js?v=185';
+ document.body.append(s);
+})();
