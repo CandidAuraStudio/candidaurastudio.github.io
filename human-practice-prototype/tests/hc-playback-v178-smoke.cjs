@@ -47,7 +47,9 @@ const assert=require('node:assert/strict');
   assert.equal(await page.locator('#hcOneTapDrive').evaluate(x=>x.classList.contains('hc-ot-collapsed')),false,'Expand does not reload Drive');
   await page.locator('#hcOtClose').click();
   console.log('PASS: Drive preview keeps its iframe on page change and supports compact/expanded view');
-  await page.evaluate(()=>{
+  // Write the stored state at document startup. The old document's real
+  // pagehide handler would correctly supersede an artificial value set before reload.
+  await page.addInitScript(()=>{
    localStorage.setItem('heartclearReturnStateV1',JSON.stringify({
     at:Date.now(),screen:'player',kind:'meditation',meditationTime:74,
     meditation:{url:'https://example.org/audio.mp3',seconds:600,
