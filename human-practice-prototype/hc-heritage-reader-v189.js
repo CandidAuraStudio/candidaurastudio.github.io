@@ -49,9 +49,9 @@ function href(s){
  }catch(_){return ''}
 }
 const el=document.createElement('section');el.id='hcHeritageReader';el.className='screen hc-heritage-screen';
-el.innerHTML='<header class="hc-heritage-header"><button type="button" id="hcHeritageBack" aria-label="Back">← <span>Back</span></button><div><strong id="hcHeritageHeaderTitle">Knowledge</strong><small id="hcHeritageTrail">HeartClear</small></div><button type="button" id="hcHeritageAll">All</button></header><main id="hcHeritageMain"></main><footer id="hcHeritageFooter"></footer>';
+el.innerHTML='<header class="hc-heritage-header"><button type="button" id="hcHeritageBack" aria-label="Back">← <span>Back</span></button><div><strong id="hcHeritageHeaderTitle">Knowledge</strong><small id="hcHeritageTrail">HeartClear</small></div><div class="hc-heritage-tools"><button type="button" id="hcHeritageLanguage" aria-label="Switch reading language">EN</button><button type="button" id="hcHeritageAll">All</button></div></header><main id="hcHeritageMain"></main><footer id="hcHeritageFooter"></footer>';
 home.insertAdjacentElement('afterend',el);
-const main=el.querySelector('#hcHeritageMain'),back=el.querySelector('#hcHeritageBack'),all=el.querySelector('#hcHeritageAll'),trail=el.querySelector('#hcHeritageTrail'),head=el.querySelector('#hcHeritageHeaderTitle'),footer=el.querySelector('#hcHeritageFooter');
+const main=el.querySelector('#hcHeritageMain'),back=el.querySelector('#hcHeritageBack'),all=el.querySelector('#hcHeritageAll'),languageButton=el.querySelector('#hcHeritageLanguage'),trail=el.querySelector('#hcHeritageTrail'),head=el.querySelector('#hcHeritageHeaderTitle'),footer=el.querySelector('#hcHeritageFooter');
 const css=document.createElement('style');css.id='hcHeritageReaderCssV189';
 css.textContent=[
 '#hcHeritageReader.screen{display:none;flex:1;justify-content:flex-start;align-items:stretch;min-width:0;width:100%;padding:0 0 calc(120px + env(safe-area-inset-bottom,0px));color:#eef4f6}',
@@ -60,6 +60,8 @@ css.textContent=[
 '#hcHeritageReader button{font:inherit;color:inherit;cursor:pointer}',
 '#hcHeritageReader .hc-heritage-header{position:sticky;top:0;z-index:6;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;align-items:center;min-height:65px;padding:8px 0;background:#07141e;border-bottom:1px solid #506777}',
 '#hcHeritageReader .hc-heritage-header button{min-height:43px;padding:9px 11px;background:#152b37;border:1px solid #748b96;border-radius:8px;font-size:12px}',
+'#hcHeritageReader .hc-heritage-tools{display:flex;gap:5px;align-items:center}',
+'#hcHeritageReader .hc-heritage-tools button{font-size:11px;padding:7px 8px}',
 '#hcHeritageReader .hc-heritage-header strong{font-size:13px;line-height:1.5;display:block;overflow-wrap:anywhere}',
 '#hcHeritageReader .hc-heritage-header small{font-size:10px;color:#b9ccd5;line-height:1.4;display:block}',
 '#hcHeritageReader #hcHeritageMain{padding:16px 0;flex:1}',
@@ -124,6 +126,7 @@ window.addEventListener('popstate',evt=>{
 function render(){
  const group=route.topic,chapter=rows(group),subject=topicLabel(group);
  head.textContent=route.level==='index'?tr('Knowledge Library','அறிவுக் களஞ்சியம்'):subject;
+ languageButton.textContent=lang==='ta'?'EN':'தமிழ்';
  trail.textContent=route.level==='index'?'HeartClear':route.level==='topic'?tr('All subjects › Subject','அனைத்தும் › தலைப்பு'):tr('Subject › Article','தலைப்பு › கட்டுரை');
  back.querySelector('span').textContent=route.level==='index'?tr('Close','மூடு'):tr('Back','பின்னால்');
  all.hidden=route.level==='index';
@@ -164,6 +167,7 @@ function render(){
 }
 back.addEventListener('click',goBack);
 all.addEventListener('click',()=>navigate('index'));
+languageButton.addEventListener('click',()=>{lang=lang==='ta'?'en':'ta';try{localStorage.setItem(ORIGIN,JSON.stringify({language:lang}))}catch(_){}render()});
 const launcher=document.getElementById('hcDeepHeritageV185');
 launcher?.addEventListener('click',()=>open());
 const grid=document.querySelector('#library .hub-grid');
