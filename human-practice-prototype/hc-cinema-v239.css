@@ -215,3 +215,7 @@ body.hc-cinema.hc-mini-visible #home.hc-bubble-mode #hcBubbleHome{
  min-height:calc(100dvh + 280px)!important;padding-bottom:calc(250px + env(safe-area-inset-bottom))!important;
 }
 body.hc-cinema.hc-mini-visible #home.hc-bubble-mode{overflow:visible!important;min-height:calc(100dvh + 280px)}
+
+/* All audio screens, including Home, need real document scroll behind the fixed mini-player. */
+body.hc-cinema.hc-mini-visible:not(.hc-reels-active):not(.hc-flow-modal-open):not(.hc-search-open){overflow-y:auto!important}
+body.hc-cinema.hc-mini-visible:not(.hc-reels-active) .app{min-height:calc(100dvh + 390px)!important}
