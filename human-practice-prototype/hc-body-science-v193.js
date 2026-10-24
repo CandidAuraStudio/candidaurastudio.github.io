@@ -82,7 +82,9 @@ const entries=[
  what:['The nervous and endocrine systems respond to challenges using signals including adrenaline and cortisol. These responses can change attention, pulse, digestion and sleep.','நரம்பு மற்றும் ஹார்மோன் மண்டலங்கள் அட்ரினலின், கார்டிசோல் போன்ற சைகைகள் மூலம் சவால்களுக்கு பதிலளிக்கின்றன. இதனால் கவனம், இதயத்துடிப்பு, செரிமானம், தூக்கம் மாறலாம்.'],
  daily:['Feelings are not automatically illnesses. Gentle movement, rest, trusted support and natural breathing can be useful, but meditation is not a replacement for healthcare.','எல்லா உணர்வுகளும் நோயல்ல. மென்மையான இயக்கம், ஓய்வு, நம்பிக்கையான ஆதரவு, இயல்பான சுவாசம் உதவலாம்; தியானம் மருத்துவ சிகிச்சைக்கு மாற்றல்ல.'],
  notice:['If distress persists or interferes with school, work, sleep or daily life, speak to a qualified health professional or trusted adult.','மனச்சிரமம் நீடித்தால் அல்லது படிப்பு, வேலை, தூக்கம், அன்றாட வாழ்க்கையைப் பாதித்தால் தகுதியான நிபுணர் அல்லது நம்பகமான பெரியவரிடம் பேசுங்கள்.'],link:healthTopics}
-];
+]; 
+window.HCBodyScienceCatalogV193=entries;
+try{window.dispatchEvent(new Event('hc:body-science-ready'))}catch(_){}
 const lang=()=>{try{return localStorage.getItem('hcEverydayCareLangV182')==='en'?'en':'ta'}catch(_){return 'ta'}};
 const choose=(en,ta)=>lang()==='ta'?ta:en;
 const defaultByTime=()=>{const h=new Date().getHours();return h>=5&&h<11?'brain':h>=11&&h<17?'digestion':h>=17&&h<21?'heart':'sleep'};
