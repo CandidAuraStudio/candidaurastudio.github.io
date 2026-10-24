@@ -1,5 +1,5 @@
-/* HeartClear Family Kitchen v181: measured, bilingual practical home guides.
-   Amounts are starter home-cooking estimates, NOT tested historical recipes.
+/* HeartClear Family Kitchen v182: household-measure, bilingual practical home guides.
+   Cup, handful and spoon measures are approximate; NOT tested historical recipes.
    No simulated market prices or synthetic 'narrated' audio. */
 (function(){
 'use strict';
@@ -111,7 +111,7 @@ function upma(n){
  P('Wash and chop vegetables; rinse or roast the grain following its packaging.','காய்கறிகளைக் கழுவி நறுக்கி, தானியத்தை அதன் பொதியின் குறிப்புப்படி தயார் செய்யவும்.'),
  [I('up-grain',grain,aval?'அவல்':vermicelli?'சேமியா':'ரவை',75),I('up-veg','Chopped seasonal vegetables','நறுக்கிய பருவக் காய்கறி',90),I('up-onion','Onion','வெங்காயம்',25),I('up-oil','Oil','எண்ணெய்',5,'ml'),I('up-water','Water','நீர்',aval?55:vermicelli?150:180,'ml')],
  [P('Heat oil; soften chopped onion and vegetables.','எண்ணெயில் நறுக்கிய வெங்காயத்தையும் காய்கறிகளையும் வதக்கவும்.'),
- P(aval?'Moisten flattened rice briefly and fold in; keep heat low.':vermicelli?'Add vermicelli and water, cover and simmer until tender.':'Toast semolina separately until fragrant. Add measured hot water carefully, then fold in semolina while stirring.','தானியத்தை வகைக்கேற்ப நீர் சேர்த்துக் கிளறி, முழுவதும் வேகும் வரை சமைக்கவும்.'),
+ P(aval?'Moisten flattened rice briefly and fold in; keep heat low.':vermicelli?'Add vermicelli and water, cover and simmer until tender.':'Toast semolina separately until fragrant. Add hot water a little at a time, then fold in semolina while stirring.','தானியத்தை வகைக்கேற்ப நீர் சேர்த்துக் கிளறி, முழுவதும் வேகும் வரை சமைக்கவும்.'),
  P('Check the texture and cook until no hard grains remain. Serve warm.','கட்டிகள் அல்லது வேகாத தானியம் இல்லாததைச் சரிபார்த்துச் சூடாக வழங்கவும்.')]);
 }
 function porridge(n){return M('porridge','Grain porridge','தானியக் கஞ்சி',30,
@@ -237,10 +237,57 @@ function sideRecipe(n,ta){
  [P(tomato?'Cook chopped tomato until soft; let cool.':'Use freshly prepared coconut or washed herbs.','தக்காளியானால் மென்மையாக வேகவைக்கவும்; இல்லையெனில் புதிய தேங்காய் அல்லது கழுவிய இலைகளைப் பயன்படுத்தவும்.'),
  P('Grind with water and lemon. Serve promptly; refrigerate leftovers.','நீர், எலுமிச்சை சேர்த்து அரைத்து உடனே பரிமாறவும்; மீதியை குளிராக வைக்கவும்.')]);
 }
-function amount(x,num){
- const raw=x.n*num;
- let v=x.unit==='pc'?Math.ceil(raw*2)/2:raw>=25?Math.round(raw/5)*5:raw>=5?Math.round(raw):Math.round(raw*10)/10;
- return String(v).replace('.5','½').replace('0½','½')+(x.unit==='pc'?' '+(v===1?'piece':'pieces'):' '+x.unit);
+// Everyday kitchen measures: quantities are approximate, not exact conversions.
+// Use one familiar household cup/tumbler consistently for dry grains and water.
+function kitchenFraction(value){
+ const whole=Math.floor(value),rest=value-whole;
+ const parts=[[0,''],[0.25,'¼'],[1/3,'⅓'],[0.5,'½'],[2/3,'⅔'],[0.75,'¾'],[1,'']];
+ let closest=parts[0];
+ for(const part of parts)if(Math.abs(part[0]-rest)<Math.abs(closest[0]-rest))closest=part;
+ if(closest[0]===1)return String(whole+1);
+ if(!whole)return closest[1]||'¼';
+ return String(whole)+(closest[1]?' '+closest[1]:'');
+}
+function kitchenHalfSpoon(value){
+ const v=Math.max(0.5,Math.round(value*2)/2);
+ return String(v).replace('.5','½');
+}
+function amount(x,num,lang){
+ const raw=x.n*num,id=x.id.toLowerCase(),name=x.en.toLowerCase();
+ const say=(en,ta)=>lang==='ta'?ta:lang==='en'?en:en+' / '+ta;
+ const cups=(v)=>{const n=kitchenFraction(Math.max(0.2,v));return say(n+' cup'+(v>1.2?'s':''),n+' கப்')};
+ const spoons=(v)=>{const n=kitchenHalfSpoon(v);return say(n+' teaspoon'+(v>1.25?'s':''),n+' தேக்கரண்டி')};
+ const handfuls=(v)=>{const n=kitchenFraction(Math.max(0.25,v));return say(n+' handful'+(v>1.2?'s':''),n+' கைப்பிடி')};
+ const pieces=(v,en,ta)=>{const n=kitchenFraction(Math.max(0.25,v));return say(n+' '+en,n+' '+ta)};
+ if(x.unit==='pc')return pieces(raw,name==='egg'?'egg':name==='appalam'?'appalam':'piece',name==='egg'?'முட்டை':name==='appalam'?'அப்பளம்':'துண்டு');
+ if(id==='boil-water')return say('Enough to cover the eggs','முட்டை மூழ்கும் அளவு');
+ if(id==='idl-water')return say('Enough for the steamer, below the tray','ஆவிப்பாத்திரத்தில் தட்டிற்குக் கீழே போதிய நீர்');
+ if(/water|நீர்/i.test(name)||x.unit==='ml'&&/water/.test(id))return cups(raw/200);
+ if(/oil|ghee/.test(name))return spoons(raw/5);
+ if(/lemon juice|lime\/lemon juice/.test(name))return spoons(raw/5);
+ if(/coconut milk/.test(name))return cups(raw/200);
+ if(/yoghurt|curd/.test(name))return cups(raw/200);
+ if(/dosa batter|idli batter|appam batter/.test(name))return cups(raw/200);
+ if(/onion/.test(name))return pieces(raw/80,'small onion','சிறிய வெங்காயம்');
+ if(/tomato/.test(name))return pieces(raw/100,'medium tomato','நடுத்தர தக்காளி');
+ if(/cucumber/.test(name))return pieces(raw/160,'medium cucumber','நடுத்தர வெள்ளரிக்காய்');
+ if(/chicken|cleaned fish/.test(name))return pieces(raw/125,'palm-sized portion','உள்ளங்கை அளவு துண்டு');
+ if(/turmeric/.test(name)||/mustard seeds/.test(name)&&raw<=1)return say(raw>1?'2 pinches':'a pinch',raw>1?'2 சிட்டிகை':'ஒரு சிட்டிகை');
+ if(/mustard seeds/.test(name))return spoons(raw/3);
+ if(/tamarind/.test(name))return pieces(raw/6,'small marble-sized piece','சிறிய உருண்டை அளவு புளி');
+ if(/ginger/.test(name))return pieces(raw/10,'thumb-sized piece','பெருவிரல் அளவு துண்டு');
+ if(/pickle/.test(name))return pieces(raw/15,'small spoonful','சிறிய கரண்டி');
+ if(/pepper|cumin|curry powder|spice/.test(name))return spoons(raw/3);
+ if(/grated coconut/.test(name))return handfuls(raw/35);
+ if(/lentil|dhal|moong|gram|bean|rice|millet|kurakkan|semolina|rava|vermicelli|aval|flattened/.test(name)){
+  const perCup=/semolina|rava|vermicelli|flattened|aval/.test(name)?130:160;
+  return cups(raw/perCup);
+ }
+ if(/flour/.test(name))return cups(raw/120);
+ if(/greens|leaves|herbs|mint|coriander/.test(name))return handfuls(raw/35);
+ if(/vegetable|pumpkin|okra|brinjal|banana|beetroot|mushroom|gourd|yam|drumstick/.test(name))return handfuls(raw/70);
+ // General solid ingredients: prefer a handful to a displayed weight.
+ return handfuls(raw/70);
 }
 function combined(mods){
  const out=new Map();
@@ -272,14 +319,15 @@ function renderCard(card,meal,plan,force=false){
  '<div class="hc-full-controls"><label>Servings / நபர்கள் <select class="hc-full-servings" aria-label="Servings">'+[1,2,3,4,5].map(n=>'<option value="'+n+'"'+(n===settings.servings?' selected':'')+'>'+n+'</option>').join('')+'</select></label>'+
  '<label>Language / மொழி <select class="hc-full-lang" aria-label="Recipe language"><option value="both"'+(settings.language==='both'?' selected':'')+'>English + தமிழ்</option><option value="ta"'+(settings.language==='ta'?' selected':'')+'>தமிழ்</option><option value="en"'+(settings.language==='en'?' selected':'')+'>English</option></select></label></div>'+
  '<p class="hc-full-note">'+txt('Allow roughly '+modules.reduce((a,m)=>a+m.time,0)+' minutes if cooking each part one after another. Soaking or batter fermentation needs extra time.','ஒவ்வொரு பகுதியையும் தனித்தனியாகச் சமைத்தால் சுமார் '+modules.reduce((a,m)=>a+m.time,0)+' நிமிடம். ஊறவைத்தல்/மாவு புளித்தலுக்கு கூடுதல் நேரம் தேவை.',settings.language)+'</p>'+
- '<h4>Shopping list / வாங்க வேண்டியவை</h4>'+
- '<div class="hc-full-ingredients">'+items.map(x=>'<label><input type="checkbox" aria-label="'+e(x.en)+'"><span>'+txt(x.en,x.ta,settings.language)+'</span><strong>'+amount(x,settings.servings)+'</strong></label>').join('')+'</div>'+
+ '<p class="hc-full-note">'+txt('No scales needed. Use one ordinary cup or tumbler for the rice, lentils and water. Use your own spoon, palm and fingers for the rest; adjust slowly by how the food looks and feels.','தராசு வேண்டாம். வீட்டிலுள்ள ஒரே கப் அல்லது டம்ளரை அரிசி, பருப்பு, நீர் அளக்கப் பயன்படுத்துங்கள். கரண்டி, கைப்பிடி, சிட்டிகையால் மற்றவற்றை அளந்து, பதம் பார்த்து கொஞ்சம் கொஞ்சமாகச் சேர்க்கவும்.',settings.language)+'</p>'+ 
+  '<h4>Shopping list / வாங்க வேண்டியவை</h4>'+
+ '<div class="hc-full-ingredients">'+items.map(x=>'<label><input type="checkbox" aria-label="'+e(x.en)+'"><span>'+txt(x.en,x.ta,settings.language)+'</span><strong>'+amount(x,settings.servings,settings.language)+'</strong></label>').join('')+'</div>'+
  '<p class="hc-full-note">'+txt('Water and staple amounts are approximate; rice varieties and flour absorb differently. Use existing pantry items before buying more.','நீர், தானிய அளவு தோராயமானது; மாவு/அரிசி வகைக்கேற்ப மாறும். வீட்டிலுள்ள பொருட்களை முதலில் பயன்படுத்தவும்.',settings.language)+'</p>'+
  modules.map(m=>'<section class="hc-full-module"><h4>'+txt(m.en,m.ta,settings.language)+' <small>~'+m.time+' min</small></h4>'+
  '<p class="hc-full-prep">'+txt('Before: '+m.prep[0],'முன்தயாரிப்பு: '+m.prep[1],settings.language)+'</p>'+
  '<ol>'+m.steps.map(s=>'<li>'+txt(s[0],s[1],settings.language)+'</li>').join('')+'</ol></section>').join('')+
  '<p class="hc-full-budget">'+txt('Spend less: buy only the quantities missing from your kitchen, use a locally available in-season vegetable, and compare market prices before choosing fish or chicken. No unverified shop price is shown.','செலவைக் குறைக்க: வீட்டில் இல்லாததை மட்டும் வாங்கவும்; உள்ளூரில் பருவத்திற்கேற்ற காய்கறியைத் தேர்ந்தெடுத்து மீன்/கோழி விலையை ஒப்பிடவும். சரிபார்க்காத விலைகள் காட்டப்படவில்லை.',settings.language)+'</p>'+
- '<p class="hc-full-note">'+txt('These are practical starter measurements, not independently tested family recipes. Use clean food handling and verify regional variations before publishing them as heritage methods. Recorded narration has not yet been added.','இவை ஆரம்ப அளவுகளுடன் கூடிய வீட்டுச் சமையல் வழிகள்; குடும்ப மரபுச் செய்முறைகளாக இன்னும் நேரில் சோதிக்கப்படவில்லை. உணவுப் பாதுகாப்பைப் பின்பற்றவும். பதிவு செய்யப்பட்ட குரல் வழிகாட்டி இன்னும் சேர்க்கப்படவில்லை.',settings.language)+'</p>';
+ '<p class="hc-full-note">'+txt('These are approximate household measures, not independently tested family recipes. Use clean food handling and verify regional variations before publishing them as heritage methods. Recorded narration has not yet been added.','இவை வீட்டுக் கப், கரண்டி, கைப்பிடி அடிப்படையிலான தோராயமான வழிகள்; குடும்ப மரபுச் செய்முறைகளாக இன்னும் நேரில் சோதிக்கப்படவில்லை. உணவுப் பாதுகாப்பைப் பின்பற்றவும். பதிவு செய்யப்பட்ட குரல் வழிகாட்டி இன்னும் சேர்க்கப்படவில்லை.',settings.language)+'</p>';
  d.append(container);
  const old=card.querySelector('.hc-kitchen-lesson');
  if(old)card.insertBefore(d,old);else card.append(d);
