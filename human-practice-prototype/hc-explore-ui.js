@@ -63,6 +63,13 @@
      '<details><summary>Your answers</summary><div class="hcx-summary">'+escape(summary())+'</div></details>'+
      '<div class="hcx-tools"><button data-action="copy">Copy symptom notes</button><button data-action="restart">Start again</button></div><div class="hcx-status" id="hcxVoiceStatus" role="status" aria-live="polite"></div>';
    }
+   if(mode==='game'&&history.some(h=>!/^(identity:|reject:)/.test(h.id))){
+    html+='<details class="hcx-answer-review"><summary>Review or correct answers</summary><div class="hcx-review-list">'+
+     history.map((h,i)=>({h,i})).filter(({h})=>!/^(identity:|reject:)/.test(h.id))
+      .map(({h,i})=>'<label><span>'+escape(questionText(h.id))+'</span><select data-review-index="'+i+'">'+
+       Object.entries(labels).map(([key,label])=>'<option value="'+key+'"'+(h.answer===key?' selected':'')+'>'+label+'</option>').join('')+
+      '</select></label>').join('')+'</div></details>';
+   }
    html+='<div class="hcx-tools">'+(history.length?'<button data-action="back">Back</button>':'')+'<button data-action="menu">Explore menu</button></div>';
   }
   html+='<p class="hcx-meta" id="hcxConnection">'+onlineText()+'</p>'+(mode==='health'?sources()+privacy():'');
@@ -133,7 +140,17 @@
    }
   }
  });
- dialog.addEventListener('change',event=>{if(event.target.matches('select')){language=event.target.value;stopVoice();const panel=dialog.querySelector('#hcxVoicePanel');if(panel)panel.hidden=true;status('Voice language changed. Tap Speak when ready.');}});
+ dialog.addEventListener('change',event=>{
+   const target=event.target;
+   if(target.matches('select[data-review-index]')&&mode==='game'){
+    const index=Number(target.dataset.reviewIndex),value=target.value;
+    if(!Number.isInteger(index)||index<0||index>=history.length||!labels[value])return;
+    stopVoice();history[index]={...history[index],answer:value};
+    history=history.filter(h=>!/^(identity:|reject:)/.test(h.id));
+    finished=false;render();return;
+   }
+   if(target.matches('select')){language=target.value;stopVoice();const panel=dialog.querySelector('#hcxVoicePanel');if(panel)panel.hidden=true;status('Voice language changed. Tap Speak when ready.');}
+  });
  dialog.addEventListener('cancel',event=>{event.preventDefault();close();});
  dialog.addEventListener('close',()=>{if(dialog.innerHTML)reset();});
  trigger.addEventListener('click',()=>{reset();render();dialog.showModal();dialog.querySelector('#hcxTitle')?.focus();});
