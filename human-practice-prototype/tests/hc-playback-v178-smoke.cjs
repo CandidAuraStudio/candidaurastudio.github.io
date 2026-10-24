@@ -35,6 +35,12 @@ const assert=require('node:assert/strict');
   await page.evaluate(()=>show('library'));
   assert.equal(await page.evaluate(()=>document.getElementById('humanSoundAudio').paused),false,'Library navigation cannot stop audio');
   console.log('PASS: Human Practice continues through Home, Practice, Library with visible mini-player');
+  await page.evaluate(()=>show('humanSession'));
+  await page.locator('#humanSession .hc-minimize-audio').click();
+  assert.equal(await page.locator('#home').evaluate(el=>el.classList.contains('active')),true,'Human Practice Minimize navigates to Home');
+  assert.equal(await page.evaluate(()=>document.getElementById('humanSoundAudio').paused),false,'Human Practice Minimize does not pause');
+  assert.equal(await page.locator('#globalMini').evaluate(el=>el.classList.contains('show')),true,'Human Practice Minimize leaves mini visible');
+  console.log('PASS: explicit Human Practice Minimize keeps audio alive');
   const dock=await page.evaluate(()=>{
    window.openHcDriveMedia(HC_DRIVE_COLLECTIONS[0].key);
    const frame=document.getElementById('hcOtFrame');
@@ -67,6 +73,23 @@ const assert=require('node:assert/strict');
   assert.ok(restored.src.includes('example.org/audio.mp3'));
   assert.match(restored.notice,/Tap Play/);
   console.log('PASS: refresh reopens paused native player ready for one-tap resume');
+  const humanPage=await context.newPage();
+  humanPage.on('pageerror',e=>errors.push(e.message));
+  await humanPage.addInitScript(()=>{
+   localStorage.setItem('heartclearReturnStateV1',JSON.stringify({
+    at:Date.now(),screen:'humanSession',kind:'human-sound',
+    humanKind:'passion',humanIndex:0,humanChoice:'birds',humanTime:3,
+    humanRemaining:480
+   }));
+  });
+  await humanPage.goto('http://127.0.0.1:8765/human-practice-prototype/',{waitUntil:'domcontentloaded'});
+  await humanPage.waitForSelector('#humanSession.active',{timeout:10000});
+  assert.equal(await humanPage.locator('#humanSessionTitle').innerText(),'Music Presence');
+  assert.equal(await humanPage.locator('#humanSoundChoice').inputValue(),'birds');
+  assert.equal(await humanPage.locator('#humanClock').innerText(),'08:00');
+  assert.equal(await humanPage.locator('#humanSoundAudio').evaluate(el=>el.paused),true);
+  console.log('PASS: Human Practice restore preserves activity, sound choice and remaining time');
+  await humanPage.close();
   assert.deepEqual(errors,[],'Unexpected page JavaScript errors');
   console.log('HEARTCLEAR v178 PLAYBACK REGRESSION PASS');
  }finally{await browser.close()}
