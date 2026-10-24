@@ -184,7 +184,8 @@ body.hc-cinema #player #hcGuidedNavigation{background:transparent}
 body.hc-cinema #player .player-top{max-width:100%}
 body.hc-cinema .global-mini.show{bottom:calc(103px + env(safe-area-inset-bottom))!important;z-index:901!important}
 body.hc-cinema .hc-mini-library{bottom:calc(105px + env(safe-area-inset-bottom))!important;z-index:904!important}
-body.hc-cinema .screen.active:not(#hcReels) :is(.glass,.hc-settings-section) :is(iframe,video,img,canvas){max-width:100%;height:auto}
+body.hc-cinema .screen.active:not(#hcReels) :is(.glass,.hc-settings-section) :is(img,canvas){max-width:100%;height:auto}
+body.hc-cinema .screen.active:not(#hcReels) :is(.glass,.hc-settings-section) :is(iframe,video){max-width:100%}
 body.hc-cinema #hcReels iframe,body.hc-cinema #hcReels video{height:100%!important}
 body.hc-cinema :is(#hcCinemaHero,#hcCinemaBackdrop){animation:none!important;transition:none!important}
 body.hc-cinema.hci-reduce-motion *,body.hc-cinema.hci-reduce-motion *::before{animation:none!important;scroll-behavior:auto!important}
