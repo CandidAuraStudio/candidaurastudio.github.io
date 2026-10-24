@@ -1,0 +1,118 @@
+/* HeartClear v220 — one coherent, readable, full-app experience.
+   Keep real content and audio controls. No blurred UI or continuous motion. */
+:root{--hc220-bg:#0a1015;--hc220-panel:#17232b;--hc220-line:#6d7d84;--hc220-text:#f8f9f8}
+body.hc-flow-enabled{
+  --ink:#f8fafb;--muted:#d6dfe2;
+  color:var(--hc220-text)!important;background:#0a1015!important;
+  overflow-x:hidden;overscroll-behavior-x:none
+}
+body.hc-flow-enabled::before,body.hc-flow-enabled::after{display:none!important}
+body.hc-flow-enabled .app{max-width:610px;width:100%;padding:calc(10px + env(safe-area-inset-top)) 16px calc(160px + env(safe-area-inset-bottom));overflow:visible}
+body.hc-flow-enabled .screen.active{min-width:0;max-width:100%;justify-content:flex-start}
+body.hc-flow-enabled .screen.active:not(#home):not(#hcReels){padding-top:0;gap:14px;scroll-margin-top:14px}
+body.hc-flow-enabled :is(h1,h2,h3,h4){letter-spacing:-.035em;line-height:1.18;overflow-wrap:anywhere}
+body.hc-flow-enabled .screen.active:not(#hcReels) :is(h1,h2){font-size:clamp(31px,7.5vw,44px)!important;margin-bottom:14px}
+body.hc-flow-enabled .screen.active:not(#hcReels) h3{font-size:clamp(24px,6.1vw,31px)!important}
+body.hc-flow-enabled .screen.active:not(#hcReels) p{font-size:clamp(18px,4.4vw,22px)!important;line-height:1.65!important;color:#e0e7e8}
+body.hc-flow-enabled .screen.active:not(#hcReels) :is(.kicker,.eyebrow,.library-label){font-size:14px!important;letter-spacing:.045em!important;line-height:1.5;color:#e2e8e8}
+body.hc-flow-enabled .screen.active:not(#hcReels) :is(small,.hub-note,.setting-row small,.choice small,.human-card small,.sacred-card small,.hub-card small){font-size:clamp(16px,3.8vw,20px)!important;line-height:1.5!important;color:#d4dfe2}
+body.hc-flow-enabled .screen.active:not(#hcReels) :is(button,summary,select,input:not([type=checkbox]):not([type=range]),textarea,a.collection-back){
+  touch-action:manipulation;min-height:52px;font-size:clamp(18px,4.1vw,22px);
+}
+body.hc-flow-enabled .screen.active:not(#hcReels) :is(button,summary,select,input,textarea):focus-visible,
+body.hc-flow-enabled #hcFlowDock button:focus-visible,
+body.hc-flow-enabled #hcFlowTop button:focus-visible,
+body.hc-flow-enabled #hcFlowExplore button:focus-visible{outline:3px solid #fff6b7!important;outline-offset:3px!important}
+body.hc-flow-enabled .screen.active:not(#hcReels) :is(.glass,.choice,.hub-card,.human-card,.sacred-card,.fear-card,.practice-card,.hc-mix-card,.hc-personal,.hcqs-verse,.hc-settings-clean,.hc-settings-section){
+  backdrop-filter:none!important;-webkit-backdrop-filter:none!important;box-shadow:none!important;
+  background:#16232c!important;border:1.5px solid #4e6774!important;color:#f8fafa!important;
+}
+body.hc-flow-enabled .screen.active:not(#hcReels) .glass{width:100%;padding:clamp(18px,4.7vw,28px)!important;border-radius:32px!important}
+body.hc-flow-enabled :is(.glass,.choice,.hub-card,.human-card,.sacred-card,.hcqs-verse){max-width:100%}
+body.hc-flow-enabled .screen.active:not(#hcReels) :is(.hub-grid,.human-grid,.sacred-grid,.library-list,.collection-list,.hc-sound-track-list){grid-template-columns:minmax(0,1fr)!important;min-width:0}
+body.hc-flow-enabled .screen.active:not(#hcReels) :is(.hub-card,.human-card,.sacred-card,.fear-card,.choice.practice-card,.hc-sound-row,.hc-simple-audio-list button,.hc-sounds-hub-card){
+  padding:clamp(18px,5.2vw,28px)!important;min-height:110px!important;border-radius:30px!important;
+  width:100%;text-align:left;gap:13px;white-space:normal;
+}
+body.hc-flow-enabled .screen.active:not(#hcReels) :is(.human-card,.sacred-card,.hub-card) b{font-size:clamp(26px,6.3vw,36px)!important;line-height:1.2}
+body.hc-flow-enabled .screen.active:not(#hcReels) :is(.human-card,.sacred-card,.hub-card) .human-symbol,
+body.hc-flow-enabled .screen.active:not(#hcReels) .sacred-symbol{font-size:clamp(45px,12vw,73px)!important;line-height:1.2}
+body.hc-flow-enabled .screen.active:not(#hcReels) :is(.choice,.practice-card,.hc-sound-track-list button) b{font-size:clamp(21px,5.2vw,28px)!important}
+body.hc-flow-enabled .screen.active:not(#hcReels) :is(select,input:not([type=range]):not([type=checkbox]),textarea){width:100%;max-width:100%;min-height:64px!important;border-radius:19px!important;padding:12px 15px!important;background:#f9faf7!important;color:#13222b!important;border:2px solid #bdc9d0!important;font-size:22px!important}
+body.hc-flow-enabled .screen.active:not(#hcReels) input[type=range]{min-height:34px;accent-color:#fff}
+body.hc-flow-enabled .screen.active:not(#hcReels) button:not(.switch){border-radius:19px}
+body.hc-flow-enabled .screen.active:not(#hcReels) :is(.reader-page,.hcqs-meaning,.hcqs-editorial,.hcqs-ta,.hcqs-en,.hc-gen-text){font-size:clamp(21px,5.2vw,27px)!important;line-height:1.85!important}
+body.hc-flow-enabled #hcQuranStudy .hcqs-arabic{font-size:clamp(34px,8.7vw,46px)!important;line-height:2.2!important}
+body.hc-flow-enabled #hcQuranStudy .hcqs-verse{padding:23px!important;scroll-margin-top:100px}
+body.hc-flow-enabled #hcQuranStudy .hcqs-picker{grid-template-columns:1fr!important}
+body.hc-flow-enabled :is(#hcQuranStudy,#hcLivingQuran,#hcFatiha,#bookReader,#bookAudio) :is(button,select){min-height:56px!important;font-size:19px!important}
+body.hc-flow-enabled #bookReader .reader-page{max-height:none!important;overflow:visible;white-space:pre-wrap}
+body.hc-flow-enabled :is(#soundLab,#soundHub) .hc-sound-filters{display:flex;overflow-x:auto;flex-wrap:nowrap;scroll-snap-type:x proximity;padding-bottom:12px;gap:10px}
+body.hc-flow-enabled :is(#soundLab,#soundHub) .hc-sound-filters button{flex:0 0 auto;scroll-snap-align:start;padding:12px 18px}
+body.hc-flow-enabled :is(#settings,#history,#downloads) :is(.setting-row,.hc-settings-toggle,.hc-settings-section>summary){min-height:74px;border-bottom:1px solid #556874;padding:15px 6px;gap:15px}
+body.hc-flow-enabled #settings .hc-settings-section>summary{font-size:23px!important;font-weight:700}
+body.hc-flow-enabled .screen.active :is(.hc-practice-group,.hc-sounds-list-head,.hub-hero,.human-hero,.hc-sounds-header){min-width:0}
+body.hc-flow-enabled #hcBubbleHome{max-width:520px;margin:0 auto}
+body.hc-flow-enabled #hcBubbleHome h1{font-size:clamp(37px,9vw,48px)!important;margin-bottom:20px}
+body.hc-flow-enabled #hcBubbleCard{min-height:clamp(390px,54vh,570px);margin:18px 0 15px;border-radius:45px}
+body.hc-flow-enabled #hcBubbleCard .hcb-title{font-size:clamp(34px,9.5vw,52px)}
+body.hc-flow-enabled #hcBubbleCard .hcb-description{font-size:clamp(20px,5vw,25px);line-height:1.38}
+body.hc-flow-enabled #hcBubbleCard .hcb-action{font-size:22px;min-height:66px}
+body.hc-flow-enabled #hcBubbleSearch{min-height:75px;font-size:21px}
+body.hc-flow-enabled #hcBubbleSwitch{min-height:64px;font-size:19px}
+body.hc-flow-enabled #hcBubbleReturn,body.hc-flow-enabled #hcBubbleClassic{display:none!important}
+body.hc-flow-enabled #appTopBar{display:none!important}
+body.hc-flow-enabled #bottomNav{display:none!important}
+/* Page header, a single navigation system on ALL sections */
+#hcFlowTop{display:none;align-items:center;justify-content:space-between;gap:12px;min-height:68px;width:100%;margin:0 0 16px;padding:6px 0}
+body.hc-flow-enabled .screen.active:not(#home):not(#hcReels) > #hcFlowTop,
+body.hc-flow-enabled #home.active.hc-bubble-detail > #hcFlowTop{display:flex!important}
+#hcFlowTop button{min-height:58px!important;min-width:82px;border:1.5px solid #83939c;border-radius:20px;background:#1d303a;color:#fff;font:700 19px system-ui;padding:12px 15px}
+#hcFlowTop .hc-flow-name{flex:1;text-align:center;font-size:clamp(20px,5vw,26px);font-weight:750;color:#fff;min-width:0;overflow-wrap:anywhere}
+body.hc-flow-enabled #home.hc-bubble-detail[data-hcb-detail="recipes"] > #hcFlowTop,
+body.hc-flow-enabled #home.hc-bubble-detail[data-hcb-detail="bible"] > #hcFlowTop{display:flex!important}
+body.hc-flow-enabled #home.hc-bubble-detail[data-hcb-detail="recipes"] > :not(#hcHomeKitchenQuickV155):not(#hcFlowTop),
+body.hc-flow-enabled #home.hc-bubble-detail[data-hcb-detail="bible"] > :not(#hcGenesisCard):not(#hcFlowTop){display:none!important}
+body.hc-flow-enabled #home.hc-bubble-detail[data-hcb-detail="recipes"] #hcHomeKitchenQuickV155{display:block!important}
+body.hc-flow-enabled #home.hc-bubble-detail[data-hcb-detail="recipes"] #hcHomeKitchenQuickV155 > :is(.hcr-small,strong,.hcr-sub,.hcr-food-actions,#hcrDosaSteps){display:none!important}
+body.hc-flow-enabled #home.hc-bubble-detail[data-hcb-detail="recipes"] #hcKitchenAskV163{border:0;padding:0}
+body.hc-flow-enabled #home.hc-bubble-detail[data-hcb-detail="recipes"] #hcKitchenAskV163 > label{font-size:clamp(24px,5.8vw,30px)!important;margin-bottom:18px}
+body.hc-flow-enabled #home.hc-bubble-detail[data-hcb-detail="recipes"] #hcKitchenSearchResults button{margin:8px 0;font-size:21px!important;min-height:68px}
+body.hc-flow-enabled #home.hc-bubble-detail[data-hcb-detail="recipes"] #hcKitchenAskReply{font-size:clamp(20px,5.2vw,26px)!important;line-height:1.8!important;background:#15232d;padding:18px;border:1px solid #6a7a83;border-radius:26px}
+body.hc-flow-enabled #home.hc-bubble-detail[data-hcb-detail="bible"] #hcGenesisCard{padding:20px!important;max-height:none!important}
+body.hc-flow-enabled #home.hc-bubble-detail[data-hcb-detail="bible"] #hcGenReading{max-height:none!important;overflow:visible}
+body.hc-flow-enabled #home.hc-bubble-detail[data-hcb-detail="bible"] #hcGenReadText{font-size:clamp(22px,5.4vw,28px)!important;line-height:1.9!important;max-height:none!important}
+body.hc-flow-enabled #home.hc-bubble-mode > :not(#hcBubbleHome){display:none!important}
+/* Vertical pages for options, not for written scriptures */
+.hc-flow-stage{position:relative;display:flex!important;flex-direction:column!important;gap:0}
+.hc-flow-stage > .hc-flow-choice{display:none!important}
+.hc-flow-stage > .hc-flow-choice.hc-flow-selected{display:flex!important;flex-direction:column;align-items:center;justify-content:center;text-align:center!important;min-height:clamp(310px,55vh,490px)!important;border-radius:40px!important;padding:30px 24px!important;animation:none!important;transform:none!important}
+.hc-flow-stage > .hc-flow-choice.hc-flow-selected :is(b,strong){font-size:clamp(29px,7vw,40px)!important;text-align:center}
+.hc-flow-stage > .hc-flow-choice.hc-flow-selected :is(small,p){font-size:clamp(19px,4.6vw,24px)!important;text-align:center}
+.hc-flow-stage > .hc-flow-choice.hc-flow-selected .hub-icon{font-size:52px!important}
+.hc-flow-pager{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:14px 0 27px}
+.hc-flow-pager>button{min-width:65px;min-height:60px;border:1.5px solid #a3b0b6;border-radius:19px;background:#22343d;color:white;font-size:30px;font-weight:700}
+.hc-flow-pager>span{font-size:19px;font-weight:650;color:#fff;text-align:center}
+#hcFlowDock{position:fixed;bottom:calc(11px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:98;width:min(97vw,560px);padding:8px;display:none;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;background:#0e1921;border:1.5px solid #607580;border-radius:27px;box-shadow:0 8px 30px #0009}
+body.hc-flow-enabled #hcFlowDock{display:grid}
+#hcFlowDock button{min-width:0;min-height:66px;border:0;border-radius:20px;background:transparent;color:#e3ecee;font:700 17px system-ui;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
+#hcFlowDock button span:first-child{font-size:25px;line-height:1}
+#hcFlowDock button[aria-current="page"]{background:#f3f6f5;color:#0c1b23}
+body.hc-flow-enabled:has(#hcReels.active) #hcFlowDock{display:none}
+body.hc-flow-enabled:has(#hcReels.active) #hcFlowTop{display:none}
+body.hc-flow-enabled .global-mini.show{bottom:calc(94px + env(safe-area-inset-bottom))!important;z-index:101}
+body.hc-flow-enabled .global-mini:not(.show){pointer-events:none}
+body.hc-flow-enabled #hcMiniLibrary{bottom:calc(95px + env(safe-area-inset-bottom))!important;max-height:62vh;overflow-y:auto}
+body.hc-flow-enabled #hcBubbleSearchPanel{z-index:1000}
+body.hc-flow-enabled :is(.screen,.glass,.hc-flow-stage) *{min-width:0;overflow-wrap:break-word}
+body.hc-flow-enabled .screen.active :is(button,input,textarea,select){max-width:100%}
+@media(max-width:365px){
+ #hcFlowDock button{min-height:60px;font-size:15px}
+ #hcFlowTop button{min-width:68px;font-size:17px;padding:9px}
+ body.hc-flow-enabled .app{padding-inline:12px}
+}
+@media(prefers-reduced-motion:reduce){
+ body.hc-flow-enabled *,body.hc-flow-enabled *::before,body.hc-flow-enabled *::after{
+  animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important
+ }
+}
