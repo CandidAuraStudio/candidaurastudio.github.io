@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#07131d">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -9512,7 +9512,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=212');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=213');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
@@ -9561,6 +9561,8 @@ const heartclearAutoInstallPrompt=false;
 <script src="./hc-accounts-preview-v176.js?v=177"></script>
 <script src="./hc-mini-transport-v185.js?v=187"></script>
 <script src="./hc-human-daily-path-v192.js?v=196"></script>
+<link rel="stylesheet" href="./hc-bubble-v207.css?v=207">
+<script src="./hc-bubble-v207.js?v=207"></script>
 </body>
 </html>
 
