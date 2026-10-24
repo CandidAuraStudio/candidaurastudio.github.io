@@ -87,7 +87,7 @@ const credit=root.querySelector('.hc-world-credit');
 const category=root.querySelector('#hcWorldCategory'),area=root.querySelector('#hcWorldArea');
 const ENDPOINT='https://www.themealdb.com/api/json/v1/1/';
 let token=0,timer=null,active=null,lastMeals=[],visible=8,currentQuery='';
-const stop=new Set(['recipe','recipes','healthy','healthier','homemade','easy','quick','how','make','cook','cooking','please','a','the','with','for','my','give','me']);
+const stop=new Set(['recipe','recipes','healthy','healthier','homemade','easy','quick','how','make','cook','cooking','please','a','the','with','for','my','give','me','i','have','has','got','some','what','can','using','and','or','want','need','from','dish','ingredients','ingredient']);
 const replacements={mutton:'lamb',aubergine:'eggplant',brinjal:'eggplant',capsicum:'pepper',prawn:'shrimp',curd:'yoghurt',dal:'lentil',dhal:'lentil',saadam:'rice',sadham:'rice',mutta:'egg',kottu:'kothu'};
 const ingredientAlias={eggs:'egg',tomatoes:'tomato',potatoes:'potato',chickpeas:'chickpeas',chicken:'chicken',fish:'salmon',rice:'rice',beef:'beef',lamb:'lamb',shrimp:'shrimp',prawns:'shrimp',mushrooms:'mushrooms',carrot:'carrots',apple:'apple',beans:'beans'};
 const categoryAlias={fish:'Seafood',dessert:'Dessert',desserts:'Dessert',breakfast:'Breakfast',vegetarian:'Vegetarian',vegan:'Vegan',seafood:'Seafood',sides:'Side',starter:'Starter',starters:'Starter'};
@@ -180,8 +180,13 @@ async function findOnline(q,mode=null){
   else{
    meals=await api('search.php?s='+encodeURIComponent(query),controller);
    if(!meals.length){
-    const ingredient=ingredientAlias[query]||(query.split(' ').length===1?query:'');
-    if(ingredient)meals=await api('filter.php?i='+encodeURIComponent(ingredient.replace(/\s+/g,'_')),controller);
+    const terms=query.split(' ');
+    const selected=terms.find(t=>ingredientAlias[t]);
+    const ingredient=ingredientAlias[query]|| (selected?ingredientAlias[selected]:terms.length===1?query:'');
+    if(ingredient){
+      meals=await api('filter.php?i='+encodeURIComponent(ingredient.replace(/\s+/g,'_')),controller);
+      if(terms.length>1)label='Ideas using '+ingredient+' (check other ingredients)';
+    }
    }
   }
   if(thisToken!==token)return;
