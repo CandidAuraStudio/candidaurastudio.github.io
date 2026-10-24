@@ -83,9 +83,9 @@ const entries=[
  daily:['Feelings are not automatically illnesses. Gentle movement, rest, trusted support and natural breathing can be useful, but meditation is not a replacement for healthcare.','எல்லா உணர்வுகளும் நோயல்ல. மென்மையான இயக்கம், ஓய்வு, நம்பிக்கையான ஆதரவு, இயல்பான சுவாசம் உதவலாம்; தியானம் மருத்துவ சிகிச்சைக்கு மாற்றல்ல.'],
  notice:['If distress persists or interferes with school, work, sleep or daily life, speak to a qualified health professional or trusted adult.','மனச்சிரமம் நீடித்தால் அல்லது படிப்பு, வேலை, தூக்கம், அன்றாட வாழ்க்கையைப் பாதித்தால் தகுதியான நிபுணர் அல்லது நம்பகமான பெரியவரிடம் பேசுங்கள்.'],link:healthTopics}
 ];
-const lang=()=>{try{return localStorage.getItem('hcEverydayCareLangV182')==='en'?'en':'ta'}catch(_){return 'en'}};
+const lang=()=>{try{return localStorage.getItem('hcEverydayCareLangV182')==='en'?'en':'ta'}catch(_){return 'ta'}};
 const choose=(en,ta)=>lang()==='ta'?ta:en;
-const defaultByTime=()=>{const h=new Date().getHours();return h<11?'brain':h<17?'digestion':h<21?'heart':'sleep'};
+const defaultByTime=()=>{const h=new Date().getHours();return h>=5&&h<11?'brain':h>=11&&h<17?'digestion':h>=17&&h<21?'heart':'sleep'};
 let chosen=defaultByTime();
 let userSelected=false;
 try{const saved=localStorage.getItem('hcBodyScienceTopicV193');if(entries.some(e=>e.id===saved)){chosen=saved;userSelected=true}}catch(_){}
@@ -120,7 +120,7 @@ function draw(){
  '<p><b>'+esc(choose('Everyday connection:','அன்றாடத் தொடர்பு:'))+'</b> '+esc(item.daily[idx])+'</p>'+
  '<p class="hcs-attention"><b>'+esc(choose('When to get help:','எப்போது உதவி பெற வேண்டும்:'))+'</b> '+esc(item.notice[idx])+'</p>'+
  '<a href="'+(safeLink.test(item.link)?item.link:reference)+'" target="_blank" rel="noopener noreferrer">'+esc(choose('Read medical reference ↗','மருத்துவ ஆதாரம் வாசிக்க ↗'))+'</a></article>'+
- '<div class="hcs-connection">'+esc(choose('Connected systems: food → gut → pancreas → liver → blood → cells; breathing → lungs → blood → brain. Organs never work alone.','இணைந்த மண்டலங்கள்: உணவு → குடல் → கணையம் → கல்லீரல் → இரத்தம் → செல்கள்; சுவாசம் → நுரையீரல் → இரத்தம் → மூளை. உறுப்புகள் தனித்தனியாகச் செயல்படுவதில்லை.'))+'</div>'+
+ '<div class="hcs-connection">'+esc(choose('Connected systems: food → gut → blood → liver → cells; pancreas supplies digestive enzymes and insulin. Breathing → lungs → blood → brain. Organs never work alone.','இணைந்த மண்டலங்கள்: உணவு → குடல் → இரத்தம் → கல்லீரல் → செல்கள்; கணையம் செரிமான நொதிகளையும் இன்சுலினையும் வழங்குகிறது. சுவாசம் → நுரையீரல் → இரத்தம் → மூளை. உறுப்புகள் தனித்தனியாகச் செயல்படுவதில்லை.'))+'</div>'+
  '<p class="hcs-foot">'+esc(choose('Medical education, not personal diagnosis. Evidence-based science and family traditions are different kinds of knowledge.','இது மருத்துவக் கல்வி; தனிப்பட்ட நோயறிதல் அல்ல. அறிவியல் ஆதாரமும் குடும்ப மரபும் வெவ்வேறு வகை அறிவுகள்.'))+'</p>';
  host.querySelector('#hcsTopic').addEventListener('change',ev=>select(ev.target.value));
  host.querySelector('#hcsNext').addEventListener('click',()=>select(entries[(entries.findIndex(e=>e.id===chosen)+1)%entries.length].id));
