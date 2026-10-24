@@ -38,7 +38,7 @@ jobs:
           import re
           page=Path('human-practice-prototype')
           html=(page/'index.html').read_text()
-          paths=re.findall(r'<(?:script|link)\\b[^>]*?(?:src|href)="(\\./[^"?#]+)',html)
+          paths=re.findall(r'<(?:script|link)\b[^>]*?(?:src|href)="(\./[^"?#]+)',html)
           missing=[p for p in paths if not (page/p[2:]).is_file()]
           print('Checked local references:',len(paths),'Missing:',missing)
           if missing:
