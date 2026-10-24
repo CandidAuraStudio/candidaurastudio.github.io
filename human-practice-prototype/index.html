@@ -3804,7 +3804,7 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
         </div>
       </details>
     </div>
-    <div class="app-version">HeartClear · Version 1.3.13 · HC v188</div>
+    <div class="app-version">HeartClear · Version 1.3.13 · HC v192</div>
   </div>
 </section>
 
@@ -9465,7 +9465,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=188');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=192');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
