@@ -318,7 +318,7 @@ function renderCard(card,meal,plan,force=false){
  summary.textContent=(settings.language==='ta'?'முழுச் செய்முறை · ':'Full recipe · ')+settings.servings+(settings.language==='ta'?' பேர்':' people')+' ›';
  d.append(summary);
  const container=document.createElement('div');container.className='hc-full-body';
- container.innerHTML='<div class="hc-full-head"><b>'+txt(plan.base[1],plan.base[0],settings.language)+'</b><small>Practical home adaptation · வீட்டுச் சமையல் முறை</small></div>'+
+ container.innerHTML='<div class="hc-full-head"><b>'+txt(plan.base[1],plan.base[0],settings.language)+'</b></div>'+
  '<div class="hc-full-controls"><label>Servings / நபர்கள் <select class="hc-full-servings" aria-label="Servings">'+[1,2,3,4,5].map(n=>'<option value="'+n+'"'+(n===settings.servings?' selected':'')+'>'+n+'</option>').join('')+'</select></label>'+
  '<label>Language / மொழி <select class="hc-full-lang" aria-label="Recipe language"><option value="both"'+(settings.language==='both'?' selected':'')+'>English + தமிழ்</option><option value="ta"'+(settings.language==='ta'?' selected':'')+'>தமிழ்</option><option value="en"'+(settings.language==='en'?' selected':'')+'>English</option></select></label></div>'+
  '<p class="hc-full-measures">'+txt('Cup · handful · spoon · pinch','கப் · கைப்பிடி · கரண்டி · சிட்டிகை',settings.language)+'</p>'+ 
@@ -401,8 +401,14 @@ style.textContent=[
 '#hcMonthlyKitchen .hc-full-module li{padding:3px 0 10px}',
 '#hcMonthlyKitchen .hc-full-body span[lang]{display:block;line-height:1.75}',
 '#hcMonthlyKitchen .hc-full-body span[lang=ta]{color:#e3eced;line-height:1.95}',
-'#hcMonthlyKitchen .hc-full-note,#hcMonthlyKitchen .hc-full-prep,#hcMonthlyKitchen .hc-full-budget{border:1px solid #364c56;border-radius:7px;background:#192b34;padding:9px;font-size:12px;margin:10px 0;color:#e1e8eb}',
-'#hcMonthlyKitchen .hc-full-budget{border-color:#71828a}',
+'#hcMonthlyKitchen .hc-full-measures{font-size:11px;color:#c3d5dc;margin:8px 0 10px}',
+'#hcMonthlyKitchen #hcPersonalKitchen{margin:10px 0;padding:9px 12px;border:1px solid #526670;border-radius:11px;background:#14232b}',
+'#hcMonthlyKitchen #hcPersonalKitchen>summary{padding:5px 0;font-size:14px}',
+'#hcMonthlyKitchen #hcPersonalKitchen summary small{font-size:11px;color:#adbec5;font-weight:400;margin-left:5px}',
+'#hcMonthlyKitchen #hcPersonalKitchen .hc-my-intro{font-size:11px;color:#bacbd0;margin:6px 0}',
+'#hcMonthlyKitchen #hcPersonalKitchen .hc-my-dish{margin:0;padding:8px 0;border-top:1px solid #354a53}',
+'#hcMonthlyKitchen #hcPersonalKitchen .hc-my-dish>summary{font-size:13px;font-weight:550}',
+'#hcMonthlyKitchen #hcPersonalKitchen li,#hcMonthlyKitchen #hcPersonalKitchen p{font-size:12px;line-height:1.65;margin:8px 0}',
 '#hcMonthlyKitchen .hc-full-recipe :is(select,input,summary):focus-visible{outline:2px solid #fff;outline-offset:2px}'
 ].join('\n');document.head.append(style);
 const mo=new MutationObserver(()=>refresh());
