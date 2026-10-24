@@ -158,9 +158,25 @@ function otherStaple(n){
  if(/rice|samba/.test(n))return rice();
  return null;
 }
+function boiledEggSide(){return M('boiled-egg','Boiled egg','அவித்த முட்டை',13,P('Use fresh eggs and a clean saucepan.','புதிய முட்டைகளும் சுத்தமான பாத்திரமும் பயன்படுத்தவும்.'),
+[I('boil-egg','Egg','முட்டை',1,'pc'),I('boil-water','Water for boiling','அவிக்க நீர்',160,'ml')],
+[P('Cover eggs with water and bring to a gentle boil.','முட்டைகள் மூழ்கும் அளவுக்கு நீர் சேர்த்து கொதிக்க வைக்கவும்.'),
+P('Cook until the white and yolk are fully firm; cool slightly and peel before serving.','வெள்ளையும் மஞ்சளும் முழுவதும் வேகியதும் சிறிது ஆறவிட்டு ஓடு நீக்கவும்.')]);}
+function beanCurry(n){const horse=/horse gram/.test(n),field=/field bean|mochai/.test(n);return M('bean-curry',horse?'Horse gram curry':field?'Field bean curry':'Green gram curry',horse?'கொள்ளு கறி':field?'மொச்சைக் கறி':'பச்சைப்பயறு கறி',horse?65:50,
+P('Rinse and sort the dry beans. Soak overnight in the refrigerator if needed; cooking time depends on the bean, with horse gram often taking longer.','உலர் பயறைக் கழுவி, தேவையெனில் குளிர்சாதனத்தில் இரவு முழுவதும் ஊறவைக்கவும்; கொள்ளு வேகவைக்க அதிக நேரம் எடுக்கலாம்.'),
+[I('bean-dry',horse?'Dry horse gram':field?'Dry field beans':'Dry green gram',horse?'கொள்ளு':field?'மொச்சை':'பச்சைப்பயறு',75),I('bean-onion','Onion','வெங்காயம்',35),I('bean-tomato','Tomato','தக்காளி',55),I('bean-oil','Oil','எண்ணெய்',5,'ml'),I('bean-water','Water (add more as needed)','நீர் (தேவைக்கேற்ப)',300,'ml')],
+[P('Cook drained beans in fresh water until completely soft, adding more water as needed; do not eat undercooked dried beans.','ஊறிய பயறை புதிய நீரில் முற்றிலும் மென்மையாகும் வரை வேகவைக்கவும்; வேகாத உலர் பயறைச் சாப்பிட வேண்டாம்.'),
+P('In another pan soften onion and tomato in oil; mix with cooked beans and simmer 5–10 minutes.','வேறு பாத்திரத்தில் வெங்காயம், தக்காளி வதக்கி வெந்த பயறுடன் கலந்து 5–10 நிமிடம் கொதிக்கவிடவும்.')]);}
+function chickenSoup(){return M('chicken-soup','Chicken and vegetable soup','கோழி காய்கறிச் சூப்',40,
+P('Separate raw chicken from washed vegetables and ready-to-eat food.','பச்சைக் கோழியை கழுவிய காய்கறிகளிலிருந்தும் சாப்பிடும் உணவிலிருந்தும் தனியாக வைக்கவும்.'),
+[I('cs-chicken','Boneless chicken','எலும்பில்லா கோழி',110),I('cs-veg','Chopped seasonal vegetables','நறுக்கிய பருவக் காய்கறி',140),I('cs-onion','Onion','வெங்காயம்',30),I('cs-water','Clean water','சுத்தமான நீர்',340,'ml')],
+[P('Place chopped onion, vegetables and chicken in a pot with water; bring to a safe simmer.','பாத்திரத்தில் வெங்காயம், காய்கறி, கோழி, நீர் சேர்த்துக் கொதிக்கவிடவும்.'),
+P('Simmer until vegetables are tender and chicken reaches 74°C at its thickest point; serve hot.','காய்கறி மென்மையாகவும் கோழியின் தடிமனான பகுதி 74°C அடையும் வரையும் வேகவைத்துச் சூடாகப் பரிமாறவும்.')]);}
 function baseModules(name){
  const n=name.toLowerCase();let primary,secondary=null;
- if(/fish/.test(n)){primary=fish(n);secondary=otherStaple(n.replace(/fish|curry|pepper|sothi|tamarind|coconut|tomato/g,'').trim())}
+ if(/chicken vegetable soup/.test(n)){primary=chickenSoup();secondary=otherStaple(n)}
+ else if(/field bean|horse gram|green gram curry|mochai/.test(n)){primary=beanCurry(n);secondary=otherStaple(n)}
+ else if(/fish/.test(n)){primary=fish(n);secondary=otherStaple(n.replace(/fish|curry|pepper|sothi|tamarind|coconut|tomato/g,'').trim())}
  else if(/chicken/.test(n)){primary=chicken(n);secondary=otherStaple(n.replace(/chicken|curry|pepper|sothi|turmeric|coconut|tomato/g,'').trim())}
  else if(/egg curry|egg masala|egg and greens|egg sothi|boiled egg|pepper egg/.test(n)){primary=egg(n);secondary=otherStaple(n.replace(/egg|curry|masala|pepper|boiled|greens|sothi/g,'').trim())}
  else if(/khichdi/.test(n))primary=khichdi();
@@ -189,7 +205,12 @@ function baseModules(name){
  else if(/rice|samba/.test(n)){primary=/curry|kootu|poriyal|greens|pumpkin|okra|brinjal|banana|bean|gourd|yam|mushroom/i.test(n)?curryVeg(n):rice();secondary=primary.id==='vegcurry'?rice():null}
  else if(/curry|kootu/.test(n)){primary=curryVeg(n);secondary=otherStaple(n)}
  else primary=curryVeg(n);
- return [primary,...(secondary&&secondary.id!==primary.id?[secondary]:[])];
+ const result=[primary,...(secondary&&secondary.id!==primary.id?[secondary]:[])];
+ if(/(?:with |,\s*)sothi/.test(n)&&!result.some(x=>x.id==='sothi')&&!/fish|chicken/.test(n))result.push(sideRecipe('Light sothi','சொதி'));
+ if(/egg/.test(n)&&!result.some(x=>x.id==='egg'||x.id==='boiled-egg')&&!/dosa/.test(n))result.push(boiledEggSide());
+ if(/with (?:vegetable )?curry|roti, pumpkin|roti with pumpkin/.test(n)&&!result.some(x=>x.id==='vegcurry')&&!/fish|chicken|egg/.test(n))result.push(curryVeg(n));
+ if(/with coconut chutney/.test(n))result.push(sideRecipe('Coconut chutney','தேங்காய்ச் சட்னி'));
+ return result;
 }
 function sideRecipe(n,ta){
  n=n.toLowerCase();
@@ -223,7 +244,7 @@ function amount(x,num){
 function combined(mods){
  const out=new Map();
  mods.forEach(mod=>mod.ings.forEach(x=>{
-  const key=x.id;
+  const key=x.en.toLowerCase().replace(/^cooking /,'').replace(/ for moulds$/,'')+'|'+x.unit;
   if(out.has(key))out.get(key).n+=x.n;else out.set(key,{...x});
  }));
  return [...out.values()];
