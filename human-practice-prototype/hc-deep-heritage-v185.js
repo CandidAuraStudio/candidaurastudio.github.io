@@ -1,6 +1,6 @@
 /* HeartClear v185 — Centuries, Qur'an and family wisdom.
  * The historical index contains documented milestones, NOT a complete uninterrupted timeline.
- * Original English and Tamil summaries; never conflate scripture, hadith and health claims.
+ * Original English and Tamil summaries; preserve each text and distinguish health claims.
  * No fake narration, no external API, no login, and no medical treatment instructions.
  */
 (function(){
@@ -125,7 +125,7 @@ const data={
    row('food-631','600s CE · Qur’an 7:31','Al-A’raf / அல் அஃராஃப்',
     ['Eat, drink — avoid excess','உண்ணுங்கள், பருகுங்கள் — அளவுமீற வேண்டாம்'],
     ['The verse joins dignity in worship with moderation in eating and drinking.','வழிபாட்டில் மரியாதையையும் உணவு, குடிப்பில் அளவையும் வசனம் இணைக்கிறது.'],
-    ['Do not rewrite this as a secret list of foods forbidden after sunset. The verse gives a principle of moderation, not a scientific meal-time chart. We can reflect on waste, abundance and sharing without claiming a fixed diet for everyone.','சூரிய மறைவுக்குப் பின் தடைசெய்யப்பட்ட உணவுப் பட்டியலாக இதை மாற்றக் கூடாது. இது அளவின் கொள்கை; அறிவியல் உணவு நேர அட்டவணை அல்ல. வீணாக்கம், பகிர்வு பற்றி சிந்திக்கலாம்; எல்லோருக்கும் ஒரே உணவுமுறை என்று கூற முடியாது.'],
+    ['The verse speaks about moderation in food and drink in its worship context. A separate personal reflection may consider waste, hospitality and sharing.','வழிபாட்டின் சூழலில் உணவு, பானத்தில் அளவை வசனம் நினைவூட்டுகிறது. உணவு வீணாக்கம், விருந்தோம்பல், பகிர்வு குறித்து தனியாகச் சிந்திக்கலாம்.'],
     ['Respect the original religious context; reflection is separate.','மூல மதச் சூழலை மதிக்கவும்; தனிச் சிந்தனையைத் தனியே காட்டவும்.'],
     ['Read the full verse and examine your real household food waste.','முழு வசனத்தை வாசித்து உங்கள் வீட்டில் உணவு எங்கு வீணாகிறது என்று பாருங்கள்.'],[sources.qFood]),
    row('food-624','600s CE · Qur’an 80:24','Abasa / அபஸ',
@@ -137,7 +137,7 @@ const data={
    row('food-669','600s CE · Qur’an 16:69','An-Nahl / அன் நஹ்ல்',
     ['The bee and the meaning of healing','தேனீயும் “குணம்” என்ற கருத்தும்'],
     ['The verse mentions the bees’ drink and its significance as a sign for reflection.','தேனீயின் பானத்தையும் சிந்திப்போருக்கான அடையாளமாக அதன் அர்த்தத்தையும் வசனம் குறிப்பிடுகிறது.'],
-    ['The Qur’anic language about healing belongs in its religious setting. It does not mean every household honey mixture treats any illness. Do not treat it as a substitute for medical care.','“குணம்” பற்றிய குர்ஆன் மொழி அதன் மதச் சூழலில் புரிந்துகொள்ளப்பட வேண்டும். வீட்டு தேன் கலவை எல்லா நோயையும் குணமாக்கும் என்று அர்த்தமில்லை; சிகிச்சைக்கு மாற்றாகப் பயன்படுத்த வேண்டாம்.'],
+    ['The Qur’anic reference to healing is part of its sacred context. Any practical medical use of honey has to be assessed separately.','குணப்படுத்துதல் பற்றிய குர்ஆன் வசனம் அதன் புனிதச் சூழலில் உள்ளது. தேனை மருத்துவப் பயன்பாட்டிற்கு பயன்படுத்துவது தனியாக மதிப்பிடப்பட வேண்டும்.'],
     ['Appreciation of nature is meaningful without inventing miracle remedies.','இயற்கையின் வியப்பை மதிப்பதற்கு அதிசய வைத்தியம் கற்பிக்கத் தேவையில்லை.'],
     ['Read the original verse and distinguish reflection from practical treatment claims.','மூல வசனத்தை வாசித்து சிந்தனையையும் மருத்துவக் கூற்றையும் பிரிக்கவும்.'],[sources.qHoney]),
    row('food-now','Today / இன்று','Family Kitchen / குடும்ப சமையல்',
@@ -184,7 +184,7 @@ const verses=[
   detail:['The verse invites attention to food, and the nearby passage describes water and growing plants.','உணவை கவனிக்க வசனம் அழைக்கிறது; அடுத்த வசனங்கள் நீரும் தாவர வளர்ச்சியும் பற்றிக் கூறுகின்றன.'],
   reflection:['Reflection: follow one ingredient from grower to kitchen and notice the people involved.','சிந்தனை: ஒரு உணவுப் பொருள் வயலிலிருந்து சமையலறை வரும்வரை யார் உழைத்தனர் எனக் கவனிக்கலாம்.'],source:sources.qLook},
  {id:'v16',ref:'16:69',label:['Bees, honey and reflection','தேனீ, தேன், சிந்தனை'],
-  detail:['The verse mentions the bees and healing language. It is not a list of treatments or permission to assume every homemade remedy is safe.','தேனீ, குணம் பற்றிய மொழி வசனத்தில் உள்ளது. அது எல்லா வீட்டு வைத்தியமும் பாதுகாப்பானது என்று சொல்லும் சிகிச்சைப் பட்டியல் அல்ல.'],
+  detail:['The verse refers to bees, honey and healing within its sacred context.','தேனீ, தேன், குணப்படுத்துதல் பற்றிய வசனத்தை அதன் ஆன்மிகச் சூழலில் வாசிப்போம்.'],
   reflection:['Reflection: nature invites curiosity; practical health claims still need appropriate evidence.','சிந்தனை: இயற்கை ஆர்வத்தைத் தூண்டும்; மருத்துவப் பலன் பற்றிய கூற்றுக்கு தனி ஆதாரம் தேவை.'],source:sources.qHoney}
 ];
 const topics=[['teeth','Teeth','பற்கள்'],['water','Water & wudu','நீர் · உளூ'],['food','Food','உணவு'],['hair','Hair','முடி'],['quran','Qur’an','குர்ஆன்']];
