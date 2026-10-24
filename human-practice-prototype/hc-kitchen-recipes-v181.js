@@ -321,21 +321,52 @@ function renderCard(card,meal,plan,force=false){
  container.innerHTML='<div class="hc-full-head"><b>'+txt(plan.base[1],plan.base[0],settings.language)+'</b><small>Practical home adaptation · வீட்டுச் சமையல் முறை</small></div>'+
  '<div class="hc-full-controls"><label>Servings / நபர்கள் <select class="hc-full-servings" aria-label="Servings">'+[1,2,3,4,5].map(n=>'<option value="'+n+'"'+(n===settings.servings?' selected':'')+'>'+n+'</option>').join('')+'</select></label>'+
  '<label>Language / மொழி <select class="hc-full-lang" aria-label="Recipe language"><option value="both"'+(settings.language==='both'?' selected':'')+'>English + தமிழ்</option><option value="ta"'+(settings.language==='ta'?' selected':'')+'>தமிழ்</option><option value="en"'+(settings.language==='en'?' selected':'')+'>English</option></select></label></div>'+
- '<p class="hc-full-note">'+txt('Allow roughly '+modules.reduce((a,m)=>a+m.time,0)+' minutes if cooking each part one after another. Soaking or batter fermentation needs extra time.','ஒவ்வொரு பகுதியையும் தனித்தனியாகச் சமைத்தால் சுமார் '+modules.reduce((a,m)=>a+m.time,0)+' நிமிடம். ஊறவைத்தல்/மாவு புளித்தலுக்கு கூடுதல் நேரம் தேவை.',settings.language)+'</p>'+
- '<p class="hc-full-note">'+txt('No scales needed. Use one ordinary cup or tumbler for the rice, lentils and water. Use your own spoon, palm and fingers for the rest; adjust slowly by how the food looks and feels.','தராசு வேண்டாம். வீட்டிலுள்ள ஒரே கப் அல்லது டம்ளரை அரிசி, பருப்பு, நீர் அளக்கப் பயன்படுத்துங்கள். கரண்டி, கைப்பிடி, சிட்டிகையால் மற்றவற்றை அளந்து, பதம் பார்த்து கொஞ்சம் கொஞ்சமாகச் சேர்க்கவும்.',settings.language)+'</p>'+ 
+ '<p class="hc-full-measures">'+txt('Cup · handful · spoon · pinch','கப் · கைப்பிடி · கரண்டி · சிட்டிகை',settings.language)+'</p>'+ 
   '<h4>Shopping list / வாங்க வேண்டியவை</h4>'+
  '<div class="hc-full-ingredients">'+items.map(x=>'<label><input type="checkbox" aria-label="'+e(x.en)+'"><span>'+txt(x.en,x.ta,settings.language)+'</span><strong>'+amount(x,settings.servings,settings.language)+'</strong></label>').join('')+'</div>'+
- '<p class="hc-full-note">'+txt('Water and staple amounts are approximate; rice varieties and flour absorb differently. Use existing pantry items before buying more.','நீர், தானிய அளவு தோராயமானது; மாவு/அரிசி வகைக்கேற்ப மாறும். வீட்டிலுள்ள பொருட்களை முதலில் பயன்படுத்தவும்.',settings.language)+'</p>'+
  modules.map(m=>'<section class="hc-full-module"><h4>'+txt(m.en,m.ta,settings.language)+' <small>~'+m.time+' min</small></h4>'+
- '<p class="hc-full-prep">'+txt('Before: '+m.prep[0],'முன்தயாரிப்பு: '+m.prep[1],settings.language)+'</p>'+
  '<ol>'+m.steps.map(s=>'<li>'+txt(s[0],s[1],settings.language)+'</li>').join('')+'</ol></section>').join('')+
- '<p class="hc-full-budget">'+txt('Spend less: buy only the quantities missing from your kitchen, use a locally available in-season vegetable, and compare market prices before choosing fish or chicken. No unverified shop price is shown.','செலவைக் குறைக்க: வீட்டில் இல்லாததை மட்டும் வாங்கவும்; உள்ளூரில் பருவத்திற்கேற்ற காய்கறியைத் தேர்ந்தெடுத்து மீன்/கோழி விலையை ஒப்பிடவும். சரிபார்க்காத விலைகள் காட்டப்படவில்லை.',settings.language)+'</p>'+
- '<p class="hc-full-note">'+txt('These are approximate household measures, not independently tested family recipes. Use clean food handling and verify regional variations before publishing them as heritage methods. Recorded narration has not yet been added.','இவை வீட்டுக் கப், கரண்டி, கைப்பிடி அடிப்படையிலான தோராயமான வழிகள்; குடும்ப மரபுச் செய்முறைகளாக இன்னும் நேரில் சோதிக்கப்படவில்லை. உணவுப் பாதுகாப்பைப் பின்பற்றவும். பதிவு செய்யப்பட்ட குரல் வழிகாட்டி இன்னும் சேர்க்கப்படவில்லை.',settings.language)+'</p>';
+ '';
  d.append(container);
  const old=card.querySelector('.hc-kitchen-lesson');
  if(old)card.insertBefore(d,old);else card.append(d);
 }
+
+/* Personal cooking index: requested dish names only; never invent unrecorded methods. */
+const personalDishes=[
+ {en:'Rice dishes',ta:'சாத வகைகள்',notes:[
+ P('Earlier stock-rice note: 1 cup Chinigura rice, 1⅓–1½ cups chicken stock and a spoon of butter or ghee. Soak 10 minutes; cook covered 10–12 minutes; rest 10 minutes. Different rice needs different water.','முன்பு பேசிய கோழி ரசச் சாதம்: 1 கப் சினிகுரா அரிசி, 1⅓–1½ கப் கோழி ரசம், 1 கரண்டி வெண்ணெய் அல்லது நெய். 10 நிமிடம் ஊறவைத்து 10–12 நிமிடம் மூடி வேகவைத்து 10 நிமிடம் ஓய்வெடுக்க விடவும். அரிசி வகைக்கேற்ப நீர் மாறும்.'),
+ P('Butter-jeera rice and kiribath were also discussed; your own final methods are not recorded.','வெண்ணெய் சீரகச் சாதம், பாற்சோறு பற்றியும் பேசினோம்; உங்கள் இறுதி சொந்த முறைகள் இன்னும் பதிவு செய்யப்படவில்லை.')
+ ]},
+ {en:'Chicken curry',ta:'கோழிக் கறி',notes:[
+ P('Earlier guide: soften onion and tomato in oil; add curry powder and chicken, then water. Cover and simmer until fully cooked (74°C in the thickest part). Your own version is not yet confirmed.','முன்பு பேசிய முறை: எண்ணெயில் வெங்காயம், தக்காளி வதக்கி, கறித்தூள், கோழி, நீர் சேர்த்து மூடி முழுவதும் வேகவைக்கவும் (தடிமனான பகுதி 74°C). உங்கள் சொந்த முறை இன்னும் உறுதியாகவில்லை.')
+ ]},
+ {en:'Butter chicken',ta:'பட்டர் சிக்கன்',notes:[]},
+ {en:'Pepper chicken',ta:'மிளகுக் கோழி',notes:[
+ P('Earlier no-milk version: half a chicken, onion, tomato, ginger, garlic, curry leaves, chilli, turmeric, cumin and 1½ teaspoons pepper. Fry aromatics with chicken, add water and cook through; finish with pepper.','முன்பு பேசிய பால் சேர்க்காத முறை: அரைக் கோழி, வெங்காயம், தக்காளி, இஞ்சி, பூண்டு, கறிவேப்பிலை, மிளகாய், மஞ்சள், சீரகம், 1½ தேக்கரண்டி மிளகு. கோழியுடன் வதக்கி நீர் சேர்த்து முழுவதும் வேகவைத்து இறுதியில் மிளகு சேர்க்கவும்.')
+ ]},
+ {en:'Naan',ta:'நான்',notes:[]},
+ {en:'Appam',ta:'ஆப்பம்',notes:[
+ P('Earlier quick appam for two: rice flour 1¼ cups, wheat flour about ¾ cup, coconut milk 1 cup, 2 spoons yoghurt, 1 teaspoon each yeast and sugar, ¼ teaspoon baking soda, ½ teaspoon salt, and a little butter. Add milk or water for pourable batter.','முன்பு பேசிய இருவருக்கான விரைவு ஆப்பம்: 1¼ கப் அரிசி மாவு, சுமார் ¾ கப் கோதுமை மாவு, 1 கப் தேங்காய்ப்பால், 2 கரண்டி தயிர், தலா 1 தேக்கரண்டி ஈஸ்ட், சர்க்கரை, ¼ தேக்கரண்டி சோடா, ½ தேக்கரண்டி உப்பு, சிறிது வெண்ணெய். பால் அல்லது நீர் சேர்த்து ஊற்றும் பதத்திற்கு கலக்கவும்.'),
+ P('Ferment until ready (the earlier quick method allowed around 1½–2 hours), then cook covered in an appam pan until the centre sets.','மாவு புளிக்கும் வரை வைக்கவும் (முன்பு பேசிய விரைவு முறை சுமார் 1½–2 மணி நேரம்). அப்பச்சட்டியில் மூடி நடுப்பகுதி வெந்ததும் எடுக்கவும்.')
+ ]},
+ {en:'Sambal kangkong',ta:'காங்கோங் சம்பல்',notes:[]}
+];
+function showPersonalKitchen(){
+ if(root.querySelector('#hcPersonalKitchen'))return;
+ const anchor=root.querySelector('#hcmMeals');if(!anchor)return;
+ const lang=(()=>{try{return localStorage.getItem('hcKitchenLangV1')==='en'?'en':'ta'}catch(_){return 'ta'}})();
+ const t=(en,ta)=>lang==='en'?en:ta;
+ const section=document.createElement('details');section.id='hcPersonalKitchen';
+ section.innerHTML='<summary>'+e(t('My recipes','என் சமையல்'))+' <small>'+e(t('7 dishes','7 உணவுகள்'))+'</small></summary>'+
+ '<p class="hc-my-intro">'+e(t('Earlier cooking notes only. Missing methods are not guessed.','முன்பு பேசிய குறிப்புகள் மட்டும். தெரியாத செய்முறைகள் சேர்க்கப்படவில்லை.'))+'</p>'+
+ personalDishes.map(d=>'<details class="hc-my-dish"><summary>'+e(t(d.en,d.ta))+'</summary>'+
+ (d.notes.length?'<ol>'+d.notes.map(n=>'<li>'+e(t(n[0],n[1]))+'</li>').join('')+'</ol>':'<p>'+e(t('Your method is not recorded yet.','உங்கள் செய்முறை இன்னும் பதிவு செய்யப்படவில்லை.'))+'</p>')+'</details>').join('');
+ anchor.before(section);
+}
+
 function refresh(force=false){
+ showPersonalKitchen();
  const plans=window.HCKitchenMenu.preview(date());
  if(!Array.isArray(plans)||plans.length!==3)return;
  root.querySelectorAll('#hcmMeals > .meal').forEach((card,i)=>{if(plans[i])renderCard(card,i,plans[i],force)});
