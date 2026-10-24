@@ -139,8 +139,8 @@ function traditionTags(d){
 }
 // One visible search field: results are drawn from the meal index and cooking guides.
 const section=el('div');section.id='hcKitchenAskV163';section.hidden=false;
-section.innerHTML='<label for="hcKitchenAskInput">Search recipes / செய்முறை தேடல்</label>'+
- '<div class="hc-search-line"><input type="search" id="hcKitchenAskInput" maxlength="150" autocomplete="off" placeholder="Butter chicken, curry with rice, பிட்டு…">'+
+section.innerHTML='<label for="hcKitchenAskInput">Search food, drinks or ingredients / உணவு, பானம், பொருட்கள் தேடல்</label>'+
+ '<div class="hc-search-line"><input type="search" id="hcKitchenAskInput" maxlength="150" autocomplete="off" placeholder="Any food, drink or ingredient…">'+
  '<button type="button" id="hcKitchenAskSend">Search / தேடு</button></div>'+
  '<div class="hc-cuisine-line"><label for="hcKitchenTradition">Tradition / மரபு</label><select id="hcKitchenTradition" aria-label="Filter recipes by cuisine">'+traditions.map(([id,label])=>'<option value="'+id+'">'+label+'</option>').join('')+'</select></div>'+ 
  '<div id="hcKitchenSearchResults" class="hc-kitchen-search-results" hidden></div>'+
@@ -241,7 +241,7 @@ function searchRecipes(openFirst){
  searchResults.replaceChildren();
  searchResults.hidden=false;
  if(!currentSearch.length){
-  const empty=el('p',null,'No matching saved recipe. Try a different ingredient or spelling. / வேறு பொருள் அல்லது பெயரைத் தேடுங்கள்.');
+  const empty=el('p',null,'Not saved here yet. Checking worldwide recipes below… / இங்கு இல்லை; கீழே உலகச் செய்முறைகளைத் தேடுகிறோம்…');
   const more=el('button',null,'Search more recipes on the web ↗ / இணையத்தில் மேலும் தேடவும்');
    more.type='button';more.addEventListener('click',()=>window.open('https://www.google.com/search?q='+encodeURIComponent(q+' recipe ingredients cooking steps healthier option'),'_blank','noopener,noreferrer'));
    searchResults.append(empty,more);reply.hidden=true;return;
