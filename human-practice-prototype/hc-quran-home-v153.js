@@ -242,15 +242,14 @@ function toggle(){
 /* The full Qur'an reader reuses this audio and the existing global mini-player. */
 function notifyQuranReader(){window.dispatchEvent(new Event('hcQuranAudioChange'));}
 window.hcQuranReaderState=()=>{
+ if(active&&active.lang!=='ar'&&audio.getAttribute('src')&&(!audio.paused||!/^hcSurah[0-9]+$/.test(String(currentSoundKey||''))||soundLabAudio.paused))return {
+  chapter:active.n,language:active.lang,verse:active.verse,playing:!audio.paused,
+  seconds:Number(audio.currentTime)||0,duration:Number(audio.duration)||0,error:!!audio.error
+ };
  const ar=/^hcSurah([1-9][0-9]?|10[0-9]|11[0-4])$/.exec(String(currentSoundKey||''));
  if(ar&&soundLabAudio.getAttribute('src'))return {
   chapter:Number(ar[1]),language:'ar',verse:1,playing:!soundLabAudio.paused,
-  seconds:Number(soundLabAudio.currentTime)||0,duration:Number(soundLabAudio.duration)||0,
-  error:!!soundLabAudio.error
- };
- if(active&&active.lang!=='ar'&&audio.getAttribute('src'))return {
-  chapter:active.n,language:active.lang,verse:active.verse,playing:!audio.paused,
-  seconds:Number(audio.currentTime)||0,duration:Number(audio.duration)||0,error:!!audio.error
+  seconds:Number(soundLabAudio.currentTime)||0,duration:Number(soundLabAudio.duration)||0,error:!!soundLabAudio.error
  };
  return null;
 };
