@@ -23,6 +23,8 @@ const SOURCES={
  sushruta:'https://niimh.nic.in/ebooks/esushruta/index.php/um/um/?con=pro&mod=home',
  vagbhata:'https://ayusoft.ayush.gov.in/introduction-to-ashtaanga-hridaya/',
  ayur:'https://nia.nic.in/pdf/TERMINOLOGIES.pdf',
+ siddha:'https://ccrs.ayush.gov.in/Indexes/Siddha_Medicine',
+ siddhaTamil:'https://www.tnmgrmu.ac.in/departments/siddha/about-us/',
  evidence:'https://www.nccih.nih.gov/health/ayurvedic-medicine-in-depth'
 };
 const passage=(ref,sa,en,ta,source,note)=>({ref,sa,en,ta,source,note});
@@ -60,6 +62,12 @@ const library=[
  ]},
  {id:'puranas',name:'Puranas',ta:'புராணங்கள்',detail:'Multiple narrative and devotional works; the existing Bhagavata passage remains in the older HC scripture section.',detailTa:'பல கதை, பக்தி நூல்கள்; HC-இல் உள்ள பாகவதப் பகுதி பழைய நூலகத்திலேயே இருக்கும்.',children:[
   {id:'bhagavata',name:'Bhagavata Purana',ta:'பாகவத புராணம்',detail:'A sourced excerpt is already in the HeartClear Hindu Scriptures panel.',detailTa:'ஆதாரத்துடன் உள்ள ஒரு பகுதி HC நூலகத்தில் ஏற்கெனவே உள்ளது.'}
+ ]},
+ {id:'siddha',name:'Tamil Siddha heritage',ta:'தமிழ் சித்த மருத்துவ மரபு',detail:'A distinct Tamil-language knowledge and medical tradition. Study it alongside Ayurveda without claiming the two traditions are the same.',detailTa:'ஆயுர்வேதத்தோடு தொடர்புகள் இருந்தாலும் தனியான தமிழ் அறிவு, வைத்திய மரபு. இரண்டையும் ஒரே நூலாகக் காட்டக்கூடாது.',source:SOURCES.siddha,children:[
+  {id:'siddha-vaatham',name:'Vātam · Historical alchemy',ta:'வாதம் · பழைய இரசவாதம்',detail:'Historical study only. No recipes or hazardous chemical/mineral processing.',detailTa:'வரலாற்று அறிவுப் பகுதி மட்டும்; ஆபத்தான ரசாயன தயாரிப்புகளுக்கான வழிமுறை இல்லை.',source:SOURCES.siddha},
+  {id:'siddha-vaidhyam',name:'Vaidhyam · Medical tradition',ta:'வைத்தியம் · மருத்துவ மரபு',detail:'Preservation of manuscript knowledge, not directions for treating illnesses.',detailTa:'ஓலைச்சுவடி, நூல் மரபுகளைப் பாதுகாப்பது; நோய்க்கு சுய மருத்துவ அறிவுரை அல்ல.',source:SOURCES.siddhaTamil},
+  {id:'siddha-yogam',name:'Yogam · Practice traditions',ta:'யோகம் · பயிற்சி மரபுகள்',detail:'Explore the historical philosophy, teachers and language of yoga. Avoid unverified therapeutic claims.',detailTa:'யோகத்தின் தத்துவம், ஆசிரியர்கள், மரபுச் சொற்கள் பற்றிப் படிக்கலாம்; உறுதியற்ற மருத்துவக் கூற்றுகள் சேர்க்கப்படாது.',source:SOURCES.siddha},
+  {id:'siddha-gnanam',name:'Jñānam · Wisdom',ta:'ஞானம் · அறிவு',detail:'Reflections on knowledge, ethics and the inner life. Historical attribution is required before importing verses.',detailTa:'அறிவு, அறம், உள்வாழ்வு பற்றிய சிந்தனை; பாடல் சேர்க்க முன் மூல ஆசிரியர், நூல் சரிபார்க்கப்பட வேண்டும்.',source:SOURCES.siddha}
  ]},
  {id:'ayurveda',name:'Ayurveda · Historical texts',ta:'ஆயுர்வேதம் · பழைய நூல்கள்',detail:'Study classical Indian medical literature as history, language and philosophy. It is not a fifth Veda and is not personalised health advice.',detailTa:'பழைய இந்திய மருத்துவ இலக்கியத்தை வரலாறு, மொழி, தத்துவம் என்ற அடிப்படையில் படிக்கலாம்; இது ஐந்தாவது வேதமல்ல, தனிப்பட்ட மருத்துவ ஆலோசனையும் அல்ல.',source:SOURCES.charaka,children:[
   {id:'charaka',name:'Charaka Samhita',ta:'சரக சம்ஹிதை',detail:'Eight sthānas, 120 chapters in the NIIMH edition. Start with the Sūtra section and follow the verified edition.',detailTa:'NIIMH பதிப்பில் 8 ஸ்தானங்கள், 120 அத்தியாயங்கள். சூத்திர ஸ்தானத்திலிருந்து மூல நூலை வாசிக்கலாம்.',source:SOURCES.charaka,children:[
@@ -182,7 +190,7 @@ function draw(){
    paragraph(root,'இப்பிரிவின் முழு சமஸ்கிருதமும் தமிழ்–ஆங்கில வசன விளக்கங்களும் இன்னும் இணைக்கப்படவில்லை. மூல ஆதாரத்தைப் பார்க்கவும்.','hcv-note','ta');
   }
   sourceLink(root,node.source,'Open source archive / மூல நூலைத் திறக்க ↗');
-  if(node.id==='ayurveda'||path.some(x=>x.id==='ayurveda')){
+  if(['ayurveda','siddha'].includes(node.id)||path.some(x=>['ayurveda','siddha'].includes(x.id))){
    const safety=document.createElement('div');safety.className='hcv-safety';
    paragraph(safety,'Historical medical descriptions are not proof of modern effectiveness. Do not use old preparations, metal/mineral recipes or procedures as self-treatment.','hcv-note');
    paragraph(safety,'பழைய வைத்தியக் குறிப்புகள் இன்றைய சிகிச்சையாகச் சரிபார்க்கப்பட்டவை அல்ல; தானாக மருந்து அல்லது மருத்துவ நடைமுறைகளை முயற்சிக்க வேண்டாம்.','hcv-note','ta');
