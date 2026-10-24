@@ -13,15 +13,17 @@ const references={
  ginger:{name:'NIH NCCIH · ginger evidence',url:'https://www.nccih.nih.gov/health/ginger'},
  turmeric:{name:'NIH NCCIH · turmeric evidence',url:'https://www.nccih.nih.gov/health/turmeric'},
  ferment:{name:'Fermented idli science · PubMed',url:'https://pubmed.ncbi.nlm.nih.gov/31053581/'},
- background:{name:'Sri Lankan cuisine · Wikipedia overview',url:'https://en.wikipedia.org/wiki/Sri_Lankan_cuisine'}
+ background:{name:'Sri Lankan cuisine · Wikipedia background',url:'https://en.wikipedia.org/wiki/Sri_Lankan_cuisine'},
+ nutrition:{name:'USDA · FoodData Central',url:'https://fdc.nal.usda.gov/'}
 };
 function refs(x){
  const n=(x.en+' '+x.ingredients+' '+x.aliases).toLowerCase();
  if(/ginger tea|ginger coriander|lemon ginger/.test(n))return [references.ginger];
  if(/turmeric milk/.test(n))return [references.turmeric];
  if(/idli|dosa|batter/.test(n))return [references.ferment,references.hygiene];
- if(/mutton|beef|chicken|egg|fish|prawn|tuna|mayonnaise|burger|dry sprat|maasi/.test(n))return [references.safety,references.hygiene];
- return [references.hygiene];
+ if(/maasi|dry fish|dry sprat|pittu|appam/.test(n))return [references.safety,references.background];
+ if(/mutton|beef|chicken|egg|fish|prawn|tuna|mayonnaise|burger/.test(n))return [references.safety,references.hygiene];
+ return [references.nutrition,references.hygiene];
 }
 function chunks(str){return String(str||'').split(/(?<=[.!?])\s+(?=[A-Z])/u).map(s=>s.trim()).filter(Boolean)}
 function detail(name){
