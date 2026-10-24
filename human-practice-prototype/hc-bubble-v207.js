@@ -245,7 +245,10 @@ if(typeof originalShow==='function')window.show=function(id){
  }
  return result;
 };
-window.addEventListener('pageshow',()=>{if(isHome()&&!home.classList.contains('hc-bubble-detail'))setMode('big',false)});
+window.addEventListener('pageshow',()=>{if(isHome()&&!home.classList.contains('hc-bubble-detail')){setMode('big',false);requestAnimationFrame(()=>window.scrollTo({top:0,behavior:'auto'}))}});
+// Mobile Chrome may restore an old vertical scroll offset across reloads.
+// A fresh HeartClear launch begins at the top of Home, never halfway down Kitchen.
+window.addEventListener('load',()=>{if(isHome()&&home.classList.contains('hc-bubble-mode'))requestAnimationFrame(()=>window.scrollTo({top:0,behavior:'auto'}))},{once:true});
 draw();syncButtons();
 window.hcBubbleHome={open:big,classic:legacy,search:openSearch,recipe:recipe};
 })();
