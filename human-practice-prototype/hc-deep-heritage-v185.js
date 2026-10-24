@@ -279,7 +279,7 @@ data.ayurveda={
  name:['Ayurveda · classical medical history','ஆயுர்வேதம் · பழைய மருத்துவ வரலாறு'],
  lead:['Ayurveda is a traditional medical system and textual history, not a collection of Vedic verses or a substitute for medical care.','ஆயுர்வேதம் பாரம்பரிய மருத்துவ மரபும் நூல்களின் வரலாறும் ஆகும்; வேத வசனங்களின் தொகுப்பு அல்ல, மருத்துவச் சிகிச்சைக்கான மாற்றும் அல்ல.'],
  rows:[
-  scripture('ayur-caraka5','Charaka Samhita · Sutra Sthana 5','சரக சம்ஹிதை · சூத்திர ஸ்தானம் 5','Daily routine in a classical text','பழைய நூலில் தினசரி வழக்கம்',
+  scripture('ayur-caraka5','Charaka Samhita · Sutra Sthana 5 / சரக சம்ஹிதை · சூத்திர ஸ்தானம் 5','Daily routine in a classical text','பழைய நூலில் தினசரி வழக்கம்',
    'This chapter discusses food quantity and daily regimen in the classical Ayurvedic tradition.','பாரம்பரிய ஆயுர்வேதத்தில் உணவளவும் தினசரி வழக்கமும் இந்த அத்தியாயத்தில் விவாதிக்கப்படுகின்றன.',
    'Classical Ayurveda combined observations, theories and practices from its time. The chapter is a valuable historical source. Individual procedures and medical claims require separate safety and evidence review.','பழைய காலக் கவனிப்பு, கோட்பாடு, வழக்குகள் இந்நூலில் சேர்கின்றன. வரலாற்றுக்கு இது உதவும்; குறிப்பிட்ட சிகிச்சை, பலன், பாதுகாப்பு தனியாகச் சரிபார்க்கப்பட வேண்டும்.',
    'Preserve the original text and its setting without promising a cure.','மூல நூலையும் காலச் சூழலையும் மதித்து குணமடையும் வாக்குறுதி கூற வேண்டாம்.',
