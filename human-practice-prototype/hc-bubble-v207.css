@@ -107,3 +107,15 @@ body.hc-bubble-on #home.hc-bubble-detail :is(#hcKitchenAskReply,#hcKitchenSearch
 #home.hc-bubble-detail[data-hcb-detail="bible"] #hcGenReading{display:block}
 #home.hc-bubble-detail[data-hcb-detail="recipes"] #hcKitchenAskV163[hidden],
 #home.hc-bubble-detail[data-hcb-detail="bible"] #hcGenReading[hidden]{display:none!important}
+
+/* A fresh visit starts at Home; resume remains available without a large overlay. */
+body.hc-fresh-home #globalMini,
+body.hc-fresh-home #hcMiniLibrary{display:none!important}
+#hcBubbleHome #hcBubbleResume{display:block;width:100%;box-sizing:border-box;margin:13px 0 6px;min-height:47px;border:1px solid #8699a3;border-radius:16px;background:#1a303b;color:#f4f7f7;font:650 15px system-ui;white-space:normal;text-align:center;padding:10px}
+#hcBubbleHome #hcBubbleResume[hidden]{display:none!important}
+/* Home's vertical swipe is handled on the active card, not normal content scrolling. */
+#home.hc-bubble-mode #hcBubbleCard{overscroll-behavior:contain}
+@media(max-width:600px){
+ #hcBubbleHome .hcb-hint{font-size:13px;line-height:1.35}
+ #hcBubbleHome .hcb-switch{font-size:14px}
+}
