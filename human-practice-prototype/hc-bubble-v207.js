@@ -22,6 +22,7 @@ launcher.innerHTML='<div class="hcb-small">ONE THING AT A TIME</div>'+
  '<button id="hcBubbleSearch" type="button" aria-label="Search HeartClear"><svg width="29" height="29" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="10.7" cy="10.7" r="7"></circle><path d="m16 16 5 5"></path></svg><span>What are you looking for?</span></button>'+
  '<button id="hcBubbleCard" type="button" aria-label="Open selected activity"><span class="hcb-orb" aria-hidden="true"></span><span class="hcb-title" id="hcBubbleTitle">Meditation</span><span class="hcb-description" id="hcBubbleDescription"></span><span class="hcb-action" id="hcBubbleAction">Begin listening ↑</span></button>'+
  '<div class="hcb-navigation"><button type="button" id="hcBubblePrev" aria-label="Previous activity, or swipe down">↓</button><div class="hcb-count" id="hcBubbleCount" aria-live="polite"></div><button type="button" id="hcBubbleNext" aria-label="Next activity, or swipe up">↑</button></div>'+
+ '<button type="button" id="hcBubbleResume" hidden>Continue listening</button>'+ 
  '<p class="hcb-hint">Swipe up for next · down for previous · tap to open</p>'+
  '<button type="button" class="hcb-switch" id="hcBubbleSwitch">All sections · classic layout</button>';
 home.prepend(launcher);
@@ -62,8 +63,36 @@ function big(){
  window.scrollTo({top:0,behavior:'auto'});
 }
 function legacy(){setMode('classic',true);window.scrollTo({top:0,behavior:'auto'})}
-// Always open the full-sized Home after refresh; never inherit a stale Classic/Detail state.
+// Each fresh load returns to Home, not a previously opened player/detail.
+if(!isHome()&&typeof window.show==='function')window.show('home');
 setMode('big',false);
+// Keep a valid saved listening position but do not cover Home with a paused mini.
+document.body.classList.add('hc-fresh-home');
+const resumeBtn=$('hcBubbleResume');
+function savedAudio(){
+ const state=typeof window.getActiveMediaState==='function'?window.getActiveMediaState():null;
+ return state?.el?.getAttribute('src')?state:null;
+}
+function syncResume(){
+ const state=savedAudio();
+ resumeBtn.hidden=!(state&&document.body.classList.contains('hc-fresh-home'));
+ if(state&&!resumeBtn.hidden)resumeBtn.textContent='Continue listening · '+state.title;
+}
+resumeBtn.addEventListener('click',()=>{
+ const state=savedAudio();if(!state)return;
+ document.body.classList.remove('hc-fresh-home');
+ resumeBtn.hidden=true;
+ state.el.play().catch(()=>{resumeBtn.textContent='Tap Play in your player';resumeBtn.hidden=false});
+ window.renderGlobalMini?.();
+});
+document.addEventListener('play',event=>{
+ if(event.target instanceof HTMLMediaElement){
+  document.body.classList.remove('hc-fresh-home');
+  resumeBtn.hidden=true;
+ }
+},true);
+window.addEventListener('pageshow',syncResume);
+requestAnimationFrame(syncResume);
 function draw(){
  const c=categories[index];
  $('hcBubbleTitle').textContent=c.title;
