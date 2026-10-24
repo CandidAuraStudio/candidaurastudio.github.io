@@ -64,8 +64,11 @@ root.innerHTML='<div class="hc-world-title">Explore world food / உலக உ�
 const style=document.createElement('style');
 style.textContent=[
 '#hcKitchenWorldV207 .hc-world-title{font-weight:650;font-size:13px;margin-bottom:7px}',
-'#hcKitchenWorldV207 .hc-world-filters{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:8px}',
-'#hcKitchenWorldV207 select{flex:1;min-width:115px;max-width:100%;border:1px solid #71838b;border-radius:8px;background:#19313d;color:#f3f7f8;font-size:12px;padding:8px;min-height:40px}',
+'#hcKitchenWorldV207 .hc-world-filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:8px;margin-bottom:8px;max-width:100%}',
+'#hcKitchenWorldV207,.hc-world-discovery{min-width:0;max-width:100%;width:100%;box-sizing:border-box}',
+'.hc-world-discovery{margin:10px 0 0;border:1px solid #536b76;border-radius:12px;padding:9px 11px}',
+'.hc-world-discovery>summary{cursor:pointer;min-height:39px;display:flex;align-items:center;font-weight:650;font-size:13px;color:#e9eff2;list-style:inside}',
+'#hcKitchenWorldV207 select{box-sizing:border-box;width:100%;min-width:0;max-width:100%;border:1px solid #71838b;border-radius:8px;background:#19313d;color:#f3f7f8;font-size:12px;padding:8px;min-height:40px}',
 '#hcKitchenWorldV207 #hcWorldStatus{color:#c4d3d9;font-size:11px}',
 '#hcKitchenWorldV207 .hc-world-results{display:grid;gap:5px}',
 '#hcKitchenWorldV207 button{font:inherit;text-align:left;min-height:37px;padding:8px 10px;border:1px solid #6b818b;border-radius:8px;background:#19313d;color:#fff}',
@@ -81,7 +84,13 @@ style.textContent=[
 '#hcKitchenWorldV207 .hc-world-credit{margin:8px 0 0;color:#a8c0c9;font-size:10px}'
 ].join('\n');
 document.head.append(style);
-localResults.after(root);
+// The world-wide web directory is secondary to the main one-line Kitchen search.
+const discovery=document.createElement('details');
+discovery.className='hc-world-discovery';
+const opener=document.createElement('summary');
+opener.textContent='More world recipes online / மேலும் உலக உணவுகள்';
+discovery.append(opener,root);
+localResults.after(discovery);
 const status=root.querySelector('#hcWorldStatus'),results=root.querySelector('#hcWorldResults'),recipe=root.querySelector('#hcWorldRecipe');
 const credit=root.querySelector('.hc-world-credit');
 const category=root.querySelector('#hcWorldCategory'),area=root.querySelector('#hcWorldArea');
@@ -205,12 +214,14 @@ function schedule(){
  category.value='';area.value='';
  clearRemote();
  const q=input.value.trim();if(!q){clearRemote();return}
+ if(!discovery.open)return;
  timer=setTimeout(()=>findOnline(q),550);
 }
 input.addEventListener('input',schedule);
 const searchBtn=document.getElementById('hcKitchenAskSend');
-searchBtn?.addEventListener('click',()=>findOnline(input.value.trim()));
-input.addEventListener('keydown',e=>{if(e.key==='Enter')findOnline(input.value.trim())});
+searchBtn?.addEventListener('click',()=>{if(discovery.open)findOnline(input.value.trim())});
+input.addEventListener('keydown',e=>{if(e.key==='Enter'&&discovery.open)findOnline(input.value.trim())});
+discovery.addEventListener('toggle',()=>{if(discovery.open&&input.value.trim())findOnline(input.value.trim());else if(!discovery.open)clearRemote()});
 function browse(kind,value){
  if(!value)return;
  const q=value;
