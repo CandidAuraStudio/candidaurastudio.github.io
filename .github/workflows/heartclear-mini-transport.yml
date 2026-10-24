@@ -1,0 +1,38 @@
+name: HeartClear Universal Mini Transport
+on:
+  pull_request:
+    paths:
+      - 'human-practice-prototype/index.html'
+      - 'human-practice-prototype/hc-mini-transport-v185.js'
+      - 'human-practice-prototype/tests/mini-transport.cjs'
+      - 'human-practice-prototype/sw.js'
+      - '.github/workflows/heartclear-mini-transport.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'human-practice-prototype/index.html'
+      - 'human-practice-prototype/hc-mini-transport-v185.js'
+      - 'human-practice-prototype/tests/mini-transport.cjs'
+      - 'human-practice-prototype/sw.js'
+      - '.github/workflows/heartclear-mini-transport.yml'
+permissions:
+  contents: read
+jobs:
+  mini-transport:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install test browser
+        run: |
+          npm install --no-save playwright
+          npx playwright install chromium --with-deps
+      - name: Verify universal seek and scroll
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8765 --directory . > /tmp/hc-mini-http.log 2>&1 &
+          node human-practice-prototype/tests/mini-transport.cjs
