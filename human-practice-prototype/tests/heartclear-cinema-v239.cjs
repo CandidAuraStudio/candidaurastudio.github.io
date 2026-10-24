@@ -46,7 +46,7 @@ const BASE='http://127.0.0.1:8765/human-practice-prototype/';
    const ids=await page.locator('.screen[id]').evaluateAll(els=>els.map(el=>el.id));
    const defects=[];
    for(const id of ids){
-    if(id==='hcReels')continue;
+    if(id==='hcReels'||id==='home')continue; // Home already has its full-screen cinematic launcher.
     const got=await page.evaluate(id=>{
      show(id);
      const hero=document.getElementById('hcCinemaHero');

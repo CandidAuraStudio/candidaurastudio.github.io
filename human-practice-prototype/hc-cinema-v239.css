@@ -208,3 +208,9 @@ body.hc-flow-enabled.hc-cinema #home.active.hc-bubble-detail > #hcCinemaHero{dis
 body.hc-flow-enabled.hc-cinema #home.active.hc-bubble-detail[data-hcb-detail="recipes"] > #hcCinemaHero,
 body.hc-flow-enabled.hc-cinema #home.active.hc-bubble-detail[data-hcb-detail="bible"] > #hcCinemaHero,
 body.hc-flow-enabled.hc-cinema #home.active.hc-bubble-detail[data-hcb-detail="feature"] > #hcCinemaHero{display:flex!important}
+
+/* With a persistent mini-player, keep full-screen Home vertically scrollable on phones. */
+body.hc-cinema.hc-mini-visible #home.hc-bubble-mode #hcBubbleHome{
+ min-height:calc(100dvh + 280px)!important;padding-bottom:calc(250px + env(safe-area-inset-bottom))!important;
+}
+body.hc-cinema.hc-mini-visible #home.hc-bubble-mode{overflow:visible!important;min-height:calc(100dvh + 280px)}
