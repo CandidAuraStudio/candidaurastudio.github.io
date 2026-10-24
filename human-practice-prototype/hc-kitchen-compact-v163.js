@@ -73,6 +73,10 @@ css.textContent=[
 '#home #hcKitchenAskV163 button{background:#213a47;border:1px solid #71838b;color:#fff;border-radius:9px;padding:8px 10px;min-height:39px;font:inherit;font-size:12px}',
 '#home #hcKitchenAskV163 .hc-ask-reply{font-size:12px;line-height:1.65;white-space:pre-line;color:#e2eef0;border:1px solid #435f69;border-radius:10px;padding:10px;background:#102733}',
 '#home #hcKitchenAskV163 .hc-search-line{display:flex;gap:7px;align-items:stretch}',
+'#home #hcKitchenAskV163 .hc-cuisine-line{display:flex;align-items:center;gap:8px;margin:7px 0 6px}',
+'#home #hcKitchenAskV163 .hc-cuisine-line label{white-space:nowrap;flex-shrink:0;font-size:11px;margin:0}',
+'#home #hcKitchenAskV163 .hc-cuisine-line select{min-width:0;flex:1;min-height:39px;font:inherit;font-size:12px;padding:6px 9px;color:#fff;background:#162e3b;border:1px solid #627783;border-radius:9px}',
+'#home #hcKitchenBrowse{display:none!important}',
 '#home #hcKitchenAskV163 .hc-kitchen-search-results{display:grid;gap:4px;margin:6px 0 4px;max-height:315px;overflow:auto}',
 '#home #hcKitchenAskV163 .hc-kitchen-search-results[hidden]{display:none}',
 '#home #hcKitchenAskV163 .hc-kitchen-search-results button{width:100%;text-align:left;font-size:12px;min-height:37px;background:#142a35}',
@@ -100,18 +104,51 @@ kitchen.querySelector('.hcr-small')?.replaceChildren('FOOD · LEARN / உணவ�
 const title=kitchen.querySelector('strong');if(title)title.textContent='What can we cook? / என்ன சமைக்கலாம்?';
 const buttons=kitchen.querySelector('.hcr-food-actions'),mealButton=document.getElementById('hcrMeals');
 if(mealButton)mealButton.textContent='Meal ideas · உணவுகள்';
-// One visible search field: results are drawn from both the meal index and recipe guides.
+// Search first; the optional tradition picker filters without changing any meal plan.
+const traditions=[
+ ['all','All traditions · அனைத்தும்'],
+ ['tamil','Tamil · தமிழ்'],['srilankantamil','Sri Lankan Tamil · ஈழத் தமிழ்'],
+ ['indian','Indian · இந்திய'],['chinese','Chinese · சீன'],
+ ['indonesian','Indonesian · இந்தோனேசிய'],['malaysian','Malaysian · மலேசிய'],
+ ['nepali','Nepali · நேபாள'],['bangladeshi','Bangladeshi · வங்கதேச'],
+ ['middleeastern','Middle East / Arab · அரபு'],['mediterranean','Mediterranean'],
+ ['italian','Italian · இத்தாலிய'],['scandinavian','Scandinavian · வட ஐரோப்பிய'],
+ ['european','European · ஐரோப்பிய'],['fusion','Tamil + world fusion · கலவை']
+];
+const traditionWords={
+ tamil:'tamil தமிழ் south indian',srilankantamil:'sri lanka sri lankan tamil eelam jaffna இலங்கை யாழ்ப்பாணம்',
+ indian:'indian india இந்திய',chinese:'chinese china சீன',
+ indonesian:'indonesian indonesia',malaysian:'malaysian malaysia',
+ nepali:'nepali nepal',bangladeshi:'bangladeshi bangladesh',
+ middleeastern:'arab arabic middle east middle eastern levant அரபு',
+ mediterranean:'mediterranean greek',italian:'italian italy',
+ scandinavian:'scandinavian nordic danish norwegian swedish',
+ european:'europe european spanish french british',fusion:'fusion mixed tamil arab chinese mediterranean malaysian'
+};
+function traditionTags(d){
+ if(Array.isArray(d.cuisines))return d.cuisines;
+ const n=String(d.en||'').toLowerCase();
+ if(/burger/.test(n))return [];
+ if(/pizza|pasta|spaghetti|risotto/.test(n))return ['italian'];
+ if(/butter chicken|naan|chana masala|aloo gobi|biryani/.test(n))return ['indian'];
+ if(/sambal kangkong|mee goreng|nasi lemak/.test(n))return ['indonesian','malaysian'];
+ if(/pittu|puttu|appam|hopper|sothi|jaffna|dry fish/.test(n))return ['tamil','srilankantamil'];
+ if(/dosa|idli|poriyal|sambar|rasam|upma|adai|pongal|kuzhambu|chutney|kootu|keerai|roti|curry|dhal/.test(n))return ['tamil'];
+ if(d.source==='menu'||d.source==='side')return ['tamil'];
+ return [];
+}
+// One visible search field: results are drawn from the meal index and cooking guides.
 const section=el('div');section.id='hcKitchenAskV163';section.hidden=false;
 section.innerHTML='<label for="hcKitchenAskInput">Search recipes / செய்முறை தேடல்</label>'+
  '<div class="hc-search-line"><input type="search" id="hcKitchenAskInput" maxlength="150" autocomplete="off" placeholder="Butter chicken, curry with rice, பிட்டு…">'+
  '<button type="button" id="hcKitchenAskSend">Search / தேடு</button></div>'+
- '<div class="hc-ask-buttons"><button type="button" id="hcKitchenBrowse">Browse recipes · வகைகள்</button></div>'+ 
+ '<div class="hc-cuisine-line"><label for="hcKitchenTradition">Tradition / மரபு</label><select id="hcKitchenTradition" aria-label="Filter recipes by cuisine">'+traditions.map(([id,label])=>'<option value="'+id+'">'+label+'</option>').join('')+'</select></div>'+ 
  '<div id="hcKitchenSearchResults" class="hc-kitchen-search-results" hidden></div>'+
  '<div class="hc-ask-buttons"><button type="button" id="hcKitchenTomorrow">Tomorrow / நாளை</button><button type="button" id="hcKitchenSavePlan" hidden>Remember / நினைவில் வை</button></div>'+
  '<div id="hcKitchenAskReply" class="hc-ask-reply" role="status" aria-live="polite" hidden></div>';
 kitchen.append(section);
 const reply=section.querySelector('#hcKitchenAskReply'),input=section.querySelector('#hcKitchenAskInput'),
-      searchResults=section.querySelector('#hcKitchenSearchResults'),saveBtn=section.querySelector('#hcKitchenSavePlan');
+      traditionSelect=section.querySelector('#hcKitchenTradition'),searchResults=section.querySelector('#hcKitchenSearchResults'),saveBtn=section.querySelector('#hcKitchenSavePlan');
 let lastPlan=null, currentSearch=[],visibleCount=10;
 const output=(txt,plan=null)=>{reply.hidden=false;reply.textContent=txt;lastPlan=plan;saveBtn.hidden=!plan};
 function foldText(v){return String(v||'').normalize('NFKC').toLocaleLowerCase().replace(/[^\p{L}\p{M}\p{N}]+/gu,' ').trim()}
@@ -133,9 +170,9 @@ function getCatalog(){
  return items;
 }
 function rank(d,q){
- const name=foldText(d.en+' '+d.ta),aliases=foldText(d.aliases),ingredients=foldText(d.ingredients),category=foldText(d.category),en=foldText(d.en),query=foldText(q),t=words(q);
+ const name=foldText(d.en+' '+d.ta),aliases=foldText(d.aliases),ingredients=foldText(d.ingredients),category=foldText(d.category),culture=foldText(traditionTags(d).map(id=>traditionWords[id]||'').join(' ')),en=foldText(d.en),query=foldText(q),t=words(q);
  if(!t.length)return 0;
- const found=t.filter(w=>name.includes(w)||aliases.includes(w)||ingredients.includes(w)||category.includes(w)), coverage=found.length/t.length;
+ const found=t.filter(w=>name.includes(w)||aliases.includes(w)||ingredients.includes(w)||category.includes(w)||culture.includes(w)), coverage=found.length/t.length;
  const named=t.filter(w=>name.includes(w)).length,aliased=t.filter(w=>aliases.includes(w)).length;
  if(!found.length||coverage<Math.min(0.65,1/t.length))return 0;
  let score=coverage*35+named*85+aliased*47+(found.length-named)*8;
@@ -148,7 +185,10 @@ function rank(d,q){
  return score;
 }
 function getMatches(q){
- return getCatalog().map((d,i)=>({...d,score:rank(d,q),order:i}))
+ const chosen=traditionSelect.value;
+ const catalog=getCatalog().filter(d=>chosen==='all'||traditionTags(d).includes(chosen));
+ if(!q.trim())return chosen==='all'?[]:catalog.slice(0,120);
+ return catalog.map((d,i)=>({...d,score:rank(d,q),order:i}))
   .filter(x=>x.score>0).sort((a,b)=>b.score-a.score||a.order-b.order).slice(0,120);
 }
 function showItem(item){
@@ -196,7 +236,7 @@ function showItem(item){
 }
 function searchRecipes(openFirst){
  const q=input.value.trim();
- if(!q){searchResults.hidden=true;reply.hidden=true;return}
+ if(!q&&traditionSelect.value==='all'){searchResults.hidden=true;reply.hidden=true;return}
  currentSearch=getMatches(q);
  searchResults.replaceChildren();
  searchResults.hidden=false;
@@ -241,17 +281,7 @@ function tomorrowPlan(){
  const plan={date:dateStr,text:lines.join('\n')};
  output(plan.text,plan);
 }
-section.querySelector('#hcKitchenBrowse').addEventListener('click',()=>{
- searchResults.hidden=false;reply.hidden=true;searchResults.replaceChildren();
- const library=window.HCKitchenWorldRecipes;
- if(!library){searchResults.append(el('p',null,'Recipe library loading'));return}
- searchResults.append(el('p',null,library.recipes+' recipes / செய்முறைகள்'));
- library.categories.forEach(cat=>{
-  const b=el('button','hc-kitchen-category',cat);b.type='button';
-  b.addEventListener('click',()=>{input.value=cat;visibleCount=10;searchRecipes(false)});
-  searchResults.append(b);
- });
-});
+traditionSelect.addEventListener('change',()=>{visibleCount=10;searchRecipes(false)});
 section.querySelector('#hcKitchenAskSend').addEventListener('click',()=>searchRecipes(true));
 input.addEventListener('input',()=>{visibleCount=10;searchRecipes(false)});
 input.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();searchRecipes(true)}});
