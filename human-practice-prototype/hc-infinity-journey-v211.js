@@ -197,6 +197,7 @@ function route(name){
   }else if(kitchen)requestAnimationFrame(()=>kitchen.scrollIntoView({block:'start',behavior:'auto'}));
  }
  else if(name==='books')typeof show==='function'&&show('library');
+ else if(name==='reels'&&typeof show==='function')show('hcReels');
  else if(name==='sounds'&&typeof openSoundLab==='function')openSoundLab();
  else if(typeof show==='function')show('practices');
 }
@@ -247,7 +248,7 @@ function render(){
   const quickPaths=document.createElement('details');quickPaths.className='hci-paper';
   const quickSummary=document.createElement('summary');quickSummary.textContent=T('Practice, books and sound','பயிற்சி, புத்தகங்கள், ஒலி');quickPaths.append(quickSummary);
   const quickButtons=document.createElement('div');quickButtons.className='hci-actions';
-  quickButtons.append(mk(T('Open Practice','பயிற்சி திற')+' →','hci-option',()=>route('practice')),mk(T('Read books & scripture','நூல்கள், வேதம் வாசி')+' →','hci-option',()=>route('books')),mk(T('Create a nature sound mix','இயற்கை ஒலிக்கலவை')+' →','hci-option',()=>route('sounds')));
+  quickButtons.append(mk(T('Open Practice','பயிற்சி திற')+' →','hci-option',()=>route('practice')),mk(T('Watch Reels','ரீல்ஸ் பார்க்க')+' →','hci-option',()=>route('reels')),mk(T('Read books & scripture','நூல்கள், வேதம் வாசி')+' →','hci-option',()=>route('books')),mk(T('Create a nature sound mix','இயற்கை ஒலிக்கலவை')+' →','hci-option',()=>route('sounds')));
   quickPaths.append(quickButtons);stage.append(quickPaths);
   const title2=document.createElement('p');title2.className='hci-kicker';title2.textContent=T('Or choose a doorway','அல்லது ஒரு வழியைத் தேர்ந்தெடு');stage.append(title2);
   const cats=[['Nature','moon','Nature · இயற்கை'],['Scripture','birds','Scripture · வேதம்'],['Body','walking','Body · உடல்'],['Food','tea','Food · உணவு'],['Practice','breath','Practice · பயிற்சி']];
