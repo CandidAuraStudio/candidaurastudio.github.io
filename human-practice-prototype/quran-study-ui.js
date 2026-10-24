@@ -131,10 +131,6 @@ function render(){
    <button data-qs-action="lang" data-qs-lang="en" aria-pressed="${state.language==="en"}">English</button>
   </div>
   <div class="hcqs-picker"><label for="hcqs-surah-select">Choose from all 114 surahs · 114 ஸூராக்கள்</label><select id="hcqs-surah-select" aria-label="Select surah">${data.chapters.map(x=>`<option value="${x.number}" ${state.chapter===x.number?"selected":""}>${x.number} · ${qsName(x)}</option>`).join("")}</select></div>
-  <details class="hcqs-guide-details"><summary>About this reader</summary><p class="hcqs-caution">${bilingual("114 surahs are selectable. Arabic and licensed translations load online. Some passages may be unavailable offline. Author reflections are separately labelled.","114 ஸூராக்கள். அரபு, மொழிபெயர்ப்புகள் இணையத்திலிருந்து ஏற்றப்படும். ஆசிரியர் சிந்தனைகள் தனியே காட்டப்படும்.")}</p></details>
- </div>
- <div class="hcqs-summary"><h3>${qsName(ch)}</h3><p>${ch.verseCount||ch.verses.length||"—"} ${state.language==="ta"?"வசனங்கள்":"verses"}${savedCount?" · "+savedCount+" saved reflections":""}</p>
- <p class="hcqs-bismillah" lang="ar" dir="rtl">${clean(ch.bismillah)}</p></div>
  <section class="hcqs-audio-player" role="region" aria-label="Qur'an audio">
   <div class="hcqs-audio-top"><strong>Qur’an audio · குர்ஆன் ஒலி</strong><span id="hcqs-audio-status" role="status">Ready</span></div>
   <div class="hcqs-audio-langs" role="group" aria-label="Listening language">
@@ -151,6 +147,11 @@ function render(){
   <input id="hcqs-audio-progress" type="range" min="0" max="1000" value="0" disabled aria-label="Audio progress">
   <div class="hcqs-audio-foot"><span id="hcqs-audio-time">0:00 / 0:00</span><span>Arabic recitation · English / Tamil spoken meanings</span></div>
  </section>
+  <details class="hcqs-guide-details"><summary>About this reader</summary><p class="hcqs-caution">${bilingual("114 surahs are selectable. Arabic and licensed translations load online. Some passages may be unavailable offline. Author reflections are separately labelled.","114 ஸூராக்கள். அரபு, மொழிபெயர்ப்புகள் இணையத்திலிருந்து ஏற்றப்படும். ஆசிரியர் சிந்தனைகள் தனியே காட்டப்படும்.")}</p></details>
+ </div>
+ <div class="hcqs-summary"><h3>${qsName(ch)}</h3><p>${ch.verseCount||ch.verses.length||"—"} ${state.language==="ta"?"வசனங்கள்":"verses"}${savedCount?" · "+savedCount+" saved reflections":""}</p>
+ <p class="hcqs-bismillah" lang="ar" dir="rtl">${clean(ch.bismillah)}</p></div>
+
  ${links?`<details class="hcqs-guide-details hcqs-highlights"><summary>${bilingual("Earlier reflections","முந்தைய சிந்தனைகள்")}</summary><div>${links}</div></details>`:""}
  <div class="hcqs-pager"><button data-qs-action="prev" ${min===1?"disabled":""}>‹ ${state.language==="ta"?"முந்தையவை":"Previous"}</button><span>${min}–${max} / ${total}</span><button data-qs-action="next" ${max===total?"disabled":""}>${state.language==="ta"?"அடுத்தவை":"Next"} ›</button></div>
  <div class="hcqs-verses">${chapterLoading?'<p class="hcqs-load-status" role="status">Loading Qur’an sources… · அரபு, தமிழ், ஆங்கிலம் ஏற்றப்படுகிறது…</p>':""}${ch.verses.length?ch.verses.slice(min-1,max).map(verseCard).join(""):'<div class="hcqs-load-status">Arabic source is not currently available. <a href="https://quran.com/'+ch.number+'" target="_blank" rel="noopener noreferrer">Read the chapter at Quran.com ↗</a></div>'}</div>
