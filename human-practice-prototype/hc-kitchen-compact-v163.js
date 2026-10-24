@@ -113,7 +113,7 @@ const traditions=[
  ['nepali','Nepali · நேபாள'],['bangladeshi','Bangladeshi · வங்கதேச'],
  ['middleeastern','Middle East / Arab · அரபு'],['mediterranean','Mediterranean'],
  ['italian','Italian · இத்தாலிய'],['scandinavian','Scandinavian · வட ஐரோப்பிய'],
- ['european','European · ஐரோப்பிய'],['fusion','Tamil + world fusion · கலவை']
+ ['european','Other European · ஐரோப்பிய'],['fusion','Tamil + world fusion · கலவை']
 ];
 const traditionWords={
  tamil:'tamil தமிழ் south indian',srilankantamil:'sri lanka sri lankan tamil eelam jaffna இலங்கை யாழ்ப்பாணம்',
@@ -123,7 +123,7 @@ const traditionWords={
  middleeastern:'arab arabic middle east middle eastern levant அரபு',
  mediterranean:'mediterranean greek',italian:'italian italy',
  scandinavian:'scandinavian nordic danish norwegian swedish',
- european:'europe european spanish french british',fusion:'fusion mixed tamil arab chinese mediterranean malaysian'
+ european:'europe european spanish french british',fusion:'fusion mixed கலவை'
 };
 function traditionTags(d){
  if(Array.isArray(d.cuisines))return d.cuisines;
@@ -182,6 +182,8 @@ function rank(d,q){
  // Prefer a named dish over rice-only matches in "rice and butter chicken".
  if(t.length>1&&found.length===1&&t.length>2)score-=35;
  if(d.source==='personal')score+=8;
+ // Tamil searches should rank traditional dishes above modern cross-cultural fusion.
+ if(t.length===1&&t[0]==='tamil'&&traditionTags(d).includes('fusion'))score-=100;
  return score;
 }
 function getMatches(q){
