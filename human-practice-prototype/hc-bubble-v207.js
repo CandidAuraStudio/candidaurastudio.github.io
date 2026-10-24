@@ -70,6 +70,7 @@ function draw(){
 }
 function move(delta){index=(index+delta+categories.length)%categories.length;draw()}
 function recipe(query){
+ home.dataset.hcbDetail='recipes';
  setMode('detail',false);
  const more=$('hcHomeMore');if(more)more.open=true;
  requestAnimationFrame(function(){
@@ -81,6 +82,7 @@ function recipe(query){
  });
 }
 function genesis(){
+ home.dataset.hcbDetail='bible';
  setMode('detail',false);
  requestAnimationFrame(function(){
   const target=$('hcGenesisCard');
