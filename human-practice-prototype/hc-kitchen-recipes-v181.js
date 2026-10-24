@@ -213,6 +213,7 @@ function baseModules(name){
  return result;
 }
 function sideRecipe(n,ta){
+ const originalName=n;
  n=n.toLowerCase();
  if(/pickle/.test(n))return M('pickle','Ready-made lemon pickle','எலுமிச்சை ஊறுகாய்',0,P('Choose a properly stored prepared pickle.','பாதுகாப்பாகச் சேமித்த ஊறுகாயைப் பயன்படுத்தவும்.'),
  [I('pick','Prepared lemon pickle','தயார் எலுமிச்சை ஊறுகாய்',15)],
@@ -230,9 +231,9 @@ function sideRecipe(n,ta){
  [P('Finely chop onion and mix with coconut and lime juice. Add chilli only if preferred.','வெங்காயத்தை நறுக்கித் தேங்காய், எலுமிச்சைச் சாறுடன் கலக்கவும்; விருப்பப்படி மிளகாய் சேர்க்கலாம்.')]);
  const tomato=/tomato/.test(n),coconut=/coconut/.test(n);
  const leaf=/mint/.test(n)?['Mint','புதினா']:/coriander/.test(n)?['Coriander leaves','கொத்தமல்லி']:/curry leaf/.test(n)?['Curry leaves','கறிவேப்பிலை']:/ginger/.test(n)?['Ginger','இஞ்சி']:['Fresh herbs','புதிய இலைகள்'];
- return M('chutney','Simple '+(tomato?'tomato':coconut?'coconut':'herb')+' chutney',ta+' சட்னி',12,
+ return M('chutney',originalName,ta,12,
  P('Wash fresh herbs and use clean utensils.','இலைகளைக் கழுவிச் சுத்தமான பாத்திரங்களைப் பயன்படுத்தவும்.'),
- [tomato?I('chut-tom','Tomato','தக்காளி',90):coconut?I('chut-coconut','Grated coconut','துருவிய தேங்காய்',50):I('chut-herb',leaf[0],leaf[1],25),I('chut-water','Clean water','சுத்தமான நீர்',20,'ml'),I('chut-lemon','Lemon juice','எலுமிச்சைச் சாறு',6,'ml')],
+ [tomato?I('chut-tom','Tomato','தக்காளி',90):coconut?I('chut-coconut','Grated coconut','துருவிய தேங்காய்',50):I('chut-herb',leaf[0],leaf[1],/ginger/.test(n)?8:25),I('chut-water','Clean water','சுத்தமான நீர்',20,'ml'),I('chut-lemon','Lemon juice','எலுமிச்சைச் சாறு',6,'ml')],
  [P(tomato?'Cook chopped tomato until soft; let cool.':'Use freshly prepared coconut or washed herbs.','தக்காளியானால் மென்மையாக வேகவைக்கவும்; இல்லையெனில் புதிய தேங்காய் அல்லது கழுவிய இலைகளைப் பயன்படுத்தவும்.'),
  P('Grind with water and lemon. Serve promptly; refrigerate leftovers.','நீர், எலுமிச்சை சேர்த்து அரைத்து உடனே பரிமாறவும்; மீதியை குளிராக வைக்கவும்.')]);
 }
