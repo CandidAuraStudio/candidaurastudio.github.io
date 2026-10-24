@@ -36,7 +36,8 @@ function render(){
  '<details><summary>'+tr('மரபும் ஆதாரங்களும்','Traditions and sources')+'</summary><p class="sub">'+tr('இவை பாரம்பரிய உணவுப் பெயர்களால் உருவாக்கப்பட்ட திட்டமிடல் யோசனைகள். அசல் பழைய செய்முறைகள் எனக் கூறவில்லை; முழுச் செய்முறைகளை வெளியிடுவதற்கு முன் சோதிக்க வேண்டும்.','Heritage-inspired menu combinations, not verified ancient recipes or tested cooking instructions. Detailed recipes still need review.')+'</p><p class="sub"><a href="https://www.fisheries.gov.lk/?page_id=8544" target="_blank" rel="noopener noreferrer">Sri Lanka Fisheries</a> · <a href="https://www.statistics.gov.lk/DashBoard/Prices/" target="_blank" rel="noopener noreferrer">Sri Lanka Food Prices</a></p></details>';
  var list=root.querySelector('#hcmMeals'),labels=[tr('காலை','Breakfast'),tr('மதியம்','Lunch'),tr('இரவு','Dinner')];
  for(var m=0;m<3;m++){
-  var key=day+'|'+m,n=Math.max(0,Math.min(4,Number(choices[key])||0)),x=choice(m,n),card=document.createElement('article');card.className='meal';
+  var key=day+'|'+m,n=Math.max(0,Math.min(4,Number(choices[key])||0)),x=choice(m,n),effective=window.HCKitchenMenu?.preview?.(day)?.[m],card=document.createElement('article');card.className='meal';
+  if(effective&&Array.isArray(effective.base))x.base=effective.base;
   card.innerHTML='<div class="r"><div><b>'+labels[m]+'</b><small>'+esc(name(x.base))+'</small></div><button type="button" class="pick">'+(opened===m?tr('மூடு','Close'):tr('5 தேர்வுகள்','5 choices'))+'</button></div><p class="sub">'+esc(detail(x))+'</p>';
   (function(meal,node){node.querySelector('.pick').addEventListener('click',function(){opened=opened===meal?-1:meal;render()})})(m,card);
   if(opened===m){
@@ -44,7 +45,7 @@ function render(){
    for(var o=0;o<5;o++){
     var a=choice(m,o),btn=document.createElement('button');btn.type='button';btn.className='option';btn.setAttribute('aria-pressed',String(o===n));
     btn.innerHTML=(o===n?'✓ ':'')+esc(name(a.base))+'<small>'+esc(kind(a.type))+' · '+esc(detail(a))+'</small>';
-    (function(meal,opt){btn.addEventListener('click',function(){choices[day+'|'+meal]=opt;save('hcKitchenMenuChoicesV1',choices);opened=-1;render()})})(m,o);
+    (function(meal,opt){btn.addEventListener('click',function(){choices[day+'|'+meal]=opt;save('hcKitchenMenuChoicesV1',choices);['hcKitchenDosaIdliV149','hcKitchenMealSwapsV2'].forEach(function(store){var swaps=read(store,{}),key=day+'|'+meal;if(Object.prototype.hasOwnProperty.call(swaps,key)){delete swaps[key];save(store,swaps)}});opened=-1;render()})})(m,o);
     options.appendChild(btn);
    }
    card.appendChild(options);
