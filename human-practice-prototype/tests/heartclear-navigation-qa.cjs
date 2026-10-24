@@ -45,7 +45,7 @@ const assert=require('node:assert/strict');
       for(const el of document.querySelectorAll('[onclick],[onchange]')){
         for(const attr of ['onclick','onchange']){
           const expr=el.getAttribute(attr)||'';
-          const m=expr.match(/^\\s*(?:return\\s+)?([A-Za-z_$][\\w$]*)\\s*\\(/);
+          const m=expr.match(/^\s*(?:return\s+)?([A-Za-z_$][\w$]*)\s*\(/);
           if(m && m[1]!=='if' && typeof window[m[1]]!=='function'){
             missing.push(attr+': '+m[1]+' ('+(el.id||el.tagName)+')');
           }
