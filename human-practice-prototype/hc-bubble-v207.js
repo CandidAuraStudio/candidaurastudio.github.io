@@ -18,13 +18,13 @@ const launcher=document.createElement('div');
 launcher.id='hcBubbleHome';
 launcher.setAttribute('aria-label','HeartClear large easy navigation');
 launcher.innerHTML='<div class="hcb-small">ONE THING AT A TIME</div>'+
- '<h1>HeartClear</h1>'+
+ '<div class="hcb-brand"><span class="hcb-logo" role="img" aria-label="HeartClear infinity logo">∞</span><h1>HeartClear</h1></div>'+
  '<button id="hcBubbleSearch" type="button" aria-label="Search HeartClear"><svg width="29" height="29" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="10.7" cy="10.7" r="7"></circle><path d="m16 16 5 5"></path></svg><span>What are you looking for?</span></button>'+
  '<button id="hcBubbleCard" type="button" aria-label="Open selected activity"><span class="hcb-orb" aria-hidden="true"></span><span class="hcb-title" id="hcBubbleTitle">Meditation</span><span class="hcb-description" id="hcBubbleDescription"></span><span class="hcb-action" id="hcBubbleAction">Begin listening ↑</span></button>'+
  '<div class="hcb-navigation"><button type="button" id="hcBubblePrev" aria-label="Previous activity, or swipe down">↓</button><div class="hcb-count" id="hcBubbleCount" aria-live="polite"></div><button type="button" id="hcBubbleNext" aria-label="Next activity, or swipe up">↑</button></div>'+
  '<button type="button" id="hcBubbleResume" hidden>Continue listening</button>'+ 
  '<p class="hcb-hint">Swipe up for next · down for previous · tap to open</p>'+
- '<button type="button" class="hcb-switch" id="hcBubbleSwitch">All sections · classic layout</button>';
+ '<button type="button" class="hcb-switch" id="hcBubbleSwitch">Browse all sections</button>';
 home.prepend(launcher);
 const search=document.createElement('section');
 search.id='hcBubbleSearchPanel';search.hidden=true;search.setAttribute('role','dialog');search.setAttribute('aria-modal','true');search.setAttribute('aria-label','Search HeartClear');
@@ -35,8 +35,8 @@ document.body.append(search);
 const back=document.createElement('button');back.id='hcBubbleReturn';back.type='button';back.textContent='← Big view';back.hidden=true;home.prepend(back);
 const classic=document.createElement('button');classic.id='hcBubbleClassic';classic.type='button';classic.textContent='Big view';classic.hidden=true;home.prepend(classic);
 const $=id=>document.getElementById(id);
+// Always start at the first real activity: a previously saved 8/8 is not a useful Home.
 let index=0;
-try{const previous=localStorage.getItem('hcBubbleCategoryV207');const found=categories.findIndex(x=>x.key===previous);if(found>=0)index=found;}catch(_){}
 function isHome(){return home.classList.contains('active')}
 function syncButtons(){
  const detail=home.classList.contains('hc-bubble-detail');
@@ -60,6 +60,8 @@ function setMode(mode,persist){
 function big(){
  if(typeof window.show==='function'&&!isHome())window.show('home');
  setMode('big',true);
+ // A tap on Home must visibly return to the beginning, even when already on Home.
+ index=0;draw();
  window.scrollTo({top:0,behavior:'auto'});
 }
 function legacy(){setMode('classic',true);window.scrollTo({top:0,behavior:'auto'})}
@@ -102,7 +104,7 @@ function draw(){
  const card=$('hcBubbleCard');card.style.setProperty('--hcb-orb',c.orb);card.style.setProperty('--hcb-glow',c.glow);
  card.setAttribute('aria-label',c.label+' — '+c.title+'. Swipe left or right for more.');
  card.classList.remove('hcb-enter');void card.offsetWidth;card.classList.add('hcb-enter');
- try{localStorage.setItem('hcBubbleCategoryV207',c.key)}catch(_){}
+ // Do not restore the last card after reloading: Home is always an entry point.
 }
 function move(delta){index=(index+delta+categories.length)%categories.length;draw()}
 function recipe(query){
@@ -151,7 +153,12 @@ function choose(key,arg){
  if(key==='books'){window.show?.('library');return}
  if(key==='sounds'){if(typeof window.openSoundLab==='function')window.openSoundLab();else window.show?.('soundLab');return}
  if(key==='reels'){if(typeof window.hcOpenReels==='function')window.hcOpenReels();else window.show?.('hcReels');return}
- if(key==='explore'){legacy();return}
+ if(key==='explore'){
+   // Opening Explore must show the section picker, not silently swap layouts.
+   if(typeof window.hcFlow?.openExplore==='function')window.hcFlow.openExplore();
+   else legacy();
+   return;
+ }
 }
 let ignoreClickUntil=0,touchStart=null;
 $('hcBubbleCard').addEventListener('touchstart',function(e){const t=e.touches[0];if(t)touchStart={x:t.clientX,y:t.clientY}},{passive:true});
@@ -165,7 +172,10 @@ $('hcBubbleCard').addEventListener('touchend',function(e){
 $('hcBubbleCard').addEventListener('click',function(){if(Date.now()>ignoreClickUntil)choose(categories[index].key)});
 $('hcBubblePrev').addEventListener('click',()=>move(-1));
 $('hcBubbleNext').addEventListener('click',()=>move(1));
-$('hcBubbleSwitch').addEventListener('click',legacy);
+$('hcBubbleSwitch').addEventListener('click',()=>{
+ if(typeof window.hcFlow?.openExplore==='function')window.hcFlow.openExplore();
+ else legacy();
+});
 classic.addEventListener('click',big);back.addEventListener('click',big);
 const searchInput=$('hcBubbleSearchInput'),results=$('hcBubbleResults');
 let searchReturn=null,originalOverflow=null;
@@ -181,7 +191,9 @@ function openSearch(){
   if(search.hidden)searchReturn=document.activeElement;
   if(originalOverflow===null)originalOverflow=document.body.style.overflow;
   search.hidden=false;
+  search.removeAttribute('inert');
   search.style.setProperty('display','block','important');
+  search.scrollTop=0;
   document.body.classList.add('hc-search-open');
   document.body.style.overflow='hidden';
   searchInput.value='';
@@ -265,6 +277,7 @@ searchInput.addEventListener('keydown',function(e){if(e.key==='Enter'){e.prevent
 // Search is a standalone full-screen surface: ESC and browser back can always close it.
 window.addEventListener('pageshow',()=>{if(!search.hidden){search.style.setProperty('display','block','important');document.body.classList.add('hc-search-open')}});
 window.hcOpenGlobalSearch=openSearch;window.hcCloseGlobalSearch=closeSearch;
+// The visible Home search and bottom Search share this one searchable, keyboard-ready view.
 const observer=new MutationObserver(syncButtons);
 observer.observe(home,{attributes:true,attributeFilter:['class']});
 // The Home tab must always return to the large navigator, not a stale detail page.

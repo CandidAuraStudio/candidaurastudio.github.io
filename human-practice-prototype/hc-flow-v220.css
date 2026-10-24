@@ -183,3 +183,13 @@ body.hc-flow-enabled #hcExploreDialog button{border-radius:17px!important}
 body.hc-flow-enabled #hcBubbleSearchPanel:not([hidden]),body.hc-search-open #hcBubbleSearchPanel:not([hidden]){position:fixed!important;inset:0!important;display:block!important;z-index:2147483000!important;pointer-events:auto!important;overflow-y:auto!important;overscroll-behavior:contain!important;visibility:visible!important;opacity:1!important}
 body.hc-search-open #hcFlowDock,body.hc-search-open #hcFlowExplore{pointer-events:none}
 body.hc-search-open #hcBubbleSearchPanel button,body.hc-search-open #hcBubbleSearchPanel input{pointer-events:auto!important}
+
+/* v236: the Home launcher and its dialog must remain clickable above Home decoration. */
+body.hc-flow-enabled #home.active.hc-bubble-mode #hcBubbleHome{position:relative;z-index:2;pointer-events:auto}
+body.hc-flow-enabled #home.active.hc-bubble-mode #hcBubbleHome button{pointer-events:auto}
+body.hc-flow-enabled #hcBubbleSearchPanel:not([hidden]){z-index:2147483000!important}
+body.hc-flow-enabled #hcBubbleCard{touch-action:pan-y!important}
+body.hc-flow-enabled #hcBubbleHome .hcb-brand{display:flex;align-items:center;gap:12px;margin:6px 0 18px}
+body.hc-flow-enabled #hcBubbleHome .hcb-brand h1{margin:0!important}
+body.hc-flow-enabled #hcBubbleHome .hcb-logo{display:grid;place-items:center;flex:none;width:59px;height:59px;border:1.5px solid #fff;background:#050505;border-radius:17px;font-size:51px;line-height:1;font-weight:400;color:#fff}
+@media(max-width:390px){body.hc-flow-enabled #hcBubbleHome .hcb-logo{width:48px;height:48px;font-size:43px}}

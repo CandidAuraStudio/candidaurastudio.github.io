@@ -92,11 +92,17 @@ function current(){return document.querySelector('.screen.active')?.id||'home'}
 function bigHome(){
  if(!explore.hidden)closeExplore();
  if(!$('hcBubbleSearchPanel')?.hidden)$('hcBubbleSearchClose')?.click();
- window.show?.('home');window.hcBubbleHome?.open?.();window.scrollTo(0,0);
+ if(typeof window.hcBubbleHome?.open==='function')window.hcBubbleHome.open();
+ else window.show?.('home');
+ window.scrollTo(0,0);
 }
 function exDraw(){const v=experiences[exIndex];$('hcFlowExploreTitle').textContent=v[0];$('hcFlowExploreDesc').textContent=v[1];$('hcFlowExploreCount').textContent=(exIndex+1)+' / '+experiences.length}
 function exMove(n){exIndex=(exIndex+n+experiences.length)%experiences.length;exDraw()}
-function openExplore(){exFocus=document.activeElement;exDraw();explore.hidden=false;document.body.classList.add('hc-flow-modal-open');$('hcFlowExploreClose').focus({preventScroll:true})}
+function openExplore(){
+ exFocus=document.activeElement;exIndex=0;exDraw();
+ explore.hidden=false;document.body.classList.add('hc-flow-modal-open');
+ $('hcFlowExploreClose').focus({preventScroll:true});
+}
 function closeExplore(){explore.hidden=true;document.body.classList.remove('hc-flow-modal-open');if(exFocus?.isConnected)exFocus.focus({preventScroll:true})}
 function exOpen(){const action=experiences[exIndex][2];closeExplore();action()}
 $('hcFlowExploreClose').addEventListener('click',closeExplore);
@@ -124,10 +130,11 @@ $('hcFlowHome').addEventListener('click',bigHome);
 $('hcFlowDockHome').addEventListener('click',bigHome);
 $('hcFlowDockSearch').addEventListener('click',()=>{
  if(!explore.hidden)closeExplore();
- // Always use the same Home search overlay, even if a navigation layer is stale.
- if(typeof window.hcOpenGlobalSearch==='function'){window.hcOpenGlobalSearch();return}
- if(typeof window.hcBubbleHome?.search==='function'){window.hcBubbleHome.search();return}
- $('hcBubbleSearch')?.click();
+ // Search results open sections within Home; return there before searching.
+ if(current()!=='home')window.show?.('home');
+ if(typeof window.hcOpenGlobalSearch==='function')window.hcOpenGlobalSearch();
+ else if(typeof window.hcBubbleHome?.search==='function')window.hcBubbleHome.search();
+ else $('hcBubbleSearch')?.click();
 });
 $('hcFlowDockListen').addEventListener('click',()=>{
  try{const m=typeof window.getActiveMediaState==='function'?window.getActiveMediaState():null;if(m&&typeof window.openActiveMediaPlayer==='function'){window.openActiveMediaPlayer();return}}catch(_){}
