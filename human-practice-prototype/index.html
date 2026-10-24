@@ -4582,10 +4582,9 @@ function hcRestorePreviousScreen(){
  try{saved=JSON.parse(localStorage.getItem(HC_RETURN_KEY)||'null')}catch(e){return false}
  if(!saved||!Number.isFinite(saved.at)||saved.at>Date.now()+60000||
      Date.now()-saved.at>12*3600*1000||!HC_RETURN_SCREENS.has(saved.screen))return false;
- // A fresh launch cannot continue audio until the listener presses Play.
- // Keep previous positions in discrete Home Continue cards instead of opening a large paused player.
- if(['player','sacredSession','soundLabPlayer','bookAudio','fearPlayer','hcDriveMedia','hcReels'].includes(saved.screen))return false;
- let success=false;hcReturnRestoring=true;
+ // Restore supported native players in a paused state with the previous position.
+  // Never autoplay on refresh; Drive and Reels cannot supply a reliable playback position.
+  let success=false;hcReturnRestoring=true;
  try{
   switch(saved.screen){
    case 'player':{
@@ -4623,7 +4622,8 @@ function hcRestorePreviousScreen(){
    default:show(saved.screen);success=true;
   }
   if(success&&['player','sacredSession','soundLabPlayer','bookAudio','fearPlayer'].includes(currentScreenId)){
-   const note=document.getElementById('hcReturnNotice');
+   hcMiniPinnedKey=saved.kind||null;
+    const note=document.getElementById('hcReturnNotice');
    if(note){note.hidden=false;note.textContent='Session restored. Tap Play to continue listening.'}
   }
  }catch(e){try{show('home')}catch(e2){}success=false}
@@ -4856,7 +4856,7 @@ function show(id){
   }
   // Privacy: leave no live microphone behind when navigating away from voice practice.
   if(id!=='humanSession' && typeof humanVoiceRecorder!=='undefined' && humanVoiceRecorder && humanVoiceRecorder.state==='recording')endHumanVoiceRecording();
-  if(id!=='humanSession'&&typeof humanSoundAudio!=='undefined'&&!humanSoundAudio.paused)humanSoundAudio.pause();
+  // Preserve Human Practice audio when changing sections; the microphone is stopped separately.
   if(id!=='hcReels'){
     if(currentScreenId==='hcReels')hcMarkCurrentReelSeen();
     hcReelAutoload=false;hcReelStop()
@@ -4873,9 +4873,7 @@ function show(id){
   const target=document.getElementById(id);
   if(target) target.classList.add('active');
   // Avoid two preview tracks continuing when switching between Home and Completion.
-  document.querySelectorAll('.heartclear-stillness-audio').forEach(el=>{
-    if(!el.closest('.screen.active') && !el.paused)el.pause();
-  });
+  // Stillness recordings remain controllable when the listener leaves their screen.
 
   if(id!=='quietTimer' && hcTimerActive)hcTimerStop(true);
   const immersive=['hcReels','quietTimer','sessionReady','intro','prep','instructions','player','aftercare','completion','hcDriveMedia','omVideo','humanSession','sacredSession','bookAudio','bookReader','soundLabPlayer','fearPlayer'].includes(id);
@@ -4970,6 +4968,12 @@ function getActiveMediaState(){
       screen:'sacredDetail'
     },
     {
+      key:'human-sound',el:humanSoundAudio,
+      title:'Human Practice · '+(document.getElementById('humanSoundTitle')?.textContent||'Listening'),
+      meta:'Human Practice · '+fmt(humanSoundAudio.currentTime||0),
+      screen:'humanSession'
+    },
+    {
       key:'meditation',el:audio,
       title:playbackPhase==='nature'?'Nature sounds':chosenKicker||'Meditation',
       meta:playbackPhase==='nature'?'After meditation · '+fmt(audio.currentTime||0):'Meditation · '+fmt(audio.currentTime||0),
@@ -5005,6 +5009,15 @@ function getActiveMediaState(){
     }
   ];
 
+  // Audio-first fallback for native recordings without a dedicated mini controller.
+  const covered=new Set(options.map(x=>x.el).filter(Boolean));
+  document.querySelectorAll('audio').forEach((el,i)=>{
+    if(!el.getAttribute('src')||covered.has(el))return;
+    if(typeof hcMixDecks!=='undefined'&&hcMixDecks.some(deck=>deck.audio===el))return;
+    const section=el.closest('.screen'),screen=section?.id||'home';
+    const title=el.getAttribute('aria-label')||section?.querySelector('h2,h3')?.textContent?.trim()||'Audio recording';
+    options.push({key:'extra-'+(el.id||i),el,title,meta:'Listening · '+fmt(el.currentTime||0),screen});
+  });
   // Prefer the source that is actually playing.
   let active=options.find(x=>x.el && !x.el.paused && !!x.el.getAttribute('src'));
   // If nothing is currently playing, keep the last loaded/paused source controllable.
@@ -9407,7 +9420,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=177');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=178');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
@@ -9446,7 +9459,7 @@ const heartclearAutoInstallPrompt=false;
 <script src="./hc-gita-original-audio-v163.js?v=172"></script>
 
 <script src="./hc-kitchen-compact-v163.js?v=167"></script>
-<script src="./hc-playback-one-tap-v174.js?v=174"></script>
+<script src="./hc-playback-one-tap-v174.js?v=178"></script>
 <script src="./hc-accounts-preview-v176.js?v=177"></script>
 </body>
 </html>
