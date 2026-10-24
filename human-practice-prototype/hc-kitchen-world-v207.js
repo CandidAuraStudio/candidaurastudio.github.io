@@ -4,7 +4,7 @@
    Measurements use ordinary cups, spoons, handfuls, and cooking cues. */
 (function(){
 'use strict';
-if(window.HCKitchenWorldRecipes)return;
+const previous=window.HCKitchenWorldRecipes;
 const items=[];
 function add(cuisines,en,ta,aliases,ingredients,steps,note=''){
  items.push({en,ta,aliases,cuisines:cuisines.split(' '),ingredients,steps,source:'world',note});
@@ -182,5 +182,19 @@ add('fusion tamil malaysian','Tamil–Malaysian coconut vegetable curry','தம
  'Soften onion, garlic, curry leaves and lemongrass in a little oil.',
  'Add turmeric, chopped vegetables, coconut milk and a splash of water.',
  'Simmer until all vegetables are completely tender; serve with rice.'],'Modern Tamil–Malaysian fusion rather than a certified traditional recipe.');
-window.HCKitchenWorldRecipes=Object.freeze(items);
+function detail(name){
+ const x=items.find(r=>r.en.toLowerCase()===String(name||'').toLowerCase());
+ if(!x)return previous?.detail?.(name)||null;
+ const out=[x.en+' / '+x.ta,'Ingredients / தேவையானவை','• '+x.ingredients,
+  'Cooking / சமைப்பது',...x.steps.map((step,i)=>(i+1)+'. '+step)];
+ if(x.note)out.push(x.note);
+ return {en:x.en,ta:x.ta,text:out.join('\n'),source:'home-style guide',references:[],cuisines:x.cuisines};
+}
+window.HCKitchenWorldRecipes={
+ ...(previous||{}),
+ catalog:()=>[...(previous?.catalog?.()||[]),...items],
+ detail,
+ recipes:(Number(previous?.recipes)||0)+items.length,
+ categories:[...new Set([...(previous?.categories||[]),'Tamil','Sri Lankan Tamil','Indian','Chinese','Indonesian','Malaysian','Nepali','Bangladeshi','Middle Eastern / Arab','Mediterranean','Italian','Scandinavian','European','Tamil fusion'])]
+};
 })();
