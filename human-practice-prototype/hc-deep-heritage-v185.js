@@ -189,12 +189,18 @@ const verses=[
   reflection:['Reflection: nature invites curiosity; practical health claims still need appropriate evidence.','சிந்தனை: இயற்கை ஆர்வத்தைத் தூண்டும்; மருத்துவப் பலன் பற்றிய கூற்றுக்கு தனி ஆதாரம் தேவை.'],source:sources.qHoney}
 ];
 const topics=[['teeth','Teeth','பற்கள்'],['water','Water & wudu','நீர் · உளூ'],['food','Food','உணவு'],['hair','Hair','முடி'],['quran','Qur’an','குர்ஆன்']];
-const root=document.createElement('section');root.id='hcDeepHeritageV185';root.setAttribute('aria-label','Centuries and Qur’an learning');
-root.innerHTML='<div class="hc-deep-head"><span class="hc-deep-kicker">HC · LEARN / அறிந்து கொள்</span><h2>Across the centuries <span lang="ta">நூற்றாண்டுகளின் வழியே</span></h2><p id="hcDeepSubtitle"></p></div><div class="hc-deep-toolbar"><div class="hc-deep-topics" role="group" aria-label="Knowledge topics" id="hcDeepTopics"></div><button type="button" id="hcDeepLang" aria-label="Language">English</button></div><div id="hcDeepContents" aria-live="polite"></div>';
+const root=document.createElement('details');root.id='hcDeepHeritageV185';root.setAttribute('aria-label','Centuries and Qur’an learning');
+root.innerHTML='<summary class="hc-deep-launch"><strong>History · Qur’an · மரபு அறிவு</strong><small>Choose a century. Understand the original source. / நூற்றாண்டு · மூலம் · சிந்தனை</small></summary><div class="hc-deep-head"><span class="hc-deep-kicker">HC · LEARN / அறிந்து கொள்</span><h2>Across the centuries <span lang="ta">நூற்றாண்டுகளின் வழியே</span></h2><p id="hcDeepSubtitle"></p></div><div class="hc-deep-toolbar"><div class="hc-deep-topics" role="group" aria-label="Knowledge topics" id="hcDeepTopics"></div><button type="button" id="hcDeepLang" aria-label="Language">English</button></div><div id="hcDeepContents" aria-live="polite"></div>';
 care.insertAdjacentElement('beforebegin',root);
 const style=document.createElement('style');style.id='hcDeepHeritageStyleV185';style.textContent=[
 '#home #hcDeepHeritageV185{background:#0a1b26;border:1px solid #4a6371;border-radius:16px;margin:10px 0;padding:13px;color:#eef4f5}',
 '#home #hcDeepHeritageV185 *{box-sizing:border-box}',
+'#home #hcDeepHeritageV185 .hc-deep-launch{list-style:none;cursor:pointer;padding:1px 1px 2px;min-height:48px;display:flex;flex-direction:column;justify-content:center}',
+'#home #hcDeepHeritageV185 .hc-deep-launch::-webkit-details-marker{display:none}',
+'#home #hcDeepHeritageV185 .hc-deep-launch strong{font-size:14px;line-height:1.4;color:#f4f6f7}',
+'#home #hcDeepHeritageV185 .hc-deep-launch small{font-size:10px;line-height:1.5;margin-top:3px;color:#bbccd3}',
+'#home #hcDeepHeritageV185[open] .hc-deep-head{border-top:1px solid #476473;padding-top:10px;margin-top:9px}',
+
 '#home #hcDeepHeritageV185 .hc-deep-kicker{font-size:10px;letter-spacing:.06em;color:#b7cbd4;font-weight:700}',
 '#home #hcDeepHeritageV185 h2{font-size:18px;line-height:1.3;margin:5px 0;color:#fff}',
 '#home #hcDeepHeritageV185 h2 span{display:block;font-weight:550;font-size:14px;color:#d9e6ea}',
