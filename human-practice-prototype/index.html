@@ -2472,7 +2472,7 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
     </div>
     <div class="brand-copy"><strong>HC · HeartClear</strong><span id="topContext">Home</span></div>
   </div>
-  <button class="top-action" onclick="show('settings')" aria-label="Settings">⋯</button>
+  <button class="top-action" id="hcTopSettingsAction" type="button" onclick="hcToggleTopSettings()" aria-label="Open settings" title="Open settings">⋯</button>
 </div>
 
 <section class="screen active" id="home">
@@ -4263,6 +4263,9 @@ let sessionRecorded=false;
 let completionHistoryIndex=-1;
 let wakeLock=null;
 let currentScreenId='home';
+// Keep Settings reversible even when entered from the bottom More tab.
+let hcSettingsReturnScreen='home';
+let hcSettingsReturnScrollY=0;
 let wakeLockEnabled=false;
 let prepIndex=0;
 let prepElapsed=0;
@@ -4879,7 +4882,26 @@ window.addEventListener('pagehide',()=>{
  if(currentScreenId==='hcReels')hcMarkCurrentReelSeen();
 });
 
+function hcToggleTopSettings(){
+  if(currentScreenId==='settings'){
+    const previous=document.getElementById(hcSettingsReturnScreen)?.classList.contains('screen')
+      && hcSettingsReturnScreen!=='settings' ? hcSettingsReturnScreen : 'home';
+    const scrollY=hcSettingsReturnScrollY;
+    show(previous);
+    requestAnimationFrame(()=>window.scrollTo(0,scrollY));
+    return;
+  }
+  show('settings');
+}
+
 function show(id){
+  // Save the actual previous route and scroll position whenever Settings opens,
+  // including through bottom More. Do not reset audio or session state.
+  if(id==='settings' && currentScreenId!=='settings'){
+    hcSettingsReturnScreen=document.getElementById(currentScreenId)?.classList.contains('screen')
+      ? currentScreenId : 'home';
+    hcSettingsReturnScrollY=window.scrollY||0;
+  }
   // Google Drive embeds have no reliable external Pause control.
   // Close archived video playback when navigating; never leave a large floating player.
   if(id!=='hcDriveMedia' && hcDriveActiveKey)hcStopDriveVideo(true);
@@ -4942,6 +4964,13 @@ function show(id){
     settings:'Settings'
   }[id]||'';
   const ctx=document.getElementById('topContext'); if(ctx)ctx.textContent=context;
+  const settingsAction=document.getElementById('hcTopSettingsAction');
+  if(settingsAction){
+    const settingsOpen=id==='settings';
+    settingsAction.textContent=settingsOpen?'×':'⋯';
+    settingsAction.setAttribute('aria-label',settingsOpen?'Close settings and return to previous page':'Open settings');
+    settingsAction.title=settingsOpen?'Back to previous page':'Open settings';
+  }
 
   const navMap={
     home:'home',
