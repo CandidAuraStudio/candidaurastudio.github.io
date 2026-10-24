@@ -40,6 +40,17 @@ const BASE='http://127.0.0.1:8765/human-practice-prototype/';
    };
   },kind);
   assert.equal(after.paused,true,kind+' must never autoplay on reload');
+  // Simulate metadata becoming ready after a network-delayed source.
+  // The real browser will apply the same saved offset at loadedmetadata.
+  const offset=await page.evaluate(kind=>{
+   const el=document.getElementById(kind==='genesis'?'hcGenesisAudio':'hcQuranMeaningAudio');
+   let position=Number(el.currentTime)||0;
+   Object.defineProperty(el,'duration',{configurable:true,get:()=>600});
+   Object.defineProperty(el,'currentTime',{configurable:true,get:()=>position,set:value=>{position=Number(value)}});
+   el.dispatchEvent(new Event('loadedmetadata'));
+   return position;
+  },kind);
+  assert.ok(Math.abs(offset-snapshot.seconds)<0.5,kind+' must restore the exact playback second');
   assert.equal(after.home,true,'Home should remain available');
   assert.ok(after.mini,kind+' resumed track should have a mini-player');
   assert.match(after.src||'',expected.src);
