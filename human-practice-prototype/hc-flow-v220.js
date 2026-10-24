@@ -5,6 +5,8 @@ if(document.getElementById('hcFlowDock'))return;
 const $=id=>document.getElementById(id);
 const home=$('home');if(!home)return;
 document.body.classList.add('hc-flow-enabled');
+// Start with readable book text while preserving the existing A+/A− adjustments.
+try{if(typeof readerFontSize!=='undefined')readerFontSize=Math.max(22,Number(readerFontSize)||22)}catch(_){}
 const names={home:'Home',practices:'Meditation',human:'Human Practice',humanCategory:'Human Practice',humanSession:'Human Practice',fearPractice:'Sound Familiarity',fearPlayer:'Listening',returnJourney:'Reflection',starterPath:'Starter Practice',quietTimer:'Quiet Timer',library:'Books & Reading',collection:'Audiobooks',bookReader:'Read Book',bookAudio:'Listen to Book',hcQuranStudy:'Qur’an',hcFatiha:'Al-Fatiha',hcLivingQuran:'The Living Qur’an',sacred:'Sacred Sound',sacredDetail:'Sacred Tradition',sacredSession:'Sacred Listening',soundHub:'Sounds',soundLab:'Sounds',soundLabPlayer:'Now Playing',player:'Now Playing',intro:'Introduction',prep:'Preparation',instructions:'Guidance',completion:'Completed',aftercare:'After Listening',hcDriveMedia:'Video Listening',omVideo:'Video',hcReels:'Reels',history:'History',downloads:'Offline',settings:'Settings',chakraGuide:'Practice Guide'};
 const top=document.createElement('div');top.id='hcFlowTop';
 top.innerHTML='<button id="hcFlowBack" type="button">‹ Back</button><span class="hc-flow-name" id="hcFlowName">HeartClear</span><button id="hcFlowHome" type="button">Home ⌂</button>';
