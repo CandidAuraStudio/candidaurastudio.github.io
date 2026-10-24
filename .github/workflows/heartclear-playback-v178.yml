@@ -1,0 +1,30 @@
+name: HeartClear v178 Playback Regression
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/heartclear-playback-v178.yml'
+      - 'human-practice-prototype/tests/hc-playback-v178-smoke.cjs'
+      - 'human-practice-prototype/index.html'
+      - 'human-practice-prototype/hc-playback-one-tap-v174.js'
+      - 'human-practice-prototype/sw.js'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  playback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Verify navigation, mini-player, Drive collapse and refresh restore
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8765 --directory . > /tmp/heartclear-playback-server.log 2>&1 &
+          node human-practice-prototype/tests/hc-playback-v178-smoke.cjs
