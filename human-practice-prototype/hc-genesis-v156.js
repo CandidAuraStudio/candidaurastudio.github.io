@@ -302,4 +302,14 @@ $('hcGenNext').addEventListener('click',()=>window.hcGenesisStep(1));
 $('hcGenJoseph').addEventListener('click',()=>{stop(true);chapter=37;isLoaded=false;remember();sync();$('hcGenReading').hidden=false;$('hcGenRead').setAttribute('aria-expanded','true');mode='story';drawText();});
 $('hcGenSelect').addEventListener('change',()=>{const v=Number($('hcGenSelect').value);if(v>=1&&v<=50){stop(true);chapter=v;isLoaded=false;remember();sync();drawText();$('hcGenSelect').closest('details').open=false;}});
 sync();
+// The Home shell restores before these deferred scripts have created their players.
+// Run the same paused-state restoration once both Qur'an and Genesis are ready.
+queueMicrotask(()=>{
+ try{
+  const saved=JSON.parse(localStorage.getItem('heartclearReturnStateV1')||'null');
+  if(saved?.screen==='home'&&['genesis','quran-meaning'].includes(saved.kind)
+    &&typeof window.hcRestorePreviousScreen==='function')
+    window.hcRestorePreviousScreen();
+ }catch(e){}
+});
 })();
