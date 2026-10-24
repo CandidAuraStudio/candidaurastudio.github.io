@@ -9,7 +9,7 @@
 #hcBubbleHome h1{font-size:clamp(32px,8vw,43px);line-height:1.1;letter-spacing:-.045em;margin:7px 0 18px;color:#fff}
 #hcBubbleSearch{display:flex;align-items:center;gap:14px;width:100%;min-height:70px;border:2px solid #6b7a81;border-radius:22px;background:#f5f5f1;color:#12202b;text-align:left;padding:13px 18px;font:inherit;font-size:20px;font-weight:650}
 #hcBubbleSearch svg{flex:none}
-#hcBubbleCard{width:100%;margin:20px 0 12px;padding:clamp(22px,6vw,34px) 22px 26px;border:1px solid rgba(240,244,247,.35);border-radius:42px;min-height:min(49vh,450px);background:radial-gradient(ellipse at 60% 12%,var(--hcb-glow,rgba(170,190,220,.22)),transparent 65%),linear-gradient(160deg,#1a2630,#0d151b 78%);display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:10px;text-align:center;color:#fff;box-shadow:0 18px 44px rgba(0,0,0,.22);touch-action:pan-y;position:relative;overflow:hidden}
+#hcBubbleCard{width:100%;margin:20px 0 12px;padding:clamp(22px,6vw,34px) 22px 26px;border:1px solid rgba(240,244,247,.35);border-radius:42px;min-height:min(49vh,450px);background:radial-gradient(ellipse at 60% 12%,var(--hcb-glow,rgba(170,190,220,.22)),transparent 65%),linear-gradient(160deg,#1a2630,#0d151b 78%);display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:10px;text-align:center;color:#fff;box-shadow:0 18px 44px rgba(0,0,0,.22);touch-action:none;position:relative;overflow:hidden}
 #hcBubbleCard .hcb-orb{width:clamp(118px,32vw,155px);height:clamp(118px,32vw,155px);border-radius:50%;background:radial-gradient(circle at 34% 29%,rgba(255,255,255,.78),var(--hcb-orb,#8ba9b6) 45%,rgba(27,40,50,.65) 82%);box-shadow:0 12px 38px var(--hcb-glow,rgba(170,190,220,.2)),inset -16px -20px 34px rgba(0,0,0,.23);flex:none;pointer-events:none}
 #hcBubbleCard .hcb-title{display:block;font-size:clamp(31px,9vw,47px);line-height:1.06;font-weight:780;letter-spacing:-.045em;color:#fff}
 #hcBubbleCard .hcb-description{display:block;max-width:320px;font-size:clamp(17px,4.5vw,21px);line-height:1.35;color:#e2e6e9}
@@ -33,7 +33,33 @@
 #hcBubbleSearchPanel .hcb-result small{font-size:16px;color:#c4d3d9;display:block;font-weight:450;margin-top:4px;line-height:1.35}
 #hcBubbleSearchPanel .hcb-empty{font-size:19px;line-height:1.5;color:#d8e3e8}
 #hcBubbleSearchPanel .hcb-search-caption{font-size:17px;line-height:1.45;color:#bdcbd1}
-#hcBubbleReturn,#hcBubbleClassic{position:fixed;z-index:150;right:max(12px,env(safe-area-inset-right));bottom:calc(110px + env(safe-area-inset-bottom));border:2px solid #fcfcfa;border-radius:999px;background:#fff;color:#0a1b24;padding:13px 20px;min-height:56px;font:750 18px system-ui;box-shadow:0 8px 28px rgba(0,0,0,.42)}
+/* Navigation stays within its page: never cover the native player or content. */
+#hcBubbleReturn,#hcBubbleClassic{position:static;max-width:100%;box-sizing:border-box;z-index:auto;border:1px solid #a3b1b7;border-radius:17px;background:#f6f6f3;color:#0a1b24;padding:10px 15px;min-height:48px;font:700 16px system-ui;box-shadow:none}
+#hcBubbleReturn{display:block;width:100%;margin:0 0 16px;text-align:left}
+#hcBubbleClassic{display:block;margin:12px auto 16px;width:min(100%,300px);text-align:center}
+#home.hc-bubble-detail :is(#hcHomeKitchenQuickV155,#hcGenesisCard){min-width:0;max-width:100%;box-sizing:border-box}
+#home.hc-bubble-detail :is(#hcWorldCategory,#hcWorldArea){min-width:0;width:100%;max-width:100%;box-sizing:border-box}
+#home.hc-bubble-detail #hcKitchenAskV163,
+#home.hc-bubble-detail #hcKitchenWorldV207{min-width:0;max-width:100%;box-sizing:border-box}
+#home.hc-bubble-detail #hcKitchenAskV163 .hc-search-line,
+#home.hc-bubble-detail #hcKitchenWorldV207 .hc-world-filters{min-width:0;max-width:100%}
+#home.hc-bubble-detail #hcKitchenWorldV207 .hc-world-filters{display:grid;grid-template-columns:minmax(0,1fr)}
+@media(max-width:600px){
+ #home.hc-bubble-mode #hcBubbleHome{max-width:100%;padding-inline:2px}
+ #hcBubbleCard{max-width:100%;min-height:min(46dvh,420px)}
+ #globalMini{left:8px!important;right:8px!important;width:auto!important;max-width:calc(100vw - 16px)!important;box-sizing:border-box!important;padding:8px!important;gap:4px!important;display:none}
+ #globalMini.show{display:grid!important;grid-template-columns:minmax(66px,1fr) repeat(5,minmax(31px,39px));align-items:center}
+ #globalMini .global-mini-copy{min-width:0!important;min-height:40px!important;overflow:hidden;text-align:left}
+ #globalMini .global-mini-copy :is(b,small){overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+ body.hc-bubble-on #globalMini .global-mini-copy b{font-size:12px!important}
+ body.hc-bubble-on #globalMini .global-mini-btn,
+ #globalMini .global-mini-btn{height:38px!important;min-height:38px!important;min-width:0!important;width:100%!important;font-size:13px!important;padding:2px!important}
+ #globalMini .hc-mini-scrubber{grid-column:1/-1;min-width:0;order:10}
+ #globalMini .hc-mini-scrubber input{min-width:0}
+ #globalMini .hc-mini-scrubber time{font-size:11px!important}
+ #globalMini #hcMiniSpeed{font-size:12px!important;min-height:33px!important}
+}
+
 body.hc-bubble-detail-on #home #hcGenesisCard :is(.hc-gen-top,#hcGenChapterMeta,#hcGenReadMode,#hcGenReadNote,.hc-gen-sources){font-size:clamp(17px,4.3vw,21px)!important}
 body.hc-bubble-detail-on #home #hcGenesisCard :is(#hcGenTitle,.hc-gen-text,#hcGenReadText){font-size:clamp(21px,5.3vw,27px)!important;max-height:none;line-height:1.8}
 body.hc-bubble-detail-on #home #hcGenesisCard button,
@@ -52,7 +78,7 @@ body.hc-bubble-on #globalMini .global-mini-copy{min-height:50px}
 @media(prefers-reduced-motion:reduce){#hcBubbleCard,.hcb-orb{animation:none!important;transition:none!important}}
 
 /* Larger reading text and touch targets across the existing screens. */
-html,body{touch-action:auto}
+html,body{touch-action:pan-x pan-y}
 body.hc-bubble-on #bottomNav .nav-item{font-size:clamp(11px,2.95vw,14px)!important;min-height:58px!important}
 body.hc-bubble-on #bottomNav .nav-item svg{width:24px;height:24px}
 body.hc-bubble-on .screen.active:not(#hcReels) .collection-back{font-size:18px!important;min-height:50px!important}
