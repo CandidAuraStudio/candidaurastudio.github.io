@@ -76,6 +76,23 @@ function compare(){
 // Expose read-only day previews for tomorrow's preparation. Keep the existing
 // rotating menu algorithm, user-selected alternatives and home layout unchanged.
 window.HCKitchenMenu={
+ // The same named foods used by the weekly menus, indexed for searching.
+ catalog:function(){
+  const seen=new Set(),items=[];
+  Object.keys(DATA.cats).forEach(function(category){
+   DATA.cats[category].forEach(function(pair){
+    const key=pair[1].trim().toLowerCase();
+    if(!seen.has(key)){seen.add(key);items.push({en:pair[1],ta:pair[0],source:'menu',category:category});}
+   });
+  });
+  [DATA.sidesB,DATA.sidesM].forEach(function(group){
+   group.forEach(function(pair){
+    const key=pair[1].trim().toLowerCase();
+    if(!seen.has(key)){seen.add(key);items.push({en:pair[1],ta:pair[0],source:'side'});}
+   });
+  });
+  return items;
+ },
  preview:function(dateStr){
   if(!/^\d{4}-\d{2}-\d{2}$/.test(dateStr))return null;
   const selected=read('hcKitchenMenuChoicesV1',{});
