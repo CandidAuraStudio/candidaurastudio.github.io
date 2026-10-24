@@ -1,4 +1,4 @@
-/* HeartClear: featured surah, nonrepeating four-a-day shuffle, QuranEnc spoken meanings. */
+/* HeartClear: fresh nonrepeating Surah recommendation on each load, QuranEnc spoken meanings. */
 (function(){
 'use strict';
 const home=document.getElementById('home'),greeting=home?.querySelector('.hc-home-greeting-row');
@@ -10,7 +10,7 @@ const spoken={en:'English meaning',ta:'தமிழ் பொருள்',ar:'A
 let lang='en';try{const x=localStorage.getItem('hcQuranHomeLanguageV1');if(['en','ta','ar'].includes(x))lang=x;}catch(e){}
 const order=Array.from({length:114},(_,i)=>i+1);let rand=20261023;
 for(let i=113;i>0;i--){rand=(Math.imul(rand,1664525)+1013904223)>>>0;const j=rand%(i+1);[order[i],order[j]]=[order[j],order[i]];}
-let manual=null,period='',active=null,serial=0;
+let manual=null,active=null,serial=0;
 const versesText=new Map(),versions=new Map();
 const audio=document.createElement('audio');audio.id='hcQuranMeaningAudio';audio.preload='metadata';audio.playsInline=true;audio.hidden=true;document.body.appendChild(audio);
 const panel=document.createElement('section');panel.id='hcQuranFirst';panel.setAttribute('aria-label','Featured Surah');
@@ -54,16 +54,65 @@ const style=document.createElement('style');style.textContent=[
 ].join('\n');document.head.appendChild(style);
 const $=id=>document.getElementById(id);
 const slot=d=>{const h=d.getHours();return h>=5&&h<11?0:h>=11&&h<17?1:h>=17&&h<22?2:3;};
-const recommendedIndex=()=>{const d=new Date(),day=Math.round(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/864e5),start=Math.round(Date.UTC(2026,9,23)/864e5);return (((day-start)*4+slot(d))%114+114)%114;};
-const index=()=>manual===null?recommendedIndex():manual;
+/* The 114 recommendations form a locally saved shuffle bag: no repetition
+   until all chapters have been offered. A page reload draws the next chapter;
+   language changes, tab changes, and minute ticks do not redraw it. */
+const RECOMMENDATION_KEY='hcQuranHomeRefreshBagV1';
+function drawFreshRecommendation(){
+ let saved=null;
+ try{saved=JSON.parse(localStorage.getItem(RECOMMENDATION_KEY)||'null')}catch(e){}
+ let remaining=Array.isArray(saved?.remaining)?saved.remaining:[];
+ const valid=remaining.length<=114&&remaining.every((n,i)=>Number.isInteger(n)&&n>=0&&n<114&&remaining.indexOf(n)===i);
+ if(!valid||!remaining.length){
+  remaining=Array.from({length:114},(_,i)=>i);
+  for(let i=113;i>0;i--){const j=Math.floor(Math.random()*(i+1));[remaining[i],remaining[j]]=[remaining[j],remaining[i]];}
+  if(remaining[0]===saved?.last)[remaining[0],remaining[1]]=[remaining[1],remaining[0]];
+ }
+ const chosen=remaining.shift();
+ try{localStorage.setItem(RECOMMENDATION_KEY,JSON.stringify({remaining,last:chosen}))}catch(e){}
+ return chosen;
+}
+const suggestedIndex=drawFreshRecommendation();
+const index=()=>manual===null?suggestedIndex:manual;
 const number=()=>order[index()];
-const title=n=>typeof soundLabTracks!=='undefined'&&soundLabTracks['hcSurah'+n]?.title||'Surah '+n;
+/* Names come from the same chapter directory used by the full Qur'an reader.
+   Cache names for later offline display; do not generate any verse text. */
+const CHAPTER_NAMES_KEY='hcQuranChapterDirectoryV1',chapterNames=new Map();
+try{
+ const saved=JSON.parse(localStorage.getItem(CHAPTER_NAMES_KEY)||'null');
+ if(Array.isArray(saved))for(const entry of saved){
+  if(Number.isInteger(entry?.n)&&entry.n>=1&&entry.n<=114&&typeof entry.en==='string'&&entry.en.length<100)
+   chapterNames.set(entry.n,{en:entry.en,ar:typeof entry.ar==='string'?entry.ar.slice(0,100):''});
+ }
+}catch(e){}
+const title=n=>chapterNames.get(n)?.en?'Surah '+chapterNames.get(n).en:
+ (typeof soundLabTracks!=='undefined'&&soundLabTracks['hcSurah'+n]?.title||'Surah '+n);
+const displayTitle=n=>title(n)+(chapterNames.get(n)?.ar?' · '+chapterNames.get(n).ar:'');
+async function loadChapterDirectory(){
+ if(chapterNames.size!==114){
+  try{
+   const r=await fetch('https://api.alquran.cloud/v1/surah',{headers:{Accept:'application/json'}});
+   if(!r.ok)throw Error('Chapter directory unavailable');
+   const json=await r.json();
+   for(const item of json?.data||[]){
+    const n=Number(item.number);
+    if(Number.isInteger(n)&&n>=1&&n<=114&&typeof item.englishName==='string')
+     chapterNames.set(n,{en:item.englishName,ar:typeof item.name==='string'?item.name:''});
+   }
+   if(chapterNames.size===114)try{
+    localStorage.setItem(CHAPTER_NAMES_KEY,JSON.stringify(Array.from(chapterNames,([n,x])=>({n,...x}))));
+   }catch(e){}
+  }catch(e){ /* Keep existing names when offline. */ }
+ }
+ for(const opt of $('hcqSelect').options){const n=Number(opt.value);opt.textContent=String(n).padStart(3,'0')+' · '+title(n);}
+ render();
+}
 const arabicSelected=n=>currentSoundKey==='hcSurah'+n&&!!soundLabAudio.getAttribute('src');
 const nowPlaying=()=>lang==='ar'?(arabicSelected(number())&&!soundLabAudio.paused):(active?.n===number()&&active.lang===lang&&!audio.paused);
 function render(){
  const n=number(),d=new Date(),time=['Morning','Afternoon','Evening','Night'][slot(d)];
- $('hcqName').textContent=title(n);$('hcqMeta').textContent=(spoken[lang]||spoken.en)+' · '+counts[n-1]+' verses';
- $('hcqCounter').textContent=n+' / 114';$('hcqSlot').textContent=time+' · changes 4 times a day';
+ $('hcqName').textContent=displayTitle(n);$('hcqMeta').textContent=(spoken[lang]||spoken.en)+' · '+counts[n-1]+' '+({en:'verses',ta:'வசனங்கள்',ar:'آيات'}[lang]||'verses');
+ $('hcqCounter').textContent=n+' / 114';$('hcqSlot').textContent=time+' · new Surah on refresh';
  $('hcqSelect').value=String(n);
  panel.querySelectorAll('[data-hcq]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.hcq===lang)));
  $('hcqIcon').textContent=nowPlaying()?'Ⅱ':'▶';
@@ -91,7 +140,7 @@ window.hcQuranMeaningRestorePaused=saved=>{
    !Number.isInteger(v)||v<1||v>counts[n-1])return false;
  const time=Math.max(0,Number(saved.seconds)||0);
  clearMeaning();
- lang=l;manual=order.indexOf(n);active={n,lang:l,verse:v};
+ lang=l;active={n,lang:l,verse:v}; // Resume in the mini-player without replacing today's freshly recommended card.
  window.hcQuranMeaningNowTitle=title(n)+' · '+spoken[l];
  audio.src=verseURL(n,v,l);audio.preload='metadata';audio.load();
  $('hcqLive').hidden=false;
@@ -223,8 +272,8 @@ $('hcqPrevious').addEventListener('click',()=>{manual=(index()+113)%114;render()
 $('hcqNext').addEventListener('click',()=>{manual=(index()+1)%114;render();});
 $('hcqSelect').addEventListener('change',()=>{const i=order.indexOf(Number($('hcqSelect').value));if(i>=0){manual=i;render();$('hcqBrowse').open=false;}});
 let lastStamp='';
-function refresh(){const d=new Date(),stamp=[d.getFullYear(),d.getMonth(),d.getDate(),slot(d)].join('-');if(lastStamp===stamp)return;lastStamp=stamp;if(!active||(!audio.getAttribute('src')&&audio.paused)){manual=null;render();}}
-refresh();render();setInterval(refresh,60000);
+function refresh(){const d=new Date(),stamp=[d.getFullYear(),d.getMonth(),d.getDate(),slot(d)].join('-');if(lastStamp===stamp)return;lastStamp=stamp;render();}
+refresh();render();loadChapterDirectory();setInterval(refresh,60000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh();});
 window.addEventListener('focus',refresh);
 })();
