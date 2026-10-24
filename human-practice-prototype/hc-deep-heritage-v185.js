@@ -189,76 +189,21 @@ const verses=[
   reflection:['Reflection: nature invites curiosity; practical health claims still need appropriate evidence.','சிந்தனை: இயற்கை ஆர்வத்தைத் தூண்டும்; மருத்துவப் பலன் பற்றிய கூற்றுக்கு தனி ஆதாரம் தேவை.'],source:sources.qHoney}
 ];
 const topics=[['teeth','Teeth','பற்கள்'],['water','Water & wudu','நீர் · உளூ'],['food','Food','உணவு'],['hair','Hair','முடி'],['quran','Qur’an','குர்ஆன்']];
-const root=document.createElement('details');root.id='hcDeepHeritageV185';root.setAttribute('aria-label','Centuries and Qur’an learning');
-root.innerHTML='<summary class="hc-deep-launch"><strong>History · Qur’an · மரபு அறிவு</strong><small>Choose a century. Understand the original source. / நூற்றாண்டு · மூலம் · சிந்தனை</small></summary><div class="hc-deep-head"><span class="hc-deep-kicker">HC · LEARN / அறிந்து கொள்</span><h2>Across the centuries <span lang="ta">நூற்றாண்டுகளின் வழியே</span></h2><p id="hcDeepSubtitle"></p></div><div class="hc-deep-toolbar"><div class="hc-deep-topics" role="group" aria-label="Knowledge topics" id="hcDeepTopics"></div><button type="button" id="hcDeepLang" aria-label="Language">English</button></div><div id="hcDeepContents" aria-live="polite"></div>';
-care.insertAdjacentElement('beforebegin',root);
-const style=document.createElement('style');style.id='hcDeepHeritageStyleV185';style.textContent=[
-'#home #hcDeepHeritageV185{background:#0a1b26;border:1px solid #4a6371;border-radius:16px;margin:10px 0;padding:13px;color:#eef4f5}',
-'#home #hcDeepHeritageV185 *{box-sizing:border-box}',
-'#home #hcDeepHeritageV185 .hc-deep-launch{list-style:none;cursor:pointer;padding:1px 1px 2px;min-height:48px;display:flex;flex-direction:column;justify-content:center}',
-'#home #hcDeepHeritageV185 .hc-deep-launch::-webkit-details-marker{display:none}',
-'#home #hcDeepHeritageV185 .hc-deep-launch strong{font-size:14px;line-height:1.4;color:#f4f6f7}',
-'#home #hcDeepHeritageV185 .hc-deep-launch small{font-size:10px;line-height:1.5;margin-top:3px;color:#bbccd3}',
-'#home #hcDeepHeritageV185[open] .hc-deep-head{border-top:1px solid #476473;padding-top:10px;margin-top:9px}',
-
-'#home #hcDeepHeritageV185 .hc-deep-kicker{font-size:10px;letter-spacing:.06em;color:#b7cbd4;font-weight:700}',
-'#home #hcDeepHeritageV185 h2{font-size:18px;line-height:1.3;margin:5px 0;color:#fff}',
-'#home #hcDeepHeritageV185 h2 span{display:block;font-weight:550;font-size:14px;color:#d9e6ea}',
-'#home #hcDeepHeritageV185 p{font-size:12px;line-height:1.6;color:#d9e5e9;margin:6px 0 10px}',
-'#home #hcDeepHeritageV185 .hc-deep-toolbar{display:flex;gap:7px;align-items:start}',
-'#home #hcDeepHeritageV185 .hc-deep-topics{display:flex;gap:5px;overflow-x:auto;flex:1;scrollbar-width:thin;padding-bottom:5px}',
-'#home #hcDeepHeritageV185 button{font:inherit;cursor:pointer;min-height:35px;border:1px solid #65818d;border-radius:8px;background:#1c303c;color:#f5f7f7;padding:7px 9px;font-size:11px}',
-'#home #hcDeepHeritageV185 .hc-deep-topics button{flex-shrink:0;white-space:nowrap}',
-'#home #hcDeepHeritageV185 button[aria-pressed=true]{background:#ecf3f5;color:#0c222e;font-weight:750;border-color:#ecf3f5}',
-'#home #hcDeepHeritageV185 #hcDeepLang{white-space:nowrap}',
-'#home #hcDeepHeritageV185 .hc-deep-key{font-size:11px;color:#cfdee5;margin:7px 0}',
-'#home #hcDeepHeritageV185 .hc-deep-years{display:flex;gap:6px;overflow-x:auto;padding:4px 0 9px;scrollbar-width:thin}',
-'#home #hcDeepHeritageV185 .hc-deep-years button{flex-shrink:0;white-space:nowrap;border-radius:18px}',
-'#home #hcDeepHeritageV185 .hc-deep-article{border-top:1px solid #496170;margin-top:5px;padding-top:10px}',
-'#home #hcDeepHeritageV185 .hc-deep-era{font-size:11px;color:#b9ccd4}',
-'#home #hcDeepHeritageV185 .hc-deep-article h3{font-size:17px;line-height:1.45;margin:5px 0 10px;font-weight:750}',
-'#home #hcDeepHeritageV185 .hc-deep-article h4{font-size:12px;margin:13px 0 4px;color:#f4f8f8}',
-'#home #hcDeepHeritageV185 .hc-deep-article .hc-deep-question{font-size:13px;color:#f3f5f4;font-weight:650}',
-'#home #hcDeepHeritageV185 .hc-deep-article details{border:1px solid #4a6572;border-radius:8px;padding:8px;margin:11px 0;background:#122936}',
-'#home #hcDeepHeritageV185 .hc-deep-article details summary{font-size:12px;line-height:1.5;cursor:pointer;font-weight:700;min-height:28px}',
-'#home #hcDeepHeritageV185 .hc-deep-article .hc-deep-take{padding:8px;background:#162b36;border-radius:8px;border:1px solid #4a6069}',
-'#home #hcDeepHeritageV185 .hc-deep-links{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0 2px}',
-'#home #hcDeepHeritageV185 .hc-deep-links a{font-size:11px;text-decoration:none;line-height:1.5;color:#f5f7f8;border:1px solid #8499a2;border-radius:7px;padding:7px 9px;min-height:37px;display:inline-flex;align-items:center}',
-'#home #hcDeepHeritageV185 .hc-deep-small{font-size:11px!important;color:#b8cad1!important}',
-'#home #hcDeepHeritageV185 .hc-deep-verse{border-top:1px solid #425b68;padding-top:12px}',
-'#home #hcDeepHeritageV185 .hc-deep-verse>strong{font-size:13px}',
-'#home #hcDeepHeritageV185 :is(a,button,summary):focus-visible{outline:2px solid #fff;outline-offset:2px}'
+/* Compact Home entry; full reading navigation belongs to the Reader screen. */
+window.HCHeritageCatalogV189={data,verses,sources};
+const launcher=document.createElement('button');
+launcher.type='button';launcher.id='hcDeepHeritageV185';
+launcher.className='hc-heritage-launch';
+launcher.innerHTML='<span><strong>History · Qur’an · மரபு அறிவு</strong><small>Open the Knowledge Library · படி · புரிந்து கொள்</small></span><span aria-hidden="true">›</span>';
+care.insertAdjacentElement('beforebegin',launcher);
+const style=document.createElement('style');style.id='hcHeritageLauncherCssV189';
+style.textContent=[
+ '#home #hcDeepHeritageV185{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 0;min-height:55px;padding:11px 13px;background:#0b202c;color:#f1f6f7;border:1px solid #4e6874;border-radius:12px;text-align:left;font:inherit;cursor:pointer}',
+ '#home #hcDeepHeritageV185 strong{display:block;font-size:14px;line-height:1.5;font-weight:750}',
+ '#home #hcDeepHeritageV185 small{display:block;font-size:11px;color:#bdd0d7;margin-top:3px;line-height:1.4}',
+ '#home #hcDeepHeritageV185>span:last-child{font-size:19px}',
+ '#home #hcDeepHeritageV185:focus-visible{outline:2px solid #fff;outline-offset:3px}'
 ].join('\n');document.head.append(style);
-const link=(s)=>s&&LINK_ALLOWED.test(s.url)?'<a href="'+esc(s.url)+'" target="_blank" rel="noopener noreferrer">'+esc(s.label)+' ↗</a>':'';
-function render(){
- const topic=state.topic,section=data[topic];
- const sub=document.getElementById('hcDeepSubtitle'),body=document.getElementById('hcDeepContents'),tabs=document.getElementById('hcDeepTopics'),langBtn=document.getElementById('hcDeepLang');
- if(!sub||!body||!tabs||!langBtn)return;
- tabs.innerHTML=topics.map(t=>'<button type="button" data-hc-topic="'+t[0]+'" aria-pressed="'+(topic===t[0])+'">'+esc(T(t[1],t[2]))+'</button>').join('');
- langBtn.textContent=state.lang==='ta'?'English':'தமிழ்';
- if(topic==='quran'){
-  sub.textContent=T('Read the original verse → explore context → reflect. These are original summaries, not word-for-word translation.','மூல வசனம் → அதன் சூழல் → தனிச் சிந்தனை. இவை சொற்சொல் மொழிபெயர்ப்பு அல்ல.');
-  body.innerHTML='<p class="hc-deep-key">'+T('Qur’an, not medical prescriptions','குர்ஆன்; மருத்துவக் குறிப்புகள் அல்ல')+'</p>'+
-   verses.map(v=>'<article class="hc-deep-verse"><strong>'+esc(v.ref)+' · '+esc(T(v.label[0],v.label[1]))+'</strong><p>'+esc(T(v.detail[0],v.detail[1]))+'</p>'+
-   '<details><summary>'+T('Consider this · personal reflection','இதைச் சிந்தியுங்கள் · தனிக் கருத்து')+'</summary><p>'+esc(T(v.reflection[0],v.reflection[1]))+'</p></details>'+
-   '<div class="hc-deep-links">'+link(v.source)+'</div></article>').join('');
- }else if(section){
-  sub.textContent=T(section.lead[0],section.lead[1]);
-  if(!section.rows.some(x=>x.id===state.selected)){state.selected=section.rows[0].id;save();}
-  const x=section.rows.find(x=>x.id===state.selected)||section.rows[0];
-  body.innerHTML='<p class="hc-deep-key">'+T('Choose an era with documented evidence. Missing centuries are not invented.','ஆதாரம் உள்ள காலத்தைத் தேர்ந்தெடுங்கள். இடைப்பட்ட நூற்றாண்டுகளுக்கு கற்பனைக் கதை இல்லை.')+'</p>'+
-   '<div class="hc-deep-years" aria-label="Historical timeline">'+section.rows.map(item=>'<button type="button" data-hc-era="'+item.id+'" aria-pressed="'+(x.id===item.id)+'">'+esc(item.era)+'</button>').join('')+'</div>'+
-   '<article class="hc-deep-article"><span class="hc-deep-era">'+esc(x.era)+' · '+esc(x.place)+'</span>'+
-   '<h3>'+esc(T(x.title[0],x.title[1]))+'</h3>'+
-   '<p class="hc-deep-question">'+esc(T(x.summary[0],x.summary[1]))+'</p>'+
-   '<details open><summary>'+T('Understand the history','வரலாற்றை அறிக')+'</summary><p>'+esc(T(x.details[0],x.details[1]))+'</p></details>'+
-   '<h4>'+T('Why it matters','ஏன் இது முக்கியம்')+'</h4><p>'+esc(T(x.meaning[0],x.meaning[1]))+'</p>'+
-   '<h4>'+T('Explore or apply','அறிந்து செயல்படுத்து')+'</h4><p class="hc-deep-take">'+esc(T(x.apply[0],x.apply[1]))+'</p>'+
-   '<div class="hc-deep-links">'+x.refs.map(link).join('')+'</div></article>';
- }
- body.querySelectorAll('[data-hc-era]').forEach(b=>b.addEventListener('click',()=>{state.selected=b.dataset.hcEra;save();render()}));
- tabs.querySelectorAll('[data-hc-topic]').forEach(b=>b.addEventListener('click',()=>{state.topic=b.dataset.hcTopic;state.selected=data[state.topic]?.rows?.[0]?.id||'';save();render()}));
- langBtn.onclick=()=>{state.lang=state.lang==='ta'?'en':'ta';save();render()};
-}
-render();
+const reader=document.createElement('script');reader.id='hcHeritageReaderScriptV189';
+reader.src='./hc-heritage-reader-v189.js?v=189';reader.async=true;document.body.append(reader);
 })();
