@@ -11,7 +11,19 @@ const ORIGIN='hcHeritageReadingProgressV189';
 let lang='ta',origin='home',originY=0,route={level:'index',topic:null,item:null},sessionNumber=0;
 try{const x=JSON.parse(localStorage.getItem(ORIGIN)||'null');if(x?.language==='en')lang='en'}catch(_){}
 const tr=(en,ta)=>lang==='ta'?ta:en;
-const topics=[['teeth','Teeth','பற்கள்'],['water','Water & wudu','நீர் · உளூ'],['food','Food & farming','உணவு · விவசாயம்'],['hair','Hair & family stories','முடி · குடும்பம்'],['whole','Body & everyday life','உடலும் அன்றாட வாழ்வும்'],['quran','Qur’an in context','குர்ஆன் · விளக்கம்']];
+const topics=[
+ ['quran','Qur’an · Islam','குர்ஆன் · இஸ்லாம்'],
+ ['newtestament','Bible · New Testament','பைபிள் · புதிய ஏற்பாடு'],
+ ['oldtestament','Old Testament · Hebrew Bible','பழைய ஏற்பாடு · எபிரேய வேதாகமம்'],
+ ['gita','Bhagavad Gita','பகவத் கீதை'],
+ ['vedas','Vedas · Rigveda','வேதங்கள் · ரிக்வேதம்'],
+ ['ayurveda','Ayurveda · classical writings','ஆயுர்வேதம் · பழைய நூல்கள்'],
+ ['teeth','Teeth & history','பற்கள் · வரலாறு'],
+ ['water','Water & wudu','நீர் · உளூ'],
+ ['food','Food & farming','உணவு · விவசாயம்'],
+ ['hair','Hair & family stories','முடி · குடும்பம்'],
+ ['whole','Body & everyday life','உடலும் அன்றாட வாழ்வும்']
+]
 const bodyRows=[
 ['eyes','Eyes & vision','கண்கள் · பார்வை','Why blinking matters','இமைப்பதன் முக்கியம்','Blinking supports the eye’s tear film. Long periods looking at a screen can make eyes uncomfortable. Traditional preparations placed directly in eyes are not automatically safe.','இமைத்தல் கண்ணீர்ப் படலத்திற்கு உதவுகிறது. அதிக நேரம் திரையைப் பார்த்தால் கண்களுக்கு அசௌகரியம் வரலாம். பழைய முறையில் பயன்படுத்திய எல்லா கலவைகளும் கண்களுக்குப் பாதுகாப்பானவை அல்ல.','Rest your eyes, use clean hands, and seek examination for pain or changes in vision.','கண்களுக்கு ஓய்வு, சுத்தமான கைகள்; வலி அல்லது பார்வை மாற்றம் இருந்தால் பரிசோதிக்கவும்.'],
 ['ears','Ears & hearing','காதுகள் · கேள்வி','How ears protect themselves','காது இயற்கையாகப் பாதுகாக்கும் முறை','The ear canal usually moves wax outward. Putting sticks or oils deep inside can interfere. Ear-care customs should be traced to real communities, not assumed to be universal.','காது மெழுகு பொதுவாகத் தானே வெளியே நகரும். உள்ளே குச்சி அல்லது எண்ணெய் வைப்பது பிரச்சினை தரலாம். மரபு முறைகள் எல்லா இடங்களுக்கும் பொதுவானவை என்று கருத வேண்டாம்.','Clean the outer ear only. Keep headphones at a comfortable volume.','காதின் வெளிப்புறத்தை மட்டும் சுத்தம் செய்து ஹெட்போன் சத்தத்தைக் குறைக்கவும்.'],
@@ -29,7 +41,7 @@ const rows=topic=>topic==='whole'?bodyRows.map(bodyChapter):topic==='quran'?vers
 const topicLabel=id=>{const x=topics.find(y=>y[0]===id);return x?tr(x[1],x[2]):''};
 const chTitle=x=>tr(x.title?.[0]||x.label?.[0],x.title?.[1]||x.label?.[1]);
 const chShort=x=>tr(x.summary?.[0]||x.detail?.[0],x.summary?.[1]||x.detail?.[1]);
-const allowedHosts=new Set(['ada.org','www.ada.org','loc.gov','www.loc.gov','americanhistory.si.edu','www.americanhistory.si.edu','metmuseum.org','www.metmuseum.org','quran.com','legacy.quran.com','sunnah.com','pmc.ncbi.nlm.nih.gov','pubmed.ncbi.nlm.nih.gov','aad.org','www.aad.org','cdc.gov','www.cdc.gov','cambridge.org','www.cambridge.org']);
+const allowedHosts=new Set(['ada.org','www.ada.org','loc.gov','www.loc.gov','americanhistory.si.edu','www.americanhistory.si.edu','metmuseum.org','www.metmuseum.org','quran.com','legacy.quran.com','pmc.ncbi.nlm.nih.gov','pubmed.ncbi.nlm.nih.gov','aad.org','www.aad.org','cdc.gov','www.cdc.gov','cambridge.org','www.cambridge.org','www.biblegateway.com','biblegateway.com','heritage.iitk.ac.in','www.gitasupersite.iitk.ac.in','gitasupersite.iitk.ac.in','www.wisdomlib.org','wisdomlib.org','www.carakasamhitaonline.com','carakasamhitaonline.com']);
 function href(s){
  if(!s||typeof s.url!=='string')return '';
  try{const u=new URL(s.url);if(u.protocol!=='https:'||!allowedHosts.has(u.hostname.toLowerCase()))return '';
@@ -118,14 +130,14 @@ function render(){
  footer.innerHTML='';
  if(route.level==='index'){
   main.innerHTML='<span class="hc-heritage-kicker">HEARTCLEAR · READ</span><h1>'+tr('Human knowledge, across time','மனித அறிவு · காலங்களின் வழியே')+'</h1>'+
-  '<p>'+tr('Not only Qur’an. Explore tools, traditions, bodies, families and verified history. Choose a subject to begin.','குர்ஆன் மட்டும் அல்ல. கருவிகள், மரபுகள், உடல், குடும்பம், ஆதாரமுள்ள வரலாறு — ஒரு தலைப்பைத் தேர்ந்தெடுக்கவும்.')+'</p>'+
+  '<p>'+tr('Explore Qur’an, Bible, Vedas and traditions in their own contexts, alongside everyday knowledge.','குர்ஆன், பைபிள், வேதம், பிற மரபுகள் மற்றும் அன்றாட அறிவை அவற்றின் சொந்தச் சூழலில் அறியலாம்.')+'</p>'+
   '<div class="hc-heritage-list">'+topics.map(t=>'<button type="button" class="hc-heritage-tile" data-topic="'+t[0]+'"><span><strong>'+E(tr(t[1],t[2]))+'</strong><small>'+rows(t[0]).length+' '+tr('articles','கட்டுரைகள்')+'</small></span><span class="chev" aria-hidden="true">›</span></button>').join('')+'</div>'+
   '<p>'+tr('Centuries are shown only when evidence exists. Gaps are not filled with invented history.','ஆதாரம் இருந்தால் மட்டுமே நூற்றாண்டுகள் குறிப்பிடப்படும். தெரியாத இடங்களில் கற்பனைக் கதை இல்லை.')+'</p>';
  }else if(route.level==='topic'){
   if(!chapter.length){navigate('index');return}
   const intro=data[group]?.lead;
   main.innerHTML='<span class="hc-heritage-kicker">'+tr('SUBJECT','தலைப்பு')+'</span><h1>'+E(subject)+'</h1>'+
-   (intro?'<p>'+E(tr(intro[0],intro[1]))+'</p>':'<p>'+tr('Read the original text, then consider the reflection separately.','மூல வசனத்தை வாசித்துப் பின்னர் சிந்தனையைத் தனியாகப் பாருங்கள்.')+'</p>')+
+   (intro?'<p>'+E(tr(intro[0],intro[1]))+'</p>':'<p>'+tr('Read the Qur’anic verse itself; reflections are clearly separate.','மூல குர்ஆன் வசனத்தை வாசித்து, சிந்தனையைத் தனியாகக் காணலாம்.')+'</p>')+
    '<div class="hc-heritage-list">'+chapter.map((c,i)=>'<button type="button" class="hc-heritage-tile" data-article="'+E(c.id)+'"><span><span class="hc-heritage-when">'+E(c.era||('Qur’an '+c.ref))+'</span><strong>'+E(chTitle(c))+'</strong><small>'+E(chShort(c))+'</small></span><span class="chev" aria-hidden="true">›</span></button>').join('')+'</div>';
  }else{
   const selected=chapter.find(c=>c.id===route.item);
@@ -157,7 +169,7 @@ launcher?.addEventListener('click',()=>open());
 const grid=document.querySelector('#library .hub-grid');
 if(grid&&!document.getElementById('hcHeritageLibraryEntry')){
  const item=document.createElement('button');item.type='button';item.className='hub-card';item.id='hcHeritageLibraryEntry';
- item.innerHTML='<span class="hub-icon">⌛</span><span><b>Human Knowledge · மரபு அறிவு</b><small>History · body · Qur’an · Tamil and English</small></span><span class="hub-arrow">›</span>';
+ item.innerHTML='<span class="hub-icon">⌛</span><span><b>Human Knowledge · மனித அறிவு</b><small>Qur’an · Bible · Vedas · Tamil and English</small></span><span class="hub-arrow">›</span>';
  item.addEventListener('click',()=>open());grid.append(item);
 }
 window.HCHeritageReader={open,back:goBack};
