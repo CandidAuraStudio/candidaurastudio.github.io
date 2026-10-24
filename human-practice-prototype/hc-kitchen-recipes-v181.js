@@ -352,6 +352,34 @@ const personalDishes=[
  ]},
  {en:'Sambal kangkong',ta:'காங்கோங் சம்பல்',notes:[]}
 ];
+// Shared read-only recipe lookup used by the Home search bar.
+window.HCKitchenSearchGuide={
+ personal:personalDishes.map(d=>({en:d.en,ta:d.ta,source:'personal',hasNotes:Boolean(d.notes.length)})),
+ detail:function(name,ta){
+  const requested=String(name||'').trim();
+  if(!requested)return null;
+  const own=personalDishes.find(d=>d.en.toLowerCase()===requested.toLowerCase());
+  if(own&&own.notes.length)return {
+   en:own.en,ta:own.ta,
+   text:own.notes.map(x=>x[0]+'\n'+x[1]).join('\n\n'),
+   source:'earlier cooking notes'
+  };
+  // Named home dishes that have no recorded personal methods use the separate,
+  // explicitly general household guides instead of inventing an old method.
+  if(own&&!own.notes.length)return null;
+  const mods=baseModules(requested);
+  if(!mods.length)return null;
+  const items=combined(mods);
+  let lines=[requested+(ta?' / '+ta:''),'Kitchen guide / சமையல் வழிகாட்டி',
+   'Shopping list / வாங்க வேண்டியவை:'];
+  items.forEach(x=>lines.push('• '+x.en+' / '+x.ta+' — '+amount(x,settings.servings,settings.language)));
+  mods.forEach(m=>{
+   lines.push('\n'+m.en+' / '+m.ta+':');
+   m.steps.forEach((step,i)=>lines.push((i+1)+'. '+step[0]+'\n'+step[1]));
+  });
+  return {en:requested,ta:ta||'',text:lines.join('\n'),source:'general cooking guide'};
+ }
+};
 function showPersonalKitchen(){
  if(root.querySelector('#hcPersonalKitchen'))return;
  const anchor=root.querySelector('#hcmMeals');if(!anchor)return;
