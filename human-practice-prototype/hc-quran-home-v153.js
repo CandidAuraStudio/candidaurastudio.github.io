@@ -67,7 +67,7 @@ function render(){
  $('hcqSelect').value=String(n);
  panel.querySelectorAll('[data-hcq]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.hcq===lang)));
  $('hcqIcon').textContent=nowPlaying()?'Ⅱ':'▶';
- $('hcqAction').textContent=nowPlaying()?'Pause':lang==='ar'?(arabicSelected(n)?'Resume':'Listen in Arabic'):lang==='ta'?'தமிழில் கேளுங்கள்':'Listen in English';
+ $('hcqAction').textContent=nowPlaying()?'Pause':lang==='ar'?(arabicSelected(n)?'Resume':'Listen in Arabic'):(active?.n===n&&active?.lang===lang&&audio.getAttribute('src')?'Resume':lang==='ta'?'தமிழில் கேளுங்கள்':'Listen in English');
  $('hcqPlay').setAttribute('aria-pressed',String(nowPlaying()));
 }
 for(let i=1;i<=114;i++){const opt=document.createElement('option');opt.value=String(i);opt.textContent=String(i).padStart(3,'0')+' · '+title(i);$('hcqSelect').appendChild(opt);}
@@ -78,6 +78,33 @@ function clearMeaning(){
  if(typeof renderGlobalMini==='function')renderGlobalMini();
 }
 window.hcStopQuranMeaning=()=>{clearMeaning();active=null;render();};
+
+/* Resume the same surah/verse after a browser restart, with audio paused. */
+window.hcQuranMeaningPlaybackSnapshot=()=>{
+ if(!active||active.lang==='ar'||!audio.getAttribute('src'))return null;
+ return {surah:active.n,language:active.lang,verse:active.verse,
+  seconds:Math.max(0,Number(audio.currentTime)||0)};
+};
+window.hcQuranMeaningRestorePaused=saved=>{
+ const n=Number(saved?.surah),v=Number(saved?.verse),l=saved?.language;
+ if(!Number.isInteger(n)||n<1||n>114||!['en','ta'].includes(l)||
+   !Number.isInteger(v)||v<1||v>counts[n-1])return false;
+ const time=Math.max(0,Number(saved.seconds)||0);
+ clearMeaning();
+ lang=l;manual=order.indexOf(n);active={n,lang:l,verse:v};
+ window.hcQuranMeaningNowTitle=title(n)+' · '+spoken[l];
+ audio.src=verseURL(n,v,l);audio.preload='metadata';audio.load();
+ $('hcqLive').hidden=false;
+ displayVerse();fetchText(n,l,serial);fetchVersion(l);setupSession();
+ if(typeof hcSeekRestored==='function')hcSeekRestored(audio,time,render);
+ if(typeof hcMiniPinnedKey!=='undefined')hcMiniPinnedKey='quran-meaning';
+ try{localStorage.setItem('heartclearActiveMedia','quran-meaning')}catch(e){}
+ $('hcqStatus').textContent='Verse restored. Tap Play to continue.';
+ render();
+ if(typeof renderGlobalMini==='function')renderGlobalMini();
+ return true;
+};
+
 function verseURL(n,v,l){return 'https://d.quranenc.com/data/audio/'+audioKeys[l]+'/'+String(n).padStart(3,'0')+String(v).padStart(3,'0')+'.mp3';}
 function displayVerse(){
  if(!active||active.lang==='ar')return;
@@ -196,7 +223,7 @@ $('hcqPrevious').addEventListener('click',()=>{manual=(index()+113)%114;render()
 $('hcqNext').addEventListener('click',()=>{manual=(index()+1)%114;render();});
 $('hcqSelect').addEventListener('change',()=>{const i=order.indexOf(Number($('hcqSelect').value));if(i>=0){manual=i;render();$('hcqBrowse').open=false;}});
 let lastStamp='';
-function refresh(){const d=new Date(),stamp=[d.getFullYear(),d.getMonth(),d.getDate(),slot(d)].join('-');if(lastStamp===stamp)return;lastStamp=stamp;if(!active||audio.paused){manual=null;render();}}
+function refresh(){const d=new Date(),stamp=[d.getFullYear(),d.getMonth(),d.getDate(),slot(d)].join('-');if(lastStamp===stamp)return;lastStamp=stamp;if(!active||(!audio.getAttribute('src')&&audio.paused)){manual=null;render();}}
 refresh();render();setInterval(refresh,60000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh();});
 window.addEventListener('focus',refresh);
