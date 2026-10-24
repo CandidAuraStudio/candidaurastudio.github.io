@@ -43,7 +43,7 @@ def year(entity,prop):
 entities={}
 keys=list(resolved)
 for i in range(0,len(keys),25):
-    entities.update(request(action='wbgetentities',ids='|'.join(keys[i:i+25]),props='claims|labels|descriptions',languages='en').get('entities',{}))
+    entities.update(request(action='wbgetentities',ids='|'.join(keys[i:i+25]),props='info|claims|labels|descriptions|sitelinks',languages='en',sitefilter='enwiki').get('entities',{}))
 occupation_ids=sorted({q for e in entities.values() for p in ['P106','P27'] for q in ids(e,p) if q})
 labels={}
 for i in range(0,len(occupation_ids),50):
@@ -52,13 +52,17 @@ for i in range(0,len(occupation_ids),50):
 eligible=set()
 for name,choices in name_candidates.items():
     humans=[q for q in choices if 'Q5' in ids(entities.get(q,{}),'P31')]
+    if len(humans)>1:
+        expected='Vijay (actor)' if name in ['Vijay','Vijay (Tamil actor)'] else re.sub(r'\s*\([^)]*\)','',name).strip()
+        main_article=[q for q in humans if normal(entities[q].get('sitelinks',{}).get('enwiki',{}).get('title',''))==normal(expected)]
+        if len(main_article)==1:humans=main_article
     if len(humans)==1:eligible.add(humans[0])
     else:skipped.append({'name':name,'reason':'ambiguous or absent verified human'})
 items=[]
 for q,e in entities.items():
     if q not in eligible:continue
     sex=ids(e,'P21');sex='female' if sex==['Q6581072'] else 'male' if sex==['Q6581097'] else None
-    items.append({'id':'wd:'+q,'name':e.get('labels',{}).get('en',{}).get('value',resolved[q]),'description':e.get('descriptions',{}).get('en',{}).get('value',''),
+    items.append({'id':'wd:'+q,'name':resolved[q],'canonicalName':e.get('labels',{}).get('en',{}).get('value',resolved[q]),'description':e.get('descriptions',{}).get('en',{}).get('value',''),
       'source':'https://www.wikidata.org/wiki/'+q,'revision':e.get('lastrevid'),'sex':sex,'birthYear':year(e,'P569'),'deathYear':year(e,'P570'),
       'citizenships':[v for v in ids(e,'P27') if v],'occupations':[{'id':v,'label':labels.get(v,v)} for v in ids(e,'P106') if v]})
 items.sort(key=lambda x:x['name'].casefold())
