@@ -104,3 +104,13 @@ if(live){
 update();window.addEventListener('focus',update);document.addEventListener('visibilitychange',()=>{if(!document.hidden)update()});
 setInterval(update,120000);
 })();
+
+/* Family daily-care routines, Tamil & English. Additive; existing home controls remain. */
+(function(){
+ if(document.getElementById('hcDailyCareScriptV182'))return;
+ const s=document.createElement('script');
+ s.id='hcDailyCareScriptV182';
+ s.src='./hc-daily-care-v182.js?v=182';
+ s.async=true;
+ document.body.append(s);
+})();
