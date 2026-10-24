@@ -119,3 +119,13 @@ body.hc-fresh-home #hcMiniLibrary{display:none!important}
  #hcBubbleHome .hcb-hint{font-size:13px;line-height:1.35}
  #hcBubbleHome .hcb-switch{font-size:14px}
 }
+/* Keep world-food cards and all filters inside the viewport at all sizes. */
+#home #hcHomeKitchenQuickV155{min-width:0;max-width:100%;box-sizing:border-box}
+#home #hcKitchenAskV163 .hc-search-line{min-width:0;display:flex;flex-wrap:wrap;align-items:stretch}
+#home #hcKitchenAskV163 #hcKitchenAskInput{min-width:0;flex:1 1 180px;max-width:100%;box-sizing:border-box}
+#home #hcKitchenAskV163 #hcKitchenAskSend{flex:0 0 auto}
+#home #hcKitchenAskV163 .hc-cuisine-line{min-width:0;max-width:100%;flex-wrap:wrap}
+#home #hcKitchenAskV163 #hcKitchenTradition{min-width:0;max-width:100%;width:100%;box-sizing:border-box}
+#home #hcKitchenAskV163 .hc-kitchen-search-results,
+#home #hcKitchenAskV163 .hc-ask-reply{min-width:0;max-width:100%;box-sizing:border-box;overflow-wrap:anywhere}
+#home.hc-bubble-detail #hcKitchenTomorrow{font-size:clamp(15px,4vw,18px)!important;min-height:48px!important;height:auto!important;width:100%!important;max-width:100%!important;padding:9px 12px!important}
