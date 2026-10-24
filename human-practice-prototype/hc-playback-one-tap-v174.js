@@ -11,7 +11,12 @@ style.textContent=[
 '#hcOneTapDrive *{box-sizing:border-box}',
 '#hcOneTapDrive .hc-ot-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}',
 '#hcOneTapDrive .hc-ot-head strong{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px}',
-'#hcOneTapDrive .hc-ot-close{width:38px;height:38px;border:1px solid #555;border-radius:9px;background:#222;color:#fff;font-size:22px;cursor:pointer}',
+'#hcOneTapDrive .hc-ot-close,#hcOneTapDrive .hc-ot-minimize{width:38px;height:38px;border:1px solid #555;border-radius:9px;background:#222;color:#fff;font-size:20px;cursor:pointer}',
+'#hcOneTapDrive.hc-ot-collapsed{padding:6px 8px;width:min(310px,calc(100vw - 20px))}',
+'#hcOneTapDrive.hc-ot-collapsed .hc-ot-head{margin:0}',
+'#hcOneTapDrive.hc-ot-collapsed iframe{position:absolute!important;width:1px!important;height:1px!important;opacity:0;pointer-events:none}',
+'#hcOneTapDrive.hc-ot-collapsed .hc-ot-foot{display:none}',
+'#hcOneTapDrive.hc-ot-collapsed .hc-ot-head strong{font-size:12px}',
 '#hcOneTapDrive iframe{display:block;width:100%;height:clamp(175px,45vw,225px);border:0;border-radius:9px;background:#000}',
 '#hcOneTapDrive .hc-ot-foot{display:flex;align-items:center;gap:9px;justify-content:space-between;margin-top:7px;font-size:11px;color:#d0d0d0;line-height:1.3}',
 '#hcOneTapDrive a{color:#fff;text-decoration:underline;white-space:nowrap}',
@@ -27,17 +32,26 @@ dock.id='hcOneTapDrive';
 dock.hidden=true;
 dock.setAttribute('role','region');
 dock.setAttribute('aria-label','Google Drive video recording');
-dock.innerHTML='<div class="hc-ot-head"><strong id="hcOtTitle"></strong><button type="button" class="hc-ot-close" id="hcOtClose" aria-label="Close Google Drive player">×</button></div>'+
+dock.innerHTML='<div class="hc-ot-head"><strong id="hcOtTitle"></strong><button type="button" class="hc-ot-minimize" id="hcOtMinimize" aria-label="Minimize Google Drive player">−</button><button type="button" class="hc-ot-close" id="hcOtClose" aria-label="Stop and close Google Drive player">×</button></div>'+
 '<iframe id="hcOtFrame" title="Google Drive video" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>'+
 '<div class="hc-ot-foot"><span>Drive video · tap inside if autoplay is blocked</span><a id="hcOtSource" target="_blank" rel="noopener noreferrer">Open source ↗</a></div>';
 document.body.appendChild(dock);
 const frame=document.getElementById('hcOtFrame');
 let activeDriveKey='';
+const minimizeButton=document.getElementById('hcOtMinimize');
+function setDriveMinimized(collapsed){
+ dock.classList.toggle('hc-ot-collapsed',!!collapsed);
+ minimizeButton.textContent=collapsed?'□':'−';
+ minimizeButton.setAttribute('aria-label',collapsed?'Expand Google Drive player':'Minimize Google Drive player');
+ minimizeButton.title=collapsed?'Expand recording':'Minimize recording (Drive controls remain inside preview)';
+}
+minimizeButton.addEventListener('click',()=>setDriveMinimized(!dock.classList.contains('hc-ot-collapsed')));
 function closeDrive(){
  if(!activeDriveKey)return;
  activeDriveKey='';
  frame.removeAttribute('src');
  dock.hidden=true;
+ setDriveMinimized(false);
  document.body.classList.remove('hc-one-tap-drive-open');
  if(typeof renderGlobalMini==='function')queueMicrotask(renderGlobalMini);
 }
@@ -70,6 +84,7 @@ window.openHcDriveMedia=function(key,sourceScreen){
  document.getElementById('hcOtTitle').textContent=item.name;
  document.getElementById('hcOtSource').href='https://drive.google.com/file/d/'+encodeURIComponent(item.id)+'/view';
  dock.hidden=false;
+ setDriveMinimized(false);
  document.body.classList.add('hc-one-tap-drive-open');
  frame.title=item.name+' (Google Drive video)';
  // No intermediate HeartClear screen, Begin button, or download-URL audio guess.
@@ -77,8 +92,10 @@ window.openHcDriveMedia=function(key,sourceScreen){
 };
 const originalShow=window.show;
 if(typeof originalShow==='function')window.show=function(id){
- closeDrive();
- if(id==='hcReels')pauseNative();
+ // Ordinary in-app navigation keeps the original iframe mounted, minimizing its view.
+ // Google Drive controls its own playback; browser background policies still apply.
+ if(id==='hcReels'){closeDrive();pauseNative();}
+ else if(activeDriveKey)setDriveMinimized(true);
  return originalShow.apply(this,arguments);
 };
 const originalReels=window.hcOpenReels;
