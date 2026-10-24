@@ -208,12 +208,12 @@ function playVerse(v){
  const current=serial;
  audio.play().catch(()=>{if(serial===current)$('hcqStatus').textContent='Tap Play again or check your connection';});
 }
-function start(n,l){
- clearMeaning();focus();active={n,lang:l,verse:1};
+function start(n,l,verse=1){
+ clearMeaning();focus();active={n,lang:l,verse};
  window.hcQuranMeaningNowTitle=title(n)+' · '+spoken[l];
  $('hcqLive').hidden=false;$('hcqStatus').textContent='Loading…';
  const current=serial;
- fetchText(n,l,current);fetchVersion(l);playVerse(1);
+ fetchText(n,l,current);fetchVersion(l);playVerse(verse);
  hcMiniPinnedKey='quran-meaning';render();renderGlobalMini();
 }
 function toggle(){
@@ -239,6 +239,60 @@ function toggle(){
  }
  start(n,lang);
 }
+/* The full Qur'an reader reuses this audio and the existing global mini-player. */
+function notifyQuranReader(){window.dispatchEvent(new Event('hcQuranAudioChange'));}
+window.hcQuranReaderState=()=>{
+ const ar=/^hcSurah([1-9][0-9]?|10[0-9]|11[0-4])$/.exec(String(currentSoundKey||''));
+ if(ar&&soundLabAudio.getAttribute('src'))return {
+  chapter:Number(ar[1]),language:'ar',verse:1,playing:!soundLabAudio.paused,
+  seconds:Number(soundLabAudio.currentTime)||0,duration:Number(soundLabAudio.duration)||0,
+  error:!!soundLabAudio.error
+ };
+ if(active&&active.lang!=='ar'&&audio.getAttribute('src'))return {
+  chapter:active.n,language:active.lang,verse:active.verse,playing:!audio.paused,
+  seconds:Number(audio.currentTime)||0,duration:Number(audio.duration)||0,error:!!audio.error
+ };
+ return null;
+};
+window.hcQuranReaderPlay=(chapter,language='ar',verse=1)=>{
+ const n=Number(chapter),l=String(language),v=Number(verse);
+ if(!Number.isInteger(n)||n<1||n>114||!['ar','en','ta'].includes(l)||
+    !Number.isInteger(v)||v<1||v>counts[n-1])return false;
+ if(l==='ar'){
+  if(currentSoundKey==='hcSurah'+n&&soundLabAudio.getAttribute('src')){
+   if(soundLabAudio.paused){
+    focus();active={n,lang:'ar',verse:1};
+    if(typeof setSoundLabMediaSession==='function')setSoundLabMediaSession();
+    soundLabAudio.play().catch(()=>{});
+    hcMiniPinnedKey='soundlab';renderGlobalMini();
+   }else soundLabAudio.pause();
+  }else{
+   clearMeaning();focus();active={n,lang:'ar',verse:1};$('hcqLive').hidden=true;
+   if(typeof hcPlayQuranSurah==='function')hcPlayQuranSurah(n);
+  }
+ }else if(active?.n===n&&active.lang===l&&audio.getAttribute('src')){
+  if(active.verse!==v){audio.pause();playVerse(v);}
+  else if(audio.paused){focus();setupSession();audio.play().catch(()=>{});}
+  else audio.pause();
+ }else start(n,l,v);
+ notifyQuranReader();render();return true;
+};
+window.hcQuranReaderStep=delta=>{
+ if(!active||active.lang==='ar'||!audio.getAttribute('src'))return false;
+ const next=active.verse+Number(delta);
+ if(!Number.isInteger(next)||next<1||next>counts[active.n-1])return false;
+ audio.pause();playVerse(next);notifyQuranReader();return true;
+};
+window.hcQuranReaderSeek=fraction=>{
+ const s=window.hcQuranReaderState();if(!s)return false;
+ const el=s.language==='ar'?soundLabAudio:audio,d=Number(el.duration);
+ if(!Number.isFinite(d)||d<=0)return false;
+ el.currentTime=Math.max(0,Math.min(d,d*Number(fraction)));
+ notifyQuranReader();return true;
+};
+for(const event of ['play','pause','waiting','error','ended','loadedmetadata','timeupdate'])audio.addEventListener(event,notifyQuranReader);
+for(const event of ['play','pause','waiting','error','ended','emptied','loadedmetadata','timeupdate'])soundLabAudio.addEventListener(event,notifyQuranReader);
+notifyQuranReader();
 window.hcMeaningStepVerse=delta=>{
  if(!active||active.lang==='ar')return;
  const v=active.verse+Number(delta);
