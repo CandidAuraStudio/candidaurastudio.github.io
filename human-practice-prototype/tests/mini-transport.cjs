@@ -69,7 +69,15 @@ const assert=require('node:assert/strict');
   await page.mouse.wheel(0,675);
   await page.waitForTimeout(150);
   const scroll=await page.evaluate(()=>({y:window.scrollY,visible:document.getElementById('globalMini').classList.contains('show'),bodyClass:document.body.classList.contains('hc-mini-visible')}));
-  assert.ok(scroll.y>90,'Page did not scroll under mini-player: '+JSON.stringify(scroll));
+  if(!(scroll.y>90)){
+    const info=await page.evaluate(()=>{
+      const app=document.querySelector('.app'),home=document.getElementById('home'),bubble=document.getElementById('hcBubbleHome'),root=document.scrollingElement;
+      const before=window.scrollY;
+      window.scrollTo(0,300);
+      return {before,after:window.scrollY,windowH:innerHeight,docH:root.scrollHeight,htmlOverflow:getComputedStyle(document.documentElement).overflowY,bodyOverflow:getComputedStyle(document.body).overflowY,appH:app?.getBoundingClientRect().height,homeH:home?.getBoundingClientRect().height,bubbleH:bubble?.getBoundingClientRect().height,active:document.querySelector('.screen.active')?.id,homeClass:home?.className,bodyClass:document.body.className};
+    });
+    throw Error('Page did not scroll under mini-player: '+JSON.stringify({...scroll,info}));
+  }
   assert.ok(scroll.visible&&scroll.bodyClass,'Mini-player disappeared while scrolling');
   assert.deepEqual(errors,[],'First-party page errors');
   console.log('PASS: all 7 native sources seek ±15 seconds, scrub, speed, and scroll with mini-player visible');
