@@ -302,5 +302,5 @@ style.textContent=[
  '#home #hcDeepHeritageV185:focus-visible{outline:2px solid #fff;outline-offset:3px}'
 ].join('\n');document.head.append(style);
 const reader=document.createElement('script');reader.id='hcHeritageReaderScriptV189';
-reader.src='./hc-heritage-reader-v189.js?v=189';reader.async=true;document.body.append(reader);
+reader.src='./hc-heritage-reader-v189.js?v=192';reader.async=true;document.body.append(reader);
 })();
