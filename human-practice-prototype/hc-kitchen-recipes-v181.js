@@ -250,7 +250,7 @@ function kitchenFraction(value){
 }
 function kitchenHalfSpoon(value){
  const v=Math.max(0.5,Math.round(value*2)/2);
- return String(v).replace('.5','½');
+ return (Math.floor(v)?String(Math.floor(v)):'')+(v%1?'½':'');
 }
 function amount(x,num,lang){
  const raw=x.n*num,id=x.id.toLowerCase(),name=x.en.toLowerCase();
@@ -272,18 +272,21 @@ function amount(x,num,lang){
  if(/tomato/.test(name))return pieces(raw/100,'medium tomato','நடுத்தர தக்காளி');
  if(/cucumber/.test(name))return pieces(raw/160,'medium cucumber','நடுத்தர வெள்ளரிக்காய்');
  if(/chicken|cleaned fish/.test(name))return pieces(raw/125,'palm-sized portion','உள்ளங்கை அளவு துண்டு');
- if(/turmeric/.test(name)||/mustard seeds/.test(name)&&raw<=1)return say(raw>1?'2 pinches':'a pinch',raw>1?'2 சிட்டிகை':'ஒரு சிட்டிகை');
- if(/mustard seeds/.test(name))return spoons(raw/3);
+ if(/turmeric|mustard seeds/.test(name)){
+  if(raw>=2)return spoons(raw/3);
+  const n=Math.max(1,Math.round(raw/0.5));
+  return say(n===1?'a pinch':n+' pinches',n===1?'ஒரு சிட்டிகை':n+' சிட்டிகை');
+ }
  if(/tamarind/.test(name))return pieces(raw/6,'small marble-sized piece','சிறிய உருண்டை அளவு புளி');
  if(/ginger/.test(name))return pieces(raw/10,'thumb-sized piece','பெருவிரல் அளவு துண்டு');
  if(/pickle/.test(name))return pieces(raw/15,'small spoonful','சிறிய கரண்டி');
  if(/pepper|cumin|curry powder|spice/.test(name))return spoons(raw/3);
  if(/grated coconut/.test(name))return handfuls(raw/35);
+ if(/flour/.test(name))return cups(raw/120);
  if(/lentil|dhal|moong|gram|bean|rice|millet|kurakkan|semolina|rava|vermicelli|aval|flattened/.test(name)){
   const perCup=/semolina|rava|vermicelli|flattened|aval/.test(name)?130:160;
   return cups(raw/perCup);
  }
- if(/flour/.test(name))return cups(raw/120);
  if(/greens|leaves|herbs|mint|coriander/.test(name))return handfuls(raw/35);
  if(/vegetable|pumpkin|okra|brinjal|banana|beetroot|mushroom|gourd|yam|drumstick/.test(name))return handfuls(raw/70);
  // General solid ingredients: prefer a handful to a displayed weight.
