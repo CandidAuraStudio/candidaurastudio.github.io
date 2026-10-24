@@ -439,7 +439,18 @@ style.textContent=[
 '#hcMonthlyKitchen #hcPersonalKitchen li,#hcMonthlyKitchen #hcPersonalKitchen p{font-size:12px;line-height:1.65;margin:8px 0}',
 '#hcMonthlyKitchen .hc-full-recipe :is(select,input,summary):focus-visible{outline:2px solid #fff;outline-offset:2px}'
 ].join('\n');document.head.append(style);
-const mo=new MutationObserver(()=>refresh());
+// Avoid recursively processing changes made by our own full-recipe cards.
+// Coalesce external menu updates into one refresh per animation frame.
+let refreshQueued=false;
+const mo=new MutationObserver(records=>{
+ const relevant=records.some(record=>{
+  const target=record.target;
+  return target instanceof Element && !target.closest('.hc-full-recipe');
+ });
+ if(!relevant||refreshQueued)return;
+ refreshQueued=true;
+ requestAnimationFrame(()=>{refreshQueued=false;refresh()});
+});
 mo.observe(root,{subtree:true,childList:true});
 refresh();
 })();
