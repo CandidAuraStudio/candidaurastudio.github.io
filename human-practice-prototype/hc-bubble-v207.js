@@ -250,5 +250,5 @@ window.addEventListener('pageshow',()=>{if(isHome()&&!home.classList.contains('h
 // A fresh HeartClear launch begins at the top of Home, never halfway down Kitchen.
 window.addEventListener('load',()=>{if(isHome()&&home.classList.contains('hc-bubble-mode'))requestAnimationFrame(()=>window.scrollTo({top:0,behavior:'auto'}))},{once:true});
 draw();syncButtons();
-window.hcBubbleHome={open:big,classic:legacy,search:openSearch,recipe:recipe};
+window.hcBubbleHome={open:big,classic:legacy,search:openSearch,recipe:recipe,bible:genesis};
 })();
