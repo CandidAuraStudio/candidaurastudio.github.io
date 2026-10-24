@@ -101,6 +101,13 @@ const css=document.createElement('style');css.id='hcCareStyleV182';css.textConte
 '#home #hcEverydayCareV182 .care-body-item{padding-left:9px}',
 '#home #hcEverydayCareV182 .care-body-item summary{font-size:12px;font-weight:500}',
 '#home #hcEverydayCareV182 .care-ref{color:#deeef8;text-decoration:underline}',
+'#home #hcEverydayCareV182 .care-origin{margin:7px 0;border:1px solid #3f5c68;border-radius:9px;padding:0 8px}',
+'#home #hcEverydayCareV182 .care-origin details{border-bottom:1px solid #355361}',
+'#home #hcEverydayCareV182 .care-origin details:last-child{border-bottom:0}',
+'#home #hcEverydayCareV182 .care-origin summary{font-size:12px;min-height:36px;padding:7px 0}',
+'#home #hcEverydayCareV182 .care-links{display:flex;flex-wrap:wrap;gap:7px;margin:8px 0}',
+'#home #hcEverydayCareV182 .care-links a{display:inline-block;font-size:12px;color:#f2f7f8;border:1px solid #698491;border-radius:7px;padding:6px 9px;text-decoration:none;min-height:25px}',
+
 '#home #hcEverydayCareV182 .care-action{margin-top:10px;width:100%;font-size:12px}',
 '#home #hcEverydayCareV182 :is(button,select,summary,input,a):focus-visible{outline:2px solid white;outline-offset:2px}'
 ].join('\n');document.head.append(css);
@@ -113,11 +120,21 @@ function render(){
  tasks[tab].map(a=>'<label class="care-row"><input type="checkbox" data-care="'+a[0]+'"'+(day[a[0]]?' checked':'')+'><span><strong>'+esc(say(a[1],a[2]))+'</strong><small>'+esc(say(a[3],a[4]))+'</small></span></label>').join('')+
  '<div class="care-more">'+
  '<details><summary>'+say('Body care','உடல் பராமரிப்பு')+' · 10</summary>'+body.map(x=>'<details class="care-body-item"><summary>'+esc(say(x[0],x[1]))+'</summary><p>'+esc(say(x[2],x[3]))+'</p></details>').join('')+'</details>'+
- '<details><summary>'+say('Traditional knowledge','மரபு அறிவு')+'</summary>'+
- '<p><b>'+say('Old:','பழைய வழக்கம்:')+'</b> '+say('Charcoal tooth powder was used historically. Miswak/chewing sticks were also used.','முன்பு பற்களைச் சுத்தம் செய்ய கரித்தூள், மிஸ்வாக் போன்ற குச்சிகள் பயன்படுத்தப்பட்டன.')+'</p>'+
- '<p><b>'+say('Today:','இன்று:')+'</b> '+say('Charcoal may wear enamel, even if used weekly. Correctly used fluoride toothpaste protects teeth.','கரித்தூள் வாரம் ஒருமுறை பயன்படுத்தினாலும் பல் மேல்பரப்பைத் தேய்க்கலாம். சரியாகப் பயன்படுத்தும் ஃப்ளூரைடு பற்பசை பற்களைப் பாதுகாக்க உதவும்.')+'</p>'+
- '<p><b>'+say('Wudu:','உளூ:')+'</b> '+say('Honour its spiritual purpose and careful washing.','அதன் ஆன்மிக அர்த்தத்தையும் தூய்மைப் பழக்கத்தையும் மதிப்போம்.')+'</p>'+
- '<p><b>'+say('Ayurveda & astrology:','ஆயுர்வேதம் · ஜோதிடம்:')+'</b> '+say('Preserve family traditions; distinguish cultural beliefs from tested health claims.','குடும்ப மரபுகளைப் பாதுகாப்போம்; நம்பிக்கையையும் உறுதிசெய்யப்பட்ட உடல்நலத் தகவலையும் தனியாகக் காட்டுவோம்.')+'</p></details>'+
+ '<details><summary>'+say('Traditional knowledge · origins','மரபு அறிவு · மூலம்')+'</summary>'+
+ '<p>'+say('Old practices deserve accurate history, not untested promises.','பழைய வழக்குகளின் வரலாற்றைச் சரியாக அறிந்து கொள்வோம்.')+'</p>'+
+ '<div class="care-origin">'+
+ '<details><summary>ⓘ '+say('Charcoal · local trees','கரித்தூள் · மர வகைகள்')+'</summary>'+
+ '<p>'+say('Recorded in Gudalur, South India: tooth powders made from charcoal of eucalyptus and teak firewood. This is a documented community practice, not a rule for all Tamil families.','தென்னிந்தியா கூடலூர் ஆய்வில் யூகலிப்டஸ், தேக்கு விறகின் கரித்தூள் பற்பொடியாகப் பயன்படுத்தப்பட்டதாக பதிவு. இது அந்தச் சமூக வழக்கு; எல்லாத் தமிழர்களுக்கும் பொதுவானதல்ல.')+'</p>'+
+ '<p>'+say('Origin information only. Do not make or use homemade charcoal tooth powder: it can be abrasive and its safety is uncertain.','இது வரலாற்றுத் தகவல் மட்டுமே. வீட்டுக் கரித்தூளைப் பற்களுக்குத் தயாரிக்கவோ பயன்படுத்தவோ வேண்டாம்; பல் மேல்பரப்பைத் தேய்க்கலாம்.')+'</p>'+
+ '<p class="care-links"><a target="_blank" rel="noopener noreferrer" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7617662/">'+say('Read study ↗','ஆய்வு வாசிக்க ↗')+'</a><a target="_blank" rel="noopener noreferrer" href="https://www.youtube.com/watch?v=aa2jD56DSTQ">'+say('Watch dentist ↗','பல் மருத்துவர் காணொளி ↗')+'</a></p></details>'+
+ '<details><summary>ⓘ '+say('Coconut shells · around the world','தேங்காய் ஓடு · உலகில்')+'</summary>'+
+ '<p>'+say('Commercial charcoal can be made from coconut shells, wood, bamboo and other plant materials. This does not make it suitable for brushing teeth.','தேங்காய் ஓடு, மரம், மூங்கில் உள்ளிட்டவற்றிலிருந்து வணிகக் கரித்தூள் தயாரிக்கப்படுகிறது. அதனால் பற்களுக்குப் பாதுகாப்பானது என்று அர்த்தமில்லை.')+'</p>'+
+ '<p class="care-links"><a target="_blank" rel="noopener noreferrer" href="https://www.nature.com/articles/s41407-019-0122-6">'+say('Read background ↗','பின்னணி வாசிக்க ↗')+'</a><a target="_blank" rel="noopener noreferrer" href="https://www.ada.org/resources/ada-library/oral-health-topics/whitening">'+say('Dental evidence ↗','பல் ஆராய்ச்சி ↗')+'</a></p></details>'+
+ '<details><summary>ⓘ '+say('Miswak · traditional twig','மிஸ்வாக் · மரக்குச்சி')+'</summary>'+
+ '<p>'+say('A tooth-cleaning twig tradition using Salvadora persica, documented in parts of Africa and Asia. Different from charcoal powder.','சல்வடோரா பெர்சிகா மரக்குச்சியால் பல் சுத்தம் செய்யும் மரபு ஆப்பிரிக்கா, ஆசியாவில் காணப்படுகிறது; கரித்தூளிலிருந்து வேறுபட்டது.')+'</p>'+
+ '<p class="care-links"><a target="_blank" rel="noopener noreferrer" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4436748/">'+say('Read history ↗','வரலாறு வாசிக்க ↗')+'</a></p></details>'+
+ '</div>'+
+ '<p>'+say('Wudu: respect its spiritual purpose. Ayurveda and astrology: keep cultural meaning distinct from verified health advice.','உளூ: ஆன்மிக அர்த்தத்தை மதிப்போம். ஆயுர்வேதம், ஜோதிடம்: மரபையும் உறுதியான உடல்நலத் தகவலையும் தனியே அறியலாம்.')+'</p></details>'+
  '<details><summary>'+say('One English sentence','ஒரு ஆங்கில வாக்கியம்')+'</summary><p lang="en"><b>'+esc(words[0])+'</b></p><p lang="ta">'+esc(words[1])+'</p></details>'+
  '<details><summary>'+say('Sources','ஆதாரங்கள்')+'</summary>'+
  '<p><a class="care-ref" href="https://www.ada.org/resources/ada-library/oral-health-topics/toothpastes" target="_blank" rel="noopener noreferrer">ADA · Toothpaste</a></p>'+
