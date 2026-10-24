@@ -70,3 +70,14 @@ body.hc-bubble-on :is(#library,#collection,#practices) :is(.choice b,.practice-c
 body.hc-bubble-on :is(#library,#collection,#practices) :is(.choice small,.practice-card small,.hub-card small){font-size:clamp(16px,4.1vw,19px)!important;line-height:1.5}
 body.hc-bubble-on :is(#library,#collection,#practices) button{min-height:50px}
 body.hc-bubble-on #home.hc-bubble-detail :is(#hcKitchenAskReply,#hcKitchenSearchResults){font-size:20px!important;line-height:1.6}
+
+/* Focused activity view: never reopen the whole legacy Home below a recipe or chapter. */
+#home.hc-bubble-detail{justify-content:flex-start;padding-top:8px;padding-bottom:110px}
+#home.hc-bubble-detail[data-hcb-detail="recipes"] > :not(#hcHomeKitchenQuickV155){display:none!important}
+#home.hc-bubble-detail[data-hcb-detail="bible"] > :not(#hcGenesisCard){display:none!important}
+#home.hc-bubble-detail[data-hcb-detail="recipes"] > #hcHomeKitchenQuickV155,
+#home.hc-bubble-detail[data-hcb-detail="bible"] > #hcGenesisCard{display:block!important;min-height:65vh;margin:8px 0 20px!important;padding:clamp(18px,5vw,26px)!important;border-radius:34px!important;scroll-margin-top:32px}
+#home.hc-bubble-detail[data-hcb-detail="recipes"] #hcKitchenAskV163,
+#home.hc-bubble-detail[data-hcb-detail="bible"] #hcGenReading{display:block}
+#home.hc-bubble-detail[data-hcb-detail="recipes"] #hcKitchenAskV163[hidden],
+#home.hc-bubble-detail[data-hcb-detail="bible"] #hcGenReading[hidden]{display:none!important}
