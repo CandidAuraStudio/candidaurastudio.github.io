@@ -8,7 +8,7 @@ if(!catalog||!home||document.getElementById('hcHeritageReader'))return;
 const data=catalog.data,verses=catalog.verses,oldSources=catalog.sources;
 const E=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const ORIGIN='hcHeritageReadingProgressV189';
-let lang='ta',origin='home',originY=0,route={level:'index',topic:null,item:null};
+let lang='ta',origin='home',originY=0,route={level:'index',topic:null,item:null},sessionNumber=0;
 try{const x=JSON.parse(localStorage.getItem(ORIGIN)||'null');if(x?.language==='en')lang='en'}catch(_){}
 const tr=(en,ta)=>lang==='ta'?ta:en;
 const topics=[['teeth','Teeth','பற்கள்'],['water','Water & wudu','நீர் · உளூ'],['food','Food & farming','உணவு · விவசாயம்'],['hair','Hair & family stories','முடி · குடும்பம்'],['whole','Body & everyday life','உடலும் அன்றாட வாழ்வும்'],['quran','Qur’an in context','குர்ஆன் · விளக்கம்']];
@@ -85,13 +85,13 @@ function hideReader(){
 function navigate(level,topic=null,item=null,push=true){
  route={level,topic,item};
  if(push&&typeof history!=='undefined'&&history.pushState){
-  try{history.pushState({hcHeritage189:true,...route},'',location.href)}catch(_){}
+  try{history.pushState({hcHeritage189:true,sessionNumber,...route},'',location.href)}catch(_){}
  }
  render();
  try{window.scrollTo({top:0,behavior:'instant'})}catch(_){try{window.scrollTo(0,0)}catch(__){}}
 }
 function open(topic=null,item=null){
- if(activeScreen()!=='hcHeritageReader'){origin=activeScreen();originY=window.scrollY||0}
+ if(activeScreen()!=='hcHeritageReader'){origin=activeScreen();originY=window.scrollY||0;sessionNumber++}
  const valid=topics.some(t=>t[0]===topic);
  showReader();
  navigate(valid?(item?'article':'topic'):'index',valid?topic:null,valid?item:null,true);
@@ -106,7 +106,7 @@ function goBack(){
  else backLocal();
 }
 window.addEventListener('popstate',evt=>{
- if(evt.state?.hcHeritage189){route={level:evt.state.level||'index',topic:evt.state.topic||null,item:evt.state.item||null};showReader();render();try{window.scrollTo(0,0)}catch(_){}}
+ if(evt.state?.hcHeritage189&&evt.state.sessionNumber===sessionNumber){route={level:evt.state.level||'index',topic:evt.state.topic||null,item:evt.state.item||null};showReader();render();try{window.scrollTo(0,0)}catch(_){}}
  else if(el.classList.contains('active'))hideReader();
 });
 function render(){
