@@ -36,4 +36,4 @@ const assert=require('node:assert/strict');
   await page.close();
  }
  await browser.close();
-})().catch(e=>{console.error('SITEWIDE AUDIT FAILURE',e.stack||e);process.exitCode=1});
+})().catch(e=>{console.error('SITEWIDE AUDIT FAILURE',e.stack||e);process.exit(1)});
