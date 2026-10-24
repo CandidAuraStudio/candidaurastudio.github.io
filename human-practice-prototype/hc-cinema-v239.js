@@ -125,5 +125,17 @@ if(typeof showBefore==='function'){
 new MutationObserver(()=>sync()).observe(home,{attributes:true,attributeFilter:['class','data-hcb-detail','data-hcb-title']});
 window.addEventListener('pageshow',sync);
 sync();
+// Wheel motion over the fixed mini-player scrolls the page rather than getting lost on the overlay.
+document.addEventListener('wheel',function(event){
+ const mini=byId('globalMini');
+ if(!mini||!mini.classList.contains('show')||document.body.classList.contains('hc-reels-active')||event.defaultPrevented)return;
+ const rect=mini.getBoundingClientRect();
+ if(event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom)return;
+ if(!Number.isFinite(event.deltaY)||Math.abs(event.deltaY)<1)return;
+ const scroller=document.scrollingElement;
+ if(!scroller||scroller.scrollHeight<=window.innerHeight+10)return;
+ event.preventDefault();
+ window.scrollBy({top:event.deltaY,left:0,behavior:'instant'});
+},{capture:true,passive:false});
 window.hcCinema={sync,goTo:id=>window.show?.(id)};
 })();
