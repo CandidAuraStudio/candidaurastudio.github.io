@@ -299,7 +299,7 @@ mealButton?.addEventListener('click',()=>{const drawer=document.getElementById('
   if(document.getElementById('hcKitchenRecipesScriptV181'))return;
   const s=document.createElement('script');
   s.id='hcKitchenRecipesScriptV181';
-  s.src='./hc-kitchen-recipes-v181.js?v=201';
+  s.src='./hc-kitchen-recipes-v181.js?v=226';
   s.async=true;
   document.body.append(s);
 })();
