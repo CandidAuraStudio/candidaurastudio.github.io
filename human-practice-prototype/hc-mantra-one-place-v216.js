@@ -59,7 +59,7 @@ function openHub(){
  if(typeof window.hcCloseOneTapDrive==='function')window.hcCloseOneTapDrive();
  if(typeof show==='function')show('soundLab');
  setOpen(true);
- window.scrollTo({top:0,behavior:'instant'});
+ window.scrollTo(0,0);
  return true;
 }
 entrance.addEventListener('click',openHub);
