@@ -59,6 +59,7 @@ function bilingual(line){
  if(!line.includes(' / '))return line;
  const ix=line.indexOf(' / '),en=line.slice(0,ix).trim(),ta=line.slice(ix+3).trim();
  if(!tamil.test(ta))return line;
+ if(/^Tomorrow\s*·\s*\d{4}-\d\d-\d\d/.test(en)&&lang==='ta')return 'நாளை · '+en.match(/\d{4}-\d\d-\d\d/)[0];
  // Keep leading quantities that precede bilingual count labels.
  const number=/^\s*(\d+)\s+(?:recipes|results)\s*$/i.exec(en);
  return number ? (lang==='ta'?number[1]+' '+ta:en):(lang==='ta'?ta:en);
@@ -134,7 +135,7 @@ function worldLabels(){
   else if(s.includes('service unavailable')||s.includes('சேவை கிடைக்கவில்லை'))write(status,lang==='ta'?'இணையச் சேவை கிடைக்கவில்லை. உள்ளூர் செய்முறைகள் உள்ளன.':'Online recipes unavailable. Built-in recipes still work.');
   else if(s.includes('No online match')||s.includes('பெயர் கிடைக்கவில்லை'))write(status,lang==='ta'?'இந்தப் பெயரில் இணையச் செய்முறை கிடைக்கவில்லை.':'No online match for this name.');
   else if(s.includes('Offline:')||s.includes('இணையம் இல்லை'))write(status,lang==='ta'?'இணையம் இல்லை. உள்ளூர் செய்முறைகளைப் பயன்படுத்தலாம்.':'Offline. Use built-in recipes.');
-  else if(/available\s*\/\s*கிடைக்கும்/.test(s)){
+  else if(/available\s*\/\s*கிடைக்கும்|^\d+\s*(?:recipes available|செய்முறைகள்)/.test(s)){
    const count=(s.match(/\d+/)||[])[0]||'';
    write(status,lang==='ta'?count+' செய்முறைகள்':count+' recipes available');
   }
