@@ -78,6 +78,7 @@ css.textContent=[
  '#hcInfinityJourney .hci-dot{width:10px;height:10px;border-radius:50%;border:1px solid #a8c1ca;background:transparent}',
  '#hcInfinityJourney .hci-dot.active{background:white}',
  '#hcInfinityJourney .hci-swipehint{font-size:12px;color:#b8cad2;text-align:center;margin:12px 0}',
+ '#hcInfinityJourney details.hci-paper>summary{font-size:18px;min-height:42px;font-weight:700;cursor:pointer}',
  '#hcInfinityJourney .hci-tag{font-size:12px;letter-spacing:.04em;font-weight:700;color:#d7e5eb}',
  '#hcInfinityJourney :is(button,select,input,textarea,a):focus-visible,#hciHomeEntry:focus-visible{outline:3px solid white;outline-offset:3px}',
  '#home #hciHomeEntry{width:100%;display:flex;align-items:center;gap:13px;border:1px solid #8299a2;border-radius:23px;background:#0e2530;color:#fff;padding:13px 16px;min-height:91px;text-align:left;font:inherit;cursor:pointer;margin:10px 0}',
@@ -106,12 +107,31 @@ const head=home.querySelector('.hc-home-greeting-row')||home.firstElementChild;
 const entry=document.createElement('button');entry.id='hciHomeEntry';entry.type='button';
 entry.innerHTML='<span class="hci-homeglyph" aria-hidden="true">∞</span><span><strong>Explore · ஆராயுங்கள்</strong><small>One question. Go deeper. Return Home.</small></span>';
 if(head)head.insertAdjacentElement('afterend',entry);else home.prepend(entry);
-entry.addEventListener('click',()=>open(saved.last||null));
+entry.addEventListener('click',()=>open());
 const exploreBtn=document.createElement('button');
 exploreBtn.className='nav-item';exploreBtn.dataset.nav='hcInfinityJourney';exploreBtn.type='button';exploreBtn.setAttribute('aria-label','Explore');
 exploreBtn.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5 13 13l-4.5 2.5L11 11z" /></svg><span>Explore</span>';
 const settingsNav=nav.querySelector('[data-nav="settings"]');
 if(settingsNav)settingsNav.before(exploreBtn);else nav.append(exploreBtn);
+const mixCard=byId('hcMixCard');
+if(mixCard&&!byId('hciSaveSoundMix')){
+ const actions=mixCard.querySelector('.hc-mix-actions');
+ if(actions){
+  const saveMix=document.createElement('button');saveMix.id='hciSaveSoundMix';saveMix.type='button';
+  saveMix.textContent='Save mix settings';saveMix.style.cssText='min-height:46px;border:1px solid #90a6ad;border-radius:12px;background:#163440;color:white;padding:9px 13px;font:700 13px system-ui';
+  saveMix.addEventListener('click',()=>{
+   try{
+    if(typeof hcMixSelected==='undefined'||typeof hcMixOptions==='undefined')throw Error('Mixer unavailable');
+    const layers=Object.entries(hcMixSelected).filter(pair=>hcMixOptions.some(x=>x.id===pair[0])).slice(0,3).map(pair=>({id:pair[0],volume:Math.max(0,Math.min(1,Number(pair[1])||.4))}));
+    if(!layers.length){if(typeof hcMixMessage==='function')hcMixMessage('Choose at least one sound first.');return}
+    localStorage.setItem('heartclearRecentMixV1',JSON.stringify({layers,updatedAt:Date.now()}));
+    if(typeof hcRenderMixer==='function')hcRenderMixer();
+    if(typeof hcMixMessage==='function')hcMixMessage('Mix settings saved on this device. This does not export an audio file.');
+   }catch(_){if(typeof hcMixMessage==='function')hcMixMessage('Saving is unavailable on this device.')}
+  });
+  actions.append(saveMix);
+ }
+}
 const settingsScreen=byId('settings');
 if(settingsScreen){
  const settingsBlock=document.createElement('div');settingsBlock.className='setting-row';
@@ -126,7 +146,7 @@ function focusStage(){const stage=byId('hciStage');try{stage.focus({preventScrol
 function open(topic){
  if(typeof show==='function')show('hcInfinityJourney');
  else{document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));reader.classList.add('active')}
- activeNav();stack=[];id=get(topic)?.id||null;step=0;
+ activeNav();const topLabel=byId('topContext');if(topLabel)topLabel.textContent='Explore';stack=[];id=get(topic)?.id||null;step=0;
  if(id)remember(id);
  render();focusStage();
 }
@@ -208,6 +228,18 @@ function render(){
   const continueButton=mk(T('Continue reading','தொடர்ந்து வாசி'),'hci-option',()=>choose(saved.last||'moon'));row.append(continueButton);
   const chooseButton=mk(T('Find a topic','தலைப்பைத் தேடு'),'hci-option',()=>field.focus());row.append(chooseButton);
   stage.append(row);
+  if(saved.favourites.length){
+   const favourites=document.createElement('details');favourites.className='hci-paper';
+   const summary=document.createElement('summary');summary.textContent=T('Saved topics','சேமித்த தலைப்புகள்')+' · '+saved.favourites.length;favourites.append(summary);
+   const picks=document.createElement('div');picks.className='hci-actions';
+   saved.favourites.map(get).filter(Boolean).forEach(x=>picks.append(mk(L([x.en,x.ta])+' →','hci-option',()=>choose(x.id))));
+   favourites.append(picks);stage.append(favourites);
+  }
+  const quickPaths=document.createElement('details');quickPaths.className='hci-paper';
+  const quickSummary=document.createElement('summary');quickSummary.textContent=T('Practice, books and sound','பயிற்சி, புத்தகங்கள், ஒலி');quickPaths.append(quickSummary);
+  const quickButtons=document.createElement('div');quickButtons.className='hci-actions';
+  quickButtons.append(mk(T('Open Practice','பயிற்சி திற')+' →','hci-option',()=>route('practice')),mk(T('Read books & scripture','நூல்கள், வேதம் வாசி')+' →','hci-option',()=>route('books')),mk(T('Create a nature sound mix','இயற்கை ஒலிக்கலவை')+' →','hci-option',()=>route('sounds')));
+  quickPaths.append(quickButtons);stage.append(quickPaths);
   const title2=document.createElement('p');title2.className='hci-kicker';title2.textContent=T('Or choose a doorway','அல்லது ஒரு வழியைத் தேர்ந்தெடு');stage.append(title2);
   const cats=[['Nature','moon','Nature · இயற்கை'],['Scripture','birds','Scripture · வேதம்'],['Body','walking','Body · உடல்'],['Food','tea','Food · உணவு'],['Practice','breath','Practice · பயிற்சி']];
   const options=document.createElement('div');options.className='hci-actions';
