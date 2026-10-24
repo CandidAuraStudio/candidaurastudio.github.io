@@ -73,12 +73,15 @@ css.textContent=[
 '#home #hcKitchenAskV163 button{background:#213a47;border:1px solid #71838b;color:#fff;border-radius:9px;padding:8px 10px;min-height:39px;font:inherit;font-size:12px}',
 '#home #hcKitchenAskV163 .hc-ask-reply{font-size:12px;line-height:1.65;white-space:pre-line;color:#e2eef0;border:1px solid #435f69;border-radius:10px;padding:10px;background:#102733}',
 '#home #hcKitchenAskV163 .hc-search-line{display:flex;gap:7px;align-items:stretch}',
-'#home #hcKitchenAskV163 .hc-kitchen-search-results{display:grid;gap:4px;margin:6px 0 4px;max-height:235px;overflow:auto}',
+'#home #hcKitchenAskV163 .hc-kitchen-search-results{display:grid;gap:4px;margin:6px 0 4px;max-height:315px;overflow:auto}',
 '#home #hcKitchenAskV163 .hc-kitchen-search-results[hidden]{display:none}',
 '#home #hcKitchenAskV163 .hc-kitchen-search-results button{width:100%;text-align:left;font-size:12px;min-height:37px;background:#142a35}',
 '#home #hcKitchenAskV163 .hc-kitchen-search-results button[aria-pressed=true]{border-color:#e1edf2;background:#294552}',
 '#home #hcKitchenAskV163 .hc-kitchen-search-results p{font-size:12px;margin:6px 0}',
 '#home #hcKitchenAskV163 .hc-ask-caption{color:#adbec5;font-size:10px;line-height:1.6}',
+'#home #hcKitchenAskV163 .hc-kitchen-science{margin-top:10px;border-top:1px solid #4d6570;padding-top:9px;white-space:normal}',
+'#home #hcKitchenAskV163 .hc-kitchen-science summary{cursor:pointer;font-weight:650}',
+'#home #hcKitchenAskV163 .hc-kitchen-science a{display:inline-block;font-size:12px;color:#d7efff;text-decoration:underline;margin:4px 8px 0 0}',
 '#home #hcKitchenAskV163 .hc-ask-reply[hidden]{display:none}',
 '.bottom-nav .nav-item.active{color:#edf4f6!important}',
 '.bottom-nav .nav-item.active span{color:#edf4f6!important}',
@@ -102,13 +105,14 @@ const section=el('div');section.id='hcKitchenAskV163';section.hidden=false;
 section.innerHTML='<label for="hcKitchenAskInput">Search recipes / செய்முறை தேடல்</label>'+
  '<div class="hc-search-line"><input type="search" id="hcKitchenAskInput" maxlength="150" autocomplete="off" placeholder="Butter chicken, curry with rice, பிட்டு…">'+
  '<button type="button" id="hcKitchenAskSend">Search / தேடு</button></div>'+
+ '<div class="hc-ask-buttons"><button type="button" id="hcKitchenBrowse">Browse recipes · வகைகள்</button></div>'+ 
  '<div id="hcKitchenSearchResults" class="hc-kitchen-search-results" hidden></div>'+
  '<div class="hc-ask-buttons"><button type="button" id="hcKitchenTomorrow">Tomorrow / நாளை</button><button type="button" id="hcKitchenSavePlan" hidden>Remember / நினைவில் வை</button></div>'+
  '<div id="hcKitchenAskReply" class="hc-ask-reply" role="status" aria-live="polite" hidden></div>';
 kitchen.append(section);
 const reply=section.querySelector('#hcKitchenAskReply'),input=section.querySelector('#hcKitchenAskInput'),
       searchResults=section.querySelector('#hcKitchenSearchResults'),saveBtn=section.querySelector('#hcKitchenSavePlan');
-let lastPlan=null, currentSearch=[];
+let lastPlan=null, currentSearch=[],visibleCount=10;
 const output=(txt,plan=null)=>{reply.hidden=false;reply.textContent=txt;lastPlan=plan;saveBtn.hidden=!plan};
 function foldText(v){return String(v||'').normalize('NFKC').toLocaleLowerCase().replace(/[^\p{L}\p{M}\p{N}]+/gu,' ').trim()}
 function words(s){return foldText(s).split(/\s+/).filter(x=>x&&!['and','with','the','for','a','my','own','recipe','recipes','please','how','make','cook','of','to','or','healthy','healthier','balanced','homemade','easy','simple','quick','என்','செய்முறை'].includes(x))}
@@ -149,7 +153,7 @@ function getMatches(q){
 function showItem(item){
  if(!item)return;
  searchResults.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.recipe===item.en)));
- if(item.source==='world'){
+ if(item.source==='world'||(item.source==='personal'&&!window.HCKitchenSearchGuide?.detail?.(item.en,item.ta))){
   const guide=window.HCKitchenWorldRecipes?.detail?.(item.en);
   if(guide){
    output(guide.text);
@@ -192,17 +196,25 @@ function searchRecipes(openFirst){
  searchResults.replaceChildren();
  searchResults.hidden=false;
  if(!currentSearch.length){
-  const empty=el('p',null,'No matching recipe saved yet. / இந்த பெயரில் செய்முறை இன்னும் இல்லை.');
+  const empty=el('p',null,'No matching saved recipe. Try a different ingredient or spelling. / வேறு பொருள் அல்லது பெயரைத் தேடுங்கள்.');
   const more=el('button',null,'Search more recipes on the web ↗ / இணையத்தில் மேலும் தேடவும்');
    more.type='button';more.addEventListener('click',()=>window.open('https://www.google.com/search?q='+encodeURIComponent(q+' recipe ingredients cooking steps healthier option'),'_blank','noopener,noreferrer'));
    searchResults.append(empty,more);reply.hidden=true;return;
  }
- currentSearch.forEach((d,i)=>{
+ searchResults.append(el('p','hc-kitchen-count',currentSearch.length+' recipes / செய்முறைகள்'));
+ currentSearch.slice(0,visibleCount).forEach((d,i)=>{
   const b=el('button','hc-recipe-match',d.en+' · '+d.ta);
   b.type='button';b.dataset.recipe=d.en;b.setAttribute('aria-pressed','false');
   b.addEventListener('click',()=>showItem(d));
   searchResults.append(b);
  });
+ if(currentSearch.length>visibleCount){
+  const more=el('button','hc-kitchen-more','Show more / மேலும் · '+(currentSearch.length-visibleCount));
+  more.type='button';more.addEventListener('click',()=>{
+   visibleCount=Math.min(currentSearch.length,visibleCount+12);
+   searchRecipes(false);
+  });searchResults.append(more);
+ }
  if(openFirst)showItem(currentSearch[0]);
  else reply.hidden=true;
 }
@@ -224,8 +236,19 @@ function tomorrowPlan(){
  const plan={date:dateStr,text:lines.join('\n')};
  output(plan.text,plan);
 }
+section.querySelector('#hcKitchenBrowse').addEventListener('click',()=>{
+ searchResults.hidden=false;reply.hidden=true;searchResults.replaceChildren();
+ const library=window.HCKitchenWorldRecipes;
+ if(!library){searchResults.append(el('p',null,'Recipe library loading'));return}
+ searchResults.append(el('p',null,library.recipes+' recipes / செய்முறைகள்'));
+ library.categories.forEach(cat=>{
+  const b=el('button','hc-kitchen-category',cat);b.type='button';
+  b.addEventListener('click',()=>{input.value=cat;visibleCount=10;searchRecipes(false)});
+  searchResults.append(b);
+ });
+});
 section.querySelector('#hcKitchenAskSend').addEventListener('click',()=>searchRecipes(true));
-input.addEventListener('input',()=>searchRecipes(false));
+input.addEventListener('input',()=>{visibleCount=10;searchRecipes(false)});
 input.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();searchRecipes(true)}});
 section.querySelector('#hcKitchenTomorrow').addEventListener('click',tomorrowPlan);
 saveBtn.addEventListener('click',()=>{if(!lastPlan)return;save(savedKey,lastPlan);output(lastPlan.text+'\n\nSaved on this device / இந்தச் சாதனத்தில் சேமிக்கப்பட்டது.',lastPlan)});
