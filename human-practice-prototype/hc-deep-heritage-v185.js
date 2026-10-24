@@ -26,7 +26,6 @@ const sources={
  qFood:S("Qur'an · 7:31",'https://quran.com/7/31'),
  qLook:S("Qur'an · 80:24",'https://quran.com/80/24'),
  qHoney:S("Qur'an · 16:69",'https://quran.com/16/69'),
- hadith:S('Sahih al-Bukhari · 887','https://sunnah.com/bukhari:887'),
  islamicStudy:S('History of oral hygiene in Islamic law · PubMed','https://pubmed.ncbi.nlm.nih.gov/23409533/'),
  siwakStudy:S('Medieval siwak history · Cambridge','https://www.cambridge.org/core/journals/journal-of-the-royal-asiatic-society/article/abs/siwak-a-medieval-islamic-contributionto-dental-care/1429960CE3B005E027DC30A630F5988A'),
  baths:S('Metropolitan Museum · history of hammams','https://www.metmuseum.org/ja/essays/baths-and-bathing-culture-in-the-middle-east-the-hammam'),
@@ -45,12 +44,12 @@ const data={
     ['Archaeological and historical accounts describe early chew sticks. The exact plants, dates and methods differed by place; they were not one invention by one people.','பண்டைய மரக்குச்சிகள் பற்றிய வரலாற்று சான்றுகள் உள்ளன. மரம், காலம், பயன்பாடு இடத்திற்கேற்ப மாறியது; ஒருவரின் ஒரே கண்டுபிடிப்பு அல்ல.'],
     ['A simple tool may carry knowledge, but its age alone does not prove it works better.','ஒரு எளிய கருவியில் மரபு அறிவு இருக்கலாம்; பழமையானது என்பதால் சிறந்தது என்று நிரூபிக்கப்படாது.'],
     ['Ask an elder which plant they actually used, where it grew and how they learned. Record it as family testimony.','பெரியவரிடம் எந்த மரக்குச்சி, எங்கு வளர்ந்தது, யார் கற்றுத் தந்தார் எனக் கேட்டு குடும்ப நினைவாகப் பதிவு செய்யவும்.'],[sources.loc,sources.adaHistory]),
-   row('teeth-600','600s CE','Arabian Peninsula / அரேபியத் தீபகற்பம்',
-    ['Siwak, Hadith and the Qur’an — not the same source','மிஸ்வாக், ஹதீஸ், குர்ஆன் — ஒரே ஆதாரம் அல்ல'],
-    ['Siwak is associated with the Prophet’s practice; it is described in Hadith. The Qur’an does not name siwak.','மிஸ்வாக் நபி வழக்கத்துடன் தொடர்புடையது; ஹதீஸில் வருகிறது. குர்ஆனில் மிஸ்வாக் என்ற பெயர் இல்லை.'],
-    ['Sahih al-Bukhari 887 reports the Prophet’s concern for tooth-cleaning alongside prayer, while recognising the difficulty of requiring it each time. Qur’an 5:6 concerns ritual purification before prayer; it does not prescribe charcoal toothpaste.','ஸஹீஹ் புகாரி 887 இல் தொழுகையுடன் பல் சுத்தத்தின் முக்கியத்துவம் கூறப்படுகிறது; ஒவ்வொரு முறையும் கட்டாயப்படுத்துவதின் சிரமமும் கருத்தில் கொள்ளப்படுகிறது. குர்ஆன் 5:6 தொழுகைக்கு முன் தூய்மையைப் பற்றியது; கரித்தூளை அறிவுறுத்தவில்லை.'],
-    ['Scripture, prophetic reports and later family customs should remain clearly attributed.','குர்ஆன், ஹதீஸ், பிற்கால குடும்ப வழக்குகள் தனித்தனியாகக் குறிப்பிடப்பட வேண்டும்.'],
-    ['Read the original verse and Hadith. Keep the spiritual meaning; choose safe everyday dental care.','மூல வசனத்தையும் ஹதீஸையும் வாசித்து ஆன்மிகப் பொருளை மதித்து, பாதுகாப்பான பல் பராமரிப்பைப் பின்பற்றவும்.'],[sources.hadith,sources.qWudu,sources.siwakStudy]),
+   row('teeth-600','600s CE','Arabia / அரேபியா',
+    ['Siwak and Qur’anic purification: separate histories','மிஸ்வாக் மற்றும் குர்ஆனின் தூய்மை: தனி மரபுகள்'],
+    ['Siwak is a historical tooth-cleaning twig. Qur’an 5:6 concerns purification for prayer; it does not name siwak.','மிஸ்வாக் பழமையான பல் சுத்தக் குச்சி. குர்ஆன் 5:6 தொழுகைக்கு முன் தூய்மையைப் பற்றியது; மிஸ்வாக் என்ற பெயர் இல்லை.'],
+    ['Different oral-care tools existed in several cultures. Keep the documented history of siwak separate from what the Qur’anic verse actually says. No extra religious report is presented as a Qur’anic explanation.','பல்வேறு பண்பாடுகளில் பல பல் சுத்தக் கருவிகள் இருந்தன. மிஸ்வாக் வரலாற்றையும் குர்ஆன் வசனம் உண்மையில் சொல்வதையும் தனித்தனியாகக் காட்டுவோம்.'],
+    ['Respect sacred text without attributing other sources to it.','வேறு மூலத்தை குர்ஆனின் சொற்களாக மாற்றாமல் மதிப்போம்.'],
+    ['Read Qur’an 5:6 for its own meaning; study the twig’s history separately.','குர்ஆன் 5:6 இன் பொருளை வாசித்து மரக்குச்சியின் வரலாற்றைத் தனியாக அறியவும்.'],[sources.qWudu,sources.siwakStudy]),
    row('teeth-1400','1400s CE','China / சீனா',
     ['A different tool: bristles on a handle','வேறொரு கருவி: கைப்பிடியுடன் முட்கள்'],
     ['A Chinese source describes an early bristle toothbrush associated with 1498.','1498 ஆம் ஆண்டுடன் தொடர்புடைய முட்கள் கொண்ட பல் பிரஷை சீன வரலாற்று ஆதாரம் குறிப்பிடுகிறது.'],
@@ -190,11 +189,109 @@ const verses=[
 ];
 const topics=[['teeth','Teeth','பற்கள்'],['water','Water & wudu','நீர் · உளூ'],['food','Food','உணவு'],['hair','Hair','முடி'],['quran','Qur’an','குர்ஆன்']];
 /* Compact Home entry; full reading navigation belongs to the Reader screen. */
+
+/* Each sacred tradition stands on its own; all prose below is editorial
+   explanation, not an attributed quotation or an invented ancient instruction. */
+sources.qPeoples=S("Qur’an 49:13 · peoples and tribes",'https://quran.com/49/13');
+sources.qLanguages=S("Qur’an 30:22 · languages",'https://quran.com/30/22');
+sources.qJustice=S("Qur’an 16:90 · justice",'https://quran.com/16/90');
+verses.push(
+ {id:'v49',ref:'49:13',label:['Different peoples, knowing one another','பல மக்கள் · ஒருவரை ஒருவர் அறிதல்'],
+  detail:['The verse addresses humankind, describing different peoples and tribes so that they may know one another, and places honour in God-consciousness.','இந்த வசனம் மனிதகுலத்தையும் பல சமூகங்களையும் குறிப்பிடுகிறது; ஒருவரை ஒருவர் அறிதலையும் இறையுணர்வின் மதிப்பையும் விளக்குகிறது.'],
+  reflection:['Personal reflection: learn someone’s language or family story respectfully without deciding their worth by birthplace.','தனிச் சிந்தனை: பிறந்த இடத்தை வைத்து மதிப்பிடாமல் ஒருவரின் மொழியையும் குடும்பக் கதையையும் மரியாதையுடன் அறியலாம்.'],source:sources.qPeoples},
+ {id:'v30',ref:'30:22',label:['Different languages as signs','மொழி வேறுபாடுகள் · அடையாளங்கள்'],
+  detail:['The verse mentions the creation of the heavens and earth and the variety of languages and colours among people as signs.','வானம், பூமியின் படைப்போடு மனிதர்களின் மொழி, நிற வேறுபாடுகளையும் அடையாளங்களாக வசனம் குறிப்பிடுகிறது.'],
+  reflection:['Personal reflection: help a person learn English while honouring their Tamil and other mother tongues.','தனிச் சிந்தனை: ஒருவருக்கு ஆங்கிலம் கற்றுத் தரும்போது அவருடைய தமிழ் மற்றும் தாய்மொழியையும் மதிக்கலாம்.'],source:sources.qLanguages},
+ {id:'v1690',ref:'16:90',label:['Justice, kindness and family','நீதி · நன்மை · உறவுகள்'],
+  detail:['The verse speaks of justice, doing good and giving to relatives, while warning against wrongdoing and oppression.','நீதி, நன்மை செய்தல், உறவினருக்கு வழங்குதல் ஆகியவற்றைக் கூறி தீமை, அநீதியைத் தவிர்க்கச் சொல்கிறது.'],
+  reflection:['Personal reflection: when sharing housework or food, choose fairness rather than blame.','தனிச் சிந்தனை: உணவு, வீட்டு வேலை பகிரும்போது குற்றச்சாட்டைவிட நியாயத்தைத் தேர்ந்தெடுக்கலாம்.'],source:sources.qJustice}
+);
+const L=(label,url)=>({label,url});
+const scripture=(id,place,en,ta,shortEn,shortTa,contextEn,contextTa,focusEn,focusTa,actionEn,actionTa,links)=>
+ row(id,'Source reading',place,[en,ta],[shortEn,shortTa],[contextEn,contextTa],[focusEn,focusTa],[actionEn,actionTa],links);
+data.newtestament={
+ name:['Bible · New Testament','பைபிள் · புதிய ஏற்பாடு'],
+ lead:['Short New Testament readings in their Christian setting. Other traditions are not inserted as explanations.','கிறிஸ்தவச் சூழலில் புதிய ஏற்பாட்டிலிருந்து சிறிய வாசிப்புகள். வேறு மரபுகள் இதன் விளக்கமாகக் கலக்கப்படாது.'],
+ rows:[
+  scripture('nt-matt6','Matthew 6:26 / மத்தேயு 6:26','Birds, provision and concern','பறவைகள் · வாழ்வாதாரம் · கவலை',
+   'Jesus points listeners toward birds when teaching about anxiety and trust.','கவலை, நம்பிக்கை பற்றி போதிக்கும்போது இயேசு பறவைகளைச் சுட்டிக்காட்டுகிறார்.',
+   'This teaching appears within the Sermon on the Mount. The passage uses an example from nature to speak about concern for life; it is not a claim that people should stop working or caring for animals.','மலைப்பிரசங்கத்தில் இயற்கையை எடுத்துக்காட்டாகக் கொண்டு வாழ்க்கைக் கவலைகள் பற்றிப் பேசுகிறார். மனிதர்கள் வேலை செய்ய வேண்டாம் அல்லது விலங்குகளைப் பராமரிக்க வேண்டாம் என்று கூறுவதல்ல.',
+   'Christian teaching about trust is preserved as Christian teaching.','நம்பிக்கை பற்றிய கிறிஸ்தவப் போதனையை அதன் சொந்த சூழலில் அறியலாம்.',
+   'Notice a bird outside and consider what helps it find food or shelter.','வெளியில் ஒரு பறவையைப் பார்த்து அதன் உணவு, இருப்பிடம் பற்றி அறியலாம்.',
+   [L('Bible Gateway · Matthew 6:26','https://www.biblegateway.com/verse/en/Matthew%206%3A26')]),
+  scripture('nt-mark12','Mark 12:31 / மாற்கு 12:31','Care for your neighbour','அயலவரை அன்புடன் அணுகுதல்',
+   'Jesus teaches love of neighbour in the context of the commandments.','கட்டளைகள் பற்றிய உரையில் இயேசு அயலவரிடம் அன்பு காட்டுவதைப் போதிக்கிறார்.',
+   'This verse belongs to a larger conversation about the greatest commandments. Read it with the preceding verse and do not turn it into a slogan against people from other faiths.','மிக முக்கிய கட்டளைகள் பற்றிய பெரிய உரையாடலின் பகுதி இது. முன்வசனத்துடன் வாசித்து வேறு மதத்தவரை விமர்சிக்கும் வாசகமாக மாற்ற வேண்டாம்.',
+   'The focus here is the neighbour as a person deserving care.','அயலவர் பராமரிப்பும் மரியாதையும் பெறவேண்டிய மனிதர்.',
+   'Offer practical help without demanding that the other person share your beliefs.','மற்றவர் உங்கள் நம்பிக்கையை ஏற்க வேண்டும் என வற்புறுத்தாமல் உதவுங்கள்.',
+   [L('Bible Gateway · Mark 12:31','https://www.biblegateway.com/verse/en/Mark%2012%3A31')])
+ ]
+};
+data.oldtestament={
+ name:['Old Testament · Hebrew Bible','பழைய ஏற்பாடு · எபிரேய வேதாகமம்'],
+ lead:['Read passages in their biblical setting. Jewish and Christian canons and ways of reading are not identical.','வசனங்களை அவற்றின் வேதாகமச் சூழலில் வாசிப்போம். யூத, கிறிஸ்தவ நூல் ஒழுங்கும் விளக்கங்களும் முழுமையாக ஒரே மாதிரி அல்ல.'],
+ rows:[
+  scripture('ot-genesis','Genesis 2:15 / ஆதியாகமம் 2:15','The garden and human responsibility','தோட்டமும் மனிதப் பொறுப்பும்',
+   'The human is placed in the garden with a responsibility to tend and watch over it.','தோட்டத்தைக் கவனித்துப் பராமரிக்க மனிதனுக்குப் பொறுப்பு கொடுக்கப்படுவதாகப் பகுதி சொல்கிறது.',
+   'The story is in Genesis’ creation narrative. Caring for the garden is part of the passage, but it is not a modern environmental science textbook.','ஆதியாகமத்தின் படைப்புக் கதையில் வரும் பகுதி. தோட்டத்தைப் பராமரிப்பது இதில் இடம் பெறுகிறது; இது நவீன சுற்றுச்சூழல் அறிவியல் நூல் அல்ல.',
+   'Work and care appear together within the story.','கதைச் சூழலில் உழைப்பும் பராமரிப்பும் இணைகின்றன.',
+   'Care for one small plant or shared living space.','ஒரு செடி அல்லது பகிர்ந்த வாழ்விடத்தைப் பராமரிக்கலாம்.',
+   [L('Bible Gateway · Genesis 2:15','https://www.biblegateway.com/verse/en/Genesis%202%3A15')]),
+  scripture('ot-psalm','Psalm 104:14 / சங்கீதம் 104:14','Plants, animals and food','செடிகள் · விலங்குகள் · உணவு',
+   'The psalm describes plant life, livestock and cultivated food within praise of the Creator.','படைப்பவரைப் புகழும் சங்கீதத்தில் தாவரங்கள், கால்நடைகள், பயிரிட்ட உணவு பற்றி வருகிறது.',
+   'The verse belongs to a song about the natural world and its provision. It expresses religious praise, not a claim that all food crops grow without labour.','இயற்கை உலகைப் பற்றிய புகழ்ப்பாடலின் பகுதி. மனித உழைப்பு இல்லாமல் எல்லா உணவும் வளர்கிறது என்ற கூற்று அல்ல.',
+   'Food, cultivation and care for living things are worth noticing.','உணவு, விவசாயம், உயிரினப் பராமரிப்பை கவனிக்கலாம்.',
+   'Ask where one vegetable in today’s meal was grown.','இன்றைய உணவில் ஒரு காய்கறி எங்கு விளைந்தது என்று அறியுங்கள்.',
+   [L('Bible Gateway · Psalm 104:14','https://www.biblegateway.com/verse/en/Psalm%20104%3A14')])
+ ]
+};
+data.gita={
+ name:['Bhagavad Gita · Hindu teaching','பகவத் கீதை · இந்து போதனை'],
+ lead:['Gita is a Hindu text within the Mahabharata, distinct from the four Vedas.','பகவத் கீதை மகாபாரதத்தில் இடம்பெறும் இந்து நூல்; நான்கு வேதங்களிலிருந்து வேறுபட்டது.'],
+ rows:[
+  scripture('gita-617','Bhagavad Gita 6.17 / பகவத் கீதை 6.17','Moderation in daily activity','அன்றாடச் செயல்களில் அளவு',
+   'The verse discusses moderated eating, recreation, activity, sleep and waking in a yogic setting.','யோகப் பயிற்சியின் சூழலில் உணவு, ஓய்வு, செயல், உறக்கம், விழிப்பில் அளவை விவரிக்கிறது.',
+   'Krishna speaks to Arjuna in the Bhagavad Gita. Translations differ slightly in wording; this is a short summary, not a Sanskrit quotation.','பகவத் கீதையில் கிருஷ்ணர் அர்ஜுனனிடம் பேசும் பகுதி. மொழிபெயர்ப்பில் சொற்கள் சிறிது மாறலாம்; இது விளக்கம், சமஸ்கிருத மேற்கோள் அல்ல.',
+   'Moderation is discussed as part of yoga, not as a universal medical prescription.','யோகத்தின் ஒரு பகுதியாக அளவு பேசப்படுகிறது; அனைவருக்கும் ஒரே மருத்துவக் கட்டளை அல்ல.',
+   'Notice whether everyday routines make space for rest and regular meals.','அன்றாட வழக்கில் ஓய்வுக்கும் உணவுக்கும் இடம் உள்ளதா கவனிக்கலாம்.',
+   [L('IIT Kanpur · Gita 6.17','https://www.gitasupersite.iitk.ac.in/srimad?etadi=1&etgb=1&etpurohit=1&etsiva=1&etssa=1&field_chapter_value=6&field_nsutra_value=17&language=dv')]),
+  scripture('gita-247','Bhagavad Gita 2.47 / பகவத் கீதை 2.47','Action and attachment to outcomes','செயலும் பலன் பற்றிய பற்றும்',
+   'The verse distinguishes doing one’s work from attachment to the result.','செயலை ஆற்றுவதையும் அதன் பலனில் பற்றுடன் இருப்பதையும் வேறுபடுத்திப் பேசுகிறது.',
+   'This teaching belongs to the Gita’s dialogue on duty and action. It does not mean that consequences or other people can be ignored.','கடமை, செயல் பற்றிய கீதையின் உரையாடலின் பகுதி. விளைவுகளையோ மற்றவர்களையோ புறக்கணிக்கலாம் என்று பொருளல்ல.',
+   'The verse concerns action with attention, without reducing people to success or failure.','வெற்றி, தோல்வி மட்டும் வைத்து மனிதனை மதிப்பிடாமல் செயலில் கவனம் வைப்பது பற்றியது.',
+   'Learn a language or practise a useful skill for its own value.','மொழியையோ பயனுள்ள திறனையோ அதன் மதிப்புக்காகக் கற்கலாம்.',
+   [L('IIT Kanpur · Gita 2.47','https://heritage.iitk.ac.in/SBG/2.47')])
+ ]
+};
+data.vedas={
+ name:['Vedic texts · Rigveda','வேதங்கள் · ரிக்வேதம்'],
+ lead:['The Vedas have their own historical, ritual and linguistic contexts. The Gita is catalogued separately.','வேதங்களுக்கு தனித்த வரலாறு, சடங்கு, மொழிச் சூழல் உண்டு. கீதை வேறு பகுதியில் உள்ளது.'],
+ rows:[
+  scripture('rig-101912','Rigveda 10.191.2 / ரிக்வேதம் 10.191.2','Gathering and speaking together','ஒன்றுகூடி உரையாடுதல்',
+   'The hymn calls for people to gather, speak together and bring their minds into shared understanding.','மக்கள் ஒன்றுகூடி உரையாடி ஒருமித்த புரிதலுடன் இருக்கப் பாடல் அழைக்கிறது.',
+   'This is part of a Vedic hymn with a ritual context. It can inspire reflection on dialogue, but should not be flattened into a modern slogan that everyone must agree on everything.','சடங்கு பின்னணி உள்ள வேதப் பாடலின் பகுதி. உரையாடலைச் சிந்திக்க உதவும்; அனைவரும் எல்லாவற்றிலும் ஒப்புக்கொள்ள வேண்டும் என்ற நவீன முழக்கமாக மாற்றக் கூடாது.',
+   'The text concerns coming together and speech, in its own sacred setting.','இந்தப் பாடல் அதன் புனிதச் சூழலில் ஒன்றுகூடலும் உரையாடலும் பற்றியது.',
+   'Invite people to exchange a family memory without arguing about whose heritage is better.','யாருடைய மரபு உயர்ந்தது என விவாதிக்காமல் குடும்ப நினைவுகளைப் பகிரலாம்.',
+   [L('Rigveda 10.191.2 · Sanskrit and translation','https://www.wisdomlib.org/hinduism/book/rig-veda-english-translation/d/doc840451.html')])
+ ]
+};
+data.ayurveda={
+ name:['Ayurveda · classical medical history','ஆயுர்வேதம் · பழைய மருத்துவ வரலாறு'],
+ lead:['Ayurveda is a traditional medical system and textual history, not a collection of Vedic verses or a substitute for medical care.','ஆயுர்வேதம் பாரம்பரிய மருத்துவ மரபும் நூல்களின் வரலாறும் ஆகும்; வேத வசனங்களின் தொகுப்பு அல்ல, மருத்துவச் சிகிச்சைக்கான மாற்றும் அல்ல.'],
+ rows:[
+  scripture('ayur-caraka5','Charaka Samhita · Sutra Sthana 5','சரக சம்ஹிதை · சூத்திர ஸ்தானம் 5','Daily routine in a classical text','பழைய நூலில் தினசரி வழக்கம்',
+   'This chapter discusses food quantity and daily regimen in the classical Ayurvedic tradition.','பாரம்பரிய ஆயுர்வேதத்தில் உணவளவும் தினசரி வழக்கமும் இந்த அத்தியாயத்தில் விவாதிக்கப்படுகின்றன.',
+   'Classical Ayurveda combined observations, theories and practices from its time. The chapter is a valuable historical source. Individual procedures and medical claims require separate safety and evidence review.','பழைய காலக் கவனிப்பு, கோட்பாடு, வழக்குகள் இந்நூலில் சேர்கின்றன. வரலாற்றுக்கு இது உதவும்; குறிப்பிட்ட சிகிச்சை, பலன், பாதுகாப்பு தனியாகச் சரிபார்க்கப்பட வேண்டும்.',
+   'Preserve the original text and its setting without promising a cure.','மூல நூலையும் காலச் சூழலையும் மதித்து குணமடையும் வாக்குறுதி கூற வேண்டாம்.',
+   'Choose ordinary affordable hygiene and food practices, not unverified treatments.','மலிவான அன்றாடச் சுத்தம், உணவுப் பழக்கங்களைத் தேர்ந்து சோதிக்காத சிகிச்சையைத் தவிர்க்கவும்.',
+   [L('Charaka Samhita · Sutra Sthana 5','https://www.carakasamhitaonline.com/index.php/Matrashiteeya_Adhyaya')])
+ ]
+};
 window.HCHeritageCatalogV189={data,verses,sources};
 const launcher=document.createElement('button');
 launcher.type='button';launcher.id='hcDeepHeritageV185';
 launcher.className='hc-heritage-launch';
-launcher.innerHTML='<span><strong>History · Qur’an · மரபு அறிவு</strong><small>Open the Knowledge Library · படி · புரிந்து கொள்</small></span><span aria-hidden="true">›</span>';
+launcher.innerHTML='<span><strong>Human Knowledge · மனித அறிவு</strong><small>Faiths · traditions · daily living · படி · புரிந்து கொள்</small></span><span aria-hidden="true">›</span>';
 care.insertAdjacentElement('beforebegin',launcher);
 const style=document.createElement('style');style.id='hcHeritageLauncherCssV189';
 style.textContent=[
