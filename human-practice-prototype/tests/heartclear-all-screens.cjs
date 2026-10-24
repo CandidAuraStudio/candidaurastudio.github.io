@@ -12,7 +12,7 @@ const assert=require('node:assert/strict');
   await page.locator('#home.active').waitFor();
   const screens=await page.locator('.screen[id]').evaluateAll(nodes=>nodes.map(n=>n.id));
   assert.ok(screens.length>=35,'Expected all app screens to be registered');
-  for(const id of ['home','practices','library','soundLab','hcQuranStudy','settings']){
+  for(const id of screens.filter(id=>id!=='hcReels')){
    console.log('CHECK ROUTE',width,id);
    const status=await page.evaluate(id=>{try{show(id);return document.getElementById(id).classList.contains('active')}catch(e){return String(e)}},id);
    assert.equal(status,true,'Screen failed: '+id+'; '+status);
