@@ -109,3 +109,24 @@
 #hcQuranStudy .hcqs-verse{padding:15px 13px;margin-top:12px}
 #hcQuranStudy .hcqs-verse-head{margin-bottom:8px}
 #hcQuranStudy .hcqs-subhead{margin-top:10px}
+
+/* Qur'an reader: first-party inline playback, shared with HeartClear's mini-player. */
+#hcQuranStudy .hcqs-audio-player{margin:12px 0 16px;padding:15px 13px;border:1px solid rgba(235,243,246,.38);border-radius:20px;background:#081c28;color:#fff}
+#hcQuranStudy .hcqs-audio-top{display:flex;align-items:center;justify-content:space-between;gap:9px;margin-bottom:12px}
+#hcQuranStudy .hcqs-audio-top strong{font-size:15px;line-height:1.45}
+#hcQuranStudy .hcqs-audio-top span{font-size:11px;color:#d5e5ea;max-width:47%;text-align:right}
+#hcQuranStudy .hcqs-audio-langs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-bottom:10px}
+#hcQuranStudy .hcqs-audio-langs button{min-width:0;min-height:46px;padding:6px 5px;border:1px solid #647885;border-radius:13px;background:#122d3c;color:white;font:600 14px system-ui}
+#hcQuranStudy .hcqs-audio-langs button[aria-pressed="true"]{background:#fff;color:#102632;border-color:#fff}
+#hcQuranStudy .hcqs-audio-controls{display:flex;align-items:center;gap:6px}
+#hcQuranStudy .hcqs-audio-controls button{font:600 12px system-ui;min-height:42px;border:1px solid rgba(218,234,243,.31);background:#143344;color:#fff;border-radius:11px;padding:8px 9px}
+#hcQuranStudy #hcqs-audio-toggle{flex:1;background:#f6f7f5;color:#071e2a;border-color:#fff;font-size:14px;white-space:nowrap;min-width:74px}
+#hcQuranStudy .hcqs-audio-controls button:disabled{opacity:.4}
+#hcQuranStudy #hcqs-audio-verse{font-size:11px;color:#e3edf1;white-space:nowrap}
+#hcQuranStudy #hcqs-audio-progress{display:block;min-height:26px;margin:8px 0 1px;width:100%;accent-color:#fff}
+#hcQuranStudy #hcqs-audio-progress:disabled{opacity:.4}
+#hcQuranStudy .hcqs-audio-foot{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;font-size:10px;color:#c2d4dc;line-height:1.5}
+#hcQuranStudy .hcqs-audio-foot>span:last-child{text-align:right}
+#hcQuranStudy .hcqs-verse-play{min-height:40px;padding:8px 11px;border-radius:12px;border:1px solid #65808c;background:#183748;color:#fff;font:650 12px system-ui}
+#hcQuranStudy .hcqs-audio-player button:focus-visible,#hcQuranStudy .hcqs-verse-play:focus-visible,#hcQuranStudy #hcqs-audio-progress:focus-visible{outline:3px solid white;outline-offset:3px}
+@media(max-width:370px){#hcQuranStudy .hcqs-audio-controls{flex-wrap:wrap}#hcQuranStudy #hcqs-audio-toggle{min-width:100%}#hcQuranStudy .hcqs-audio-controls button:not(#hcqs-audio-toggle){flex:1}#hcQuranStudy .hcqs-audio-top strong{font-size:13px}}
