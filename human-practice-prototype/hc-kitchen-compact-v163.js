@@ -123,16 +123,18 @@ function getCatalog(){
  // Personal methods, general named guides and rotating family menu all appear.
  (window.HCKitchenSearchGuide?.personal||[]).forEach(push);
  dishes.forEach(d=>push({en:d.name,ta:d.ta,aliases:d.aliases||'',source:'quick'}));
+ (window.HCKitchenWorldRecipes?.catalog?.()||[]).forEach(push);
  (window.HCKitchenMenu?.catalog?.()||[]).forEach(push);
  return items;
 }
 function rank(d,q){
- const name=foldText(d.en+' '+d.ta+' '+(d.aliases||'')),en=foldText(d.en),query=foldText(q),t=words(q);
+ const name=foldText(d.en+' '+d.ta),aliases=foldText(d.aliases),ingredients=foldText(d.ingredients),category=foldText(d.category),en=foldText(d.en),query=foldText(q),t=words(q);
  if(!t.length)return 0;
- const found=t.filter(w=>name.includes(w)), coverage=found.length/t.length;
+ const found=t.filter(w=>name.includes(w)||aliases.includes(w)||ingredients.includes(w)||category.includes(w)), coverage=found.length/t.length;
+ const named=t.filter(w=>name.includes(w)).length,aliased=t.filter(w=>aliases.includes(w)).length;
  if(!found.length||coverage<Math.min(0.65,1/t.length))return 0;
- let score=coverage*90 + found.length*7 - Math.max(0,words(d.en).length-found.length)*2;
- if(en===query||foldText(d.ta)===query)score+=120;
+ let score=coverage*35+named*85+aliased*47+(found.length-named)*8;
+ if(en===query||foldText(d.ta)===query)score+=220;
  if(query.length>3&&en.includes(query))score+=65;
  if(en.length>3&&query.includes(en))score+=75;
  // Prefer a named dish over rice-only matches in "rice and butter chicken".
@@ -142,11 +144,30 @@ function rank(d,q){
 }
 function getMatches(q){
  return getCatalog().map((d,i)=>({...d,score:rank(d,q),order:i}))
-  .filter(x=>x.score>0).sort((a,b)=>b.score-a.score||a.order-b.order).slice(0,8);
+  .filter(x=>x.score>0).sort((a,b)=>b.score-a.score||a.order-b.order).slice(0,120);
 }
 function showItem(item){
  if(!item)return;
  searchResults.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.recipe===item.en)));
+ if(item.source==='world'){
+  const guide=window.HCKitchenWorldRecipes?.detail?.(item.en);
+  if(guide){
+   output(guide.text);
+   const box=document.createElement('details');box.className='hc-kitchen-science';
+   const heading=document.createElement('summary');heading.textContent='Food science & sources / அறிவியல் · ஆதாரம்';box.append(heading);
+   const fact=document.createElement('p');
+   fact.textContent=/ginger tea|lemon ginger|ginger coriander/i.test(item.en)?'Ginger is a culinary ingredient; a cup of ginger tea does not replace medical care.':
+   /turmeric milk/i.test(item.en)?'Culinary turmeric adds flavour. Concentrated turmeric supplements have different risks.':
+   /idli|dosa|batter/i.test(item.en)?'Natural microorganisms ferment rice-and-urad batter. Use safe water and clean equipment. Chill ready batter.':
+   /mutton|beef|chicken|egg|fish|prawn|burger|tuna|maasi|sprat|mayonnaise/i.test(item.en)?'Keep raw and ready-to-eat food separate, cook to safe temperatures, and refrigerate perishables.':
+   'Fresh ingredients, clean utensils and safe storage matter more than unsupported health claims.';
+   box.append(fact);
+   (guide.references||[]).forEach(ref=>{
+     const link=document.createElement('a');link.href=ref.url;link.target='_blank';link.rel='noopener noreferrer';link.textContent=ref.name+' ↗';box.append(link);
+   });
+   reply.append(box);return;
+  }
+ }
  const guide=window.HCKitchenSearchGuide?.detail?.(item.en,item.ta);
  // Original cooking notes override general methods if recorded.
  if(item.source==='personal'&&guide){output(guide.en+' / '+guide.ta+'\n\n'+guide.text);return}
