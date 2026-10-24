@@ -54,6 +54,11 @@ const el=document.createElement('section');el.id='hcHeritageReader';el.className
 el.innerHTML='<header class="hc-heritage-header"><button type="button" id="hcHeritageBack" aria-label="Back">← <span>Back</span></button><div><strong id="hcHeritageHeaderTitle">Knowledge</strong><small id="hcHeritageTrail">HeartClear</small></div><div class="hc-heritage-tools"><button type="button" id="hcHeritageLanguage" aria-label="Switch reading language">EN</button><button type="button" id="hcHeritageAll">All</button></div></header><main id="hcHeritageMain"></main><footer id="hcHeritageFooter"></footer>';
 home.insertAdjacentElement('afterend',el);
 const main=el.querySelector('#hcHeritageMain'),back=el.querySelector('#hcHeritageBack'),all=el.querySelector('#hcHeritageAll'),languageButton=el.querySelector('#hcHeritageLanguage'),trail=el.querySelector('#hcHeritageTrail'),head=el.querySelector('#hcHeritageHeaderTitle'),footer=el.querySelector('#hcHeritageFooter');
+const quick=document.createElement('nav');
+quick.className='hc-heritage-quicknav';quick.setAttribute('aria-label','Reader navigation');
+quick.innerHTML='<button type="button" id="hcHeritageBottomBack">← <span>Back</span></button><button type="button" id="hcHeritageBottomList">▤ <span>Subjects</span></button><button type="button" id="hcHeritageBottomTop">↑ <span>Top</span></button>';
+el.append(quick);
+const bottomBack=quick.querySelector('#hcHeritageBottomBack'),bottomList=quick.querySelector('#hcHeritageBottomList'),bottomTop=quick.querySelector('#hcHeritageBottomTop');
 const css=document.createElement('style');css.id='hcHeritageReaderCssV189';
 css.textContent=[
 '#hcHeritageReader.screen{display:none;flex:1;justify-content:flex-start;align-items:stretch;min-width:0;width:100%;padding:0 0 calc(120px + env(safe-area-inset-bottom,0px));color:#eef4f6}',
@@ -86,7 +91,30 @@ css.textContent=[
 '#hcHeritageReader #hcHeritageFooter button:disabled{opacity:.36;cursor:default}',
 '#hcHeritageReader :is(button,a):focus-visible{outline:2px solid #fff;outline-offset:2px}',
 '@media(max-width:370px){#hcHeritageReader .hc-heritage-header{gap:5px}#hcHeritageReader .hc-heritage-header button{font-size:11px;padding:8px}}'
-].join('\n');document.head.append(css);
+].join('\n');
+css.textContent+=`
+/* Keep header controls on their own row so Tamil titles have the full width. */
+#hcHeritageReader .hc-heritage-header{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;grid-template-areas:"back tools" "heading heading";gap:8px 10px!important;min-height:0!important;max-width:100%;padding:10px 2px 12px;background:#07141e}
+#hcHeritageReader #hcHeritageBack{grid-area:back;justify-self:start;white-space:nowrap}
+#hcHeritageReader .hc-heritage-header>div:nth-child(2){grid-area:heading;min-width:0;width:100%}
+#hcHeritageReader .hc-heritage-tools{grid-area:tools;justify-self:end;flex-wrap:nowrap;gap:7px;min-width:max-content}
+#hcHeritageReader .hc-heritage-header strong,body.hc-flow-enabled #hcHeritageReader .hc-heritage-header strong{display:block;font-size:clamp(21px,5.5vw,26px)!important;line-height:1.4!important;letter-spacing:0!important;overflow-wrap:normal!important;word-break:normal!important;hyphens:none!important;white-space:normal!important}
+#hcHeritageReader .hc-heritage-header small,body.hc-flow-enabled #hcHeritageReader .hc-heritage-header small{display:block;font-size:13px!important;line-height:1.5!important;margin-top:3px}
+#hcHeritageReader .hc-heritage-header button,body.hc-flow-enabled #hcHeritageReader .hc-heritage-header button{min-height:48px!important;font-size:clamp(15px,4vw,18px)!important;line-height:1.3!important;border-radius:16px!important;padding:8px 11px!important}
+#hcHeritageReader #hcHeritageLanguage{min-width:61px;white-space:nowrap}
+#hcHeritageReader #hcHeritageAll{min-width:52px;white-space:nowrap}
+body.hc-flow-enabled #hcHeritageReader.active>#hcFlowTop{display:none!important}
+#hcHeritageReader #hcHeritageMain{min-width:0;width:100%;padding-bottom:30px}
+#hcHeritageReader #hcHeritageMain :is(h1,h2,p,.hc-heritage-tile strong,.hc-heritage-tile small){word-break:normal;hyphens:none}
+#hcHeritageReader #hcHeritageFooter{margin-bottom:42px}
+#hcHeritageReader .hc-heritage-quicknav{position:fixed;z-index:99;bottom:calc(101px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);width:min(96vw,540px);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;padding:7px;background:#0d1c26;border:1.5px solid #78909e;border-radius:22px;box-shadow:0 8px 24px #000a}
+#hcHeritageReader:not(.active) .hc-heritage-quicknav{display:none!important}
+#hcHeritageReader .hc-heritage-quicknav button,body.hc-flow-enabled #hcHeritageReader .hc-heritage-quicknav button{min-height:52px!important;min-width:0;border:0;border-radius:16px!important;background:#1b3441;color:#f7faf9;font-size:clamp(15px,3.7vw,18px)!important;font-weight:700;line-height:1.3;padding:7px 4px!important;white-space:nowrap}
+#hcHeritageReader .hc-heritage-quicknav button:active{background:#395467}
+body.hc-flow-enabled:has(.global-mini.show) #hcHeritageReader .hc-heritage-quicknav{bottom:calc(176px + env(safe-area-inset-bottom,0px))}
+@media(max-width:365px){#hcHeritageReader .hc-heritage-quicknav{bottom:calc(95px + env(safe-area-inset-bottom,0px))}#hcHeritageReader .hc-heritage-header{gap:6px!important}}
+`;
+document.head.append(css);
 function activeScreen(){return document.querySelector('.screen.active')?.id||'home'}
 function showReader(){
  if(typeof show==='function')show('hcHeritageReader');
@@ -128,9 +156,15 @@ window.addEventListener('popstate',evt=>{
 function render(){
  const group=route.topic,chapter=rows(group),subject=topicLabel(group);
  head.textContent=route.level==='index'?tr('Knowledge Library','அறிவுக் களஞ்சியம்'):subject;
- languageButton.textContent=lang==='ta'?'EN':'தமிழ்';
+ el.setAttribute('lang',lang);
+  languageButton.textContent=lang==='ta'?'EN':'தமிழ்';
+  languageButton.setAttribute('aria-label',lang==='ta'?'Switch to English':'தமிழுக்கு மாற்று');
+  all.textContent=tr('All','அனைத்து');
+  bottomBack.querySelector('span').textContent=route.level==='index'?tr('Close','மூடு'):tr('Back','திரும்பு');
+  bottomList.querySelector('span').textContent=tr('Subjects','தலைப்புகள்');
+  bottomTop.querySelector('span').textContent=tr('Top','மேலே');
  trail.textContent=route.level==='index'?'HeartClear':route.level==='topic'?tr('All subjects › Subject','அனைத்தும் › தலைப்பு'):tr('Subject › Article','தலைப்பு › கட்டுரை');
- back.querySelector('span').textContent=route.level==='index'?tr('Close','மூடு'):tr('Back','பின்னால்');
+ back.querySelector('span').textContent=route.level==='index'?tr('Close','மூடு'):tr('Back','திரும்பு');
  all.hidden=route.level==='index';
  footer.innerHTML='';
  if(route.level==='index'){
@@ -168,8 +202,11 @@ function render(){
  main.querySelectorAll('[data-article]').forEach(b=>b.addEventListener('click',()=>navigate('article',group,b.dataset.article)));
 }
 back.addEventListener('click',goBack);
+bottomBack.addEventListener('click',goBack);
+bottomList.addEventListener('click',()=>{if(route.level!=='index')navigate('index');else window.scrollTo(0,0)});
+bottomTop.addEventListener('click',()=>window.scrollTo({top:0,behavior:'auto'}));
 all.addEventListener('click',()=>navigate('index'));
-languageButton.addEventListener('click',()=>{lang=lang==='ta'?'en':'ta';try{localStorage.setItem(ORIGIN,JSON.stringify({language:lang}))}catch(_){}render()});
+languageButton.addEventListener('click',()=>{const y=window.scrollY||0;lang=lang==='ta'?'en':'ta';try{localStorage.setItem(ORIGIN,JSON.stringify({language:lang}))}catch(_){}render();requestAnimationFrame(()=>window.scrollTo(0,Math.min(y,Math.max(0,document.documentElement.scrollHeight-window.innerHeight))))});
 window.addEventListener('hc:body-science-ready',()=>{if(route.level==='index'||route.topic==='medicine')render()});
 const launcher=document.getElementById('hcDeepHeritageV185');
 launcher?.addEventListener('click',()=>open());
