@@ -202,3 +202,9 @@ body.hc-cinema.hci-reduce-motion *,body.hc-cinema.hci-reduce-motion *::before{an
 @media(prefers-reduced-motion:reduce){
  body.hc-cinema *,body.hc-cinema *::before,body.hc-cinema *::after{animation:none!important;transition-duration:0s!important}
 }
+
+/* Keep the same cinematic masthead inside focused Kitchen, Bible, and knowledge pages. */
+body.hc-flow-enabled.hc-cinema #home.active.hc-bubble-detail > #hcCinemaHero{display:flex!important;visibility:visible!important;min-height:180px!important;margin-bottom:18px!important}
+body.hc-flow-enabled.hc-cinema #home.active.hc-bubble-detail[data-hcb-detail="recipes"] > #hcCinemaHero,
+body.hc-flow-enabled.hc-cinema #home.active.hc-bubble-detail[data-hcb-detail="bible"] > #hcCinemaHero,
+body.hc-flow-enabled.hc-cinema #home.active.hc-bubble-detail[data-hcb-detail="feature"] > #hcCinemaHero{display:flex!important}

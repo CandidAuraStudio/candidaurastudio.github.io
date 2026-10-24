@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#07131d">
+<meta name="theme-color" content="#090b0e">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="HeartClear">
@@ -9511,7 +9511,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=236');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=239');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
@@ -9593,6 +9593,8 @@ const heartclearAutoInstallPrompt=false;
 <script src="./hc-flow-v220.js?v=238"></script>
 <script src="./hc-meditation-navigation-v237.js?v=237"></script>
 <script src="./hc-kitchen-language-v234.js?v=234"></script>
+<link rel="stylesheet" href="./hc-cinema-v239.css?v=239">
+<script src="./hc-cinema-v239.js?v=239"></script>
 </body>
 </html>
 
