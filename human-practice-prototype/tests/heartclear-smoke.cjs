@@ -26,7 +26,7 @@ const assert = require('node:assert/strict');
     let playing=await page.locator('audio').evaluateAll(els=>els.filter(x=>!x.paused).map(x=>x.id));
     assert.deepEqual(playing,[],'App must be silent on first open');
     console.log('PASS: launch stays silent');
-    assert.equal((await page.locator('.hc-daily-family').innerText()).trim(),'Welcome to Mastar Alim family');
+    assert.equal((await page.locator('.hc-daily-family').innerText()).trim(),'Welcome to HeartClear');
     console.log('PASS: welcome subtitle is available under the changing daily greeting');
 
     // A phone app must not scale its document in response to accidental pinch/double-tap.
