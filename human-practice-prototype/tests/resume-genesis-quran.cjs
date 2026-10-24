@@ -21,7 +21,7 @@ const BASE='http://127.0.0.1:8765/human-practice-prototype/';
    Object.defineProperty(el,'currentTime',{configurable:true,get:()=>snapshot.seconds});
    hcCaptureReturnState(true);
    const stored=JSON.parse(localStorage.getItem('heartclearReturnStateV1')||'null');
-   return {success,stored,snapshot:window[keys[1]]()};
+   return {success,stored,snapshot:window[keys[1]](),featuredBefore:document.getElementById('hcqSelect')?.value};
   },{keys,snapshot});
   assert.equal(before.success,true,kind+' initial setup');
   assert.equal(before.stored.kind,kind,kind+' state kind');
@@ -33,6 +33,7 @@ const BASE='http://127.0.0.1:8765/human-practice-prototype/';
    return {
     src:el.getAttribute('src'),paused:el.paused,chapter:document.getElementById('hcGenChapter')?.textContent,
     surah:document.getElementById('hcqName')?.textContent,
+    featuredAfter:document.getElementById('hcqSelect')?.value,
     verse:document.getElementById('hcqVerseNumber')?.textContent,
     cardAction:document.getElementById(kind==='genesis'?'hcGenPlayLabel':'hcqAction')?.textContent,
     home:document.getElementById('home')?.classList.contains('active'),
@@ -54,9 +55,18 @@ const BASE='http://127.0.0.1:8765/human-practice-prototype/';
   assert.equal(after.home,true,'Home should remain available');
   assert.ok(after.mini,kind+' resumed track should have a mini-player');
   assert.match(after.src||'',expected.src);
-  assert.match(after.cardAction||'',/Resume/i);
-  if(kind==='genesis')assert.equal(after.chapter,'37 / 50');
-  else assert.match(after.verse||'',/Verse 7 \/ 109/);
+  if(kind==='genesis'){
+   assert.match(after.cardAction||'',/Resume/i);
+   assert.equal(after.chapter,'37 / 50');
+  }else{
+   assert.notEqual(after.featuredAfter,before.featuredBefore,
+     'Fresh Surah suggestion must change on every browser refresh');
+   assert.match(after.verse||'',/Verse 7 \/ 109/);
+   // The paused listening session is restored in the mini-player independently
+   // from the new recommendation. It must not replace the fresh Surah card.
+   if(Number(after.featuredAfter)!==snapshot.surah)
+    assert.doesNotMatch(after.cardAction||'',/Resume/i);
+  }
   assert.deepEqual(errors,[],'JavaScript errors: '+errors.join('; '));
   console.log('PASS: '+kind+' restored exact chapter/verse and paused mini-player');
   await context.close();
