@@ -186,7 +186,16 @@ function route(name){
  }else if(name==='bible')window.HCHeritageReader?window.HCHeritageReader.open('newtestament'):typeof show==='function'&&show('library');
  else if(name==='gita')window.HCHeritageReader?window.HCHeritageReader.open('gita'):typeof show==='function'&&show('library');
  else if(name==='science')window.HCHeritageReader?window.HCHeritageReader.open('medicine'):typeof show==='function'&&show('library');
- else if(name==='animal')typeof show==='function'&&show('home');
+ else if(name==='animal'){
+  goHome();
+  const animal=byId('hcAnimalsV192'),drawer=byId('hcKitchenDrawer'),kitchen=byId('hcMonthlyKitchen');
+  if(drawer)drawer.open=true;
+  if(kitchen)kitchen.hidden=false;
+  if(animal){
+   animal.open=true;
+   requestAnimationFrame(()=>animal.scrollIntoView({block:'start',behavior:'auto'}));
+  }else if(kitchen)requestAnimationFrame(()=>kitchen.scrollIntoView({block:'start',behavior:'auto'}));
+ }
  else if(name==='books')typeof show==='function'&&show('library');
  else if(name==='sounds'&&typeof openSoundLab==='function')openSoundLab();
  else if(typeof show==='function')show('practices');
