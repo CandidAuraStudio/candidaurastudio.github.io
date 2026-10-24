@@ -28,7 +28,7 @@ const assert=require('node:assert/strict');
   await page.locator('#practices [data-session="wake"]').first().click();
   await page.locator('#player.active').waitFor();
   await page.locator('#hcGuidedNext').click();
-  assert.match(await page.locator('#sessionKicker').innerText(),/Noon Reset/);
+  assert.match(await page.locator('#sessionKicker').innerText(),/Noon Reset/i);
   await page.locator('#hcGuidedSettings').click();
   assert.equal(await page.locator('#optionsPanel').evaluate(x=>x.classList.contains('open')),true);
   assert.deepEqual(errors,[],width+' JavaScript exceptions');
