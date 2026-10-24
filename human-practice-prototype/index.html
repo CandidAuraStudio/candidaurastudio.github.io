@@ -3804,7 +3804,7 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
         </div>
       </details>
     </div>
-    <div class="app-version">HeartClear · Version 1.3.12 · HC v187</div>
+    <div class="app-version">HeartClear · Version 1.3.13 · HC v188</div>
   </div>
 </section>
 
@@ -4574,6 +4574,10 @@ function hcCaptureReturnState(force=false){
       humanChoice:humanSoundChoice,humanTime:Number(humanSoundAudio.currentTime)||0,
       humanRemaining:Number(humanRemaining)||0,
      driveKey:hcDriveActiveKey||null,driveFrom:hcDriveBackScreen||null};
+   if(active?.key==='genesis'&&typeof window.hcGenesisPlaybackSnapshot==='function')
+     item.genesis=window.hcGenesisPlaybackSnapshot();
+   if(active?.key==='quran-meaning'&&typeof window.hcQuranMeaningPlaybackSnapshot==='function')
+     item.quranMeaning=window.hcQuranMeaningPlaybackSnapshot();
    if((screen==='player'||item.kind==='meditation')&&chosenUrl){
      item.meditation={url:chosenUrl,seconds:chosenSeconds,introUrl:chosenIntroUrl,
        visualUrl:chosenVisualUrl,kicker:chosenKicker,title:chosenTitle};
@@ -4600,6 +4604,14 @@ function hcRestorePreviousScreen(){
   let success=false;hcReturnRestoring=true;
  try{
   switch(saved.screen){
+   case 'home':{
+    if(saved.kind==='genesis'&&typeof window.hcGenesisRestorePaused==='function'){
+      success=window.hcGenesisRestorePaused(saved.genesis)===true;
+    }else if(saved.kind==='quran-meaning'&&typeof window.hcQuranMeaningRestorePaused==='function'){
+      success=window.hcQuranMeaningRestorePaused(saved.quranMeaning)===true;
+    }else success=true;
+    break;
+   }
    case 'player':{
     const p=saved.meditation;
     if(!p||typeof p.url!=='string'||!/^https:\/\//.test(p.url)){show('practices');break}
@@ -4654,7 +4666,7 @@ function hcRestorePreviousScreen(){
    case 'sacredDetail':openSacred('islamic');success=true;break;
    default:show(saved.screen);success=true;
   }
-  if(success&&['player','sacredSession','soundLabPlayer','bookAudio','fearPlayer','humanSession'].includes(currentScreenId)){
+  if(success&&(['player','sacredSession','soundLabPlayer','bookAudio','fearPlayer','humanSession'].includes(currentScreenId)||['genesis','quran-meaning'].includes(saved.kind))){
    hcMiniPinnedKey=saved.kind||null;
     const note=document.getElementById('hcReturnNotice');
    if(note){note.hidden=false;note.textContent='Session restored. Tap Play to continue listening.'}
@@ -9453,7 +9465,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=191');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=188');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
@@ -9480,7 +9492,7 @@ const heartclearAutoInstallPrompt=false;
 <script src="./hc-monthly-kitchen-v145.js?v=165"></script>
 <script src="./hc-kitchen-teaching-v149.js?v=150"></script>
 <script src="./hc-sounds-direct-v149.js?v=152"></script>
-<script src="./hc-quran-home-v153.js?v=168"></script>
+<script src="./hc-quran-home-v153.js?v=188"></script>
 
 <link rel="stylesheet" href="./hc-explore.css?v=154">
 <script src="./hc-explore-core.js?v=161"></script>
@@ -9489,7 +9501,7 @@ const heartclearAutoInstallPrompt=false;
 <script src="./hc-explore-ui.js?v=190"></script>
 <script src="./hc-health-talk-v156.js?v=160"></script>
 <script src="./hc-home-routine-v155.js?v=191"></script>
-<script src="./hc-genesis-v156.js?v=168"></script>
+<script src="./hc-genesis-v156.js?v=188"></script>
 <script src="./hc-hindu-scriptures-v162.js?v=170"></script>
 <script src="./hc-gita-original-audio-v163.js?v=172"></script>
 
