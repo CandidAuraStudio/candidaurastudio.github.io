@@ -11,6 +11,8 @@
  document.body.append(dialog);
  let mode='menu',history=[],step=null,recognition=null,generation=0,voiceAllowed=false,language='en-US',pending=null,finished=false,voiceTimer=null;
  const labels={yes:'Yes',no:'No',unsure:'Unsure'};
+ const gameLimit=core.gameQuestionLimit||20;
+ const gameCount=()=>history.filter(h=>!/^(identity:|reject:)/.test(h.id)).length;
  const questionText=id=>mode==='health'?core.healthQuestions[id]+(core.healthHelp[id]?' '+core.healthHelp[id]:''):core.questions.find(q=>q.id===id)?.text||id;
  function stopVoice(){
   generation++;clearTimeout(voiceTimer);voiceTimer=null;
@@ -32,12 +34,12 @@
   let html='';
   if(mode==='menu'){
    html='<h2 id="hcxTitle" tabindex="-1">A little discovery.</h2>'+
-    '<button class="hcx-choice" data-mode="game">Guess my thought<small>People, nature &amp; everyday things · up to 20 questions</small></button>'+
+    '<button class="hcx-choice" data-mode="game">Guess my thought<small>People, nature &amp; everyday things · up to '+gameLimit+' questions</small></button>'+
     '<button class="hcx-choice" data-mode="health">Help me explain<small>Private symptom notes · adults · urinary &amp; general concerns</small></button>'+
-    '<p>The game includes '+core.bank.length+' subjects, including '+core.bank.filter(x=>x.tags.includes('music')).length+' musicians. Each guess is tentative. Choose “That is not it” to exclude a wrong candidate; some answers may be outside the collection.</p>';
+    '<p>'+core.bank.length+' subjects'+(core.gameStats?.publicFigures?' · '+core.gameStats.publicFigures+' source-linked public figures':' · basic collection')+'. A match needs supporting clues and your confirmation. It cannot read minds or identify private names.</p>';
   }else{
    step=mode==='game'?core.gameStep(history):core.healthStep(history);
-   html='<p class="hcx-meta">'+(mode==='game'?'Guess my thought · '+history.length+' / 20':'Help me explain · not a diagnosis')+'</p>';
+   html='<p class="hcx-meta">'+(mode==='game'?'Guess my thought · '+gameCount()+' / '+gameLimit:'Help me explain · not a diagnosis')+'</p>';
    if(finished){html+='<h2 id="hcxTitle" tabindex="-1">Found it.</h2><p>Your answers helped narrow it down.</p><button class="hcx-primary" data-action="restart">Play again</button>';}
    else if(step.kind==='question'){
     html+='<h2 id="hcxTitle" tabindex="-1" data-question="'+step.id+'">'+escape(step.text)+'</h2>'+(step.help?'<p>'+escape(step.help)+'</p>':'')+
@@ -46,6 +48,14 @@
      '<div class="hcx-voice-panel" id="hcxVoicePanel" hidden></div><div class="hcx-status" id="hcxVoiceStatus" role="status" aria-live="polite"></div>';
    }else if(step.kind==='guess'){
     html+='<h2 id="hcxTitle" tabindex="-1">'+escape(step.message)+'</h2><div class="hcx-tools"><button data-action="correct">That is right</button><button data-action="incorrect">That is not it · try another</button></div><p class="hcx-meta">A wrong answer is removed from this round; no repeated guess.</p>';
+    if(step.evidence?.length){
+     html+='<details><summary>Why this guess?</summary><ul>'+step.evidence.slice(-8).map(e=>'<li>'+escape(e.question)+' — '+escape(labels[e.answer])+'</li>').join('')+'</ul>';
+     if(/^https:\/\/www\.wikidata\.org\/wiki\/Q\d+$/.test(step.source||''))html+='<a href="'+step.source+'" target="_blank" rel="noopener noreferrer">Public-figure facts · Wikidata ↗</a><p>Missing facts are treated as unknown. Source data can contain errors; confirm the match yourself.</p>';
+     html+='</details>';
+    }
+   }else if(step.kind==='ambiguous'){
+    html+='<h2 id="hcxTitle" tabindex="-1">I need another clue.</h2><p>'+escape(step.message)+'</p>'+
+     '<details><summary>Some possible matches</summary><ul>'+(step.items||[]).map(item=>'<li>'+escape(item.name)+'</li>').join('')+'</ul><p>These are possibilities, not identified answers.</p></details><button class="hcx-primary" data-action="restart">Start again</button>';
    }else if(step.kind==='unknown'){
     html+='<h2 id="hcxTitle" tabindex="-1">I do not know yet.</h2><p>'+escape(step.message)+'</p><button class="hcx-primary" data-action="restart">Start again</button>';
    }else{
