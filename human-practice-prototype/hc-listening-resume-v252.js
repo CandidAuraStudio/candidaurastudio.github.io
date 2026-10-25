@@ -50,7 +50,15 @@ function currentSnapshot(allowZero=false){
   }
   if(s.key==='meditation'){
     const p=read('clearWithinLastSession');
-    if(p?.url)out.session=p;
+    // Save enough to restore even before the older 20-second bookmark threshold.
+    out.session=p?.url?p:{
+      url:typeof chosenUrl==='string'?chosenUrl:'',
+      introUrl:typeof chosenIntroUrl==='string'?chosenIntroUrl:'',
+      visualUrl:typeof chosenVisualUrl==='string'?chosenVisualUrl:'',
+      seconds:typeof chosenSeconds==='number'?chosenSeconds:600,
+      kicker:typeof chosenKicker==='string'?chosenKicker:'Practice',
+      title:typeof chosenTitle==='string'?chosenTitle:'Practice'
+    };
   }
   return out;
 }
@@ -109,7 +117,9 @@ function openSaved(s){
     }else if(s.kind==='soundlab'){
       if(!s.track||typeof soundLabTracks==='undefined'||!soundLabTracks[s.track])return false;
       openSoundTrack(s.track);
-      seek(byId('soundLabAudio'),tnum(s.time),typeof syncSoundLab==='function'?syncSoundLab:null);
+      const bookmark=read('heartclearLastSoundV1');
+      const t=bookmark?.key===s.track?Math.max(tnum(s.time),tnum(bookmark.position)):tnum(s.time);
+      seek(byId('soundLabAudio'),t,typeof syncSoundLab==='function'?syncSoundLab:null);
     }else if(s.kind==='book'){
       openBookAudio(s.lang||'en',s.chapter||1);
       seek(byId('bookAudio'),tnum(s.time),typeof syncBookAudio==='function'?syncBookAudio:null);
