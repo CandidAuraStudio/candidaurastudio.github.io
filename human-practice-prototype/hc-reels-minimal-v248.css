@@ -81,3 +81,58 @@
   #hcReels.active #hcReelSwipeRail,
   #hcReels.active .hc-reels-head{transition:none!important}
 }
+
+
+/* Whole-frame Reels gesture mode (review only).
+   Drive iframe owns audio/play/seek in Player controls mode. When the
+   viewer selects Swipe anywhere, the transparent surface intercepts
+   gestures over the video and the existing rail is no longer needed. */
+#hcReels.active #hcReelSwipeSurface{
+  position:absolute;inset:0;z-index:30;
+  display:block;box-sizing:border-box;width:100%;height:100%;
+  margin:0;padding:0;border:0;border-radius:0;background:transparent;
+  color:#fff;touch-action:none;overscroll-behavior:contain;
+  cursor:ns-resize;user-select:none;-webkit-user-select:none;
+}
+#hcReels.active #hcReelSwipeSurface[hidden],
+#hcReels.active #hcReelModeToggle[hidden]{display:none!important}
+#hcReels.active #hcReelSwipeSurface .hc-reel-swipe-hint{
+  position:absolute;left:50%;top:calc(86px + env(safe-area-inset-top,0px));
+  transform:translateX(-50%);width:max-content;max-width:calc(100vw - 30px);
+  padding:8px 12px;border:1px solid rgba(255,255,255,.24);
+  border-radius:999px;background:rgba(4,6,8,.68);
+  color:#fff;font:600 12px/1.3 system-ui;
+  text-align:center;pointer-events:none;
+}
+#hcReels.active #hcReelModeToggle{
+  position:absolute;z-index:40;
+  top:calc(13px + env(safe-area-inset-top,0px));right:10px;
+  width:auto;max-width:calc(100vw - 112px);min-width:100px;min-height:44px;
+  display:inline-flex;align-items:center;justify-content:center;
+  margin:0;padding:9px 12px;border-radius:14px;
+  border:1px solid rgba(255,255,255,.46);
+  background:rgba(5,8,11,.83);color:#fff;
+  font:700 12px/1.2 system-ui;white-space:nowrap;
+  cursor:pointer;touch-action:manipulation;
+}
+#hcReels.active #hcReelModeToggle[aria-pressed="true"]{
+  background:#f6f6f3;color:#121619;border-color:#fff;
+}
+#hcReels.active #hcReelModeToggle:focus-visible,
+#hcReels.active #hcReelSwipeSurface:focus-visible{
+  outline:3px solid #fff;outline-offset:2px;
+}
+#hcReels.active.hc-reels-swipe-mode #hcReelSwipeRail{
+  display:none!important
+}
+@media(max-width:350px){
+  #hcReels.active #hcReelModeToggle{
+    font-size:11px;min-width:90px;padding-inline:8px;
+  }
+  #hcReels.active #hcReelSwipeSurface .hc-reel-swipe-hint{
+    font-size:11px;padding:7px 9px;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  #hcReels.active #hcReelModeToggle{transition:none!important}
+}
