@@ -10,7 +10,7 @@ const STORE='hcOmListeningV252';
 const safeGet=()=>{try{return JSON.parse(localStorage.getItem(STORE)||'null')||{}}catch(e){return {}}};
 const save=(active=true)=>{try{localStorage.setItem(STORE,JSON.stringify({active,time:Number.isFinite(media.currentTime)?media.currentTime:0,at:Date.now()}))}catch(e){}};
 let preferred=safeGet(),lastSavedTime=Number(preferred.time)||0;
-let mode='idle',attempt=0,watchdog=0,playWanted=false;
+let mode='idle',attempt=0,watchdog=0,playWanted=false,sourceIndex=-1;
 let minimized=true;
 const style=document.createElement('style');style.id='hcOmMiniStyleV252';
 style.textContent=`
@@ -114,7 +114,7 @@ function trySource(index,token){
  }
  let responded=false;
  clearTimeout(watchdog);
- media.pause();media.src=sources[index];media.load();
+ media.pause();sourceIndex=index;media.src=sources[index];media.load();
  setStatus('Opening original audio…','loading');
  // Audio autoplay is attempted directly in the user gesture. Never claim it played unless "playing" fires.
  try{const p=media.play();if(p&&typeof p.catch==='function')p.catch(e=>{
@@ -154,7 +154,7 @@ media.addEventListener('pause',()=>{if(mode==='playing'){lastSavedTime=media.cur
 media.addEventListener('timeupdate',()=>{if(media.currentTime>0)lastSavedTime=media.currentTime;render();if(Math.floor(media.currentTime)%4===0)preserve()});
 media.addEventListener('loadedmetadata',render);
 media.addEventListener('ended',()=>{playWanted=false;lastSavedTime=0;setStatus('Finished · replay when ready.','paused');save(true)});
-media.addEventListener('error',()=>{if(mode==='loading'&&playWanted){attempt++;trySource(1,attempt)}});
+media.addEventListener('error',()=>{if(mode==='loading'&&playWanted){const next=sourceIndex+1;attempt++;trySource(next,attempt)}});
 toggle.addEventListener('click',start);
 seek.addEventListener('input',()=>{if(Number.isFinite(media.duration)&&media.duration>0){media.currentTime=Number(seek.value);lastSavedTime=media.currentTime;preserve();render()}});
 el('hcomClose').addEventListener('click',()=>stop(true));
