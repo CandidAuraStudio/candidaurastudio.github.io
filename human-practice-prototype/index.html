@@ -2613,6 +2613,13 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
    <div class="hc-reels-stage" id="hcReelsStage" aria-label="Swipe up for next reel, down for previous">
      <button id="hcReelPoster" class="hc-reel-drive-poster" type="button" onclick="hcReelToggle()" aria-label="Play or retry current reel"><span class="hc-reel-playmark" aria-hidden="true">▶</span><strong>Play this reel</strong><span>Videos load when you open Reels or swipe. Tap if your browser requires a playback gesture.</span></button>
      <iframe id="hcReelFrame" class="hc-reel-drive-frame" title="Google Drive reel video player" loading="eager" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="no-referrer-when-downgrade" hidden></iframe>
+     <!-- Google Drive's cross-origin iframe cannot send touch swipes to HeartClear.
+          Optional swipe surface catches full-frame gestures; Player mode restores
+          direct access to the original Drive pause/seek/volume controls. -->
+     <button type="button" id="hcReelSwipeSurface" class="hc-reel-swipe-surface" hidden aria-label="Swipe up or down anywhere to change reels. Tap to use Google Drive player controls.">
+       <span class="hc-reel-swipe-hint" aria-hidden="true">Swipe ↑ / ↓ anywhere · Tap for controls</span>
+     </button>
+     <button type="button" id="hcReelModeToggle" class="hc-reel-mode-toggle" onclick="hcReelToggleSwipeMode()" aria-pressed="false" aria-label="Enable whole-screen swiping" hidden>Swipe anywhere</button>
       <div id="hcReelSwipeRail" class="hc-reel-swipe-rail" aria-label="Swipe up and down or use small arrows to change reels">
         <button type="button" class="hc-reel-rail-btn" aria-label="Previous unwatched reel" onclick="hcReelRailTap('previous')">↑</button>
         <small aria-hidden="true">SWIPE</small>
@@ -4700,6 +4707,25 @@ function hcPauseOtherAudioForReels(){
 }
 let hcReelIndex=0,hcReelTouchStart=0,hcReelAutoload=false,hcReelSwipeStart=0;
 let hcReelFrameLoaded=false;
+let hcReelSwipeMode=false;
+function hcReelSyncSwipeMode(){
+ const root=document.getElementById('hcReels');
+ const surface=document.getElementById('hcReelSwipeSurface');
+ const button=document.getElementById('hcReelModeToggle');
+ if(!root||!surface||!button)return;
+ const available=hcReelFrameLoaded&&currentScreenId==='hcReels';
+ root.classList.toggle('hc-reels-swipe-mode',available&&hcReelSwipeMode);
+ surface.hidden=!available||!hcReelSwipeMode;
+ button.hidden=!available;
+ button.textContent=hcReelSwipeMode?'Player controls':'Swipe anywhere';
+ button.setAttribute('aria-pressed',String(available&&hcReelSwipeMode));
+ button.setAttribute('aria-label',hcReelSwipeMode?'Show original Google Drive play, pause, seek and volume controls':'Enable swipe up and down over the whole video');
+}
+function hcReelSetSwipeMode(enabled){
+ hcReelSwipeMode=!!enabled;
+ hcReelSyncSwipeMode();
+}
+function hcReelToggleSwipeMode(){hcReelSetSwipeMode(!hcReelSwipeMode)}
 let hcReelShuffleOrder=[],hcReelShuffleCursor=0,hcReelReplayMode=false;
 /* Fisher–Yates shuffle without replacement. Keep the order in memory so
  * swiping down revisits the actually watched reel. */
@@ -4792,6 +4818,7 @@ function hcReelStop(){
  hcReelFrameLoaded=false;
  const cover=document.getElementById('hcReelPoster');if(cover)cover.hidden=false;
  hcReelUpdatePlayButton();
+ hcReelSyncSwipeMode();
 }
 function hcReelRender(){
  if(!document.getElementById('hcReelsStage'))return;
@@ -4811,10 +4838,14 @@ function hcReelRender(){
 }
 function hcOpenReels(){
  hcReelShuffle();hcReelAutoload=true;
+ // First let the user start sound and video through native Drive controls.
+ // A single tap on "Swipe anywhere" then switches to whole-frame navigation.
+ hcReelSetSwipeMode(false);
  hcPauseOtherAudioForReels();show('hcReels');
 }
 function hcCloseReels(){
  hcMarkCurrentReelSeen();
+ hcReelSetSwipeMode(false);
  hcReelAutoload=false;hcReelStop();show('home');
 }
 function hcReelNext(){hcAdvanceUnseenReel('next')}
@@ -4832,11 +4863,50 @@ function hcReelToggle(){
  frame.hidden=false;
  if(cover)cover.hidden=true;
  hcReelFrameLoaded=true;
+ hcReelSyncSwipeMode();
  const hint=document.getElementById('hcReelHint');
  if(hint)hint.textContent='Swipe ↑ / ↓ on the right edge to change reels.';
  hcReelUpdatePlayButton();
 }
 {
+ // Whole-video swipe is opt-in while Drive controls remain cross-origin.
+ // Do not layer invisible touch shields over playback in Player controls mode.
+ const surface=document.getElementById('hcReelSwipeSurface');
+ if(surface){
+  let gestureStart=null,ignoreClickUntil=0,lastScrollAt=0;
+  surface.addEventListener('touchstart',event=>{
+   if(event.touches.length!==1){gestureStart=null;return}
+   const t=event.touches[0];
+   gestureStart={x:t.clientX,y:t.clientY,at:Date.now()};
+  },{passive:true});
+  surface.addEventListener('touchmove',event=>{
+   if(!gestureStart||event.touches.length!==1)return;
+   const t=event.touches[0],dy=t.clientY-gestureStart.y,dx=t.clientX-gestureStart.x;
+   if(Math.abs(dy)>12&&Math.abs(dy)>Math.abs(dx)*1.1)event.preventDefault();
+  },{passive:false});
+  surface.addEventListener('touchcancel',()=>{gestureStart=null},{passive:true});
+  surface.addEventListener('touchend',event=>{
+   if(!gestureStart||!event.changedTouches.length)return;
+   const t=event.changedTouches[0],dy=t.clientY-gestureStart.y,dx=t.clientX-gestureStart.x;
+   const elapsed=Date.now()-gestureStart.at;gestureStart=null;
+   if(Math.abs(dy)<62||Math.abs(dy)<Math.abs(dx)*1.25||elapsed>1500)return;
+   const now=Date.now();
+   if(now-hcReelLastSwipeAt<420)return;
+   ignoreClickUntil=now+720;hcReelLastSwipeAt=now;
+   event.preventDefault();
+   if(dy<0)hcReelNext();else hcReelPrevious();
+  },{passive:false});
+  surface.addEventListener('click',event=>{
+   if(Date.now()<ignoreClickUntil){event.preventDefault();return}
+   hcReelSetSwipeMode(false);
+  });
+  surface.addEventListener('wheel',event=>{
+   if(currentScreenId!=='hcReels'||!hcReelSwipeMode||Math.abs(event.deltaY)<25)return;
+   event.preventDefault();
+   const now=Date.now();if(now-lastScrollAt<600)return;lastScrollAt=now;
+   if(event.deltaY>0)hcReelNext();else hcReelPrevious();
+  },{passive:false});
+ }
  const frame=document.getElementById('hcReelsStage');
  if(frame){
   frame.addEventListener('touchstart',event=>{if(!hcReelFrameLoaded&&event.touches.length===1)hcReelTouchStart=event.touches[0].clientY},{passive:true});
