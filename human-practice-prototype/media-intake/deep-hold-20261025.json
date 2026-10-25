@@ -15,5 +15,13 @@
   "no_voice_filtering": true,
   "redistribution_permission_verified": false,
   "reviewed_for_release": false,
-  "note": "Intake record only. Do not display a play action or release this entry without identifying and verifying the user's exact source and reviewing permissions."
+  "note": "Intake record only. Do not display a play action or release this entry without identifying and verifying the user's exact source and reviewing permissions.",
+  "source_creator_reference": "Breathe With Sandy (shown in user's video screenshot)",
+  "source_title_reference": "(Resilience) Psychedelic Breathwork — 5 Rounds of Guided Rhythmic Breathing (screenshot reference)",
+  "source_expected_size_display": "44.95 MB (Android screenshot; exact bytes unverified)",
+  "verified_duration_seconds": null,
+  "verified_sha256": null,
+  "audio_derivative_created": false,
+  "audio_conversion_requirement": "Retain original soundtrack, music and environmental/background sound; no noise cancellation, dynamic processing or voice replacement. Any MP3 export requires source permission and separate verification.",
+  "rights_status": "publisher redistribution permission not confirmed"
 }
