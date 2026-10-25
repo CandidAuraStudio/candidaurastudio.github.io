@@ -52,11 +52,13 @@ const base='http://127.0.0.1:8765/human-practice-prototype/';
   gameResolved=true;break;
  }
  assert.ok(gameResolved,'Game must either guess from evidence or acknowledge uncertainty within 26 steps');
+ await page.evaluate(()=>{const el=document.getElementById('hcExploreDialog');window.__hcExploreCloseTrace=[];const close=el.close.bind(el);el.close=function(){window.__hcExploreCloseTrace.push({when:'close()',stack:new Error('close trace').stack});return close()};el.addEventListener('close',()=>window.__hcExploreCloseTrace.push({when:'close event',open:el.open}));});
  await dialog.getByRole('button',{name:'Close Explore',exact:true}).click();
  await page.locator('#hcExploreOpen').click();
  await dialog.locator('[data-mode="health"]').click();
  const healthStart=await dialog.evaluate(el=>({open:el.open,htmlLength:el.innerHTML.length,text:el.textContent.slice(0,900),question:el.querySelector('[data-question]')?.getAttribute('data-question'),answers:el.querySelectorAll('[data-answer]').length,active:document.activeElement?.id}));
  console.log('EXPLORE HEALTH START',JSON.stringify(healthStart));
+ console.log('EXPLORE CLOSE TRACE',JSON.stringify(await page.evaluate(()=>window.__hcExploreCloseTrace)));
  assert.equal(healthStart.question,'emergency','Health check-in must start with its actual emergency question');
  await dialog.locator('[data-answer="yes"]').click();
  assert.match(await dialog.textContent(),/Get emergency help now/);
