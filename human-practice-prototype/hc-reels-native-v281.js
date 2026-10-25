@@ -76,8 +76,8 @@ controls.addEventListener('click',event=>{
   case 'forward':advanceTime(10);break;
   case 'play':toggle();break;
   case 'mute':
-   video.muted=!video.muted;
-   try{localStorage.setItem(MUTE_KEY,video.muted?'1':'0')}catch(e){}
+   video.muted=!video.muted;muted=video.muted;
+   try{localStorage.setItem(MUTE_KEY,muted?'1':'0')}catch(e){}
    update();break;
   case 'fullscreen':fullscreen();break;
  }
