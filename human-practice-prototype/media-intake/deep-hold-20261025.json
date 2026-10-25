@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "id": "deep-hold",
+  "title": "Deep Hold",
+  "requested_display_duration": "17 min",
+  "original_filename": "videoplayback (9).mp4",
+  "upload_status": "source_not_found_in_connected_drive",
+  "media_available": false,
+  "playable": false,
+  "source_drive_file_id": null,
+  "source_media_url": null,
+  "original_video_unchanged": true,
+  "original_audio_unchanged": true,
+  "no_noise_reduction": true,
+  "no_voice_filtering": true,
+  "redistribution_permission_verified": false,
+  "reviewed_for_release": false,
+  "note": "Intake record only. Do not display a play action or release this entry without identifying and verifying the user's exact source and reviewing permissions."
+}
