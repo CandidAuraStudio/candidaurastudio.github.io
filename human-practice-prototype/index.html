@@ -9521,7 +9521,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=261');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=262');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
@@ -9559,7 +9559,7 @@ const heartclearAutoInstallPrompt=false;
 <script src="./hc-health-talk-v156.js?v=160"></script>
 <script src="./hc-home-routine-v155.js?v=195"></script>
 <script src="./hc-genesis-v156.js?v=188"></script>
-<script src="./hc-hindu-scriptures-v162.js?v=261"></script>
+<script src="./hc-hindu-scriptures-v162.js?v=262"></script>
 <script>
 /* Load the deep source catalog only when the user opens Hindu traditions.
    This prevents parsing another optional library during first Home paint. */
