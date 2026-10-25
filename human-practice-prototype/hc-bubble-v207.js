@@ -70,7 +70,7 @@ function legacy(){
  window.scrollTo({top:0,behavior:'auto'});
 }
 // Each fresh load returns to Home, not a previously opened player/detail.
-if(!isHome()&&typeof window.show==='function')window.show('home');
+// A restored media session may need to reopen on its original player; never force it to Home here.
 setMode('classic',false);
 // Keep the approved local-time Home greeting current; never replace the copy.
 function refreshHomeGreeting(){

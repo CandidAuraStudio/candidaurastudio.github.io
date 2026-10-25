@@ -19,7 +19,7 @@ const assert=require('node:assert/strict');
   }
   await page.evaluate(()=>show('home'));
   console.log('CHECK SEARCH',width);
-  await page.locator('#hcBubbleSearch').click();
+  await page.locator('#hcFlowDockSearch').click();
   await page.locator('#hcBubbleSearchInput').fill('burger');
   assert.ok(await page.locator('#hcBubbleResults button').count(),'Search returned nothing');
   await page.locator('#hcBubbleSearchClose').click();
@@ -42,7 +42,7 @@ const assert=require('node:assert/strict');
   }
   await filters.first().click();
   await page.evaluate(()=>show('home'));
-  await page.locator('#hcBubbleSwitch').click();
+  await page.locator('#hcCinemaExplore').click();
   await page.locator('#hcFlowExplore:not([hidden])').waitFor();
   const oldChoice=await page.locator('#hcFlowExploreTitle').innerText();
   await page.locator('#hcFlowExploreNext').click();
