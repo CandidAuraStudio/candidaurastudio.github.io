@@ -25,7 +25,10 @@ const assert = require('node:assert/strict');
     assert.match(await page.locator('body').innerText(),/HeartClear|Good morning|Good afternoon|Good evening/);
     assert.equal(await page.locator('#timeGreeting').isVisible(),true,'Original time-based Home greeting must be visible');
     assert.equal(await page.locator('.hc-simple-start').isVisible(),true,'Approved One tap. Just listen section must be visible');
-    assert.equal(await page.locator('#hcHomeRoutineV155').isVisible(),true,'Daily guided practice must be visible');
+    // The v279 Home intentionally places the daily guided session behind one primary button.
+    // Preserve the original routine DOM without forcing the expanded old card to remain visible.
+    assert.equal(await page.locator('#hcHomeRoutineV155').count(),1,'Daily guided sessions must remain mounted');
+    assert.equal(await page.locator('#hcCorePathsClassic .hc-path-begin').count()>0,true,'One-tap daily guided action must remain available');
     assert.equal(await page.locator('#home').evaluate(el=>el.classList.contains('hc-bubble-mode')),false,'Home must not be replaced by the bubble carousel');
     let playing=await page.locator('audio').evaluateAll(els=>els.filter(x=>!x.paused).map(x=>x.id));
     assert.deepEqual(playing,[],'App must be silent on first open');
