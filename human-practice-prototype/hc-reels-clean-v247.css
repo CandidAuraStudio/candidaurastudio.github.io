@@ -1,0 +1,38 @@
+/* Reels v247: hide HeartClear overlay after 3s; do not mask Google Drive playback. */
+#hcReels .hc-reel-chrome-toggle{
+  position:absolute;z-index:40;
+  top:calc(67px + env(safe-area-inset-top,0px));right:12px;
+  min-width:54px;min-height:44px;padding:9px 12px;
+  background:rgba(4,13,19,.62);color:#fff;
+  border:1px solid rgba(255,255,255,.30);border-radius:24px;
+  font:600 12px/1.2 system-ui,-apple-system,Segoe UI,sans-serif;
+  cursor:pointer;touch-action:manipulation;
+}
+#hcReels:not(.active) .hc-reel-chrome-toggle,
+#hcReels:has(#hcReelFrame[hidden]) .hc-reel-chrome-toggle{display:none!important}
+#hcReels .hc-reels-head,
+#hcReels .hc-reels-badge,
+#hcReels .hc-reel-swipe-rail,
+#hcReels .hc-reel-chrome-toggle{transition:opacity .22s ease}
+#hcReels.hc-reels-quiet .hc-reels-head,
+#hcReels.hc-reels-quiet .hc-reels-badge,
+#hcReels.hc-reels-quiet .hc-reel-swipe-rail{
+  opacity:0!important;
+}
+#hcReels.hc-reels-quiet .hc-reels-head{pointer-events:none!important}
+#hcReels.hc-reels-quiet .hc-reel-swipe-rail{
+  pointer-events:auto!important; /* invisible swipe zone stays functional */
+}
+#hcReels.hc-reels-quiet .hc-reel-chrome-toggle{
+  opacity:.12;border-color:transparent;background:transparent;
+  color:#fff;font-size:17px;min-width:44px;padding:8px;
+}
+#hcReels .hc-reel-chrome-toggle:focus-visible{
+  opacity:1!important;outline:2px solid white;outline-offset:2px;
+}
+@media(prefers-reduced-motion:reduce){
+  #hcReels .hc-reels-head,#hcReels .hc-reels-badge,
+  #hcReels .hc-reel-swipe-rail,#hcReels .hc-reel-chrome-toggle{
+    transition:none!important;
+  }
+}
