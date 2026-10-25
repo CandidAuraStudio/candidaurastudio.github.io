@@ -59,7 +59,7 @@ const symbols={
  listen:svg('<path d="M4 13v-2a8 8 0 0 1 16 0v2"/><rect x="2.5" y="12" width="4" height="8" rx="2"/><rect x="17.5" y="12" width="4" height="8" rx="2"/>'),
  explore:svg('<circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2.4 4.6-4.6 2.4 2.4-4.6z"/>'),
  library:svg('<path d="M3 5.5Q8 3.5 12 6v14Q8 17.5 3 19z"/><path d="M12 6q4-2.5 9-.5V19q-5-1.5-9 1z"/>'),
- search:svg('<circle cx="10.7" cy="10.7" r="7.4"/><path d="m16 16 5 5"/>'),
+ reels:svg('<rect x="3" y="4" width="18" height="16" rx="3"/><path d="M3 9h18M7 4l3 5M14 4l3 5"/><path d="m10 11 5 3-5 3z"/>'),
  settings:svg('<path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2" fill="#111013"/><circle cx="16" cy="12" r="2" fill="#111013"/><circle cx="8" cy="18" r="2" fill="#111013"/>')
 };
 function skin(button,icon,label){
@@ -72,7 +72,7 @@ skin(byId('hcFlowBack'),'back','Back to previous screen');
 skin(byId('hcFlowHome'),'home','Return to Home');
 skin(byId('hcFlowDockHome'),'infinity','Home');
 skin(byId('hcFlowDockListen'),'listen','Listen or return to player');
-skin(byId('hcFlowDockSearch'),'search','Search HeartClear');
+// Reels replaces Search in the six-icon bottom dock; global search stays on Home.
 function newAction(id,label,icon,handler){
  let b=byId(id);
  if(!b){b=document.createElement('button');b.id=id;b.type='button';b.addEventListener('click',handler)}
@@ -84,7 +84,12 @@ const explore=newAction('hcCinemaExplore','Explore', 'explore',()=>{
 });
 const library=newAction('hcCinemaLibrary','Library','library',()=>window.show?.('library'));
 const settings=newAction('hcCinemaSettings','Settings','settings',()=>window.show?.('settings'));
-dock.append(byId('hcFlowDockHome'),byId('hcFlowDockListen'),explore,library,byId('hcFlowDockSearch'),settings);
+const reels=newAction('hcCinemaReels','Reels','reels',()=>{
+ if(typeof window.hcOpenReels==='function')window.hcOpenReels();
+ else window.show?.('hcReels');
+});
+byId('hcFlowDockSearch')?.remove();
+dock.append(byId('hcFlowDockHome'),byId('hcFlowDockListen'),explore,library,reels,settings);
 function chooseScene(id){
  if(id==='home'&&home.classList.contains('hc-bubble-detail')){
   const type=home.dataset.hcbDetail;
@@ -115,6 +120,7 @@ function sync(){
   ['player','soundLabPlayer','bookAudio','humanSession','sacredSession','fearPlayer'].includes(id)?'hcFlowDockListen':
   ['library','collection','bookReader','history','downloads'].includes(id)?'hcCinemaLibrary':
   ['settings'].includes(id)?'hcCinemaSettings':
+  id==='hcReels'?'hcCinemaReels':
   id==='home'&&detail?'hcCinemaExplore':
   ['practices','human','humanCategory','sacred','sacredDetail','hcQuranStudy','hcFatiha','hcLivingQuran','chakraGuide'].includes(id)?'hcCinemaExplore':null;
  dock.querySelectorAll('button').forEach(b=>{if(b.id===active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
