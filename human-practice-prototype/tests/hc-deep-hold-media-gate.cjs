@@ -1,9 +1,9 @@
-/* HeartClear Deep Hold intake test.
- * Usage:
+/* HeartClear — verified original video intake and release gate.
+ * Commands (read-only; media is never processed or re-encoded):
  * node human-practice-prototype/tests/hc-deep-hold-media-gate.cjs
- * node human-practice-prototype/tests/hc-deep-hold-media-gate.cjs --inspect /absolute/path/to/source.mp4
- * node human-practice-prototype/tests/hc-deep-hold-media-gate.cjs --release /absolute/path/to/source.mp4
- * No noise removal, transcoding or other media edits are performed.
+ * node human-practice-prototype/tests/hc-deep-hold-media-gate.cjs --inspect deep-hold "/path/to/videoplayback (9).mp4"
+ * node human-practice-prototype/tests/hc-deep-hold-media-gate.cjs --inspect resilience-five-rounds "/path/to/resilience.mp4"
+ * node human-practice-prototype/tests/hc-deep-hold-media-gate.cjs --release deep-hold "/path/to/videoplayback (9).mp4"
  */
 'use strict';
 const assert=require('node:assert/strict');
@@ -11,54 +11,55 @@ const fs=require('node:fs');
 const path=require('node:path');
 const crypto=require('node:crypto');
 const cp=require('node:child_process');
-const ROOT=path.resolve(__dirname,'..');
-const intake=JSON.parse(fs.readFileSync(path.join(ROOT,'media-intake','deep-hold-20261025.json'),'utf8'));
-function blocked(message){console.error('BLOCKED: '+message);process.exitCode=1}
-assert.equal(intake.schema,1);
-assert.equal(intake.id,'deep-hold');
-assert.equal(intake.title,'Deep Hold');
-assert.equal(intake.original_filename,'videoplayback (9).mp4');
-assert.equal(intake.requested_display_duration,'17 min');
-for(const k of ['original_video_unchanged','original_audio_unchanged','no_noise_reduction','no_voice_filtering'])assert.equal(intake[k],true,k);
-assert.notEqual(intake.source_drive_file_id,'1AJCfNPgTdq2cOc4rtjFcAh0ixnyKMm_C','Never use the unrelated two-hour Dhikr');
-const [mode='--contract',file]=process.argv.slice(2);
-assert.ok(['--contract','--inspect','--release'].includes(mode),'Unknown mode');
-if(mode==='--contract'){
- if(intake.playable || intake.media_available){
-  assert.ok(intake.source_media_url || intake.source_drive_file_id,'Source must be verified');
-  assert.equal(intake.redistribution_permission_verified,true);
-  assert.equal(intake.reviewed_for_release,true);
- }else{
-  assert.equal(intake.playable,false);
-  assert.equal(intake.media_available,false);
-  assert.equal(intake.source_drive_file_id,null);
-  assert.equal(intake.source_media_url,null);
+const ROOT=path.resolve(__dirname,'..','media-intake');
+const expected={
+ 'deep-hold':{filename:'deep-hold-20261025.json',driveId:'1I-DTKONkn-cbg0n-hst0iKldgnOJ6b-J',bytes:44947258,duration:1031.058866,sha256:'755969e2218fc511590bf37afdecec39a024a0124c08e5a9aff19fc9b46545b1'},
+ 'resilience-five-rounds':{filename:'resilience-five-rounds-20261025.json',driveId:'1JJpsuYRe792yC5FpvPsx4zyQcig-YkMM',bytes:62747290,duration:1589.034376,sha256:'53678fb188bac04ee33c0d1440e25c57bf296260f64c70adf5d36988befaed8d'}
+};
+const entries=Object.entries(expected).map(([id,e])=>[id,e,JSON.parse(fs.readFileSync(path.join(ROOT,e.filename),'utf8'))]);
+for(const [id,e,item] of entries){
+ assert.equal(item.schema,1,id);
+ assert.equal(item.id,id);
+ assert.equal(item.source_drive_file_id,e.driveId);
+ assert.equal(item.source_size_bytes,e.bytes);
+ assert.ok(Math.abs(item.verified_duration_seconds-e.duration)<0.01);
+ assert.equal(item.verified_sha256,e.sha256);
+ assert.equal(item.media_available,true);
+ assert.equal(item.source_verified,true);
+ assert.equal(item.original_audio_unchanged,true);
+ assert.equal(item.original_video_unchanged,true);
+ assert.equal(item.no_noise_reduction,true);
+ assert.equal(item.no_voice_filtering,true);
+ assert.notEqual(item.source_drive_file_id,'1AJCfNPgTdq2cOc4rtjFcAh0ixnyKMm_C','Never substitute the unrelated two-hour Islamic Dhikr');
+ if(item.playable){
+  assert.equal(item.redistribution_permission_verified,true,'Publishing requires creator rights');
+  assert.equal(item.reviewed_for_release,true,'Publishing requires content/safety and release review');
  }
- console.log('PASS: pending Deep Hold record is accurate, nonplayable, and preserves original sound.');
+}
+const [mode='--contract',selected,file]=process.argv.slice(2);
+assert.ok(['--contract','--inspect','--release'].includes(mode),'Unsupported mode');
+if(mode==='--contract'){
+ console.log('PASS: both source records verified and exact-original playback/publication gates intact.');
 }else{
- if(!file || !fs.existsSync(file) || !fs.statSync(file).isFile())throw Error('Original video MP4 is not accessible');
- const size=fs.statSync(file).size;
- assert.equal(path.extname(file).toLowerCase(),'.mp4');
- assert.ok(size>10*1024*1024 && size<120*1024*1024,'Size unexpected: do not substitute the two-hour Dhikr video');
- const hash=crypto.createHash('sha256'),fd=fs.openSync(file,'r'),buf=Buffer.allocUnsafe(1024*1024);
- try{let n=0,pos=0;while((n=fs.readSync(fd,buf,0,buf.length,pos))>0){hash.update(buf.subarray(0,n));pos+=n}}finally{fs.closeSync(fd)}
- const sha256=hash.digest('hex');
- const probe=cp.spawnSync('ffprobe',['-v','error','-show_format','-show_streams','-of','json',file],{encoding:'utf8',maxBuffer:4*1024*1024});
- if(probe.status!==0)throw Error('Could not inspect video/audio: '+probe.stderr);
- const data=JSON.parse(probe.stdout),streams=data.streams||[],duration=Number(data.format?.duration);
- assert.ok(streams.some(s=>s.codec_type==='video'),'No video stream');
- assert.ok(streams.some(s=>s.codec_type==='audio'),'Original soundtrack missing');
- assert.ok(Number.isFinite(duration)&&duration>60,'Cannot confirm duration');
- console.log(JSON.stringify({file:path.basename(file),bytes:size,sha256,duration_seconds:duration,
-  video:streams.filter(s=>s.codec_type==='video').map(s=>({codec:s.codec_name,width:s.width,height:s.height})),
-  audio:streams.filter(s=>s.codec_type==='audio').map(s=>({codec:s.codec_name,sample_rate:s.sample_rate,channels:s.channels,bit_rate:s.bit_rate})),
-  processing:'None; voice, music and background retained unchanged'},null,2));
+ assert.ok(expected[selected],'Unknown video ID');
+ assert.ok(file&&fs.existsSync(file)&&fs.statSync(file).isFile(),'Exact source MP4 not found');
+ const item=entries.find(([id])=>id===selected)[2],e=expected[selected];
+ const bytes=fs.statSync(file).size;
+ assert.equal(bytes,e.bytes,'Exact original source size differs');
+ const digest=crypto.createHash('sha256'),fd=fs.openSync(file,'r'),buf=Buffer.allocUnsafe(1024*1024);
+ try{let pos=0,n=0;while((n=fs.readSync(fd,buf,0,buf.length,pos))>0){digest.update(buf.subarray(0,n));pos+=n}}finally{fs.closeSync(fd)}
+ const sha=digest.digest('hex');assert.equal(sha,e.sha256,'Original media fingerprint mismatch');
+ const ff=cp.spawnSync('ffprobe',['-v','error','-show_format','-show_streams','-of','json',file],{encoding:'utf8',maxBuffer:4*1024*1024});
+ assert.equal(ff.status,0,'ffprobe failed');
+ const parsed=JSON.parse(ff.stdout),duration=Number(parsed.format?.duration);
+ assert.ok(Math.abs(duration-e.duration)<0.02,'Actual original duration differs');
+ assert.ok(parsed.streams.some(s=>s.codec_type==='video'&&s.codec_name==='h264'),'Original video missing');
+ assert.ok(parsed.streams.some(s=>s.codec_type==='audio'&&s.codec_name==='aac'&&Number(s.channels)===2),'Original stereo audio missing');
+ console.log('PASS '+selected+': '+duration.toFixed(3)+'s; SHA256 '+sha+'; stereo AAC preserved unchanged');
  if(mode==='--release'){
-  if(!intake.redistribution_permission_verified)blocked('Public redistribution permission missing');
-  if(!intake.reviewed_for_release)blocked('Release manager review missing');
-  if(!intake.source_media_url && !intake.source_drive_file_id)blocked('Verified media source missing');
-  if(!intake.media_available || !intake.playable)blocked('Media playback not verified');
-  if(intake.verified_sha256 && intake.verified_sha256!==sha256)blocked('Media checksum changed');
-  if(intake.verified_duration_seconds && Math.abs(Number(intake.verified_duration_seconds)-duration)>2)blocked('Media duration changed');
+  assert.equal(item.redistribution_permission_verified,true,'Rights permission not confirmed');
+  assert.equal(item.reviewed_for_release,true,'Release review not completed');
+  assert.equal(item.playable,true,'Public playback not authorized/verified');
+  console.log('Release gate satisfied; release manager must separately verify Android/PWA playback.');
  }
 }
