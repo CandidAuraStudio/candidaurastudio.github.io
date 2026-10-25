@@ -42,6 +42,14 @@ function syncScriptureLanguage(){
  }
 }
 window.addEventListener('hc:languagechange',syncScriptureLanguage);
+// On an ordinary new visit the global selection also chooses the Bible
+// narration language. Do not reset a restored, paused audio chapter.
+const genesisAudio=document.getElementById('hcGenesisAudio');
+if(!genesisAudio?.getAttribute('src')){
+ const currentLanguage=window.HCAppLanguage?.get?.();
+ const initialBible=home.querySelector('#hcGenesisCard [data-genlang="'+currentLanguage+'"]');
+ if(initialBible&&initialBible.getAttribute('aria-pressed')!=='true')initialBible.click();
+}
 
 const styles=document.createElement('style');
 styles.id='hcHomeLayoutV256';
