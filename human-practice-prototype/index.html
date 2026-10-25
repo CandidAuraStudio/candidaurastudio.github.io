@@ -3106,7 +3106,7 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
 
     <button class="hub-card" onclick="openCollection('books')">
       <span class="hub-icon">Aa</span>
-      <span><b>Books · Reading</b><small>Book Two: HUMAN in English · Shadows of Truth in English, Tamil & Sinhala.</small></span>
+      <span><b>Books · Reading</b><small>Book Two: HUMAN in English & Tamil · Shadows of Truth in English, Tamil & Sinhala.</small></span>
       <span class="hub-arrow">›</span>
     </button>
   </div>
@@ -6612,7 +6612,7 @@ function openCollection(kind){
     books:{
       kicker:'Reading',
       title:'Available Reading',
-      description:'Book excerpts already included with HeartClear.',
+      description:'Read HUMAN in English or Tamil, alongside Shadows of Truth.',
       empty:'Additional licensed reading will appear here.'
     }
   }[kind]||{};
@@ -6622,7 +6622,7 @@ function openCollection(kind){
   const list=document.getElementById('collectionList');
   if(kind==='english') list.innerHTML=renderBookShelf('en');
   else if(kind==='tamil') list.innerHTML=renderBookShelf('ta');
-  else list.innerHTML=`<div class="hc-human-reading-entry"><img src="./books/human-cover.svg" alt="HUMAN — WHEN YOU ARE ALONE English book cover" loading="lazy"><div class="hc-human-reading-copy"><div class="kicker">BOOK TWO · ENGLISH</div><h3>HUMAN — WHEN YOU ARE ALONE</h3><p>Akmal Mohamed Jabir · Complete reading master · 27 chapters</p><a href="./books/human-when-you-are-alone.html" class="hc-human-reading-link">Read English book ›</a></div></div><div class="hc-reading-existing"><div class="kicker">BOOK ONE</div><h3>Shadows of Truth · Reading</h3><p>English and Tamil excerpts, plus the complete 61-chapter Sinhala edition.</p><div class="hc-reading-choices"><button onclick="openBookReader('en')">Read English</button><button onclick="openBookReader('ta')">Read Tamil</button><button onclick="location.href='./books/shadows-of-truth-sinhala.html'">Read Sinhala · සිංහල</button></div></div>`;
+  else list.innerHTML=`<div class="hc-human-reading-entry"><img src="./books/human-cover.svg" alt="HUMAN — WHEN YOU ARE ALONE English book cover" loading="lazy"><div class="hc-human-reading-copy"><div class="kicker">BOOK TWO · ENGLISH</div><h3>HUMAN — WHEN YOU ARE ALONE</h3><p>Akmal Mohamed Jabir · Complete reading master · 27 chapters</p><a href="./books/human-when-you-are-alone.html" class="hc-human-reading-link">Read English book ›</a></div></div><div class="hc-human-reading-entry" lang="ta"><img src="./books/human-cover.svg" alt="HUMAN — WHEN YOU ARE ALONE book cover" loading="lazy"><div class="hc-human-reading-copy"><div class="kicker">BOOK TWO · தமிழ் · புதிய பதிப்பு</div><h3>மனிதன் — நீ தனியாக இருக்கும்போது</h3><p>27 அத்தியாயங்கள் · அக்டோபர் 2026 · தமிழ் வாசிப்பு மதிப்பீட்டுப் பதிப்பு</p><a href="./books/human-when-you-are-alone-tamil.html" class="hc-human-reading-link">தமிழில் வாசிக்க ›</a></div></div><div class="hc-reading-existing"><div class="kicker">BOOK ONE</div><h3>Shadows of Truth · Reading</h3><p>English and Tamil excerpts, plus the complete 61-chapter Sinhala edition.</p><div class="hc-reading-choices"><button onclick="openBookReader('en')">Read English</button><button onclick="openBookReader('ta')">Read Tamil</button><button onclick="location.href='./books/shadows-of-truth-sinhala.html'">Read Sinhala · සිංහල</button></div></div>`;
   show('collection');
 }
 
