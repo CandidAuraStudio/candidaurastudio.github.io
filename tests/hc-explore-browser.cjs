@@ -55,7 +55,7 @@ const base='http://127.0.0.1:8765/human-practice-prototype/';
  await dialog.getByRole('button',{name:'Close Explore',exact:true}).click();
  await page.locator('#hcExploreOpen').click();
  await dialog.locator('[data-mode="health"]').click();
- const healthStart=await dialog.evaluate(el=>({text:el.innerText.slice(0,800),question:el.querySelector('[data-question]')?.getAttribute('data-question'),answers:el.querySelectorAll('[data-answer]').length}));
+ const healthStart=await dialog.evaluate(el=>({open:el.open,htmlLength:el.innerHTML.length,text:el.textContent.slice(0,900),question:el.querySelector('[data-question]')?.getAttribute('data-question'),answers:el.querySelectorAll('[data-answer]').length,active:document.activeElement?.id}));
  console.log('EXPLORE HEALTH START',JSON.stringify(healthStart));
  assert.equal(healthStart.question,'emergency','Health check-in must start with its actual emergency question');
  await dialog.locator('[data-answer="yes"]').click();
