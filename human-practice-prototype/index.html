@@ -3796,7 +3796,7 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
         </div>
       </details>
     </div>
-    <div class="app-version">HeartClear · HC v275</div>
+    <div class="app-version">HeartClear · HC v277</div>
   </div>
 </section>
 
@@ -9546,7 +9546,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=275');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=277');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
@@ -9641,8 +9641,8 @@ const heartclearAutoInstallPrompt=false;
 <script src="./hc-home-layout-v256.js?v=257"></script>
 <script src="./hc-home-core-paths-v259.js?v=268"></script>
 <link rel="stylesheet" href="./hc-unified-visual-v259.css?v=267">
-<link rel="stylesheet" href="./hc-home-visible-v268.css?v=276">
-<script src="./hc-home-visible-v268.js?v=276"></script>
+<link rel="stylesheet" href="./hc-home-visible-v268.css?v=277">
+<script src="./hc-home-visible-v268.js?v=277"></script>
 <script id="hcReelsBottomTabGuard">
 /* Defensive bottom navigation repair: Reels always replaces the legacy Search icon. */
 (function(){
