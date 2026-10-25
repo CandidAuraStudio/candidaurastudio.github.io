@@ -18,6 +18,36 @@ const assert=require('node:assert/strict');
    assert.equal(status,true,'Screen failed: '+id+'; '+status);
   }
   await page.evaluate(()=>show('home'));
+  // v243: content must remain readable, not squeezed by global full-width
+  // select/input styles. Test in both mobile and desktop browsers.
+  console.log('CHECK HOME CONTENT WIDTH',width);
+  const homeContent=await page.evaluate(()=>{
+    const dom=id=>document.getElementById(id);
+    const box=el=>el?.getBoundingClientRect();
+    const listen=document.querySelector('#home .hc-simple-start');
+    const bar=dom('hcHinduHome'),label=bar?.querySelector('.hc-hindu-info b');
+    const choose=bar?.querySelector('select');
+    const tracks=[...document.querySelectorAll('#home .hc-simple-audio-list>button')];
+    return {
+      greetingVisible:!!box(dom('timeGreeting'))?.width,
+      originalListenVisible:!!box(listen)?.width,
+      hinduBarWidth:box(bar)?.width||0,
+      hinduTextWidth:box(label)?.width||0,
+      hinduTextHeight:box(label)?.height||0,
+      selectWidth:box(choose)?.width||0,
+      trackHeights:tracks.map(x=>box(x).height),
+      barRight:box(bar)?.right||0,
+      listenRight:box(listen)?.right||0,
+      viewport:document.documentElement.clientWidth
+    };
+  });
+  assert.equal(homeContent.greetingVisible,true,'Local-time Home greeting is hidden');
+  assert.equal(homeContent.originalListenVisible,true,'Original listening section missing');
+  assert.ok(homeContent.hinduBarWidth>200,'Gita panel squeezed: '+JSON.stringify(homeContent));
+  assert.ok(homeContent.hinduTextWidth>150&&homeContent.hinduTextHeight<85,'Gita text collapsed vertically: '+JSON.stringify(homeContent));
+  assert.ok(homeContent.selectWidth>100,'Gita language picker squeezed: '+JSON.stringify(homeContent));
+  assert.ok(homeContent.trackHeights.length>=3&&homeContent.trackHeights.every(h=>h<125),'Audio cards grew too tall: '+JSON.stringify(homeContent));
+  assert.ok(homeContent.barRight<=homeContent.viewport+3&&homeContent.listenRight<=homeContent.viewport+3,'Home exceeds viewport: '+JSON.stringify(homeContent));
   console.log('CHECK SEARCH',width);
   await page.locator('#hcFlowDockSearch').click();
   await page.locator('#hcBubbleSearchInput').fill('burger');
