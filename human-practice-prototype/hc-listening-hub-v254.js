@@ -10,7 +10,7 @@ view.setAttribute('aria-label','All HeartClear listening');
 view.innerHTML='<div class="hcl-page"><div class="hcl-heading"><span>HEARTCLEAR · ∞</span><h2>All Listening</h2><p>All your recordings, in one place.</p></div><input id="hclSearch" type="search" placeholder="Search recordings…" aria-label="Search audio and meditation"><nav id="hclTabs" aria-label="Listening categories"></nav><p id="hclStatus" role="status" aria-live="polite">Choose something to listen to.</p><div id="hclResults"></div></div>';
 $('soundHub').parentNode.insertBefore(view,$('soundHub'));
 const tabs=$('hclTabs'),results=$('hclResults'),search=$('hclSearch'),status=$('hclStatus');
-const groups=[['all','All'],['meditation','Meditation'],['breathing','Breathing'],['islamic','Islamic'],['hindu','Hindu'],['buddhist','Buddhist'],['quran','Qur’an'],['nature','Nature & Sounds'],['books','Audiobooks']];
+const groups=[['all','All'],['meditation','Meditation'],['breathing','Breathing'],['islamic','Islamic'],['hindu','Hindu'],['bible','Bible'],['buddhist','Buddhist'],['quran','Qur’an'],['nature','Nature & Sounds'],['books','Audiobooks']];
 let current='all';
 const guided=[
  ['wake','Deep Wake Up','10 min · guided audio','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/f4d262f6-56fe-40e3-84ea-930c11fe7c54.mp3',600],
@@ -37,6 +37,8 @@ const record=(id,name,detail,category,kind,key,ref=null)=>({id,name,detail,categ
 function list(){
  const all=[];const add=x=>{if(!all.some(y=>y.id===x.id))all.push(x)};
  guided.forEach(([key,name,detail])=>add(record('guided-'+key,name,detail,'meditation','audio','hcl-'+key)));
+ add(record('hindu-library','Hindu Scriptures · Gita and Vedas','Read original teachings · English / Tamil','hindu','hindu-library','hindu'));
+ add(record('bible-genesis','Bible · Genesis','Read and listen · English / Tamil','bible','bible','genesis'));
  add(record('adhkar','Morning Adhkar','28:18 · native audio','islamic','adhkar','adhkar'));
  add(record('allahu','Allahu Hu · Akmal','24:32 · native audio','islamic','audio','allahuAkmal'));
  add(record('mantra','Mantra Bed','8 min · separate native audio','hindu','audio','mantra'));
@@ -95,7 +97,7 @@ function section(cat,items,limit=0){
 function render(){
  const q=search.value.trim().toLocaleLowerCase();results.replaceChildren();const all=list();
  if(q){results.append(section('search',all.filter(item=>(item.name+' '+item.detail+' '+item.category).toLowerCase().includes(q))));return}
- if(current==='all'){['meditation','breathing','islamic','hindu','quran','nature','books','buddhist'].forEach(cat=>results.append(section(cat,all.filter(x=>x.category===cat),3)))}
+ if(current==='all'){['meditation','breathing','islamic','hindu','bible','quran','nature','books','buddhist'].forEach(cat=>results.append(section(cat,all.filter(x=>x.category===cat),3)))}
  else results.append(section(current,all.filter(x=>x.category===current)));
 }
 function say(text){status.textContent=text;status.hidden=!text}
@@ -119,6 +121,16 @@ function play(item){
    const drive=$('hcOneTapDrive');
    if(drive&&!drive.hidden&&drive.classList.contains('hc-ot-collapsed'))$('hcOtMinimize')?.click();
    say('Player opened · tap Play inside the video if your browser blocks autoplay.');
+  }else if(item.kind==='hindu-library'){
+   if(typeof openSacred!=='function')throw Error('Hindu library unavailable');
+   openSacred('hindu');
+   const shelf=$('hcHinduScriptures');
+   if(shelf){shelf.hidden=false;requestAnimationFrame(()=>shelf.scrollIntoView({block:'start'}));}
+   say('Hindu Scriptures opened.');
+  }else if(item.kind==='bible'){
+   window.show('home');
+   requestAnimationFrame(()=>$('hcGenesisCard')?.scrollIntoView({block:'start'}));
+   say('Bible player opened.');
   }else if(item.kind==='gita'){
    window.hcOpenGitaVoice?.(1);say('Bhagavad Gita voice selected.');
   }else if(item.kind==='practice'){
@@ -134,7 +146,7 @@ function play(item){
    say('Audiobook selected · saved chapter '+chapter);
   }
   // All Listening remains the destination, even when a legacy player opens a screen.
-  if(!$('hcListening').classList.contains('active')&&item.kind!=='gita'&&item.kind!=='drive')window.show('hcListening');
+  if(!$('hcListening').classList.contains('active')&&!['gita','hindu-library','bible','drive'].includes(item.kind))window.show('hcListening');
   if(typeof renderGlobalMini==='function')renderGlobalMini();
  }catch(e){say('Unable to open the selected recording.')}
 }
