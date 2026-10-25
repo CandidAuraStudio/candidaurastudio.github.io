@@ -128,11 +128,20 @@ function play(item){
    if(shelf){shelf.hidden=false;requestAnimationFrame(()=>shelf.scrollIntoView({block:'start'}));}
    say('Hindu Scriptures opened.');
   }else if(item.kind==='bible'){
+   // Use the already mounted Genesis reader/player. Do not claim it opened if the module failed to load.
+   const card=$('hcGenesisCard'),playButton=$('hcGenPlay');
+   if(!card||!playButton)throw Error('Genesis reader/player is unavailable');
    window.show('home');
-   requestAnimationFrame(()=>$('hcGenesisCard')?.scrollIntoView({block:'start'}));
-   say('Bible player opened.');
+   requestAnimationFrame(()=>{
+    card.scrollIntoView({block:'start',behavior:'auto'});
+    playButton.focus({preventScroll:true});
+   });
+   say('Genesis player opened. Tap Listen to begin.');
   }else if(item.kind==='gita'){
-   window.hcGitaHomeToggle?.(1);say('Gita is playing in the HeartClear mini-player.');
+   // Open the real chapter controls at the saved chapter/language; never report playback without a Play gesture.
+   if(typeof window.hcOpenGitaVoice!=='function')throw Error('Gita chapter player is unavailable');
+   window.hcOpenGitaVoice();
+   say('Gita chapter controls opened. Tap Play when ready.');
   }else if(item.kind==='practice'){
    item.ref.click();say('Guided practice selected.');
   }else if(item.kind==='book'){
