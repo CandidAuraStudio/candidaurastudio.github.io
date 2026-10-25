@@ -1,0 +1,90 @@
+/* HeartClear v259 — All Listening visual palette, used app-wide.
+   Presentation only: do not alter layout, text, media, controls or accessibility.
+   Use the same image and dark slate/navy colors already used by All Listening. */
+
+body.hc-flow-enabled.hc-cinema{
+  --hc-cinema-panel:rgba(14,30,39,.90);
+  --hc-cinema-soft:rgba(19,41,54,.88);
+  --hc-cinema-line:rgba(143,169,180,.42);
+  background:#090f15!important;
+}
+
+/* Keep a single All Listening backdrop on Home, Explore, books, sacred,
+   meditation, kitchen, settings and every other regular screen. */
+body.hc-cinema:not([data-hc-cinema-scene="reels"]) #hcCinemaBackdrop{
+  background-image:
+    linear-gradient(180deg,rgba(5,7,10,.28) 0%,rgba(6,7,10,.28) 24%,rgba(6,7,10,.60) 53%,#080a0de8 82%,#080a0df5 100%),
+    url('./hc-cinema-scene-v239.svg')!important;
+  background-size:cover!important;
+  background-position:center 37%!important;
+  background-repeat:no-repeat!important;
+}
+
+/* Reels remain fullscreen video, never a decorative background layer. */
+body.hc-cinema[data-hc-cinema-scene="reels"] #hcCinemaBackdrop{display:none!important}
+
+/* Apply the Listening navy panels elsewhere. The Listening page remains
+   completely untouched to preserve the exact design shown in the reference. */
+body.hc-cinema .screen.active:not(#hcReels):not(#hcListening)
+:is(.glass,.choice,.hub-card,.human-card,.sacred-card,.fear-card,.practice-card,.hc-mix-card,.hc-settings-clean,.hc-settings-section,.hcqs-verse){
+  background:linear-gradient(145deg,rgba(19,41,54,.91),rgba(10,24,33,.93))!important;
+  border-color:rgba(143,169,180,.42)!important;
+  box-shadow:none!important;
+}
+
+/* The Home artwork and the space behind its Explore / daily tiles now read
+   like All Listening instead of opaque black panels. */
+body.hc-cinema #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail)
+:is(.hc-simple-start,#hcHomeKitchenQuickV155,#hcQuranFirst,#hcGenesisCard,
+    .hc-recommended-card,.hc-primary-resume,.hc-secondary-resume,.hc-home-more){
+  background:linear-gradient(145deg,rgba(19,41,54,.90),rgba(10,23,31,.93))!important;
+  border-color:rgba(143,169,180,.39)!important;
+}
+body.hc-cinema #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail)
+:is(.hc-simple-audio-list>button,.hc-simple-paths>button,
+    .hc-v139-daily-grid>button,.hc-quick-tile,.hc-sound-card,.hc-reels-home-card){
+  background:#132936!important;
+  border-color:#5e7582!important;
+  color:#f7f9fa!important;
+}
+body.hc-cinema #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail)
+:is(.hc-simple-audio-list>button,.hc-simple-paths>button,.hc-v139-daily-grid>button) :is(b,strong){
+  color:#fff!important;
+}
+
+/* All other content surfaces use the same deep-blue reading contrast. */
+body.hc-cinema .screen.active:not(#hcReels):not(#hcListening)
+:is(.hc-sound-row,.hc-sounds-hub-card,.hc-drive-card,.hc-sacred-quick,
+    .hc-home-section,.hc-recommended-card,.hc-secondary-resume){
+  background:linear-gradient(145deg,rgba(20,43,56,.91),rgba(10,25,33,.92))!important;
+  border-color:rgba(143,169,180,.40)!important;
+}
+body.hc-cinema #settings :is(.hc-settings-section,.setting-row,.hc-settings-toggle){
+  background:rgba(19,41,54,.88)!important;
+  border-color:rgba(143,169,180,.38)!important;
+}
+body.hc-cinema #settings .hc-settings-section[open]{
+  background:rgba(11,26,35,.96)!important;
+}
+
+/* The standalone Explore sheet should keep the same illustrated background. */
+body.hc-cinema #hcFlowExplore{
+  background:
+    linear-gradient(180deg,rgba(6,16,23,.36),rgba(6,15,22,.93)),
+    url('./hc-cinema-scene-v239.svg') center 37%/cover no-repeat!important;
+}
+body.hc-cinema #hcFlowExplore .hc-flow-explore-card{
+  background:
+    linear-gradient(180deg,rgba(20,46,58,.74),rgba(8,20,29,.92)),
+    url('./hc-cinema-scene-v239.svg') center/cover no-repeat!important;
+  border-color:rgba(143,169,180,.48)!important;
+}
+body.hc-cinema #hcFlowExplore button:not(#hcFlowExploreOpen){
+  background:#132936!important;
+  border-color:#5e7582!important;
+}
+
+/* No filters, animation, blur or interaction changes to audio/video players. */
+@media(prefers-reduced-motion:reduce){
+  body.hc-cinema #hcCinemaBackdrop{animation:none!important;transition:none!important}
+}
