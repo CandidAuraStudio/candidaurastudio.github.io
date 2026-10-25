@@ -34,6 +34,29 @@ const assert=require('node:assert/strict');
   assert.equal(await page.evaluate(()=>document.getElementById('humanSoundAudio').paused),false,'Practice navigation cannot stop audio');
   await page.evaluate(()=>show('library'));
   assert.equal(await page.evaluate(()=>document.getElementById('humanSoundAudio').paused),false,'Library navigation cannot stop audio');
+
+  // UNIFIED HEADPHONES QA: bottom headset always opens complete listening,
+  // even when audio is playing or a sacred recording was previously open.
+  await page.locator('#hcFlowDockListen').click();
+  assert.equal(await page.locator('#hcListening.active').count(),1,'Headphones must open All Listening, not active media screen');
+  assert.ok(await page.locator('#hclTabs [data-category="islamic"]').count(),'Islamic tab exists');
+  await page.locator('#hclTabs [data-category="islamic"]').click();
+  assert.ok(await page.locator('#hcListening [data-record="adhkar"]').count(),'Morning Adhkar listed');
+  assert.ok(await page.locator('#hcListening [data-record="allahu"]').count(),'Allahu Hu listed');
+  await page.locator('#hclTabs [data-category="hindu"]').click();
+  assert.ok(await page.locator('#hcListening [data-record="drive-hinduOm"]').count(),'Original OM listed');
+  assert.ok(await page.locator('#hcListening [data-record="mantra"]').count(),'Hindu mantra listed');
+  await page.locator('#hclTabs [data-category="breathing"]').click();
+  assert.ok(await page.locator('#hcListening [data-record="drive-hclBreath0"]').count(),'Uploaded breathwork listed');
+  await page.locator('#hclTabs [data-category="books"]').click();
+  assert.ok(await page.locator('#hcListening [data-record="book-en"]').count(),'Audiobooks listed');
+  assert.equal(await page.locator('#hcOneTapDrive').isVisible(),false,'Browsing must not open Drive popup');
+  await page.evaluate(()=>show('sacredDetail'));
+  await page.locator('#hcFlowDockListen').click();
+  assert.equal(await page.locator('#hcListening.active').count(),1,'Headphones from Islamic/Hindu detail must open unified listening');
+  assert.equal(await page.evaluate(()=>document.getElementById('humanSoundAudio').paused),false,'Opening audio library must preserve already-playing media');
+  console.log('PASS: headphones always show one full Islamic/Hindu/meditation/breathwork/books library without interrupting audio');
+
   console.log('PASS: Human Practice continues through Home, Practice, Library with visible mini-player');
   await page.evaluate(()=>show('humanSession'));
   await page.locator('#humanSession .hc-minimize-audio').click();
