@@ -7,9 +7,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="HeartClear">
-<link rel="manifest" href="./manifest.webmanifest?v=235">
-<link rel="icon" type="image/svg+xml" href="./icon.svg?v=235">
-<link rel="apple-touch-icon" href="./icon-192.png">
+<link rel="manifest" href="./manifest.webmanifest?v=280">
+<link rel="icon" type="image/svg+xml" href="./icon.svg?v=280">
+<link rel="apple-touch-icon" href="./icon-192.png?v=280">
 <title>HeartClear · Meditation, Sounds & Reflection</title>
 <meta name="description" content="HeartClear brings together guided meditation, nature sounds, gentle breathing, Sacred Sound and reading. Listen, reflect and save your progress on your device.">
 <meta name="application-name" content="HeartClear">
@@ -3796,7 +3796,7 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
         </div>
       </details>
     </div>
-    <div class="app-version">HeartClear · HC v277</div>
+    <div class="app-version">HeartClear · HC v280</div>
   </div>
 </section>
 
@@ -9547,7 +9547,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=277');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=280');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
@@ -9643,7 +9643,7 @@ const heartclearAutoInstallPrompt=false;
 <script src="./hc-home-core-paths-v259.js?v=268"></script>
 <link rel="stylesheet" href="./hc-unified-visual-v259.css?v=267">
 <link rel="stylesheet" href="./hc-home-visible-v268.css?v=277">
-<script src="./hc-home-visible-v268.js?v=279"></script>
+<script src="./hc-home-visible-v268.js?v=280"></script>
 <script id="hcReelsBottomTabGuard">
 /* Defensive bottom navigation repair: Reels always replaces the legacy Search icon. */
 (function(){
