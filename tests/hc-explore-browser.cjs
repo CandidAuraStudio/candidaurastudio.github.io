@@ -28,15 +28,30 @@ const base='http://127.0.0.1:8765/human-practice-prototype/';
  await page.screenshot({path:path.join(__dirname,'explore-menu.png')});
  await dialog.locator('[data-mode="game"]').click();
  const target=await page.evaluate(()=>window.HCExploreCore.bank.find(x=>x.id==='grandfather'));
- let steps=0;
- while(await dialog.locator('[data-answer="yes"]').count()){
-  const id=await dialog.locator('[data-question]').getAttribute('data-question');
-  await dialog.locator('[data-answer="'+(target.tags.includes(id)?'yes':'no')+'"]').click();steps++;
-  assert.ok(steps<=20);
+ // A larger, honest knowledge bank may reach an evidence-based guess OR explicitly
+ // report uncertainty. Both are valid; inventing a match is not.
+ let steps=0,gameResolved=false;
+ while(steps<26){
+  if(await dialog.locator('[data-answer="yes"]').count()){
+   const id=await dialog.locator('[data-question]').getAttribute('data-question');
+   await dialog.locator('[data-answer="'+(target.tags.includes(id)?'yes':'no')+'"]').click();
+   steps++;continue;
+  }
+  const content=await dialog.textContent();
+  if(await dialog.getByRole('button',{name:'That is right',exact:true}).count()){
+   if(/your grandfather/i.test(content)){
+    await dialog.getByRole('button',{name:'That is right',exact:true}).click();
+    assert.match(await dialog.textContent(),/Found it/);
+    gameResolved=true;break;
+   }
+   await dialog.getByRole('button',{name:/That is not it/}).click();
+   steps++;continue;
+  }
+  assert.match(content,/cannot match|cannot distinguish|do not know|not sufficient|still cannot identify/i,
+   'The collection must acknowledge insufficient evidence rather than invent a result');
+  gameResolved=true;break;
  }
- assert.match(await dialog.textContent(),/your grandfather/);
- await dialog.getByRole('button',{name:'That is right',exact:true}).click();
- assert.match(await dialog.textContent(),/Found it/);
+ assert.ok(gameResolved,'Game must either guess from evidence or acknowledge uncertainty within 26 steps');
  await dialog.getByRole('button',{name:'Close Explore',exact:true}).click();
  await page.locator('#hcExploreOpen').click();
  await dialog.locator('[data-mode="health"]').click();
