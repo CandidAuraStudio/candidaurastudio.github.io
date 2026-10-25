@@ -12,7 +12,7 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   const errors=[];let navigations=0,delayed=0;
   page.on('framenavigated',frame=>{if(frame===page.mainFrame())navigations++});
   page.on('pageerror',err=>errors.push(err.message));
-  await page.route(/hc-design-unified-v279\.css\?v=280/,async route=>{
+  await page.route(/hc-design-unified-v279\.css\?v=284/,async route=>{
    delayed++;await sleep(1600);await route.continue();
   });
   await page.goto('http://127.0.0.1:8765/human-practice-prototype/',{waitUntil:'commit',timeout:30000});
