@@ -89,12 +89,12 @@ if(oldMixStatus&&oldMixStatus.textContent.includes('Choose 1'))oldMixStatus.text
 // Make Sacred Listening visibly clickable, and open play buttons inline (not another screen).
 const sacredButton=routes.querySelector('button:first-child');
 const direct=document.createElement('section');direct.id='hcSacredQuickV149';direct.hidden=true;direct.setAttribute('aria-label','Sacred audio choices');
-direct.innerHTML='<div class="hc-short-title">Choose and listen here · no extra menu</div><div class="hc-direct-list">'+
- '<button data-direct="mantra" type="button"><span>▶ Mantra Bed <small>8 min · real audio</small></span><span>Play</span></button>'+
- '<button data-direct="adhkar" type="button"><span>▶ Morning Adhkar <small>28 min · real audio</small></span><span>Play</span></button>'+
- '<button data-direct="allahu" type="button"><span>▶ Allahu Hu · Akmal <small>24 min · real audio</small></span><span>Play</span></button>'+
- '<button data-direct="om" type="button"><span>▷ OM Chanting <small>Drive video source · audio file needed</small></span><span>Open</span></button>'+
- '<button data-direct="library" type="button"><span>Sacred traditions & readings</span><span>›</span></button>'+
+direct.innerHTML='<div class="hc-short-title">Choose and listen here</div><div class="hc-direct-list">'+
+ '<button data-direct="om" type="button"><span>▶ OM Chanting &amp; Singing Bowls <small>3h 33m · full original · plays here</small></span><span>Play</span></button>'+
+ '<button data-direct="mantra" type="button"><span>▶ Mantra Bed <small>Separate 8-minute audio</small></span><span>Play</span></button>'+
+ '<button data-direct="adhkar" type="button"><span>▶ Morning Adhkar <small>28 min · audio</small></span><span>Play</span></button>'+
+ '<button data-direct="allahu" type="button"><span>▶ Allahu Hu · Akmal <small>24 min · audio</small></span><span>Play</span></button>'+
+ '<button data-direct="library" type="button"><span>Sacred traditions &amp; readings</span><span>›</span></button>'+
  '</div>';
 routes.insertAdjacentElement('afterend',direct);
 sacredButton.removeAttribute('onclick');
@@ -113,11 +113,11 @@ direct.querySelectorAll('[data-direct]').forEach(b=>b.addEventListener('click',(
 const sacred=document.getElementById('sacred'),hero=sacred&&sacred.querySelector('.hub-hero');
 if(hero&&!document.getElementById('hcSacredInstantV149')){
  const quick=document.createElement('div');quick.id='hcSacredInstantV149';quick.className='hc-sacred-instant';
- quick.innerHTML='<button data-play="mantra"><span>▶ Mantra Bed <small>Native audio · 8 min</small></span>›</button>'+
- '<button data-play="adhkar"><span>▶ Morning Adhkar <small>Native audio · 28 min</small></span>›</button>'+
- '<button data-play="allahu"><span>▶ Allahu Hu · Akmal <small>Native audio · 24 min</small></span>›</button>'+
- '<button data-play="om"><span>▷ OM Chanting <small>Drive video recording · audio-only file not available</small></span>›</button>';
- hero.insertAdjacentElement('afterend',quick);
+ quick.innerHTML='<button data-play="om"><span>▶ OM Chanting <small>3h 33m · full original · plays here</small></span>›</button>'+
+ '<button data-play="mantra"><span>▶ Mantra Bed <small>Separate 8-minute audio</small></span>›</button>'+
+ '<button data-play="adhkar"><span>▶ Morning Adhkar <small>28 min · audio</small></span>›</button>'+
+ '<button data-play="allahu"><span>▶ Allahu Hu · Akmal <small>24 min · audio</small></span>›</button>';
+hero.insertAdjacentElement('afterend',quick);
  quick.querySelectorAll('[data-play]').forEach(b=>b.addEventListener('click',()=>playChoice(b.dataset.play)));
  const grid=sacred.querySelector('.sacred-grid');
  if(grid)grid.setAttribute('aria-label','Explore traditions and readings');
