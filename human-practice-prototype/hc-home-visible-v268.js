@@ -42,6 +42,56 @@
  }
  if(caption)caption.remove();
 
+ // Small, original HeartClear Home view. No media handlers or sources replaced.
+ if(brand&&!document.getElementById('hcHomeWordmarkDesign')){
+   const word=document.createElement('strong');
+   word.id='hcHomeWordmarkDesign';
+   word.textContent='HeartClear';
+   const selector=document.getElementById('hcAppLanguageHome');
+   brand.insertBefore(word,selector&&selector.parentElement===brand?selector:null);
+ }
+ const copy=greeting.querySelector('.hc-home-greeting-copy');
+ if(copy&&!document.getElementById('hcHomeIntroDesign')){
+   const intro=document.createElement('p');
+   intro.id='hcHomeIntroDesign';
+   intro.textContent='A moment for yourself.';
+   copy.append(intro);
+ }
+ if(hero&&!document.getElementById('hcHomeWorldsDesign')){
+   const period=hero.querySelector('.hc-path-period');
+   if(period&&!hero.querySelector('.hc-path-subtitle')){
+     const subtitle=document.createElement('small');
+     subtitle.className='hc-path-subtitle';
+     subtitle.textContent='One tap. Just listen.';
+     period.after(subtitle);
+   }
+   const worlds=document.createElement('div');
+   worlds.id='hcHomeWorldsDesign';
+   worlds.className='hc-home-worlds';
+   worlds.setAttribute('role','group');
+   worlds.setAttribute('aria-label','Explore HeartClear');
+   const cards=[
+     ['books','Bookshelf','<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>'],
+     ['nature','Nature','<path d="m12 22 0-8"/><path d="m6 14 6-12 6 12z"/><path d="M3 22h18"/>'],
+     ['kitchen','Kitchen','<path d="M4 9h14v5a7 7 0 0 1-14 0z"/><path d="M18 9h1a3 3 0 0 1 0 6h-1"/><path d="M4 22h14"/>'],
+     ['audio','Listening','<path d="M3 14v-3a9 9 0 0 1 18 0v3"/><rect x="2" y="13" width="4" height="8" rx="2"/><rect x="18" y="13" width="4" height="8" rx="2"/>']
+   ];
+   for(const [key,label,shape] of cards){
+     const button=document.createElement('button');
+     button.type='button';
+     button.className='hc-world-card';
+     button.dataset.path=key;
+     button.setAttribute('aria-label','Open '+label);
+     button.innerHTML='<svg viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+shape+'</svg>';
+     const name=document.createElement('strong');
+     name.textContent=label;
+     button.append(name);
+     worlds.append(button);
+   }
+   hero.after(worlds); // Original Qur'an/Bible/Gita links remain immediately below.
+ }
+
+
  // Move the ORIGINAL elements — never clone a control, iframe, or audio player.
  const quran=document.getElementById('hcQuranFirst');
  const bible=document.getElementById('hcGenesisCard');
@@ -58,7 +108,7 @@
    // Keep one authoritative, visible version. The older secondary v269 stamp
    // conflicted with the v192 label and actual offline build number.
    const label=settings.querySelector('.app-version');
-   if(label)label.textContent='HeartClear · HC v275';
+   if(label)label.textContent='HeartClear · HC v276';
    const stamp=document.createElement('span');
    stamp.id='hcHomeVersion268';stamp.hidden=true;settings.append(stamp);
  }else{
