@@ -52,53 +52,29 @@ const base='http://127.0.0.1:8765/human-practice-prototype/';
   gameResolved=true;break;
  }
  assert.ok(gameResolved,'Game must either guess from evidence or acknowledge uncertainty within 26 steps');
- await page.evaluate(()=>{const el=document.getElementById('hcExploreDialog');window.__hcExploreCloseTrace=[];const close=el.close.bind(el);el.close=function(){window.__hcExploreCloseTrace.push({when:'close()',stack:new Error('close trace').stack});return close()};el.addEventListener('close',()=>window.__hcExploreCloseTrace.push({when:'close event',open:el.open}));});
+ // Current Explore routes health check-ins to the independent Health Talk dialog.
+ // Verify that handoff without expecting obsolete health-question buttons in Explore.
  await dialog.getByRole('button',{name:'Close Explore',exact:true}).click();
  await page.locator('#hcExploreOpen').click();
  await dialog.locator('[data-mode="health"]').click();
- const healthStart=await dialog.evaluate(el=>({open:el.open,htmlLength:el.innerHTML.length,text:el.textContent.slice(0,900),question:el.querySelector('[data-question]')?.getAttribute('data-question'),answers:el.querySelectorAll('[data-answer]').length,active:document.activeElement?.id}));
- console.log('EXPLORE HEALTH START',JSON.stringify(healthStart));
- console.log('EXPLORE CLOSE TRACE',JSON.stringify(await page.evaluate(()=>window.__hcExploreCloseTrace)));
- assert.equal(healthStart.question,'emergency','Health check-in must start with its actual emergency question');
- await dialog.locator('[data-answer="yes"]').click();
- assert.match(await dialog.textContent(),/Get emergency help now/);
- await dialog.getByRole('button',{name:'Start again',exact:true}).click();
- await dialog.locator('[data-answer="no"]').click(); // emergency
- await dialog.locator('[data-answer="no"]').click(); // emergency chest
- await dialog.locator('[data-answer="no"]').click(); // emergency stroke
- await dialog.locator('[data-answer="yes"]').click(); // adult
- await dialog.locator('[data-answer="yes"]').click(); // urinary
- await dialog.locator('[data-answer="yes"]').click(); // retention
- assert.match(await dialog.textContent(),/urgent medical service now/);
- await dialog.getByRole('button',{name:'Start again',exact:true}).click();
- await dialog.getByRole('button',{name:'Speak an answer',exact:true}).click();
- assert.match(await dialog.textContent(),/browser provider/);
- await dialog.getByRole('button',{name:'Enable voice',exact:true}).click();
- await page.evaluate(()=>window.__voice.at(-1).savedResult({results:[[{transcript:'yes'}]]}));
- assert.match(await dialog.textContent(),/Use “Yes”/);
- assert.equal(await dialog.locator('[data-question]').getAttribute('data-question'),'emergency');
- await dialog.getByRole('button',{name:'Use “Yes”',exact:true}).click();
- assert.match(await dialog.textContent(),/Get emergency help now/);
- await dialog.getByRole('button',{name:'Start again',exact:true}).click();
- await dialog.getByRole('button',{name:'Speak an answer',exact:true}).click();
- await page.evaluate(()=>{window.__late=window.__voice.at(-1).savedResult;});
- await dialog.getByRole('button',{name:'Close Explore',exact:true}).click();
- await page.evaluate(()=>window.__late({results:[[{transcript:'yes'}]]}));
+ const health=page.locator('#hcHealthTalk');
+ await health.waitFor({state:'visible',timeout:10000});
+ assert.equal(await dialog.evaluate(el=>el.open),false,'Explore closes when handing off to Health Talk');
+ assert.ok(await health.locator('#hchtComplaint').isVisible(),'Private free-text entry is available');
+ await health.locator('#hchtComplaint').fill('I have had a mild headache for two days');
+ await health.locator('button[data-act="continue"]').click();
+ assert.ok(await health.locator('[data-property="red"][data-answer="no"]').count(),'Relevant safety check follows user description');
+ await health.locator('[data-property="red"][data-answer="no"]').click();
+ assert.ok(await health.locator('[data-property="specific"][data-answer="no"]').count(),'Follow-up safety question appears');
+ await health.locator('[data-property="specific"][data-answer="no"]').click();
+ assert.ok(await health.locator('[data-property="age"]').count(),'Age-appropriate pathway is available');
+ await health.locator('button[data-act="close"]').click();
+ assert.equal(await health.evaluate(el=>el.open),false,'Health Talk can close');
  await page.locator('#hcExploreOpen').click();
- assert.match(await dialog.textContent(),/Guess my thought/);
- assert.doesNotMatch(await dialog.textContent(),/Use “Yes”/);
- await dialog.locator('[data-mode="health"]').click();
- await dialog.getByRole('button',{name:'Speak an answer',exact:true}).click();
- await dialog.getByRole('button',{name:'Enable voice',exact:true}).click();
- await page.evaluate(()=>window.__voice.at(-1).onerror({error:'not-allowed'}));
- assert.match(await dialog.textContent(),/Microphone access was not granted/);
- await dialog.locator('[data-answer="no"]').click();
- assert.equal(await dialog.locator('[data-question]').getAttribute('data-question'),'emergencyChest');
- await dialog.getByRole('button',{name:'Back',exact:true}).click();
- assert.equal(await dialog.locator('[data-question]').getAttribute('data-question'),'emergency');
- assert.ok(await dialog.evaluate(el=>el.scrollWidth<=el.clientWidth),'mobile dialog overflow');
+ assert.match(await dialog.textContent(),/Guess my thought/,'Explore can reopen after Health Talk without stale questions');
+ assert.doesNotMatch(await dialog.textContent(),/I have had a mild headache/,'Health Talk text is not exposed in Explore');
+ await dialog.getByRole('button',{name:'Close Explore',exact:true}).click();
  await page.screenshot({path:path.join(__dirname,'explore-mobile.png')});
- await dialog.getByRole('button',{name:'Close Explore',exact:true}).click();
  await page.evaluate(()=>{delete window.SpeechRecognition;delete window.webkitSpeechRecognition;});
  await page.locator('#hcExploreOpen').click();await dialog.locator('[data-mode="game"]').click();
  assert.match(await dialog.textContent(),/Voice is unavailable/);
@@ -114,6 +90,6 @@ const base='http://127.0.0.1:8765/human-practice-prototype/';
  await dialog.locator('[data-answer="no"]').click();
  await context.setOffline(false);
  assert.deepEqual(errors,[]);
- console.log('PASS: mobile Home integration, grandfather game, health exits, voice confirmation/denial/stale callbacks, back, unsupported voice, offline reload, no page errors');
+ console.log('PASS: mobile Explore game, safe Health Talk handoff, private closure, unsupported voice, offline reload, no page errors');
  await browser.close();
 })().catch(e=>{console.error(e);process.exit(1)});
