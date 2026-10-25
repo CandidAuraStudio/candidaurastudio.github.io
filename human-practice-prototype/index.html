@@ -5504,7 +5504,7 @@ function hcRenderMiniLibrary(){
           hcPlayQuranSurah(Number(item.key.slice(7)));
         }else hcPlaySoundFromRow(item.key);
         hcMiniPinnedKey='soundlab';renderGlobalMini();
-      }else if(item.kind==='gita')window.hcOpenGitaVoice?.(1);
+      }else if(item.kind==='gita')window.hcGitaHomeToggle?.(1);
       else if(item.kind==='practice')item.el.click();
       else openHcDriveMedia(item.key);
     });
@@ -5621,7 +5621,7 @@ function stopGlobalMedia(){
 
 function openActiveMediaPlayer(){
   const state=getActiveMediaState();
-  if(state?.key==='gita'){show('sacredDetail');return;}
+  if(state?.key==='gita'){show('home');document.getElementById('hcHinduHome')?.scrollIntoView({block:'center',behavior:'smooth'});return;}
   if(state?.key==='genesis'){show('home');return;}
   if(state?.key==='quran-meaning'){show('home');return;}
   if(state?.key==='soundlab'&&currentSoundKey==='allahuAkmal'){show('home');return;}
@@ -9521,7 +9521,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=260');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=261');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
@@ -9559,7 +9559,7 @@ const heartclearAutoInstallPrompt=false;
 <script src="./hc-health-talk-v156.js?v=160"></script>
 <script src="./hc-home-routine-v155.js?v=195"></script>
 <script src="./hc-genesis-v156.js?v=188"></script>
-<script src="./hc-hindu-scriptures-v162.js?v=170"></script>
+<script src="./hc-hindu-scriptures-v162.js?v=261"></script>
 <script>
 /* Load the deep source catalog only when the user opens Hindu traditions.
    This prevents parsing another optional library during first Home paint. */
@@ -9585,7 +9585,7 @@ const heartclearAutoInstallPrompt=false;
   if(map.open)load();
 })();
 </script>
-<script src="./hc-gita-original-audio-v163.js?v=172"></script>
+<script src="./hc-gita-original-audio-v163.js?v=261"></script>
 
 <script src="./hc-kitchen-world-v205.js?v=206"></script>
 <script src="./hc-kitchen-world-v207.js?v=210"></script>
@@ -9611,7 +9611,7 @@ const heartclearAutoInstallPrompt=false;
 <link rel="stylesheet" href="./hc-reels-minimal-v248.css?v=248">
 <script src="./hc-om-mini-v252.js?v=252"></script>
 <link rel="stylesheet" href="./hc-listening-hub-v254.css?v=258">
-<script src="./hc-listening-hub-v254.js?v=260"></script>
+<script src="./hc-listening-hub-v254.js?v=261"></script>
 <script src="./hc-home-layout-v256.js?v=257"></script>
 <script src="./hc-home-core-paths-v259.js?v=259"></script>
 <link rel="stylesheet" href="./hc-unified-visual-v259.css?v=259">
