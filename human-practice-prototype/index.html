@@ -3796,7 +3796,7 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
         </div>
       </details>
     </div>
-    <div class="app-version">HeartClear · HC v277</div>
+    <div class="app-version">HeartClear · HC v281 (review)</div>
   </div>
 </section>
 
@@ -4787,6 +4787,7 @@ function hcReelUpdatePlayButton(){
  b.setAttribute('aria-label',hcReelFrameLoaded?'Close current Drive video':'Load current Drive reel');
 }
 function hcReelStop(){
+ window.HCNativeReels?.stop();
  const frame=hcReelFrame();
  if(frame){frame.removeAttribute('src');frame.hidden=true;}
  hcReelFrameLoaded=false;
@@ -4825,6 +4826,18 @@ function hcReelToggle(){
  if(hcReelFrameLoaded){hcReelStop();return;}
  const frame=hcReelFrame(),item=hcReelItems[hcReelIndex];
  if(!frame||!item)return;
+ const nextItem=hcReelItems[hcReelShuffleOrder[hcReelShuffleCursor+1]];
+ if(window.HCNativeReels?.start(item,nextItem,()=>{
+   hcMarkCurrentReelSeen();hcReelNext();
+ },()=>{
+   hcReelStop();hcReelToggle(); // Source failed: preserve authorized Drive player.
+ })){
+   hcReelFrameLoaded=true;
+   document.getElementById('hcReelPoster').hidden=true;
+   const hint=document.getElementById('hcReelHint');
+   if(hint)hint.textContent='Swipe the video up or down. Tap to pause or play.';
+   return;
+ }
  const cover=document.getElementById('hcReelPoster');
  // A user action opens this embedded Drive player. Autoplay is best-effort only:
  // cross-origin playback still depends on Chrome/WebKit and Google Drive.
@@ -4880,6 +4893,10 @@ function hcReelToggle(){
 }
 
 
+// Native renderer uses the original queue and existing Reel history keys.
+window.hcReelItemsForNative=()=>hcReelItems;
+window.hcReelNativeNext=()=>hcReelNext();
+window.hcReelNativePrevious=()=>hcReelPrevious();
 hcUpdateReelsHomeMeta();
 window.addEventListener('pagehide',()=>{
  if(currentScreenId==='hcReels')hcMarkCurrentReelSeen();
@@ -9547,7 +9564,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=277');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=281');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
@@ -9636,6 +9653,8 @@ const heartclearAutoInstallPrompt=false;
 <link rel="stylesheet" href="./hc-global-language-v245.css?v=245">
 <script src="./hc-global-language-v245.js?v=263"></script>
 <link rel="stylesheet" href="./hc-reels-minimal-v248.css?v=248">
+<link rel="stylesheet" href="./hc-reels-native-v281.css?v=281">
+<script src="./hc-reels-native-v281.js?v=281"></script>
 <script src="./hc-om-mini-v252.js?v=252"></script>
 <link rel="stylesheet" href="./hc-listening-hub-v254.css?v=258">
 <script src="./hc-listening-hub-v254.js?v=261"></script>
