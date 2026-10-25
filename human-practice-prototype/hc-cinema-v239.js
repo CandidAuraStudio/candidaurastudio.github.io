@@ -40,6 +40,7 @@ const paths={
  sacredDetail:{title:'Sacred Traditions',desc:'Read and listen in one place.',scene:'sacred'},
  sacredSession:{title:'Sacred Listening',desc:'Original voices and sound.',scene:'sacred'},
  chakraGuide:{title:'Practice Guide',desc:'Explore practices and explanations.',scene:'sacred'},
+ hcListening:{title:'All Listening',desc:'Your meditation, sacred sound, nature and audio in one place.',scene:'practice'},
  soundHub:{title:'Sounds',desc:'Natural sound and quiet listening.',scene:'practice'},
  soundLab:{title:'Sound Lab',desc:'Choose or combine sounds.',scene:'practice'},
  soundLabPlayer:{title:'Now Playing',desc:'Every control stays within reach.',scene:'practice'},
