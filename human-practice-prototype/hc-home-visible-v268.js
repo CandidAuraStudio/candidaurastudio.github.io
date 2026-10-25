@@ -55,10 +55,12 @@
  // shell from an old cached build without covering the Home design.
  const settings=document.getElementById('settings');
  if(settings){
-   const stamp=document.createElement('small');stamp.id='hcHomeVersion268';
-   stamp.textContent='HeartClear interface · v269';
-   stamp.style.cssText='display:block;margin:12px 0 18px;text-align:center;font:500 11px/1.4 system-ui;color:#b6b2aa';
-   settings.append(stamp);
+   // Keep one authoritative, visible version. The older secondary v269 stamp
+   // conflicted with the v192 label and actual offline build number.
+   const label=settings.querySelector('.app-version');
+   if(label)label.textContent='HeartClear · HC v275';
+   const stamp=document.createElement('span');
+   stamp.id='hcHomeVersion268';stamp.hidden=true;settings.append(stamp);
  }else{
    const stamp=document.createElement('span');stamp.id='hcHomeVersion268';stamp.hidden=true;home.append(stamp);
  }
