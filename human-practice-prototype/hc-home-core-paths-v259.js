@@ -109,7 +109,7 @@
  ].join('\n');document.head.appendChild(style);
 
  const periods={wake:['Morning','Deep Wake Up'],noon:['Midday','Noon Reset'],evening:['Evening','Evening Release'],sleep:['Night','Deep Sleep']};
- function hcPathPeriod(){const h=new Date().getHours();return h>=5&&h<11?'wake':h>=11&&h<17?'noon':h>=17&&h<21?'evening':'sleep'}
+ function hcPathPeriod(){const h=new Date().getHours();return h>=5&&h<12?'wake':h>=12&&h<17?'noon':h>=17&&h<21?'evening':'sleep'}
  function refreshHcPeriods(){
   const key=hcPathPeriod(),p=periods[key];
   document.querySelectorAll('#home .hc-path-hero').forEach(hero=>{
