@@ -31,7 +31,10 @@ jobs:
         run: node human-practice-prototype/tests/hc-refresh-first-paint.cjs
       - name: Check merged Genesis/Gita All Listening routes
         run: node human-practice-prototype/tests/hc-listening-scripture-access.cjs
+      - name: Browser test merged Genesis/Gita entry points
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/hc-pr43-browser.log 2>&1 &
+          node human-practice-prototype/tests/hc-listening-scripture-browser.cjs
       - name: Simulate a slow stylesheet and verify no duplicate refresh
         run: |
-          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/hc-refresh-first-paint.log 2>&1 &
           node human-practice-prototype/tests/hc-refresh-first-paint-browser.cjs
