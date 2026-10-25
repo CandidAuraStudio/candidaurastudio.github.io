@@ -184,3 +184,83 @@ body.hc-flow-enabled #soundLab.active #hcMixTimerChips button{
     grid-template-columns:repeat(2,minmax(0,1fr));
   }
 }
+
+
+/* Sacred Sound v251 — restore full-width tap targets and readable transport labels.
+   Scope only to Sacred Sound cards, not other pages or existing content. */
+body.hc-flow-enabled #sacredDetail.active #hcSacredDriveLibrary .hc-sacred-quick,
+body.hc-flow-enabled #sacredDetail.active #hcSacredDriveLibrary .hc-drive-card {
+  display:grid!important;
+  grid-template-columns:52px minmax(0,1fr) minmax(60px,max-content)!important;
+  align-items:center!important;
+  column-gap:12px!important;
+  box-sizing:border-box!important;
+  width:100%!important;
+  min-width:0!important;
+  min-height:76px!important;
+  height:auto!important;
+  padding:12px!important;
+  text-align:left!important;
+  cursor:pointer!important;
+  touch-action:manipulation!important;
+  pointer-events:auto!important;
+}
+body.hc-flow-enabled #sacredDetail.active #hcSacredDriveLibrary :is(.hc-sacred-quick,.hc-drive-card) > span:nth-child(2) {
+  display:block!important;
+  min-width:0!important;
+  width:auto!important;
+  overflow-wrap:normal!important;
+  word-break:normal!important;
+}
+body.hc-flow-enabled #sacredDetail.active #hcSacredDriveLibrary :is(.hc-sacred-quick,.hc-drive-card) :is(b,small) {
+  overflow-wrap:normal!important;
+  word-break:normal!important;
+  white-space:normal!important;
+  line-height:1.4!important;
+}
+body.hc-flow-enabled #sacredDetail.active #hcSacredDriveLibrary :is(.hc-sacred-quick-status,.soundlab-duration) {
+  margin-left:0!important;
+  width:auto!important;
+  min-width:60px!important;
+  max-width:95px!important;
+  display:block!important;
+  white-space:nowrap!important;
+  text-align:right!important;
+  overflow-wrap:normal!important;
+  word-break:keep-all!important;
+  font-size:13px!important;
+  font-weight:650!important;
+  line-height:1.3!important;
+  padding:0!important;
+}
+body.hc-flow-enabled #sacredDetail.active #hcSacredDriveLibrary :is(.hc-sacred-quick-icon,.soundlab-icon){
+  flex:none!important;
+  width:52px!important;
+  min-width:52px!important;
+  height:52px!important;
+  display:grid!important;
+  place-items:center!important;
+}
+body.hc-flow-enabled #sacredDetail.active #hcSacredDriveLibrary .hc-more-recordings,
+body.hc-flow-enabled #sacredDetail.active #hcSacredDriveLibrary .soundlab-grid{
+  width:100%!important;min-width:0!important;
+}
+body.hc-flow-enabled :is(#sacred.active,#sacredDetail.active){
+  padding-bottom:max(148px,calc(125px + env(safe-area-inset-bottom,0px)))!important;
+}
+body.hc-flow-enabled #sacredDetail.active #hcSacredDriveLibrary :is(button,summary):focus-visible{
+  outline:3px solid #fff!important;outline-offset:3px!important;
+}
+@media(max-width:360px){
+ body.hc-flow-enabled #sacredDetail.active #hcSacredDriveLibrary :is(.hc-sacred-quick,.hc-drive-card){
+   grid-template-columns:44px minmax(0,1fr) 55px!important;
+   column-gap:9px!important;
+   padding:10px!important;
+ }
+ body.hc-flow-enabled #sacredDetail.active #hcSacredDriveLibrary :is(.hc-sacred-quick-icon,.soundlab-icon){
+   width:44px!important;min-width:44px!important;height:44px!important;
+ }
+ body.hc-flow-enabled #sacredDetail.active #hcSacredDriveLibrary :is(.hc-sacred-quick-status,.soundlab-duration){
+   min-width:55px!important;max-width:55px!important;font-size:12px!important;
+ }
+}
