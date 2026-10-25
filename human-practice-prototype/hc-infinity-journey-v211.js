@@ -296,7 +296,7 @@ function render(){
   const paper=document.createElement('article');paper.className='hci-paper';paper.id='hciReadingPanel';
   paper.innerHTML='<span class="hci-kicker">'+esc(T(sections[step],taSections[step]))+'</span><h2>'+esc(step===0?T('How it works','எப்படிச் செயல்படுகிறது'):step===1?T('What can it mean?','இதன் அர்த்தம் என்ன?'):T('Bring it into life','வாழ்வில் பயன்படுத்தலாம்'))+'</h2><p>'+esc(L(step===0?item.explain:step===1?item.reflect:item.practice))+'</p>';
   const additional=window.HCInfinityDepth?.[item.id]?.[language]?.[step]||'';
-  additional.split(/\\n\\s*\\n/).filter(Boolean).forEach(paragraph=>{
+  additional.split(/\n\s*\n/).filter(Boolean).forEach(paragraph=>{
    const text=document.createElement('p');text.textContent=paragraph.trim();paper.append(text);
   });
   if(step===1){
