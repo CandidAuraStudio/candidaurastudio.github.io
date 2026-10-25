@@ -9521,7 +9521,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=250');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=254');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
@@ -9610,6 +9610,8 @@ const heartclearAutoInstallPrompt=false;
 <script src="./hc-global-language-v245.js?v=253"></script>
 <link rel="stylesheet" href="./hc-reels-minimal-v248.css?v=248">
 <script src="./hc-om-mini-v252.js?v=252"></script>
+<link rel="stylesheet" href="./hc-listening-hub-v254.css?v=254">
+<script src="./hc-listening-hub-v254.js?v=254"></script>
 </body>
 </html>
 
