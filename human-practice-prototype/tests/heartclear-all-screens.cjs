@@ -54,6 +54,8 @@ const assert=require('node:assert/strict');
   assert.equal(await page.evaluate(()=>document.documentElement.lang),'en','First launch must default to English');
   assert.equal(await page.locator('#home .hc-simple-start h2').innerText(),'One tap. Just listen.');
   await page.locator('#hcAppLanguageHome [data-hc-app-lang="ta"]').click();
+  await page.waitForTimeout(300);
+  console.log('LANG SWITCH DIAGNOSTIC',width,JSON.stringify(await page.evaluate(()=>({language:document.documentElement.lang,title:document.querySelector('#home .hc-simple-start h2')?.textContent,selected:document.querySelector('#hcAppLanguageHome [data-hc-app-lang="ta"]')?.getAttribute('aria-pressed'),appLang:window.HCAppLanguage?.get(),kitchen:window.HCKitchenLanguage?.get()}))));
   await page.waitForFunction(()=>document.documentElement.lang==='ta'&&document.querySelector('#home .hc-simple-start h2')?.textContent==='ஒரு தொடுதல். கேட்டுப் பாருங்கள்.');
   assert.match(await page.locator('#timeGreeting').innerText(),/காலை|மதிய|மாலை|இனிய இரவு/,'Greeting must translate to Tamil');
   assert.equal(await page.locator('#hcAppLanguageHome [data-hc-app-lang="ta"]').getAttribute('aria-pressed'),'true');
