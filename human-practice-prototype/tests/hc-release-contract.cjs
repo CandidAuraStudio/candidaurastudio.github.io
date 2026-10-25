@@ -45,7 +45,7 @@ test('Reels is third, Library fifth, and old competing scripts are absent',()=>{
  assert.ok(cinema.includes("dock.append(byId('hcFlowDockHome'),byId('hcFlowDockListen'),reels,explore,library,settings)"));
  assert.ok(!flow.includes('hcFlowDockSearch'));
  assert.ok(!html.includes('hcReelsBottomTabGuard'));
- assert.ok(html.includes('hcBubbleSearch'));
+ assert.ok(read('hc-bubble-v207.js').includes('hcBubbleSearch'));
  assert.ok(flow.includes("hcCinemaReels').addEventListener('click'"));
 });
 test('Time-based meditation and all three original scripture players remain',()=>{
