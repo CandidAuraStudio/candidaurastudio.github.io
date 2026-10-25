@@ -294,8 +294,9 @@ const assert = require('node:assert/strict');
     assert.ok(await page.locator('#hcCopyPlaybackCheckBtn').isEnabled());
     console.log('PASS: on-device playback diagnostics');
 
-    await page.locator('#settings .hc-more-shortcuts button').first().evaluate(el=>el.click());
-    await page.locator('button[onclick="openFearPractice()"]').first().evaluate(el=>el.click());
+    // Fear remains an existing screen even when Settings no longer displays the
+    // legacy 'More shortcuts' grid. Open its real app action, not a removed button.
+    await page.evaluate(()=>openFearPractice());
     assert.ok(await page.locator('#fearPractice').evaluate(el=>el.classList.contains('active')));
     await page.locator('#fearPractice button').filter({hasText:'Frogs & Waterfall'}).evaluate(el=>el.click());
     assert.ok(await page.locator('#fearPlayer').evaluate(el=>el.classList.contains('active')));
