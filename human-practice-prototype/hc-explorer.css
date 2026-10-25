@@ -1,72 +1,72 @@
-/* HeartClear Interactive Explorer v126 — additive, aligned with existing sky/glass language */
+/* HeartClear Explorer v284 — charcoal/white, scoped to the existing Explorer. No global visual overrides. */
 .hcxe-entry{display:block;margin:2px 0 13px!important;text-align:left!important;
-  border-color:rgba(235,247,255,.40)!important;background:linear-gradient(115deg,rgba(225,240,245,.21),rgba(30,69,89,.34))!important}
+  border-color:#535353!important;background:#1d1d1d!important}
 .hcxe-entry b{color:#fff!important}
-#hcExplorer.screen{justify-content:flex-start;min-width:0;padding:20px 0 44px}
+#hcExplorer.screen{justify-content:flex-start;min-width:0;padding:12px 0 130px;background:#090909;color:#f6f6f4}
 #hcExplorer .hcxe-wrapper{width:100%;min-width:0}
-#hcExplorer .hcxe-wrapper>.kicker{margin-top:12px}
-#hcExplorer h2{font-size:clamp(26px,7vw,35px);line-height:1.13;max-width:370px;margin:0}
-#hcExplorer .hcxe-lead{font-size:13px;max-width:380px;margin:10px 0 18px}
+#hcExplorer .hcxe-wrapper>.kicker{margin-top:4px;color:#c8c7c5}
+#hcExplorer h2{font-size:clamp(22px,5.8vw,28px);line-height:1.22;max-width:100%;margin:0;color:#fff}
+#hcExplorer .hcxe-lead{font-size:14px;line-height:1.5;color:#d1d0ce;max-width:100%;margin:8px 0 16px}
 #hcExplorer .hcxe-tracks{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 15px}
 #hcExplorer .hcxe-tracks button{flex:1;min-width:86px;padding:12px 8px;
-  border:1px solid rgba(255,255,255,.30);border-radius:15px;background:rgba(9,35,52,.34);
-  color:#f4f8fa;font:inherit;font-size:12px;font-weight:700}
-#hcExplorer .hcxe-tracks [aria-pressed="true"]{background:#f7fbff;color:#13354a;border-color:white}
-#hcExplorer .hcxe-panel{background:linear-gradient(165deg,rgba(24,61,81,.82),rgba(7,27,43,.87));
-  border:1px solid rgba(255,255,255,.27);border-radius:26px;padding:18px 16px 17px;
-  box-shadow:0 20px 55px rgba(0,20,34,.24)}
+  border:1px solid #515151;border-radius:12px;background:#202020;
+  color:#f6f6f4;font:inherit;font-size:13px;font-weight:700;min-height:44px}
+#hcExplorer .hcxe-tracks [aria-pressed="true"]{background:#f5f4f1;color:#111;border-color:#fff}
+#hcExplorer .hcxe-panel{background:#1b1b1b;
+  border:1px solid #4a4a4a;border-radius:17px;padding:15px 14px;
+  box-shadow:none}
 #hcExplorer .hcxe-meta{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#e8c9a3;font-weight:800}
-#hcExplorer #hcxeTrackName{font-size:24px;margin:8px 0 0}
-#hcExplorer #hcxeTrackIntro{font-size:13px;line-height:1.65;color:#d3e4ec;margin:8px 0 20px}
+#hcExplorer #hcxeTrackName{font-size:clamp(18px,4.8vw,21px);margin:7px 0 0}
+#hcExplorer #hcxeTrackIntro{font-size:13px;line-height:1.5;color:#cbcac9;margin:6px 0 15px}
 #hcExplorer .hcxe-steps{display:flex;justify-content:space-between;gap:6px;margin:3px 0 15px}
-#hcExplorer .hcxe-steps button{border:1px solid rgba(244,249,255,.33);border-radius:50%;
-  width:clamp(29px,8vw,38px);height:clamp(29px,8vw,38px);padding:0;
-  flex:0 1 38px;min-width:26px;background:rgba(225,242,253,.07);color:#e4eef4;
+#hcExplorer .hcxe-steps button{border:1px solid #5d5d5d;border-radius:12px;
+  width:clamp(44px,11vw,52px);height:44px;padding:0;
+  flex:0 1 52px;min-width:44px;background:#292929;color:#f4f4f2;
   font-size:12px;font-weight:700;font-family:inherit}
-#hcExplorer .hcxe-steps button[aria-current="step"]{background:#fff;color:#0e3449;border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.15)}
-#hcExplorer .hcxe-steps button.hcxe-done:not([aria-current="step"]){background:rgba(157,216,205,.31);border-color:#c7f4e2}
-#hcExplorer .hcxe-visual{height:165px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;
-  border-radius:18px;background:radial-gradient(ellipse at 50% 42%,rgba(186,219,225,.18),rgba(15,49,71,.20) 56%,rgba(7,29,47,.20) 81%);
-  border:1px solid rgba(255,255,255,.12);margin:0 0 17px}
-#hcExplorer .hcxe-ring{position:absolute;top:50%;left:50%;border:1px solid rgba(228,244,255,.48);border-radius:50%;transform:translate(-50%,-50%);
-  width:124px;height:124px;animation:hcxe-breathe 7.5s ease-in-out infinite;pointer-events:none}
-#hcExplorer .hcxe-ring-b{width:92px;height:92px;animation-delay:-2.3s;border-color:rgba(255,237,210,.47)}
-#hcExplorer .hcxe-core{width:57px;height:57px;border-radius:50%;
-  background:radial-gradient(circle at 37% 32%,#f6fbff,#a5d4df 48%,#5a9cb8 75%,#294c71);
-  box-shadow:0 0 22px rgba(166,224,238,.37),0 0 55px rgba(161,221,238,.22);animation:hcxe-glow 7.5s ease-in-out infinite}
-#hcExplorer #hcxeVisualLabel{position:absolute;bottom:11px;letter-spacing:.16em;font-size:9px;font-weight:800;color:#ddeef2}
+#hcExplorer .hcxe-steps button[aria-current="step"]{background:#f5f4f1;color:#101010;border-color:#fff;box-shadow:none}
+#hcExplorer .hcxe-steps button.hcxe-done:not([aria-current="step"]){background:#373737;border-color:#d1c2ac}
+#hcExplorer .hcxe-visual{height:104px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;
+  border-radius:13px;background:#131313;
+  border:1px solid #3d3d3d;margin:0 0 13px}
+#hcExplorer .hcxe-ring{position:absolute;top:50%;left:50%;border:1px solid rgba(240,239,237,.39);border-radius:50%;transform:translate(-50%,-50%);
+  width:86px;height:86px;animation:hcxe-breathe 7.5s ease-in-out infinite;pointer-events:none}
+#hcExplorer .hcxe-ring-b{width:64px;height:64px;animation-delay:-2.3s;border-color:rgba(222,199,164,.44)}
+#hcExplorer .hcxe-core{width:42px;height:42px;border-radius:50%;
+  background:radial-gradient(circle at 37% 32%,#fff,#bebdbb 62%,#666 96%);
+  box-shadow:none;animation:hcxe-glow 7.5s ease-in-out infinite}
+#hcExplorer #hcxeVisualLabel{position:absolute;bottom:11px;letter-spacing:.16em;font-size:9px;font-weight:800;color:#dbd9d5}
 @keyframes hcxe-breathe{0%,100%{transform:translate(-50%,-50%) scale(.90);opacity:.65}
   50%{transform:translate(-50%,-50%) scale(1.13);opacity:1}}
 @keyframes hcxe-glow{0%,100%{transform:scale(.94);opacity:.88}50%{transform:scale(1.08);opacity:1}}
 #hcExplorer .hcxe-reference{font-size:11px;color:#f5d9b1;font-weight:750;letter-spacing:.08em;text-transform:uppercase}
 #hcExplorer .hcxe-step-title{font-size:23px;margin:8px 0 10px;line-height:1.2}
-#hcExplorer .hcxe-idea{font-size:15px;line-height:1.7;color:#f1f6fa;margin:0 0 14px}
-#hcExplorer .hcxe-practice{padding:12px 14px;border-radius:14px;background:rgba(191,219,233,.12);border:1px solid rgba(255,255,255,.14)}
+#hcExplorer .hcxe-idea{font-size:15px;line-height:1.7;color:#f2f2f0;margin:0 0 14px}
+#hcExplorer .hcxe-practice{padding:12px 14px;border-radius:14px;background:#252525;border:1px solid #454545}
 #hcExplorer .hcxe-practice b{font-size:12px;color:#f1ddb9}
 #hcExplorer .hcxe-practice p{font-size:13px;margin:5px 0 0;line-height:1.6}
 #hcExplorer .hcxe-question{display:block;font-size:13px;font-weight:720;line-height:1.5;margin:18px 0 9px;color:white}
 #hcExplorer textarea{display:block;width:100%;box-sizing:border-box;min-height:83px;resize:vertical;
-  border-radius:14px;background:rgba(1,19,30,.52);color:#fff;border:1px solid rgba(245,250,255,.31);
+  border-radius:14px;background:#121212;color:#fff;border:1px solid #585858;
   padding:12px 13px;font:inherit;font-size:14px;line-height:1.55}
-#hcExplorer textarea::placeholder{color:#b3c4ce}
-#hcExplorer .hcxe-saved{font-size:11px;color:#c2d8e3;min-height:17px;margin:8px 0 12px}
+#hcExplorer textarea::placeholder{color:#a8a7a5}
+#hcExplorer .hcxe-saved{font-size:11px;color:#c6c5c2;min-height:17px;margin:8px 0 12px}
 #hcExplorer .hcxe-mark{border-radius:14px;min-height:45px;width:100%;font:inherit;font-weight:750;font-size:13px;
-  border:1px solid rgba(255,255,255,.32);background:rgba(196,226,237,.17);color:#f8fdff}
-#hcExplorer .hcxe-mark[aria-pressed="true"]{background:rgba(164,223,205,.28);border-color:#bfecdd}
+  border:1px solid rgba(255,255,255,.32);background:#252525;color:#f7f7f6}
+#hcExplorer .hcxe-mark[aria-pressed="true"]{background:#373737;border-color:#c7baa7}
 #hcExplorer .hcxe-actions{display:flex;gap:10px;margin-top:11px}
 #hcExplorer .hcxe-actions button{flex:1;min-height:48px;border-radius:14px;border:1px solid rgba(255,255,255,.24);
-  background:rgba(255,255,255,.12);color:#fff;font:inherit;font-weight:750}
-#hcExplorer #hcxeNext{background:#fff;color:#12384b;border-color:#fff}
+  background:#292929;color:#fff;font:inherit;font-weight:750}
+#hcExplorer #hcxeNext{background:#f5f4f1;color:#111;border-color:#fff}
 #hcExplorer .hcxe-actions button:disabled{opacity:.40;cursor:default}
 #hcExplorer .hcxe-related{display:block;width:100%;min-height:49px;margin:16px 0 4px;
-  border:1px solid rgba(255,255,255,.35);border-radius:15px;font:inherit;font-size:14px;font-weight:760;color:white;background:rgba(5,26,39,.39)}
-#hcExplorer .hcxe-privacy{font-size:11px;line-height:1.6;color:#c6dbe2}
+  border:1px solid rgba(255,255,255,.35);border-radius:15px;font:inherit;font-size:14px;font-weight:760;color:white;background:#262626}
+#hcExplorer .hcxe-privacy{font-size:11px;line-height:1.6;color:#c7c6c3}
 #hcExplorer button:focus-visible,#hcExplorer textarea:focus-visible,.hcxe-entry:focus-visible{
   outline:3px solid white;outline-offset:3px}
 @media(max-width:350px){
  #hcExplorer .hcxe-panel{padding:16px 11px}
  #hcExplorer .hcxe-tracks button{min-width:76px;font-size:11px}
- #hcExplorer .hcxe-steps button{min-width:24px;height:28px}
+ #hcExplorer .hcxe-steps button{min-width:44px;height:44px}
 }
 body.reduce-motion #hcExplorer .hcxe-ring,
 body.reduce-motion #hcExplorer .hcxe-core{animation:none!important}
