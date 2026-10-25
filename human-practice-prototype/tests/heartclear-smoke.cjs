@@ -283,7 +283,11 @@ const assert = require('node:assert/strict');
     await page.locator('#hcPlaybackChecks').evaluate(el=>el.open=true);
     await page.locator('#hcRunPlaybackCheckBtn').evaluate(el=>el.click());
     await page.waitForFunction(()=>/checks passed|did not finish/.test(document.getElementById('hcPlaybackCheckStatus')?.textContent||''),null,{timeout:40000});
-    const checkText=await page.locator('#hcPlaybackCheckResults').innerText();
+    const playbackStatus=await page.locator('#hcPlaybackCheckStatus').textContent();
+    assert.match(playbackStatus,/checks passed/,'Playback diagnostics must complete instead of silently stopping');
+    // Settings nests diagnostics in a collapsible panel. innerText can return
+    // empty for a visually collapsed ancestor even when results are populated.
+    const checkText=await page.locator('#hcPlaybackCheckResults').textContent();
     assert.match(checkText,/Rain hosted audio/);
     assert.match(checkText,/Frogs hosted audio/);
     assert.match(checkText,/Flute · 10 min hosted audio/);
