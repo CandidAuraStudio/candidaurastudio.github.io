@@ -128,7 +128,10 @@ function trySource(index,token){
 }
 function start(){
  if(mode==='loading')return;
- if(mode==='playing'){media.pause();return}
+ if(mode==='playing'){
+  media.pause();lastSavedTime=media.currentTime;save(true);
+  setStatus('Paused · tap Play to continue.','paused');return;
+ }
  if(mode==='paused'&&media.getAttribute('src')&&media.readyState>0){
   media.play().catch(()=>{attempt++;playWanted=true;trySource(0,attempt)});return;
  }
