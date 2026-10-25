@@ -18,10 +18,10 @@ style.textContent=[
  '#hcMantraHubV216 h3{font-size:25px;line-height:1.2;margin:0}',
  '#hcMantraHubV216 .hc-mantra-back{border:1px solid #9aa6af;border-radius:12px;background:#17242c;color:#fff;font:inherit;padding:12px 14px;min-height:46px}',
  '#hcMantraHubV216 .hc-mantra-item{border:1px solid #637883;border-radius:18px;padding:14px 15px;background:#101e27;display:grid;gap:8px}',
- '#hcMantraHubV216 .hc-mantra-item h4{font-size:18px;line-height:1.25;margin:0;color:#fff}',
- '#hcMantraHubV216 .hc-mantra-item p{font-size:14px;line-height:1.4;margin:0;color:#cdd7dc}',
- '#hcMantraHubV216 .hc-mantra-item button,#hcMantraHubV216 .hc-mantra-item a{display:inline-flex;justify-content:center;align-items:center;min-height:54px;border:1px solid #fff;border-radius:15px;background:#fff;color:#101820;font:inherit;font-size:17px;font-weight:700;padding:10px 15px;text-decoration:none;text-align:center}',
- '#hcMantraHubV216 .hc-mantra-original a{background:#142630;color:#fff;border-color:#70828b;font-size:15px}',
+ '#hcMantraHubV216 .hc-mantra-item h4{font-size:17px;line-height:1.3;margin:0;color:#fff}',
+ '#hcMantraHubV216 .hc-mantra-item p{font-size:13px;line-height:1.4;margin:0;color:#cdd7dc}',
+ '#hcMantraHubV216 .hc-mantra-item button,#hcMantraHubV216 .hc-mantra-item a{display:inline-flex;justify-content:center;align-items:center;min-height:48px;border:1px solid #fff;border-radius:15px;background:#fff;color:#101820;font:inherit;font-size:15px;font-weight:700;padding:9px 12px;text-decoration:none;text-align:center}',
+ '#hcMantraHubV216 .hc-mantra-original button{background:#142630;color:#fff;border-color:#70828b;font-size:15px}',
  '#hcMantraHubV216 .hc-mantra-note{font-size:13px;color:#cdd8de;line-height:1.45;margin:0}',
  '#soundLab.hc-mantra-open > :not(.hc-sounds-header):not(#hcMantraEntranceV216):not(#hcMantraHubV216){display:none!important}',
  '#soundLab.hc-mantra-open #hcMantraEntranceV216{display:none}',
@@ -39,11 +39,11 @@ hub.id='hcMantraHubV216';hub.hidden=true;
 hub.setAttribute('aria-label','Mantra and chanting recordings');
 hub.innerHTML=
  '<div class="hc-mantra-head"><h3>Mantra &amp; Chanting</h3><button type="button" class="hc-mantra-back" id="hcMantraBackV216">← Sounds</button></div>'+
- '<div class="hc-mantra-item"><h4>Mantra Bed · 8 min</h4><p>Existing HeartClear audio. Not your original long OM recording.</p><button type="button" data-mantra-play="mantra">▶ Play audio</button></div>'+
- '<div class="hc-mantra-item hc-mantra-original"><h4>OM Chanting &amp; Singing Bowls</h4><p>Your original Drive MP4 is preserved. Audio-only WAV and mobile playback copies have not yet been extracted.</p><a href="https://drive.google.com/file/d/11ogtK6FopRz-g8o-gHLY6-TV4fTJ5GjN/view" target="_blank" rel="noopener noreferrer">View original recording ↗</a></div>'+
- '<div class="hc-mantra-item"><h4>Acoustic Bansuri · flute</h4><p>Existing HeartClear audio recording, separate from the Krishna video.</p><button type="button" data-mantra-play="organicBansuri">▶ Play audio</button></div>'+
- '<div class="hc-mantra-item hc-mantra-original"><h4>Krishna Flute · 66 min</h4><p>Original Drive video preserved. Native audio-only file not yet available.</p><a href="https://drive.google.com/file/d/1jyI0O3Tib36sKTdhohU4iQ2CbUuSJLCc/view" target="_blank" rel="noopener noreferrer">View original recording ↗</a></div>'+
- '<p class="hc-mantra-note" role="status" id="hcMantraStatusV216">One audio player at a time. Use the bottom mini-player to pause, seek or continue while browsing.</p>';
+ '<div class="hc-mantra-item hc-mantra-original"><h4>OM Chanting &amp; Singing Bowls · 3:33:33</h4><p>Full original recording · play inside HeartClear.</p><button type="button" data-mantra-drive="hinduOm">▶ Listen · 3h 33m</button></div>'+
+ '<div class="hc-mantra-item"><h4>Mantra Bed · 8 min</h4><p>Separate short audio.</p><button type="button" data-mantra-play="mantra">▶ Play audio</button></div>'+
+ '<div class="hc-mantra-item"><h4>Acoustic Bansuri · flute</h4><p>Instrumental audio.</p><button type="button" data-mantra-play="organicBansuri">▶ Play audio</button></div>'+
+ '<div class="hc-mantra-item hc-mantra-original"><h4>Krishna Flute · 66 min</h4><p>Original video · play inside HeartClear.</p><button type="button" data-mantra-drive="hinduKrishnaFlute">▶ Listen here</button></div>'+
+ '<p class="hc-mantra-note" role="status" id="hcMantraStatusV216">The full OM file is an MP4 with audio. A separate WAV or MP3 has not been published.</p>';
 header.insertAdjacentElement('afterend',entrance);
 entrance.insertAdjacentElement('afterend',hub);
 function setOpen(on){
@@ -80,8 +80,34 @@ hub.querySelectorAll('[data-mantra-play]').forEach(button=>{
  });
 });
 const drive=window.openHcDriveMedia;
+function hcPlayOriginalMantraVideo(key){
+ if(typeof drive!=='function')return;
+ const status=document.getElementById('hcMantraStatusV216');
+ try{
+  drive(key,'soundLab'); // HeartClear's EXISTING in-app player, not a new Drive tab.
+  if(typeof hcDriveBackScreen!=='undefined')hcDriveBackScreen='soundLab';
+  const panel=document.getElementById('hcDriveMedia');
+  if(panel){
+   panel.classList.toggle('hc-long-om-original',key==='hinduOm');
+   panel.classList.add('hc-mantra-original-preview');
+   const title=document.getElementById('hcDriveVideoTitle');
+   if(title && key==='hinduOm')title.textContent='OM Chanting & Singing Bowls · 3:33:33';
+   const meta=document.getElementById('hcDriveVideoCategory');
+   if(meta)meta.textContent=key==='hinduOm'?'Full original recording · audio in MP4':'Original recording · audio in video';
+   const state=document.getElementById('hcDriveVideoStatus');
+   if(state)state.textContent='Listen inside HeartClear. Tap Play once if your browser requires it.';
+  }
+ }catch(e){
+  if(status)status.textContent='Could not open the recording. Check your connection.';
+ }
+}
+hub.querySelectorAll('[data-mantra-drive]').forEach(button=>{
+ button.addEventListener('click',()=>hcPlayOriginalMantraVideo(button.getAttribute('data-mantra-drive')));
+});
 if(typeof drive==='function')window.openHcDriveMedia=function(key,from){
- if(key==='hinduOm'||key==='hinduKrishnaFlute')return openHub();
+ if(key==='hinduOm'||key==='hinduKrishnaFlute')return hcPlayOriginalMantraVideo(key);
+ const panel=document.getElementById('hcDriveMedia');
+ if(panel)panel.classList.remove('hc-long-om-original','hc-mantra-original-preview');
  return drive.apply(this,arguments);
 };
 window.hcOpenOmVoice=openHub;
