@@ -1,5 +1,5 @@
 /* HeartClear minimized Google Drive player regression — no network/media requests.
- * Run: node human-practice-prototype/tests/hc-drive-minimize-v284.cjs
+ * Run: node human-practice-prototype/tests/hc-drive-minimize-v282.cjs
  */
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
@@ -14,11 +14,11 @@ assert.match(source,/hc-ot-collapsed iframe\{position:relative/);
 assert.doesNotMatch(source,/hc-ot-collapsed iframe\{position:absolute!important;width:1px/);
 assert.match(source,/hc-ot-resume/);
 assert.match(source,/heartclearDriveLastOpenV1/);
-assert.match(html,/hc-playback-one-tap-v174\.js\?v=282/);
-assert.match(html,/register\('\.\/sw\.js\?v=282'\)/);
+assert.match(html,/hc-playback-one-tap-v174\.js\?v=284/);
+assert.match(html,/register\('\.\/sw\.js\?v=284'\)/);
 assert.match(sw,/const APP_CACHE='heartclear-v284'/);
 assert.match(sw,/const MEDIA_CACHE='heartclear-media-v1'/);
-assert.match(sw,/hc-playback-one-tap-v174\.js\?v=282/);
+assert.match(sw,/hc-playback-one-tap-v174\.js\?v=284/);
 const memory=new Map();
 function launch(){
  const els=new Map();
