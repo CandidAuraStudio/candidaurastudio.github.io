@@ -5,40 +5,62 @@
  if(!home||!bubble||document.getElementById('hcCorePathsClassic'))return;
  const faith=[['islam','Qur’an',''],['bible','Bible',''],['hindu','Hindu','']];
  const paths=[['books','Books','All reading and audiobooks'],['audio','Audio Journeys','Meditation and listening'],['kitchen','Kitchen','Cooking and heritage recipes'],['human','Human Journey','Daily care and attention'],['nature','Nature Sounds','Forest, flute and rain'],['explore','More','All HeartClear experiences']];
+ // Three Home scripture chips take the reader to the *existing* live control,
+ // never an empty position or a new copy of the media player.
+ function scriptureStatus(message){
+  const status=document.getElementById('hcCorePathStatus');
+  if(status)status.textContent=message;
+ }
+ function openScripture(key){
+  const destinations={
+   islam:{id:'hcQuranFirst',control:'hcqPlay',label:'Qur’an'},
+   bible:{id:'hcGenesisCard',control:'hcGenPlay',label:'Bible'},
+   hindu:{id:'hcHinduHome',control:null,label:'Bhagavad Gita'}
+  };
+  const config=destinations[key];if(!config)return;
+  // Hidden bubble/detail Home modes must be exited BEFORE targeting any of
+  // the scripture cards. This also deliberately avoids clicking Play.
+  if(typeof window.hcBubbleHome?.classic==='function')window.hcBubbleHome.classic();
+  else window.show?.('home');
+  const target=document.getElementById(config.id);
+  function unavailable(){
+   if(key==='islam'&&typeof window.hcOpenQuranStudy==='function'){
+    window.hcOpenQuranStudy();
+    scriptureStatus('Opened Qur’an study because its Home player was unavailable.');
+    return;
+   }
+   if(key==='hindu'&&typeof window.hcOpenGitaVoice==='function'){
+    window.hcOpenGitaVoice();
+    scriptureStatus('Opened Bhagavad Gita listening because its Home player was unavailable.');
+    return;
+   }
+   scriptureStatus(config.label+' player is unavailable. Please check that the section has loaded.');
+  }
+  if(!target){unavailable();return}
+  // show('home') resets scroll to the top; let both layout and screen state
+  // settle before jumping. Avoid a smooth scroll that can land mid-way on
+  // Android Chrome when the user taps another scripture quickly.
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+   if(!home.classList.contains('active')||!target.isConnected||!target.getClientRects().length){
+    unavailable();return;
+   }
+   target.scrollIntoView({behavior:'auto',block:'start'});
+   const control=config.control?document.getElementById(config.control):
+     target.querySelector('.hc-hindu-play');
+   if(control&&target.contains(control))control.focus({preventScroll:true});
+   scriptureStatus(config.label+' player ready. Choose Play or Read.');
+  }));
+ }
  function go(key){
   try{switch(key){
-   case 'islam':{
-    // Open the complete Qur'an listening controls on Home. Adhkar stays separate.
-    window.show?.('home');
-    const player=document.getElementById('hcQuranFirst');
-    const directory=document.getElementById('hcqBrowse');
-    if(directory)directory.open=true;
-    player?.scrollIntoView({behavior:'smooth',block:'start'});
-    document.getElementById('hcqPlay')?.focus({preventScroll:true});
-    break;
-   }
-   case 'bible':{
-    window.show?.('home');
-    const card=document.getElementById('hcGenesisCard');
-    const chapterMenu=document.getElementById('hcGenSelect')?.closest('details');
-    if(chapterMenu)chapterMenu.open=true;
-    card?.scrollIntoView({behavior:'smooth',block:'start'});
-    document.getElementById('hcGenPlay')?.focus({preventScroll:true});
-    break;
-   }
-   case 'hindu':{
-    window.show?.('home');
-    document.getElementById('hcHinduHome')?.scrollIntoView({behavior:'smooth',block:'center'});
-    document.querySelector('#hcHinduHome .hc-hindu-play')?.focus({preventScroll:true});
-    break;
-   }
+   case 'islam':case 'bible':case 'hindu':openScripture(key);break;
    case 'books':window.show?.('library');break;
    case 'audio':if(typeof window.hcOpenAllListening==='function')window.hcOpenAllListening();else window.openSoundLab?.();break;
    case 'kitchen':if(typeof window.hcBubbleHome?.recipe==='function')window.hcBubbleHome.recipe('');else window.hcFlow?.openExplore?.();break;
    case 'human':window.show?.('human');break;
    case 'nature':window.openSoundLab?.();break;
    case 'explore':window.hcFlow?.openExplore?.();break;
-  }}catch(e){const m=document.getElementById('hcCorePathStatus');if(m)m.textContent='This section did not open. Try Search.'}
+  }}catch(e){scriptureStatus('This section did not open. Please try again.')}
  }
  function make(id){
   const s=document.createElement('section');s.id=id;s.className='hc-core-paths';s.setAttribute('aria-label','Main HeartClear choices');
@@ -77,6 +99,32 @@
   curve.setAttribute('stroke-linecap','round');curve.setAttribute('stroke-linejoin','round');
   symbol.append(curve);bar.append(symbol);
   appLanguage.before(bar);bar.append(appLanguage);
+ }
+
+ // Match the existing white infinity logo on every normal route. Reuse the
+ // original SVG instead of adding another header or replacing its navigation.
+ const eyebrow=document.getElementById('hcCinemaEyebrow');
+ const existingInfinity=document.getElementById('hcHomeInfinity');
+ if(eyebrow&&existingInfinity&&!eyebrow.querySelector('svg')){
+  const mark=existingInfinity.cloneNode(true);
+  mark.removeAttribute('id');
+  mark.setAttribute('aria-hidden','true');
+  mark.removeAttribute('role');
+  mark.removeAttribute('aria-label');
+  eyebrow.textContent='HeartClear';
+  eyebrow.prepend(mark);
+  eyebrow.classList.add('hc-matched-wordmark');
+  const shared=document.createElement('style');
+  shared.id='hcScriptureSharedBrandCss';
+  shared.textContent=[
+   'body.hc-cinema #hcCinemaEyebrow.hc-matched-wordmark{display:flex!important;align-items:center!important;gap:9px!important;min-height:32px!important;text-transform:none!important;letter-spacing:normal!important;color:#fff!important;font:750 16px/1.3 system-ui!important}',
+   'body.hc-cinema #hcCinemaEyebrow.hc-matched-wordmark svg{display:block!important;width:43px!important;height:30px!important;flex:none!important;color:#fff!important}',
+   'body.hc-cinema #hcCinemaHero{background:#191919!important;background-image:none!important;backdrop-filter:none!important;box-shadow:none!important}',
+   'body.hc-cinema #hcCinemaHero :is(h1,p){overflow-wrap:normal!important}',
+   'body.hc-cinema #hcCinemaTitle{color:#fff!important}',
+   '@media(prefers-reduced-motion:reduce){body.hc-cinema #hcCinemaHero *{animation:none!important;transition:none!important}}'
+  ].join('\\n');
+  document.head.append(shared);
  }
  const normal=make('hcCorePathsClassic'),daily=home.querySelector('.hc-v139-daily')||home.querySelector('.hc-home-greeting-row');
  if(daily)daily.before(normal);else home.prepend(normal);
