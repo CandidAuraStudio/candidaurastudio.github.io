@@ -2421,6 +2421,20 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
 .hc-human-reading-copy p{font-size:12px;line-height:1.45;margin:0 0 10px;color:#b2bec3}
 .hc-human-reading-link{display:inline-flex;align-items:center;color:#15181c!important;background:#e8c58e;text-decoration:none;font-weight:700;font-size:13px;border-radius:11px;padding:11px 14px;min-height:42px}
 @media(max-width:365px){.hc-human-reading-entry img{width:80px;min-width:80px}.hc-human-reading-copy h3{font-size:16px}}
+
+/* Acoustic Earth review: entirely opt-in; does not start playback on navigation. */
+.hc-acoustic-earth{margin:12px 0 17px;padding:18px;border:1px solid rgba(218,226,231,.12);border-radius:20px;background:linear-gradient(155deg,rgba(26,47,54,.8),rgba(7,20,29,.72))}
+.hc-acoustic-earth h3{font-size:19px;font-weight:650;letter-spacing:-.025em;margin:7px 0 5px;color:var(--ink)}
+.hc-acoustic-earth p{margin:0;color:var(--muted);font-size:12px;line-height:1.55}
+.hc-acoustic-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:13px}
+.hc-acoustic-actions button{min-height:51px;display:flex;align-items:center;justify-content:space-between;gap:7px;padding:10px 12px;text-align:left;border-radius:13px;background:rgba(8,22,32,.65);border:1px solid rgba(209,223,232,.16);color:var(--ink);font:inherit;font-size:12px}
+.hc-acoustic-action-icon{display:grid;place-items:center;flex:0 0 29px;height:29px;border-radius:50%;background:#fff;color:#0c2531;font-size:12px}
+.hc-acoustic-earth .hc-acoustic-next{margin:13px 0 8px;color:var(--muted);font-size:11px}
+.hc-acoustic-explore{display:flex;align-items:center;justify-content:space-between;width:100%;border:none;background:transparent;color:#d9b978;padding:9px 0 0;text-align:left;font:inherit;font-weight:650;font-size:12px}
+.hc-acoustic-actions button:focus-visible,.hc-acoustic-explore:focus-visible{outline:2px solid #e9c48d;outline-offset:3px}
+@media(max-width:355px){.hc-acoustic-actions{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.hc-acoustic-earth *{animation:none!important;transition:none!important}}
+
 </style>
 <link rel="stylesheet" href="./quran-study.css?v=232">
 </head>
@@ -3589,6 +3603,17 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
     <h2>Sounds</h2>
     <p>Nature, calm music and your own mixes.</p>
   </header>
+  <section class="hc-acoustic-earth" aria-label="Acoustic Earth real instrument collection">
+    <div class="kicker">ACOUSTIC EARTH · ORIGINAL RECORDINGS</div>
+    <h3>Real instruments. Real spaces.</h3>
+    <p>Listen to recorded air, wood and natural resonance. No synthetic instrument replacements.</p>
+    <div class="hc-acoustic-actions">
+      <button type="button" onclick="hcPlaySoundFromRow('bansuri15')" aria-label="Play 15-minute original acoustic bansuri edition"><span>Acoustic bansuri</span><span class="hc-acoustic-action-icon" aria-hidden="true">▶</span></button>
+      <button type="button" onclick="hcPlaySoundFromRow('dudukApril')" aria-label="Play a recorded Armenian duduk improvisation"><span>Armenian duduk</span><span class="hc-acoustic-action-icon" aria-hidden="true">▶</span></button>
+    </div>
+    <p class="hc-acoustic-next">Pipe organ · Piano · Cello — planned, pending authentic recordings and reuse rights.</p>
+    <button type="button" class="hc-acoustic-explore" onclick="hcFilterSounds('acoustic')">Explore acoustic recordings <span aria-hidden="true">›</span></button>
+  </section>
   <div class="hc-sound-routes" aria-label="Other listening collections">
     <button onclick="show('sacred')"><span class="hc-route-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3v18M3 12h18M6 6l12 12M18 6 6 18"/></svg></span><span><b>Sacred listening</b><small>Traditions and prayer</small></span></button>
     <button onclick="openFearPractice()"><span class="hc-route-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></span><span><b>Sound familiarity</b><small>Listen at your pace</small></span></button>
@@ -3598,6 +3623,7 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
     <button data-filter="nature" onclick="hcFilterSounds('nature')" aria-pressed="false">Nature</button>
     <button data-filter="ambient" onclick="hcFilterSounds('ambient')" aria-pressed="false">Ambient</button>
     <button data-filter="flute" onclick="hcFilterSounds('flute')" aria-pressed="false">Flute</button>
+    <button data-filter="acoustic" onclick="hcFilterSounds('acoustic')" aria-pressed="false">Acoustic</button>
     <button data-filter="mixes" onclick="hcFilterSounds('mixes')" aria-pressed="false">Mixes</button>
     <button data-filter="favourites" onclick="hcFilterSounds('favourites')" aria-pressed="false">Favourites</button>
   </div>
@@ -7143,6 +7169,8 @@ const hcSoundSections={
   nature:['birds','fire','rain','ocean','storm','thunder','foreststream','treewind','windfield','nightforest','countryside','frogswater','forestRambouillet','forestFour']
 };
 const hcSoundListKeys=[...hcSoundSections.mixes,...hcSoundSections.nature,...hcSoundSections.ambient,...hcSoundSections.flute];
+// A second view of verified acoustic tracks; the original Nature, Flute, Ambient and Mixes categories remain unchanged.
+const hcAcousticKeys=['dudukApril','dudukFolk','organicBansuri','bansuri7','bansuri10','bansuri15'];
 let hcSoundsCurrentFilter='all';
 const hcSoundDurations=Object.create(null);
 function hcSoundCategory(key){
@@ -7176,6 +7204,7 @@ function hcRenderSoundRows(){
   const visible=hcSoundListKeys.filter(key=>{
     if(hcSoundsCurrentFilter==='all')return true;
     if(hcSoundsCurrentFilter==='favourites')return favs.some(v=>v.kind==='soundlab'&&v.key===key);
+    if(hcSoundsCurrentFilter==='acoustic')return hcAcousticKeys.includes(key);
     return hcSoundCategory(key)===hcSoundsCurrentFilter;
   });
   const count=document.getElementById('hcSoundCount');
@@ -7262,14 +7291,14 @@ function hcPlaySoundFromRow(key){
   }else start();
 }
 function hcFilterSounds(filter){
-  if(!['all','nature','ambient','flute','mixes','favourites'].includes(filter))filter='all';
+  if(!['all','nature','ambient','flute','acoustic','mixes','favourites'].includes(filter))filter='all';
   hcSoundsCurrentFilter=filter;
   document.querySelectorAll('#hcSoundFilters [data-filter]').forEach(button=>{
     const yes=button.dataset.filter===filter;
     button.classList.toggle('active',yes);button.setAttribute('aria-pressed',String(yes));
   });
   const card=document.getElementById('hcMixCard');
-  if(card)card.hidden=filter==='favourites'||filter==='flute'||filter==='ambient';
+  if(card)card.hidden=['favourites','flute','ambient','acoustic'].includes(filter);
   hcRenderSoundRows();
 }
 function hcShowSoundCredits(key){
