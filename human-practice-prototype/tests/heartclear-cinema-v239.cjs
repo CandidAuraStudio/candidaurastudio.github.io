@@ -15,7 +15,7 @@ const BASE='http://127.0.0.1:8765/human-practice-prototype/';
    assert.equal(await page.locator('body').evaluate(el=>el.classList.contains('hc-cinema')),true,'Shared theme did not initialize');
    assert.equal(await page.locator('#hcFlowDock button').count(),6,'Exactly six universal navigation controls');
    assert.equal(await page.locator('#hcFlowDockHome img').getAttribute('src'),'./icon.svg');
-   const nav=['hcFlowDockHome','hcFlowDockListen','hcCinemaExplore','hcCinemaLibrary','hcFlowDockSearch','hcCinemaSettings'];
+   const nav=['hcFlowDockHome','hcFlowDockListen','hcCinemaExplore','hcCinemaLibrary','hcCinemaReels','hcCinemaSettings'];
    for(const id of nav)assert.equal(await page.locator('#'+id).isVisible(),true,id+' hidden');
    const geometry=await page.locator('#hcFlowDock').evaluate(el=>{
     const r=el.getBoundingClientRect();
@@ -35,7 +35,8 @@ const BASE='http://127.0.0.1:8765/human-practice-prototype/';
    await page.locator('#hcCinemaExplore').click();
    assert.equal(await page.locator('#hcFlowExplore').evaluate(el=>el.hidden),false);
    await page.locator('#hcFlowExploreClose').click();
-   await page.locator('#hcFlowDockSearch').click();
+   // Reels now occupies the bottom destination; preserve Search engine separately.
+   await page.locator('#hcBubbleSearch').evaluate(button=>button.click());
    await page.locator('#hcBubbleSearchPanel:not([hidden])').waitFor();
    await page.locator('#hcBubbleSearchInput').fill('burger');
    assert.ok(await page.locator('#hcBubbleResults button').count()>0);
@@ -70,7 +71,7 @@ const BASE='http://127.0.0.1:8765/human-practice-prototype/';
    await page.locator('#hcGuidedSettings').click();
    assert.equal(await page.locator('#optionsPanel').evaluate(el=>el.classList.contains('open')),true);
    assert.deepEqual(errors,[],'Unexpected JavaScript errors');
-   console.log('PASS: cinematic '+width+'px — 6-icon dock, Settings, Explore, Search, '+(ids.length-1)+' screens, playback controls');
+   console.log('PASS: cinematic '+width+'px — 6-icon dock, Settings, Explore, Reels, Search engine, '+(ids.length-1)+' screens, playback controls');
    await page.close();
   }
  }finally{await browser.close()}
