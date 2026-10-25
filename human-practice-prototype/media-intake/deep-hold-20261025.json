@@ -4,10 +4,10 @@
   "title": "Deep Hold",
   "requested_display_duration": "17 min",
   "original_filename": "videoplayback (9).mp4",
-  "upload_status": "source_not_found_in_connected_drive",
-  "media_available": false,
+  "upload_status": "found_in_connected_google_drive_original_verified",
+  "media_available": true,
   "playable": false,
-  "source_drive_file_id": null,
+  "source_drive_file_id": "1I-DTKONkn-cbg0n-hst0iKldgnOJ6b-J",
   "source_media_url": null,
   "original_video_unchanged": true,
   "original_audio_unchanged": true,
@@ -15,13 +15,30 @@
   "no_voice_filtering": true,
   "redistribution_permission_verified": false,
   "reviewed_for_release": false,
-  "note": "Intake record only. Do not display a play action or release this entry without identifying and verifying the user's exact source and reviewing permissions.",
+  "note": "Exact original found under Drive > Meditation (trailing space), not the empty HeartClear — Breathwork (10 New Uploads) subfolder. Kept nonplayable for public release until rights and safety review. Do not replace or process original background audio.",
   "source_creator_reference": "Breathe With Sandy (shown in user's video screenshot)",
   "source_title_reference": "(Resilience) Psychedelic Breathwork — 5 Rounds of Guided Rhythmic Breathing (screenshot reference)",
   "source_expected_size_display": "44.95 MB (Android screenshot; exact bytes unverified)",
-  "verified_duration_seconds": null,
-  "verified_sha256": null,
+  "verified_duration_seconds": 1031.058866,
+  "verified_sha256": "755969e2218fc511590bf37afdecec39a024a0124c08e5a9aff19fc9b46545b1",
   "audio_derivative_created": false,
   "audio_conversion_requirement": "Retain original soundtrack, music and environmental/background sound; no noise cancellation, dynamic processing or voice replacement. Any MP3 export requires source permission and separate verification.",
-  "rights_status": "publisher redistribution permission not confirmed"
+  "rights_status": "publisher redistribution permission not confirmed",
+  "source_size_bytes": 44947258,
+  "uploaded_to_drive_utc": "2026-10-25T17:50:50.394Z",
+  "verified_duration_display": "17:11",
+  "verified_streams": {
+    "video": {
+      "codec": "h264",
+      "width": 640,
+      "height": 360
+    },
+    "audio": {
+      "codec": "aac",
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "unchanged": true
+    }
+  },
+  "source_verified": true
 }
