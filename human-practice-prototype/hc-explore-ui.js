@@ -152,7 +152,9 @@
    if(target.matches('select')){language=target.value;stopVoice();const panel=dialog.querySelector('#hcxVoicePanel');if(panel)panel.hidden=true;status('Voice language changed. Tap Speak when ready.');}
   });
  dialog.addEventListener('cancel',event=>{event.preventDefault();close();});
- dialog.addEventListener('close',()=>{if(dialog.innerHTML)reset();});
+ // A close event is dispatched asynchronously. If a new Explore session has
+ // already been opened, do not let its old close event wipe the new questions.
+ dialog.addEventListener('close',()=>{if(!dialog.open&&dialog.innerHTML)reset();});
  trigger.addEventListener('click',()=>{reset();render();dialog.showModal();dialog.querySelector('#hcxTitle')?.focus();});
  document.addEventListener('visibilitychange',()=>{if(document.hidden){stopVoice();const panel=dialog.querySelector('#hcxVoicePanel');if(panel)panel.hidden=true;status('Microphone stopped. Tap Speak when ready.');}});
  window.addEventListener('pagehide',()=>{if(dialog.open)close();else reset();});
