@@ -61,7 +61,13 @@ function list(){
  add(record('book-ta','Shadows of Truth · Tamil audiobook','Resume saved chapter · native audio','books','book','ta'));
  return all;
 }
-function choose(cat){current=cat;tabs.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.category===cat)));render()}
+function choose(cat){
+ current=cat;
+ search.value='';
+ tabs.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.category===cat)));
+ say('');
+ render();
+}
 groups.forEach(([category,title])=>{
  const b=document.createElement('button');b.type='button';b.dataset.category=category;b.textContent=title;b.setAttribute('aria-pressed',String(category==='all'));b.addEventListener('click',()=>choose(category));tabs.appendChild(b);
 });
@@ -92,7 +98,7 @@ function render(){
  if(current==='all'){['meditation','breathing','islamic','hindu','quran','nature','books','buddhist'].forEach(cat=>results.append(section(cat,all.filter(x=>x.category===cat),3)))}
  else results.append(section(current,all.filter(x=>x.category===current)));
 }
-function say(text){status.textContent=text}
+function say(text){status.textContent=text;status.hidden=!text}
 function play(item){
  try{
   if(item.kind==='audio'){
@@ -139,11 +145,18 @@ function synchronize(){
  }
 }
 const originalShow=window.show;
-window.show=function(){const out=originalShow.apply(this,arguments);synchronize();return out};
+window.show=function(){
+ const entering=arguments[0]==='hcListening'&&!$('hcListening').classList.contains('active');
+ const out=originalShow.apply(this,arguments);
+ if(entering){choose('all');window.scrollTo(0,0)}
+ synchronize();
+ return out;
+};
 window.hcOpenAllListening=function(){
  if(typeof hcCloseMiniLibrary==='function')hcCloseMiniLibrary();
- if(!$('hcListening').classList.contains('active')){window.show('hcListening');render();window.scrollTo(0,0)}
- else synchronize();
+ if(!$('hcListening').classList.contains('active'))window.show('hcListening');
+ else{choose('all');synchronize()}
+ window.scrollTo(0,0);
 };
 const headphone=$('hcFlowDockListen');
 headphone.setAttribute('aria-label','All listening');headphone.title='All Listening';
@@ -152,6 +165,9 @@ document.addEventListener('click',event=>{
  event.preventDefault();event.stopImmediatePropagation();window.hcOpenAllListening();
 },true);
 search.addEventListener('input',render);
-window.addEventListener('pageshow',synchronize);
-render();synchronize();
+window.addEventListener('pageshow',()=>{
+ if($('hcListening').classList.contains('active'))choose('all');
+ synchronize();
+});
+render();say('');synchronize();
 })();
