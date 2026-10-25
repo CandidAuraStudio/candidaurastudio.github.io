@@ -73,13 +73,13 @@ groups.forEach(([category,title])=>{
 });
 function itemButton(item){
  const b=document.createElement('button');b.type='button';b.className='hcl-record';b.dataset.record=item.id;
- const icon=document.createElement('span');icon.className='hcl-record-icon';icon.textContent=item.kind==='drive'?'▣':'▶';
+ const icon=document.createElement('span');icon.className='hcl-record-icon';icon.textContent='▶';
  const info=document.createElement('span');info.className='hcl-record-info';
  const title=document.createElement('strong');title.textContent=item.name;
  const desc=document.createElement('small');desc.textContent=item.detail;
  info.append(title,desc);
- const action=document.createElement('span');action.className='hcl-record-action';action.textContent=item.kind==='drive'?'Video':'Play';
- b.append(icon,info,action);b.setAttribute('aria-label',(item.kind==='drive'?'Open video ':'Play ')+item.name);
+ const action=document.createElement('span');action.className='hcl-record-action';action.textContent='Play';
+ b.append(icon,info,action);b.setAttribute('aria-label','Play '+item.name+(item.kind==='drive'?' in the embedded video player':''));
  b.addEventListener('click',()=>play(item));return b;
 }
 function section(cat,items,limit=0){
@@ -109,11 +109,16 @@ function play(item){
    const p=hcInlineToggleAdhkar();if(p?.catch)p.catch(()=>say('Unable to play Morning Adhkar.'));
    say('Morning Adhkar selected · pause from the mini-player.');
   }else if(item.kind==='drive'){
-   // Drive MP4 cannot be represented as a working native audio waveform.
+   // Keep the headphones page active BEFORE opening the floating Drive player.
+   // Previously, show('hcListening') ran AFTER opening and immediately minimized
+   // the new iframe, making the Play tap appear to do nothing on mobile.
+   if(!$('hcListening').classList.contains('active'))window.show('hcListening');
    const fn=window.hcOpenDriveDock||window.openHcDriveMedia;
    if(typeof fn!=='function')throw Error('Video player unavailable');
    fn(item.key,'hcListening');
-   say('Original video selected · use its embedded controls.');
+   const drive=$('hcOneTapDrive');
+   if(drive&&!drive.hidden&&drive.classList.contains('hc-ot-collapsed'))$('hcOtMinimize')?.click();
+   say('Player opened · tap Play inside the video if your browser blocks autoplay.');
   }else if(item.kind==='gita'){
    window.hcOpenGitaVoice?.(1);say('Bhagavad Gita voice selected.');
   }else if(item.kind==='practice'){
@@ -129,7 +134,7 @@ function play(item){
    say('Audiobook selected · saved chapter '+chapter);
   }
   // All Listening remains the destination, even when a legacy player opens a screen.
-  if(!$('hcListening').classList.contains('active')&&item.kind!=='gita')window.show('hcListening');
+  if(!$('hcListening').classList.contains('active')&&item.kind!=='gita'&&item.kind!=='drive')window.show('hcListening');
   if(typeof renderGlobalMini==='function')renderGlobalMini();
  }catch(e){say('Unable to open the selected recording.')}
 }
@@ -140,8 +145,6 @@ function synchronize(){
   $('hcFlowDockListen')?.setAttribute('aria-current','page');
   const om=$('hcOmMiniV252');
   if(om&&!om.hidden&&om.dataset.mode==='failed')$('hcomClose')?.click();
-  const drive=$('hcOneTapDrive');
-  if(drive&&!drive.hidden&&!drive.classList.contains('hc-ot-collapsed'))$('hcOtMinimize')?.click();
  }
 }
 const originalShow=window.show;
