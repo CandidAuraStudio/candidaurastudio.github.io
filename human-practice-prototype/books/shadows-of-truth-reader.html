@@ -48,7 +48,8 @@ els('bookTitle').textContent=lang==='ta'?'உண்மையின் நிழ�
 els('bookMeta').textContent=lang==='ta'?'மனம் vs உடல் · முழு தமிழ் வாசிப்புப் பதிப்பு · 60 அத்தியாயங்கள்':'A Memoir of Mind vs Body · Full English reading text';
 const script=document.createElement('script');script.src=source;
 script.onload=()=>{
- const pages=lang==='ta'?window.HeartClearShadowsTamil:window.HeartClearShadowsEnglish;
+ const loadedPages=lang==='ta'?window.HeartClearShadowsTamil:window.HeartClearShadowsEnglish;
+ const pages=Array.isArray(loadedPages)?loadedPages.filter(p=>typeof p==='string'&&p.trim().length>0):null;
  if(!Array.isArray(pages)||pages.length<200){els('content').textContent='The book text is unavailable.';return}
  state.page=Math.max(0,Math.min(state.page,pages.length-1));
  const jump=els('jump'),span=document.createDocumentFragment();
