@@ -135,31 +135,38 @@ const assert = require('node:assert/strict');
       'Sacred practice catalog now includes Adhkar, Fatiha, and Allahu; do not treat growth as a regression');
     assert.equal(await page.locator('#practices [data-group="guided"]').evaluate(el=>el.hidden),true);
     await page.locator('#practices [data-session="islamHu"]').evaluate(el=>el.click());
-    assert.ok(await page.locator('#hcDriveMedia').evaluate(el=>el.classList.contains('active')));
-    assert.match(await page.locator('#hcDriveVideoTitle').innerText(),/Allahu Meditation/);
-    assert.ok(await page.locator('#hcDriveMedia').evaluate(el=>el.classList.contains('hc-drive-audio-view')),
-      'Drive listening should start in compact audio-focused view');
-    assert.equal(await page.locator('#hcDriveVideoFrame').getAttribute('src'),'https://drive.google.com/file/d/11Sgca-PXcd4-5DRaPQPslynyc7QtkVYx/preview?autoplay=1','Allahu video starts only after its card is tapped');
-    assert.equal(await page.locator('#hcDriveOpenSource').getAttribute('href'),'https://drive.google.com/file/d/11Sgca-PXcd4-5DRaPQPslynyc7QtkVYx/view');
-    const beforeDock=await page.locator('#hcDriveVideoFrame').getAttribute('src');
-    await page.locator('#hcDriveMedia .hc-drive-minimize').evaluate(el=>el.click());
-    const dock=await page.locator('#hcDriveMedia').evaluate(el=>{
-      const rect=el.getBoundingClientRect();
-      return {width:rect.width,height:rect.height,docked:el.classList.contains('hc-drive-docked'),
-        iframeStillMounted:!!document.getElementById('hcDriveVideoFrame')?.getAttribute('src'),
-        visibleLabel:getComputedStyle(el.querySelector('.hc-drive-mini-label')).display};
+    // The original Drive recording opens in the existing floating player,
+    // not an obsolete full-screen hcDriveMedia route.
+    const drive=page.locator('#hcOneTapDrive');
+    assert.equal(await drive.evaluate(el=>el.hidden),false,'One-tap Drive player must open');
+    assert.match(await page.locator('#hcOtTitle').innerText(),/Hu Hu Hu Allah/);
+    const expectedDrivePreview='https://drive.google.com/file/d/11Sgca-PXcd4-5DRaPQPslynyc7QtkVYx/preview?autoplay=1';
+    assert.equal(await page.locator('#hcOtFrame').getAttribute('src'),expectedDrivePreview,
+      'Original Google Drive recording must load without a second Begin');
+    assert.equal(await page.locator('#hcOtSource').getAttribute('href'),
+      'https://drive.google.com/file/d/11Sgca-PXcd4-5DRaPQPslynyc7QtkVYx/view');
+    assert.ok(await page.locator('#practices').evaluate(el=>el.classList.contains('active')),
+      'Drive dock should not disrupt the original practice page');
+    await page.locator('#hcOtMinimize').evaluate(el=>el.click());
+    const compact=await drive.evaluate(el=>{
+      const r=el.getBoundingClientRect(),frame=el.querySelector('iframe');
+      return {collapsed:el.classList.contains('hc-ot-collapsed'),width:r.width,height:r.height,
+        thumbnail:getComputedStyle(frame).opacity,frameSrc:frame.getAttribute('src')};
     });
-    assert.ok(dock.docked && dock.height<=75 && dock.width<=292,
-      'Google Drive floating view should be a short, narrow audio-focused strip');
-    assert.notEqual(dock.visibleLabel,'none');
-    assert.equal(await page.locator('#hcDriveVideoFrame').getAttribute('src'),beforeDock,
-      'Minimizing must not restart or replace original Google Drive frame');
-    await page.locator('#hcDriveMedia .hc-drive-expand').evaluate(el=>el.click());
-    assert.ok(await page.locator('#hcDriveMedia').evaluate(el=>el.classList.contains('active')),
-      'Expand returns to full controls without changing the iframe');
-    console.log('PASS: minimized Drive playback no longer covers Home and stays mounted');
-    await page.locator('#hcDriveMedia button').first().evaluate(el=>el.click());
-    assert.ok(await page.locator('#practices').evaluate(el=>el.classList.contains('active')),'Return from devotional video should go to Practice');
+    assert.ok(compact.collapsed&&compact.width<=370&&compact.height<=155,
+      'Minimize must leave a compact visible Drive preview above nav');
+    assert.equal(compact.thumbnail,'1','Video thumbnail should not disappear into a hidden 1px iframe');
+    assert.equal(compact.frameSrc,expectedDrivePreview,'Minimize must not reload the original recording');
+    assert.equal((await page.locator('#hcOtMinimize').innerText()).trim(),'Resume');
+    await page.locator('#hcOtMinimize').evaluate(el=>el.click());
+    assert.equal(await drive.evaluate(el=>el.classList.contains('hc-ot-collapsed')),false,
+      'Resume expands the same existing Drive player');
+    assert.equal(await page.locator('#hcOtFrame').getAttribute('src'),expectedDrivePreview);
+    await page.locator('#hcOtClose').evaluate(el=>el.click());
+    assert.equal(await drive.evaluate(el=>el.hidden),true,'Close hides the floating Drive dock');
+    assert.ok(await page.locator('#practices').evaluate(el=>el.classList.contains('active')),
+      'Closing a Drive recording returns to underlying Practice');
+    console.log('PASS: Drive one-tap, visible minimized preview, Resume and explicit Close');
     await page.evaluate(()=>{show('sacred');openSacred('islamic')});
     const sacredDrive=await page.locator('#hcSacredDriveCards').innerText();
     assert.match(sacredDrive,/Hu Hu Hu Allah/,'Original Islamic video entry must remain');
