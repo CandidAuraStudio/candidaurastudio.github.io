@@ -19,9 +19,9 @@ style.textContent=[
 '#hcOneTapDrive.hc-ot-collapsed .hc-ot-head strong{font-size:11px;line-height:1.3;white-space:normal;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}',
 '#hcOneTapDrive .hc-ot-restore-note{display:none}',
 '#hcOneTapDrive.hc-ot-collapsed .hc-ot-restore-note{grid-column:2;grid-row:2;display:block;margin:0;color:#dedede;font:500 11px/1.4 system-ui}',
-'#hcOneTapDrive.hc-ot-collapsed .hc-ot-minimize{width:72px;height:38px;font:700 11px system-ui;background:#fff;color:#111;border-color:#fff}',
+'#hcOneTapDrive.hc-ot-collapsed .hc-ot-resume{width:72px;height:38px;min-height:38px;padding:0 4px;border-radius:9px;font:700 11px system-ui;background:#fff;color:#111;border:1px solid #fff;cursor:pointer}',
 '#hcOneTapDrive.hc-ot-collapsed .hc-ot-close{width:32px;height:38px;font:700 18px system-ui}',
-'@media(max-width:350px){#hcOneTapDrive.hc-ot-collapsed{grid-template-columns:84px minmax(0,1fr)}#hcOneTapDrive.hc-ot-collapsed iframe{width:84px!important;height:75px!important;min-height:75px!important}#hcOneTapDrive.hc-ot-collapsed .hc-ot-head{grid-template-columns:minmax(0,1fr) 60px 30px}#hcOneTapDrive.hc-ot-collapsed .hc-ot-minimize{width:60px}}',
+'@media(max-width:350px){#hcOneTapDrive.hc-ot-collapsed{grid-template-columns:84px minmax(0,1fr)}#hcOneTapDrive.hc-ot-collapsed iframe{width:84px!important;height:75px!important;min-height:75px!important}#hcOneTapDrive.hc-ot-collapsed .hc-ot-head{grid-template-columns:minmax(0,1fr) 60px 30px}#hcOneTapDrive.hc-ot-collapsed .hc-ot-resume{width:60px}}',
 '#hcOneTapDrive iframe{display:block;width:100%;height:clamp(175px,45vw,225px);border:0;border-radius:9px;background:#000}',
 '#hcOneTapDrive .hc-ot-foot{display:flex;align-items:center;gap:9px;justify-content:space-between;margin-top:7px;font-size:11px;color:#d0d0d0;line-height:1.3}',
 '#hcOneTapDrive a{color:#fff;text-decoration:underline;white-space:nowrap}',
@@ -52,12 +52,16 @@ function storeDriveSelection(key){
 }
 function safeDriveItem(key){
  const items=typeof HC_DRIVE_COLLECTIONS==='undefined'?[]:HC_DRIVE_COLLECTIONS;
- return items.find(item=>item.key===key&&typeof item.id==='string'&&/^[-\\w]+$/.test(item.id))||null;
+ return items.find(item=>item.key===key&&typeof item.id==='string'&&/^[A-Za-z0-9_-]+$/.test(item.id))||null;
 }
 function setDriveMinimized(collapsed){
  if(!activeDriveKey)return;
  const isMinimized=!!collapsed;
  dock.classList.toggle('hc-ot-collapsed',isMinimized);
+ // A different class prevents legacy Listening CSS from shrinking "Resume"
+ // into its old 34px icon-only minimize button.
+ minimizeButton.classList.toggle('hc-ot-minimize',!isMinimized);
+ minimizeButton.classList.toggle('hc-ot-resume',isMinimized);
  minimizeButton.textContent=isMinimized?'Resume':'−';
  minimizeButton.setAttribute('aria-label',isMinimized?'Expand video to continue playing or seek':'Minimize video without closing it');
  minimizeButton.title=isMinimized?'Resume / expand this video':'Minimize; video stays visible in a small preview';
@@ -89,6 +93,8 @@ function closeDrive(){
  frame.removeAttribute('src');
  dock.hidden=true;
  dock.classList.remove('hc-ot-collapsed');
+ minimizeButton.classList.add('hc-ot-minimize');
+ minimizeButton.classList.remove('hc-ot-resume');
  document.body.classList.remove('hc-one-tap-drive-open');
  if(typeof renderGlobalMini==='function')queueMicrotask(renderGlobalMini);
 }
