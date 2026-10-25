@@ -263,12 +263,22 @@ const assert = require('node:assert/strict');
     assert.equal(rowStyle.height,44);
     console.log('PASS: all compact white playback controls and Sound row circles');
     await page.locator('[data-nav="library"]').evaluate(el=>el.click());
-    await page.locator('#library button[onclick*="books"]').evaluate(el=>el.click());
-    await page.locator('#collectionList button').filter({hasText:'Read English'}).evaluate(el=>el.click());
-    assert.ok(await page.locator('#bookReader').evaluate(el=>el.classList.contains('active')),'English reading route inactive');
-    assert.ok((await page.locator('#readerPage').innerText()).length>150,'Reader has no content');
-    console.log('PASS: Library Reading opens real book content');
-
+    // Reading Books now uses a language shelf and standalone original readers.
+    // Never replace original book files with the former inline placeholder.
+    await page.locator('#library button[onclick*="readingLanguages"]').evaluate(el=>el.click());
+    await page.locator('#collectionList button[onclick*="reading-en"]').evaluate(el=>el.click());
+    const firstBook=page.locator('#collectionList a[href*="shadows-of-truth-reader.html?lang=en"]');
+    assert.equal(await firstBook.count(),1,'Original English Shadows of Truth reader link must remain');
+    assert.ok((await page.locator('#collectionList').innerText()).includes('HUMAN — WHEN YOU ARE ALONE'),
+      'Original second English reading book must remain');
+    const reader=await page.evaluate(async()=>{
+      const res=await fetch('./books/shadows-of-truth-reader.html?lang=en');
+      const html=await res.text();
+      return {ok:res.ok,html:html.slice(0,60000)};
+    });
+    assert.ok(reader.ok&&reader.html.length>1500&&/Shadows of Truth|SHADOWS OF TRUTH/i.test(reader.html),
+      'Original standalone English reader must be accessible with real content');
+    console.log('PASS: Reading Books > English retains both books and the original reader');
     await page.locator('[data-nav="settings"]').evaluate(el=>el.click());
     await page.locator('#hcPlaybackChecks').evaluate(el=>el.open=true);
     await page.locator('#hcRunPlaybackCheckBtn').evaluate(el=>el.click());
