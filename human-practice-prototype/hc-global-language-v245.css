@@ -1,0 +1,32 @@
+/* HeartClear v245: one compact language switch, no Big view button. */
+#hcBubbleClassic{display:none!important}
+#home > #hcAppLanguageHome{
+  display:flex;align-items:center;justify-content:flex-end;gap:4px;
+  margin:4px 0 14px auto!important;padding:4px!important;
+  max-width:100%;width:max-content;
+  border:1px solid #83949e;border-radius:19px;background:#111b22;
+}
+body.hc-cinema #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail)>#hcAppLanguageHome{
+ display:flex!important;visibility:visible!important
+}
+.hc-app-lang-switch button{
+ appearance:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;
+ flex:0 0 auto;min-width:82px!important;min-height:44px!important;
+ padding:10px 12px!important;margin:0!important;
+ border:0!important;border-radius:14px!important;
+ background:transparent!important;color:#e0e8eb!important;
+ font:650 15px/1.3 system-ui!important;white-space:nowrap!important;
+ letter-spacing:0!important;touch-action:manipulation;
+}
+.hc-app-lang-switch button[aria-pressed="true"]{
+ background:#f1f1ee!important;color:#11222b!important;
+}
+.hc-app-lang-switch button:focus-visible{
+ outline:3px solid #fff!important;outline-offset:2px!important;
+}
+.hc-app-language-settings{margin:4px 0 18px;padding:14px;border:1px solid #667882;border-radius:18px;background:#15232b}
+.hc-app-language-settings strong{display:block;font-size:17px;margin-bottom:12px}
+#hcAppLanguageSettings{display:flex;gap:4px;flex-wrap:wrap}
+@media(max-width:360px){
+ .hc-app-lang-switch button{min-width:71px!important;padding:9px 10px!important;font-size:14px!important}
+}
