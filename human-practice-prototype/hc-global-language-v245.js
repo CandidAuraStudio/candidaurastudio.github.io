@@ -32,7 +32,7 @@ function renderValue(original,locale){
  }
  // Default English: strip only clearly separate bilingual UI labels,
  // but never touch source material or personal writings.
- if(words.has(value))return source;
+ if(words.has(value)&&!tamil.test(value))return source;
  const pair=/^(.*?)(\s*[·/]\s*)([\u0B80-\u0BFF][\s\S]*)$/.exec(value);
  if(pair&&pair[1].trim()&&!tamil.test(pair[1]))return match[1]+pair[1].trim()+match[3];
  return source;
