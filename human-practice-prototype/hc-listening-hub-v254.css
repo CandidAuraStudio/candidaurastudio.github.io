@@ -1,5 +1,9 @@
 /* HeartClear v254: one unified headphone destination. Scoped to new listening page. */
-#hcListening #hcCinemaHero{display:none!important}
+/* Keep the single shared cinematic page header; compact its footprint here. */
+body.hc-cinema #hcListening #hcCinemaHero{display:flex!important;min-height:150px!important;height:auto!important;max-height:195px!important;padding:22px 22px!important;margin-bottom:6px!important}
+body.hc-cinema #hcListening #hcCinemaHero #hcCinemaTitle{font-size:clamp(26px,6vw,34px)!important;margin:4px 0!important}
+body.hc-cinema #hcListening #hcCinemaHero #hcCinemaSubtitle{font-size:15px!important;line-height:1.4!important}
+body.hc-cinema #hcListening .hcl-heading{display:none!important}
 body.hc-flow-enabled #hcListening.active{padding-bottom:245px!important;gap:0!important}
 #hcListening .hcl-page{display:grid;gap:13px;width:100%;max-width:650px;margin:0 auto;padding-bottom:20px}
 #hcListening .hcl-heading{padding:4px 3px 0}
