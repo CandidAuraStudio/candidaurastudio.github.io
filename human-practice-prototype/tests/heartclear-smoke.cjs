@@ -168,6 +168,8 @@ const assert = require('node:assert/strict');
       'Closing a Drive recording returns to underlying Practice');
     console.log('PASS: Drive one-tap, visible minimized preview, Resume and explicit Close');
     await page.evaluate(()=>{show('sacred');openSacred('islamic')});
+    // The original Drive videos are intentionally under the 'Older videos' disclosure.
+    await page.locator('#hcSacredDriveCards details.hc-more-recordings summary').evaluate(el=>el.click());
     const sacredDrive=await page.locator('#hcSacredDriveCards').innerText();
     assert.match(sacredDrive,/Hu Hu Hu Allah/,'Original Islamic video entry must remain');
     console.log('PASS: Allahu one-tap playback, Sacred filter, return and original Islamic entry');
