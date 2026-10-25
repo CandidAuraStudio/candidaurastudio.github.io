@@ -183,7 +183,7 @@ function toggle(id){
  const l=all.find(x=>x.id===id);if(!l)return;
  if(l.work.id==='gita'){
    const chapter=Number(l.ref.split('.')[0])||2;
-   if(typeof window.hcOpenGitaVoice==='function')window.hcOpenGitaVoice(chapter,lang);
+   if(typeof window.hcGitaHomeToggle==='function')window.hcGitaHomeToggle(chapter,homeLang);
    else update('Human narration is not ready. Please refresh HeartClear.');
    return;
  }
