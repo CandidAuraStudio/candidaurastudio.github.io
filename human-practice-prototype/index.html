@@ -3092,21 +3092,14 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
 
   <div class="hub-grid">
     <button class="hub-card" onclick="hcOpenQuranStudy()"><span class="hub-icon">۞</span><span><b>Qur'an &amp; Inner Journey · குர்ஆன்</b><small>114 surahs online · original Arabic, English/Tamil translations and your private notes.</small></span><span class="hub-arrow">›</span></button>
-    <button class="hub-card" onclick="openCollection('english')">
-      <span class="hub-icon">EN</span>
-      <span><b>English Audiobooks</b><small>Long-form listening, reflection and learning.</small></span>
+    <button class="hub-card" onclick="openCollection('audioLanguages')">
+      <span class="hub-icon" aria-hidden="true">♫</span>
+      <span><b>Audiobooks</b><small>English · Tamil</small></span>
       <span class="hub-arrow">›</span>
     </button>
-
-    <button class="hub-card" onclick="openCollection('tamil')">
-      <span class="hub-icon">த</span>
-      <span><b>Tamil · Books &amp; Audio</b><small>Book Two · தமிழ் 27 chapters · Shadows of Truth recordings</small></span>
-      <span class="hub-arrow">›</span>
-    </button>
-
-    <button class="hub-card" onclick="openCollection('books')">
-      <span class="hub-icon">Aa</span>
-      <span><b>Books · Reading</b><small>Book Two: HUMAN in English & Tamil · Shadows of Truth in English, Tamil & Sinhala.</small></span>
+    <button class="hub-card" onclick="openCollection('readingLanguages')">
+      <span class="hub-icon" aria-hidden="true">Aa</span>
+      <span><b>Reading Books</b><small>English · தமிழ் · සිංහල</small></span>
       <span class="hub-arrow">›</span>
     </button>
   </div>
@@ -6329,8 +6322,7 @@ function renderBookShelf(lang){
     '<p class="hub-note">Shadows of Truth has 61 verified numbered chapters. Only the listed voice recordings are currently available in HeartClear. The remaining chapters are being prepared; no extra chapter or recording is invented.</p>'+ 
     '<div class="book-shelf">'+chapterRows+'</div>'+
     '<div class="book-actions">'+
-      '<button onclick="openBookReader(\''+(isTamil?'ta':'en')+'\')">Read</button>'+
-      '<button class="primary" onclick="openBookAudio(\''+(isTamil?'ta':'en')+'\',1)">Start Chapter 1</button>'+
+            '<button class="primary" onclick="openBookAudio(\''+(isTamil?'ta':'en')+'\',1)">Start Chapter 1</button>'+
     '</div>'+
   '</div>';
 }
@@ -6595,34 +6587,67 @@ bookSeek.addEventListener('input',()=>{
 window.addEventListener('pagehide',saveBookBookmark);
 document.addEventListener('visibilitychange',()=>{if(document.hidden)saveBookBookmark()});
 
+function hcReadingBookCard(book,lang){
+  const review=book.review?'<small style="display:block;margin-top:6px">Reading review · proofreading pending</small>':'';
+  return '<div class="hc-human-reading-entry" lang="'+lang+'">'+
+    '<div class="hc-human-reading-copy">'+
+    '<div class="kicker">'+book.label+'</div>'+
+    '<h3>'+book.title+'</h3>'+
+    '<p>'+book.details+'</p>'+
+    '<a href="'+book.href+'" class="hc-human-reading-link">'+(lang==='ta'?'புத்தகத்தை வாசிக்க ›':lang==='si'?'පොත කියවන්න ›':'Read book ›')+'</a>'+review+
+    '</div></div>';
+}
+function hcReadingBookShelf(language){
+  const back='<button class="collection-back" type="button" onclick="openCollection(\'readingLanguages\')">‹ Reading languages</button>';
+  const items={
+    en:[
+      {label:'BOOK ONE · ENGLISH',title:'Shadows of Truth — A Memoir of Mind vs Body',details:'Complete memoir text · English edition',href:'./books/shadows-of-truth-reader.html?lang=en'},
+      {label:'BOOK TWO · ENGLISH',title:'HUMAN — WHEN YOU ARE ALONE',details:'27 chapters · English Reader 1.5',href:'./books/human-when-you-are-alone.html',review:true}
+    ],
+    ta:[
+      {label:'BOOK ONE · தமிழ்',title:'உண்மையின் நிழல்கள்',details:'மனம் vs உடல் · முழு தமிழ் வாசிப்பு · 60 அத்தியாயங்கள்',href:'./books/shadows-of-truth-reader.html?lang=ta'},
+      {label:'BOOK TWO · புதிய தமிழ் பதிப்பு',title:'மனிதன் — நீ தனியாக இருக்கும்போது',details:'27 அத்தியாயங்கள் · தமிழ் வாசிப்பு',href:'./books/human-when-you-are-alone-tamil.html',review:true}
+    ],
+    si:[
+      {label:'BOOK ONE · සිංහල',title:'Shadows of Truth · සිංහල',details:'Complete Sinhala reader · 61 chapters',href:'./books/shadows-of-truth-sinhala.html'}
+    ]
+  };
+  return back+'<div class="hc-reading-book-list">'+items[language].map(x=>hcReadingBookCard(x,language)).join('')+'</div>';
+}
+function hcLanguageShelf(type){
+ const isAudio=type==='audioLanguages';
+ const name=isAudio?'Audiobooks':'Reading Books';
+ const options=isAudio?[
+  {code:'EN',label:'English Audiobooks',detail:'Listen to your English recordings',kind:'english'},
+  {code:'த',label:'Tamil Audiobooks',detail:'Listen to your Tamil recordings',kind:'tamil'}
+ ]:[
+  {code:'EN',label:'English',detail:'2 books',kind:'reading-en'},
+  {code:'த',label:'தமிழ்',detail:'2 books',kind:'reading-ta'},
+  {code:'සි',label:'සිංහල',detail:'1 book',kind:'reading-si'}
+ ];
+ return '<div class="hc-reading-languages">'+options.map(x=>'<button class="hub-card" type="button" onclick="openCollection(\''+x.kind+'\')"><span class="hub-icon">'+x.code+'</span><span><b>'+x.label+'</b><small>'+x.detail+'</small></span><span class="hub-arrow">›</span></button>').join('')+'</div>';
+}
 function openCollection(kind){
-  const data={
-    english:{
-      kicker:'Audiobooks',
-      title:'English Audiobooks',
-      description:'Long-form English listening for reflection, learning and quiet time.',
-      empty:'Add your first English audiobook here.'
-    },
-    tamil:{
-      kicker:'தமிழ் · Audiobooks',
-      title:'Tamil · Books & Listening',
-      description:'Read the new Tamil edition of HUMAN, or listen to Shadows of Truth recordings.',
-      empty:'Add your first Tamil audiobook here.'
-    },
-    books:{
-      kicker:'Reading',
-      title:'Available Reading',
-      description:'Read HUMAN in English or Tamil, alongside Shadows of Truth.',
-      empty:'Additional licensed reading will appear here.'
-    }
-  }[kind]||{};
-  document.getElementById('collectionKicker').textContent=data.kicker||'Library';
-  document.getElementById('collectionTitle').textContent=data.title||'Library';
-  document.getElementById('collectionDescription').textContent=data.description||'';
+  const cfg={
+    audioLanguages:['Listening','Audiobooks','Choose your listening language.'],
+    readingLanguages:['Library','Reading Books','Choose a reading language.'],
+    english:['English · Audio','English Audiobooks','Recorded audio · Shadows of Truth'],
+    tamil:['தமிழ் · Audio','Tamil Audiobooks','Recorded audio · Shadows of Truth'],
+    'reading-en':['Reading','English Books','Book One and Book Two'],
+    'reading-ta':['வாசிப்பு','தமிழ் புத்தகங்கள்','முதல் புத்தகம் · இரண்டாம் புத்தகம்'],
+    'reading-si':['Reading','සිංහල පොත්','Shadows of Truth · Sinhala edition']
+  };
+  if(kind==='books')kind='readingLanguages';
+  const conf=cfg[kind]||cfg.readingLanguages;
+  document.getElementById('collectionKicker').textContent=conf[0];
+  document.getElementById('collectionTitle').textContent=conf[1];
+  document.getElementById('collectionDescription').textContent=conf[2];
   const list=document.getElementById('collectionList');
-  if(kind==='english') list.innerHTML=renderBookShelf('en');
-  else if(kind==='tamil') list.innerHTML=`<div class="hc-human-reading-entry" lang="ta"><img src="./books/human-cover.svg" alt="மனிதன் — நீ தனியாக இருக்கும்போது புத்தக அட்டை" loading="lazy"><div class="hc-human-reading-copy"><div class="kicker">BOOK TWO · புதிய தமிழ் பதிப்பு · READ</div><h3>மனிதன் — நீ தனியாக இருக்கும்போது</h3><p>27 அத்தியாயங்கள் · தமிழ் வாசிப்பு பதிப்பு · October 2026</p><a href="./books/human-when-you-are-alone-tamil.html" class="hc-human-reading-link">புத்தகத்தை வாசிக்க ›</a></div></div>` + renderBookShelf('ta');
-  else list.innerHTML=`<div class="hc-human-reading-entry"><img src="./books/human-cover.svg" alt="HUMAN — WHEN YOU ARE ALONE English book cover" loading="lazy"><div class="hc-human-reading-copy"><div class="kicker">BOOK TWO · ENGLISH</div><h3>HUMAN — WHEN YOU ARE ALONE</h3><p>Akmal Mohamed Jabir · Complete reading master · 27 chapters</p><a href="./books/human-when-you-are-alone.html" class="hc-human-reading-link">Read English book ›</a></div></div><div class="hc-human-reading-entry" lang="ta"><img src="./books/human-cover.svg" alt="HUMAN — WHEN YOU ARE ALONE book cover" loading="lazy"><div class="hc-human-reading-copy"><div class="kicker">BOOK TWO · தமிழ் · புதிய பதிப்பு</div><h3>மனிதன் — நீ தனியாக இருக்கும்போது</h3><p>27 அத்தியாயங்கள் · அக்டோபர் 2026 · தமிழ் வாசிப்பு மதிப்பீட்டுப் பதிப்பு</p><a href="./books/human-when-you-are-alone-tamil.html" class="hc-human-reading-link">தமிழில் வாசிக்க ›</a></div></div><div class="hc-reading-existing"><div class="kicker">BOOK ONE</div><h3>Shadows of Truth · Reading</h3><p>English and Tamil excerpts, plus the complete 61-chapter Sinhala edition.</p><div class="hc-reading-choices"><button onclick="openBookReader('en')">Read English</button><button onclick="openBookReader('ta')">Read Tamil</button><button onclick="location.href='./books/shadows-of-truth-sinhala.html'">Read Sinhala · සිංහල</button></div></div>`;
+  if(kind==='audioLanguages'||kind==='readingLanguages')list.innerHTML=hcLanguageShelf(kind);
+  else if(kind==='english')list.innerHTML='<button class="collection-back" onclick="openCollection(\'audioLanguages\')">‹ Audiobooks</button>'+renderBookShelf('en');
+  else if(kind==='tamil')list.innerHTML='<button class="collection-back" onclick="openCollection(\'audioLanguages\')">‹ Audiobooks</button>'+renderBookShelf('ta');
+  else if(kind.startsWith('reading-'))list.innerHTML=hcReadingBookShelf(kind.slice(8));
+  else list.innerHTML=hcLanguageShelf('readingLanguages');
   show('collection');
 }
 
