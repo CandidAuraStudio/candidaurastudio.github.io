@@ -71,7 +71,7 @@ window.openHcDriveMedia=function(key,sourceScreen){
  if(!item)return;
  // Prefer the actual native recording: do not substitute an unrelated MP3.
  if(key==='islamHuAkmal'&&typeof hcQuickPlaySound==='function'){closeDrive();return hcQuickPlaySound('allahuAkmal');}
- if(key==='hinduOm'&&typeof window.hcOpenOmVoice==='function'){closeDrive();return window.hcOpenOmVoice();}
+ // OM uses this same stable embedded player; redirecting to hcOpenOmVoice loops back here.
  if(typeof item.id!=='string'||!/^[-\w]+$/.test(item.id)){
   if(typeof originalDrive==='function')return originalDrive(key,sourceScreen);
   return;
@@ -90,6 +90,8 @@ window.openHcDriveMedia=function(key,sourceScreen){
  // No intermediate HeartClear screen, Begin button, or download-URL audio guess.
  frame.src='https://drive.google.com/file/d/'+encodeURIComponent(item.id)+'/preview?autoplay=1';
 };
+// Preserve a non-wrapped entry point for every later Sacred Sound integration.
+window.hcOpenDriveDock=window.openHcDriveMedia;
 const originalShow=window.show;
 if(typeof originalShow==='function')window.show=function(id){
  // Ordinary in-app navigation keeps the original iframe mounted, minimizing its view.
