@@ -33,9 +33,10 @@ const assert=require('node:assert/strict');
   });
   assert.deepEqual(missing,[],'No broken legacy inline handlers');
   const dock=page.locator('#hcFlowDock');
-  const idsOrdered=['hcFlowDockHome','hcFlowDockListen','hcCinemaExplore','hcCinemaLibrary','hcCinemaReels','hcCinemaSettings'];
+  const idsOrdered=['hcFlowDockHome','hcFlowDockListen','hcCinemaReels','hcCinemaExplore','hcCinemaLibrary','hcCinemaSettings'];
   for(const id of idsOrdered)assert.equal(await page.locator('#'+id).count(),1,'Dock action mounted '+id);
   assert.equal(await dock.locator('button').count(),6,'Exactly six navigational actions');
+  assert.deepEqual(await dock.locator(':scope > button').evaluateAll(nodes=>nodes.map(node=>node.id)),idsOrdered,'Reels must be third in the exact locked six-tab order');
   assert.equal(await page.locator('#hcFlowDockSearch').count(),0,'Search must not replace Reels in dock');
   const check=async id=>assert.equal(await page.locator('#'+id).evaluate(el=>el.classList.contains('active')),true,'Active screen '+id);
   // The old upper "..." button is intentionally hidden in the v279 simplified layout.
