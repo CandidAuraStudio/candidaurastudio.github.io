@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="hc-booting">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -2423,8 +2423,36 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
 @media(max-width:365px){.hc-human-reading-entry img{width:80px;min-width:80px}.hc-human-reading-copy h3{font-size:16px}}
 </style>
 <link rel="stylesheet" href="./quran-study.css?v=232">
+<style id="hc-refresh-first-paint">
+/* Gate the first paint until the existing approved v279 theme finishes loading. */
+html.hc-booting body{background:#090909!important}
+html.hc-booting body::before,html.hc-booting body::after{display:none!important}
+html.hc-booting .app,
+html.hc-booting #hcFlowDock,
+html.hc-booting #hcCinemaBackdrop,
+html.hc-booting #globalMini,
+html.hc-booting #updateBanner{visibility:hidden!important}
+.hc-boot-screen{display:none}
+html.hc-booting .hc-boot-screen{
+ position:fixed;inset:0;display:flex;flex-direction:column;
+ align-items:center;justify-content:center;gap:13px;
+ padding:24px;background:#090909;color:#f5f5f5;z-index:2147483646;
+ font:600 16px/1.25 system-ui,-apple-system,sans-serif;letter-spacing:.02em;
+}
+.hc-boot-screen img{width:70px;height:70px;object-fit:contain}
+</style>
 </head>
 <body>
+<div class="hc-boot-screen" role="status" aria-label="Loading HeartClear">
+ <img src="./icon.svg" width="70" height="70" alt="" aria-hidden="true">
+ <span>HeartClear</span>
+</div>
+<script id="hcBootSafety">
+/* Fail open if a stylesheet becomes unavailable; never lock the user's screen. */
+window.setTimeout(function(){
+ document.documentElement.classList.remove('hc-booting');
+},10000);
+</script>
 <div class="update-banner" id="updateBanner">
   <div><b>HeartClear updated</b><small>A newer version is ready.</small></div>
   <button onclick="reloadHeartClear()">Refresh</button>
@@ -9547,7 +9575,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=277');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=280');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
@@ -9643,7 +9671,7 @@ const heartclearAutoInstallPrompt=false;
 <script src="./hc-home-core-paths-v259.js?v=268"></script>
 <link rel="stylesheet" href="./hc-unified-visual-v259.css?v=267">
 <link rel="stylesheet" href="./hc-home-visible-v268.css?v=277">
-<script src="./hc-home-visible-v268.js?v=279"></script>
+<script src="./hc-home-visible-v268.js?v=280"></script>
 <script id="hcReelsBottomTabGuard">
 /* Defensive bottom navigation repair: Reels always replaces the legacy Search icon. */
 (function(){
@@ -9688,7 +9716,7 @@ const heartclearAutoInstallPrompt=false;
   window.addEventListener('pageshow',apply);
 })();
 </script>
-<link rel="stylesheet" href="./hc-design-unified-v279.css?v=279">
+<link rel="stylesheet" href="./hc-design-unified-v279.css?v=280" onload="document.documentElement.classList.remove('hc-booting')" onerror="document.documentElement.classList.remove('hc-booting')">
 </body>
 </html>
 
