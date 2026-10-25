@@ -63,7 +63,7 @@ const assert=require('node:assert/strict');
   wav.writeUInt16LE(1,22);wav.writeUInt32LE(8000,24);
   wav.writeUInt32LE(16000,28);wav.writeUInt16LE(2,32);wav.writeUInt16LE(16,34);
   wav.write('data',36);wav.writeUInt32LE(n*2,40);
-  await page.route(/^https:\\/\\/drive\\.usercontent\\.google\\.com\\/download\\?/,route=>route.fulfill({status:200,contentType:'audio/wav',body:wav}));
+  await page.route(url=>url.startsWith('https://drive.usercontent.google.com/download?'),route=>route.fulfill({status:200,contentType:'audio/wav',body:wav}));
   await page.evaluate(()=>show('sacred'));
   await page.locator('#hcSacredInstantV149 [data-play="om"]').click();
   await page.waitForFunction(()=>document.getElementById('hcOmMiniV252')?.dataset.mode==='playing',{timeout:10000});
