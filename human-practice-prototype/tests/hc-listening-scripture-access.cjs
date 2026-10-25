@@ -13,7 +13,7 @@ const end=source.indexOf('function synchronize(){',start);
 assert(start>=0&&end>start,'Existing All Listening player handler found');
 const playSource=source.slice(start,end);
 assert(!playSource.includes("window.hcGitaHomeToggle?.(1)"),'No silent no-op Gita playback');
-assert(playSource.includes("window.hcOpenGitaVoice();"),'Use existing full Gita player and saved chapter');
+assert(playSource.includes("window.hcOpenGitaVoice(undefined,undefined,{autoplay:false});"),'Gita opens player with explicit no-autoplay');
 assert(playSource.includes("if(!card||!playButton)throw Error"),'Genesis panel must exist before reporting it opened');
 assert(!playSource.includes("Gita is playing in the HeartClear mini-player."),'Never claim Gita auto-start');
 assert(source.includes("hcQuickPlaySound(item.key)"),'Existing native audio route preserved');
@@ -26,7 +26,7 @@ function run(item,{gita=true,genesis=true}={}){
   hcGenPlay:genesis?{focus(x){events.push('focus:'+x.preventScroll)}}:null
  };
  const window={show(x){events.push('show:'+x)}};
- if(gita)window.hcOpenGitaVoice=(...args)=>events.push('gita:'+args.length);
+ if(gita)window.hcOpenGitaVoice=(...args)=>events.push('gita:'+args.length+':'+String(args[2]?.autoplay));
  const context={
   item,
   $:id=>targets[id]||null,
@@ -40,7 +40,7 @@ function run(item,{gita=true,genesis=true}={}){
  return {events,messages};
 }
 const gitaOk=run({kind:'gita',name:'Gita'});
-assert(gitaOk.events.includes('gita:0'),'Gita opens at existing chapter/language, not hardcoded Chapter 1');
+assert(gitaOk.events.includes('gita:3:false'),'Gita opens saved chapter controls and does not autoplay');
 assert(!gitaOk.messages.join(' ').includes('is playing'),'No invented playback state');
 const gitaMissing=run({kind:'gita'},{gita:false});
 assert.match(gitaMissing.messages.join(' '),/Unable to open/,'Missing Gita interface has honest fallback');

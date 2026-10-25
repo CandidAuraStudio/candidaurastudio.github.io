@@ -140,7 +140,7 @@ function play(item){
   }else if(item.kind==='gita'){
    // Open the real chapter controls at the saved chapter/language; never report playback without a Play gesture.
    if(typeof window.hcOpenGitaVoice!=='function')throw Error('Gita chapter player is unavailable');
-   window.hcOpenGitaVoice();
+   window.hcOpenGitaVoice(undefined,undefined,{autoplay:false});
    say('Gita chapter controls opened. Tap Play when ready.');
   }else if(item.kind==='practice'){
    item.ref.click();say('Guided practice selected.');

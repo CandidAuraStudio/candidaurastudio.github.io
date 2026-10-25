@@ -140,9 +140,12 @@ function wrapNativeVoice(name){
  const original=window[name];
  if(typeof original!=='function')return;
  window[name]=function(){
+  // Opening from All Listening shows the controls without starting audio.
+  const opts=arguments.length?arguments[arguments.length-1]:null;
+  const openOnly=!!(opts&&typeof opts==='object'&&opts.autoplay===false);
   const result=original.apply(this,arguments);
   const button=document.getElementById('hcgPlay');
-  if(button&&!button.disabled)button.click();
+  if(!openOnly&&button&&!button.disabled)button.click();
   return result;
  };
 }
