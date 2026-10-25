@@ -41,11 +41,12 @@ function list(){
  add(record('bible-genesis','Bible · Genesis','Read and listen · English / Tamil','bible','bible','genesis'));
  add(record('adhkar','Morning Adhkar','28:18 · native audio','islamic','adhkar','adhkar'));
  add(record('allahu','Allahu Hu · Akmal','24:32 · native audio','islamic','audio','allahuAkmal'));
+ add(record('dhikr-extended','Islamic Dhikr · Extended Playlist','2:00:05 · original audio-only edition','islamic','dhikr-audio','islamDhir120'));
  add(record('mantra','Mantra Bed','8 min · separate native audio','hindu','audio','mantra'));
  add(record('flute','Acoustic Bansuri · Original audio','7:54 · original recording','nature','audio','organicBansuri'));
  add(record('gita','Bhagavad Gita · Human voice','18 chapters · original readings','hindu','gita','gita'));
  if(typeof HC_DRIVE_COLLECTIONS!=='undefined')HC_DRIVE_COLLECTIONS.forEach(item=>{
-  if(item.key==='islamHuAkmal'||item.key==='generalDuduk')return;
+  if(item.key==='islamHuAkmal'||item.key==='generalDuduk'||item.key==='islamDhir120')return;
   const category=item.section==='islamic'?'islamic':item.section==='hindu'?'hindu':item.section==='meditation'?'breathing':'nature';
   if(category==='breathing'&&!item.key.startsWith('hclBreath'))return;
   const meta=item.key==='hinduOm'?'3:33:33 · original video; audio stream unavailable':(item.type||'Original video')+' · video';
@@ -80,7 +81,9 @@ function itemButton(item){
  const title=document.createElement('strong');title.textContent=item.name;
  const desc=document.createElement('small');desc.textContent=item.detail;
  info.append(title,desc);
- const action=document.createElement('span');action.className='hcl-record-action';action.textContent=item.kind==='drive'?'Video':['book','bible','hindu-library','gita','practice'].includes(item.kind)?'Open':'Play';
+ const action=document.createElement('span');action.className='hcl-record-action';action.textContent=
+   item.kind==='dhikr-audio'?(window.hcExtendedDhikrAudioAvailable?.()?'Play':'Audio pending'):
+   item.kind==='drive'?'Video':['book','bible','hindu-library','gita','practice'].includes(item.kind)?'Open':'Play';
  b.append(icon,info,action);b.setAttribute('aria-label',(['drive','book','bible','hindu-library','gita','practice'].includes(item.kind)?'Open ':'Play ')+item.name);
  b.addEventListener('click',()=>play(item));return b;
 }
@@ -103,7 +106,15 @@ function render(){
 function say(text){status.textContent=text;status.hidden=!text}
 function play(item){
  try{
-  if(item.kind==='audio'){
+  if(item.kind==='dhikr-audio'){
+   // This exact extended recording is audio-only, not a Drive video preview.
+   const fn=window.hcPlayExtendedDhikrAudio;
+   if(typeof fn!=='function')throw Error('Original audio playback unavailable');
+   Promise.resolve(fn()).then(ok=>{
+     say(ok?'Original two-hour dhikr selected · use the mini-player.':
+       'Audio extracted, but its permanent HeartClear media file is not published yet.');
+   }).catch(()=>say('Original dhikr audio could not be started.'));
+  }else if(item.kind==='audio'){
    if(typeof hcQuickPlaySound!=='function')throw Error('Audio player missing');
    const p=hcQuickPlaySound(item.key);if(p?.catch)p.catch(()=>say('Unable to play this audio. Check your connection.'));
    say('Selected · '+item.name);
@@ -180,6 +191,10 @@ document.addEventListener('click',event=>{
  event.preventDefault();event.stopImmediatePropagation();window.hcOpenAllListening();
 },true);
 search.addEventListener('input',render);
+window.addEventListener('hc:dhikr-audio-availability',event=>{
+  const label=results.querySelector('[data-record="dhikr-extended"] .hcl-record-action');
+  if(label)label.textContent=event.detail?.available?'Play':'Audio pending';
+});
 window.addEventListener('pageshow',()=>{
  if($('hcListening').classList.contains('active'))choose('all');
  synchronize();
