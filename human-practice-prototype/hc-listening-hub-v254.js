@@ -132,7 +132,7 @@ function play(item){
    requestAnimationFrame(()=>$('hcGenesisCard')?.scrollIntoView({block:'start'}));
    say('Bible player opened.');
   }else if(item.kind==='gita'){
-   window.hcOpenGitaVoice?.(1);say('Bhagavad Gita voice selected.');
+   window.hcGitaHomeToggle?.(1);say('Gita is playing in the HeartClear mini-player.');
   }else if(item.kind==='practice'){
    item.ref.click();say('Guided practice selected.');
   }else if(item.kind==='book'){
