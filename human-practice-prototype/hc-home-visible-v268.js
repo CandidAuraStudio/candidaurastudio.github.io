@@ -88,7 +88,7 @@
      button.append(name);
      worlds.append(button);
    }
-   hero.after(worlds); // Original Qur'an/Bible/Gita links remain immediately below.
+   if(faith&&faith.parentElement===paths)faith.after(worlds);else hero.after(worlds); // Scripture choices remain directly below meditation.
  }
 
 
@@ -108,7 +108,7 @@
    // Keep one authoritative, visible version. The older secondary v269 stamp
    // conflicted with the v192 label and actual offline build number.
    const label=settings.querySelector('.app-version');
-   if(label)label.textContent='HeartClear · HC v276';
+   if(label)label.textContent='HeartClear · HC v277';
    const stamp=document.createElement('span');
    stamp.id='hcHomeVersion268';stamp.hidden=true;settings.append(stamp);
  }else{
