@@ -10,6 +10,21 @@
  function scriptureStatus(message){
   const status=document.getElementById('hcCorePathStatus');
   if(status)status.textContent=message;
+  // Home's older status node may sit in a collapsed "Explore more" panel.
+  // If a player is unavailable, show a readable message beside the chips.
+  const faith=document.getElementById('hcCorePathsClassic')?.querySelector('.hc-path-faith');
+  if(!faith)return;
+  let notice=document.getElementById('hcScriptureJumpFeedback');
+  if(!notice){
+   notice=document.createElement('p');
+   notice.id='hcScriptureJumpFeedback';
+   notice.setAttribute('role','status');
+   notice.style.cssText='margin:0;padding:10px 12px;border:1px solid #777;border-radius:12px;background:#202020;color:#fff;font:500 13px/1.5 system-ui';
+   faith.insertAdjacentElement('afterend',notice);
+  }
+  const failed=/unavailable|did not open/i.test(message);
+  notice.hidden=!failed;
+  notice.textContent=failed?message:'';
  }
  function openScripture(key){
   const destinations={
