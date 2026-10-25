@@ -13,7 +13,13 @@ top.innerHTML='<button id="hcFlowBack" type="button">‹ Back</button><span clas
 // Header controls must be connected before getElementById binds their listeners.
 document.body.append(top);
 const dock=document.createElement('nav');dock.id='hcFlowDock';dock.setAttribute('aria-label','HeartClear main navigation');
-dock.innerHTML='<button id="hcFlowDockHome" type="button"><span aria-hidden="true">⌂</span>Home</button><button id="hcFlowDockSearch" type="button"><span aria-hidden="true">⌕</span>Search</button><button id="hcFlowDockListen" type="button"><span aria-hidden="true">▶</span>Listen</button>';
+// All six final bottom destinations exist from the start. Search stays in Home.
+dock.innerHTML='<button id="hcFlowDockHome" type="button"><span aria-hidden="true">∞</span>Home</button>'+
+ '<button id="hcFlowDockListen" type="button"><span aria-hidden="true">♫</span>Listen</button>'+
+ '<button id="hcCinemaExplore" type="button"><span aria-hidden="true">◇</span>Explore</button>'+
+ '<button id="hcCinemaLibrary" type="button"><span aria-hidden="true">▤</span>Library</button>'+
+ '<button id="hcCinemaReels" type="button" aria-label="Reels"><span aria-hidden="true">▣</span>Reels</button>'+
+ '<button id="hcCinemaSettings" type="button"><span aria-hidden="true">☷</span>Settings</button>';
 document.body.append(dock);
 const experiences=[
  ['Meditation','Easy listening, morning to night',()=>window.show?.('practices')],
@@ -130,13 +136,13 @@ function goBack(){
 $('hcFlowBack').addEventListener('click',goBack);
 $('hcFlowHome').addEventListener('click',bigHome);
 $('hcFlowDockHome').addEventListener('click',bigHome);
-$('hcFlowDockSearch').addEventListener('click',()=>{
- if(!explore.hidden)closeExplore();
- // Search results open sections within Home; return there before searching.
- if(current()!=='home')window.show?.('home');
- if(typeof window.hcOpenGlobalSearch==='function')window.hcOpenGlobalSearch();
- else if(typeof window.hcBubbleHome?.search==='function')window.hcBubbleHome.search();
- else $('hcBubbleSearch')?.click();
+$('hcCinemaExplore').addEventListener('click',openExplore);
+$('hcCinemaLibrary').addEventListener('click',()=>window.show?.('library'));
+$('hcCinemaSettings').addEventListener('click',()=>window.show?.('settings'));
+$('hcCinemaReels').addEventListener('click',()=>{
+ // Open the first full-screen Reel, not a Search sheet.
+ if(typeof window.hcOpenReels==='function')window.hcOpenReels();
+ else window.show?.('hcReels');
 });
 $('hcFlowDockListen').addEventListener('click',()=>{
  try{const m=typeof window.getActiveMediaState==='function'?window.getActiveMediaState():null;if(m&&typeof window.openActiveMediaPlayer==='function'){window.openActiveMediaPlayer();return}}catch(_){}
@@ -211,7 +217,10 @@ function sync(){
  if(route==='practices')screen.hcFlowRefreshPractices?.();
  if(route==='soundLab'){$('hcSoundTrackList')?.hcFlowRefresh?.();$('hcGeneralDriveCards')?.hcFlowRefresh?.()}
  dock.querySelectorAll('button').forEach(b=>b.removeAttribute('aria-current'));
- const navId=route==='home'?'hcFlowDockHome':(['soundLabPlayer','player','bookAudio'].includes(route)?'hcFlowDockListen':null);
+ const navId=route==='home'?'hcFlowDockHome':route==='hcReels'?'hcCinemaReels':
+   ['soundLabPlayer','player','bookAudio','soundLab'].includes(route)?'hcFlowDockListen':
+   ['library','collection','bookReader'].includes(route)?'hcCinemaLibrary':
+   route==='settings'?'hcCinemaSettings':null;
  if(navId)$(navId)?.setAttribute('aria-current','page');
 }
 /* v237: retain original meditation catalogue and advanced Sounds controls. */
