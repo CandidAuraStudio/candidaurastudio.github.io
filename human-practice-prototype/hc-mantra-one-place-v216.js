@@ -26,7 +26,15 @@ style.textContent=[
  '#soundLab.hc-mantra-open > :not(.hc-sounds-header):not(#hcMantraEntranceV216):not(#hcMantraHubV216){display:none!important}',
  '#soundLab.hc-mantra-open #hcMantraEntranceV216{display:none}',
  '#hcMantraEntranceV216:focus-visible,#hcMantraHubV216 :is(button,a):focus-visible{outline:3px solid #fff;outline-offset:3px}',
- '@media(prefers-reduced-motion:reduce){#hcMantraHubV216 *{scroll-behavior:auto!important;transition:none!important}}'
+  '#hcDriveMedia.hc-mantra-original-preview #hcDriveOpenSource{display:none!important}',
+ '#hcDriveMedia.hc-mantra-original-preview .hc-drive-caution{display:none!important}',
+ 'body.hc-flow-enabled #soundLab.active.hc-mantra-open #hcMantraHubV216{gap:9px;padding:0 0 14px}',
+ 'body.hc-flow-enabled #soundLab.active.hc-mantra-open #hcMantraHubV216 .hc-mantra-item{min-height:0!important;padding:12px!important;border-radius:18px!important}',
+ 'body.hc-flow-enabled #soundLab.active.hc-mantra-open #hcMantraHubV216 .hc-mantra-item h4{font-size:17px!important;line-height:1.3!important}',
+ 'body.hc-flow-enabled #soundLab.active.hc-mantra-open #hcMantraHubV216 .hc-mantra-item p{font-size:14px!important;line-height:1.4!important;margin:0!important}',
+ 'body.hc-flow-enabled #soundLab.active.hc-mantra-open #hcMantraHubV216 .hc-mantra-item button{font-size:15px!important;min-height:48px!important;padding:9px 12px!important}',
+
+'@media(prefers-reduced-motion:reduce){#hcMantraHubV216 *{scroll-behavior:auto!important;transition:none!important}}'
 ].join('\n');
 document.head.appendChild(style);
 const entrance=document.createElement('button');
@@ -110,6 +118,6 @@ if(typeof drive==='function')window.openHcDriveMedia=function(key,from){
  if(panel)panel.classList.remove('hc-long-om-original','hc-mantra-original-preview');
  return drive.apply(this,arguments);
 };
-window.hcOpenOmVoice=openHub;
+window.hcOpenOmVoice=()=>hcPlayOriginalMantraVideo('hinduOm');
 window.hcOpenMantraHub=openHub;
 })();
