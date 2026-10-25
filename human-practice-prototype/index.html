@@ -3796,7 +3796,7 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
         </div>
       </details>
     </div>
-    <div class="app-version">HeartClear · HC v277</div>
+    <div class="app-version">HeartClear · HC v283 (audio review)</div>
   </div>
 </section>
 
@@ -6686,6 +6686,18 @@ function hcDriveCard(item){
     btn.dataset.inlineAudio='allahuAkmal';
     btn.setAttribute('aria-label','Play or pause Allahu Hu Breath Reflection by Akmal');
     btn.addEventListener('click',()=>hcQuickPlaySound('allahuAkmal'));
+  }else if(item.key==='islamDhir120'){
+    // The exact original 2-hour soundtrack has been extracted as an M4A.
+    // Never open the Drive video when the user requests listening.
+    ico.textContent='♫';
+    meta.textContent='2:00:05 · original audio-only edition';
+    arrow.textContent='Audio pending';
+    btn.setAttribute('aria-label','Play original two-hour dhikr audio when published in HeartClear');
+    btn.addEventListener('click',()=>window.hcPlayExtendedDhikrAudio?.());
+    window.addEventListener('hc:dhikr-audio-availability',event=>{
+      arrow.textContent=event.detail?.available?'Play audio':'Audio pending';
+    });
+    if(window.hcExtendedDhikrAudioAvailable?.())arrow.textContent='Play audio';
   }else{
     ico.textContent='▣';
     arrow.textContent='Play video ›';
@@ -6708,7 +6720,7 @@ function hcRenderDriveCards(section,containerId){
       const details=document.createElement('details');
       details.className='hc-more-recordings';
       const summary=document.createElement('summary');
-      summary.textContent='Older videos ('+rest.length+')';
+      summary.textContent='More listening ('+rest.length+')';
       details.appendChild(summary);
       const inside=document.createElement('div');
       inside.className='hc-extra-recordings';
@@ -9547,7 +9559,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=277');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=283');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
@@ -9638,7 +9650,8 @@ const heartclearAutoInstallPrompt=false;
 <link rel="stylesheet" href="./hc-reels-minimal-v248.css?v=248">
 <script src="./hc-om-mini-v252.js?v=252"></script>
 <link rel="stylesheet" href="./hc-listening-hub-v254.css?v=258">
-<script src="./hc-listening-hub-v254.js?v=261"></script>
+<script src="./hc-dhikr-audio-v283.js?v=283"></script>
+<script src="./hc-listening-hub-v254.js?v=283"></script>
 <script src="./hc-home-layout-v256.js?v=257"></script>
 <script src="./hc-home-core-paths-v259.js?v=268"></script>
 <link rel="stylesheet" href="./hc-unified-visual-v259.css?v=267">
