@@ -17,7 +17,7 @@ ta:'https://bhagavadgitaclass.com/bhagavad-gita-recitation-in-sanskrit-with-tami
 };
 const otherSource='https://yatharthgeeta.com/yatharth-geeta-audio/';
 const nepaliSource='https://www.gitab.com.np/2019/04/the-bhagavad-gita-audio-book.html';
-const names={sa:'Swami Devrupananda',en:'Purnachandra Goswami',hi:'Savyasachi Prabhu',ta:'Human-voiced Sanskrit with Tamil translations'};
+const names={ne:'Nepali human-voice source (direct audio pending)',sa:'Swami Devrupananda',en:'Purnachandra Goswami',hi:'Savyasachi Prabhu',ta:'Human-voiced Sanskrit with Tamil translations'};
 const pad=n=>String(n).padStart(2,'0');
 function url(lang,n){
  if(lang==='sa')return 'https://ramakrishnamath.in/Gita/BhagvadGitaChantingSwamiDevrupananda/'+pad(n)+'%20GITA%20CHAPTER%20%20'+n+'.mp3';
@@ -77,14 +77,17 @@ const shelf=document.getElementById('hcHinduScriptures');
 if(shelf)shelf.insertAdjacentElement('beforebegin',panel);
 else root.append(panel);
 const el=id=>document.getElementById(id);
-for(const [k,v] of Object.entries(labels)){const o=document.createElement('option');o.value=k;o.textContent=v;el('hcgLang').add(o)}
+for(const k of ['en','ta','hi','sa','ne']){const v=labels[k];const o=document.createElement('option');o.value=k;o.textContent=v;el('hcgLang').add(o)}
 for(let n=1;n<=18;n++){const o=document.createElement('option');o.value=String(n);o.textContent='Chapter '+n;el('hcgChapter').add(o)}
-let mode='gita',lang='sa',chapter=1,playing=false,src='',playToken=0;
+let mode='gita',lang='en',chapter=1,playing=false,src='',playToken=0;
 let omTarget=480,omCompleted=0; // The original 3-hour video has NOT been extracted as native audio.
 el('hcgDuration').value=String(omTarget);
 try{const l=localStorage.getItem('hcGitaVoiceLang');if(labels[l])lang=l;const n=Number(localStorage.getItem('hcGitaVoiceChapter'));if(n>=1&&n<=18)chapter=n}catch(e){}
 const audio=new Audio();audio.preload='none';audio.hidden=true;audio.playsInline=true;panel.append(audio);
-function notice(txt){el('hcgStatus').textContent=txt}
+function informHome(){
+ window.dispatchEvent(new CustomEvent('hc:gita-state',{detail:{lang,chapter,playing,mode,ready:!!url(lang,chapter),message:el('hcgStatus').textContent}}));
+}
+function notice(txt){el('hcgStatus').textContent=txt;informHome()}
 function timeLabel(value){if(!Number.isFinite(value)||value<0)return '--:--';const t=Math.floor(value);return (t>=3600?String(Math.floor(t/3600))+':':'')+String(Math.floor(t/60)%60).padStart(2,'0')+':'+String(t%60).padStart(2,'0')}
 function syncSeek(){
  const seek=el('hcgSeek'),length=Number(audio.duration),sample=Number(audio.currentTime)||0;
@@ -110,7 +113,7 @@ function hcLongMantraSeek(seconds){
  return true;
 }
 function save(){try{localStorage.setItem('hcGitaVoiceLang',lang);localStorage.setItem('hcGitaVoiceChapter',String(chapter))}catch(e){}}
-function stop(){++playToken;audio.pause();audio.removeAttribute('src');audio.load();src='';omCompleted=0;playing=false;el('hcgPlay').textContent='▶';syncSeek();if(typeof renderGlobalMini==='function')renderGlobalMini()}
+function stop(){++playToken;audio.pause();audio.removeAttribute('src');audio.load();src='';omCompleted=0;playing=false;el('hcgPlay').textContent='▶';syncSeek();informHome();if(typeof renderGlobalMini==='function')renderGlobalMini()}
 function update(){
  el('hcgHeader').textContent=mode==='om'?'Mantra Bed · 8-minute audio':'Bhagavad Gita · Original voice';
  el('hcgLangRow').hidden=mode==='om';el('hcgChapterRow').hidden=mode==='om';
@@ -132,7 +135,8 @@ function update(){
   'This language has no verified direct MP3 playlist yet, so playback is unavailable.');
  el('hcgPlay').textContent=playing?'Ⅱ':'▶';
  syncSeek();
- if(!isPlayable)notice('Tap the source link for '+labels[lang]+' voice recordings.');
+ if(!isPlayable)notice('Original '+labels[lang]+' audio is not yet connected for in-app playback.');
+ informHome();
 }
 function exclusivity(){
  try{window.speechSynthesis?.cancel()}catch(e){}
@@ -140,7 +144,7 @@ function exclusivity(){
  document.querySelectorAll('audio,video').forEach(a=>{if(!a.paused)try{a.pause()}catch(e){}});
 }
 async function play(){
- if(!panel.hidden&&mode!=='om'&&!url(lang,chapter)){notice(labels[lang]+' audio is not connected yet. Choose Tamil, Sanskrit, English or Hindi to listen here.');return}
+ if(mode!=='om'&&!url(lang,chapter)){notice(labels[lang]+' direct audio is not yet available in HeartClear. Other language audio will not be substituted.');return}
  const wanted=mode==='om'?omUrl:url(lang,chapter);
  if(!wanted)return;
  if(!audio.paused&&src===wanted){audio.pause();return}
@@ -167,6 +171,16 @@ function next(direction){
  if(newChapter===chapter){stop();notice('End of the collection.');return}
  chapter=newChapter;save();stop();update();play();
 }
+function playFromHome(n,chosen,autoplay=true){
+ const nextLanguage=chosen&&labels[chosen]?chosen:lang;
+ const number=Number(n),nextChapter=Number.isInteger(number)&&number>=1&&number<=18?number:chapter;
+ const changed=mode!=='gita'||nextLanguage!==lang||nextChapter!==chapter;
+ if(changed)stop();
+ mode='gita';lang=nextLanguage;chapter=nextChapter;save();update();
+ if(autoplay)play(); // Triggered by the user's Home button or selection gesture.
+ else if(!url(lang,chapter))notice('Nepali original audio is listed, but direct in-app MP3 playback is not verified yet.');
+ return !!url(lang,chapter);
+}
 function open(which='gita',n){
  stop();if(typeof openSacred==='function')openSacred('hindu');
  mode=which==='om'?'om':'gita';
@@ -188,8 +202,8 @@ el('hcgPrev').addEventListener('click',()=>next(-1));
 el('hcgNext').addEventListener('click',()=>next(1));
 el('hcgPlay').addEventListener('click',play);
 el('hcgClose').addEventListener('click',()=>{stop();panel.hidden=true});
-audio.addEventListener('pause',()=>{playing=false;el('hcgPlay').textContent='▶';if(typeof renderGlobalMini==='function')renderGlobalMini()});
-audio.addEventListener('play',()=>{playing=true;el('hcgPlay').textContent='Ⅱ';try{localStorage.setItem('heartclearActiveMedia','gita')}catch(e){};if(typeof renderGlobalMini==='function')renderGlobalMini()});
+audio.addEventListener('pause',()=>{playing=false;el('hcgPlay').textContent='▶';informHome();if(typeof renderGlobalMini==='function')renderGlobalMini()});
+audio.addEventListener('play',()=>{playing=true;el('hcgPlay').textContent='Ⅱ';try{localStorage.setItem('heartclearActiveMedia','gita')}catch(e){};informHome();if(typeof renderGlobalMini==='function')renderGlobalMini()});
 audio.addEventListener('ended',()=>{
  playing=false;
  if(mode==='om'){
@@ -207,7 +221,7 @@ audio.addEventListener('timeupdate',()=>{
  }
  syncSeek();if(typeof renderGlobalMini==='function')renderGlobalMini()
 });
-audio.addEventListener('error',()=>{playing=false;el('hcgPlay').textContent='▶';notice('Cannot play this audio stream. Use the original source link.');});
+audio.addEventListener('error',()=>{playing=false;el('hcgPlay').textContent='▶';notice('This recording cannot stream in HeartClear right now. Choose another language or try again.');});
 document.addEventListener('play',event=>{if(event.target instanceof HTMLMediaElement&&event.target!==audio&&!audio.paused)audio.pause()},true);
 window.hcGitaPlayerState=()=>{
  if(!audio.getAttribute('src'))return null;
@@ -216,6 +230,8 @@ window.hcGitaPlayerState=()=>{
  screen:'sacredDetail'};
 };
 window.hcGitaStep=direction=>next(direction);
+window.hcGitaHomeToggle=(n,language)=>playFromHome(n,language,true);
+window.hcGitaHomeConfigure=(n,language)=>playFromHome(n,language,false);
 window.hcGitaJump=seconds=>jump(seconds);
 window.hcGitaStop=()=>{stop();try{localStorage.removeItem('heartclearActiveMedia')}catch(e){};if(typeof renderGlobalMini==='function')renderGlobalMini()};
 window.hcOpenGitaVoice=(chapterNum,language)=>{if(language&&labels[language])lang=language;open('gita',chapterNum)};
