@@ -12,7 +12,7 @@ const {chromium}=require('playwright');
    const errors=[];
    page.on('pageerror',e=>{if(e.message!=='writeEmbed is not defined')errors.push(e.message)});
    await page.goto('http://127.0.0.1:8765/human-practice-prototype/',{waitUntil:'domcontentloaded',timeout:30000});
-   await page.waitForSelector('#hcListening',{timeout:20000});
+   await page.waitForSelector('#hcListening',{state:'attached',timeout:20000});
    await page.waitForFunction(()=>!document.documentElement.classList.contains('hc-booting'),{timeout:20000});
    await page.evaluate(()=>{
      window.hcPlaybackTriggered=[];
