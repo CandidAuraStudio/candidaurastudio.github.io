@@ -53,6 +53,28 @@ const assert=require('node:assert/strict');
   assert.equal(await page.locator('#hcOneTapDrive').evaluate(x=>x.classList.contains('hc-ot-collapsed')),false,'Expand does not reload Drive');
   await page.locator('#hcOtClose').click();
   console.log('PASS: Drive preview keeps its iframe on page change and supports compact/expanded view');
+
+  // v251: verify the exact Sacred Sound controls users tap on narrow Android screens.
+  await page.evaluate(()=>show('sacred'));
+  await page.locator('#hcSacredInstantV149 [data-play="om"]').click();
+  await page.waitForFunction(()=>!document.getElementById('hcOneTapDrive').hidden);
+  assert.match(await page.locator('#hcOtFrame').getAttribute('src'),/11ogtK6FopRz-g8o-gHLY6-TV4fTJ5GjN/,'Sacred Sound quick OM tap must open the original video');
+  await page.locator('#hcOtClose').click();
+  await page.evaluate(()=>openSacred('hindu'));
+  await page.locator('#hcSacredDriveCards .hc-drive-card').first().click();
+  await page.waitForFunction(()=>!document.getElementById('hcOneTapDrive').hidden);
+  assert.match(await page.locator('#hcOtFrame').getAttribute('src'),/11ogtK6FopRz-g8o-gHLY6-TV4fTJ5GjN/,'Hindu OM listing must use the same player without recursion');
+  await page.locator('#hcOtClose').click();
+  const bansuri=page.locator('#hcHinduBansuriQuick');
+  assert.equal(await bansuri.isVisible(),true,'Original Bansuri play card must be visible');
+  const measured=await bansuri.evaluate(x=>({width:x.getBoundingClientRect().width,
+    statusWidth:x.querySelector('.hc-sacred-quick-status')?.getBoundingClientRect().width||0}));
+  assert.ok(measured.width>280&&measured.statusWidth>=55,'Sacred Play text is squeezed: '+JSON.stringify(measured));
+  await bansuri.click();
+  await page.waitForFunction(()=>soundLabAudio.getAttribute('src')?.includes('HeartClear_Nepal_Bansuri_Learnerktm_CC0.ogg'));
+  assert.ok(await page.locator('#hcHinduBansuriQuick').getAttribute('data-inline-audio'),'Bansuri must report play state');
+  console.log('PASS: both OM entrances, original Bansuri tap and mobile Sacred buttons');
+
   // Write the stored state at document startup. The old document's real
   // pagehide handler would correctly supersede an artificial value set before reload.
   await page.addInitScript(()=>{
