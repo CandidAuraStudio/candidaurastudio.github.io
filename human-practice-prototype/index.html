@@ -3421,7 +3421,7 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
     <iframe id="omVideoFrame" title="OM chanting meditation video" allow="autoplay;fullscreen;picture-in-picture" allowfullscreen loading="lazy" style="border:0;width:100%;height:100%"></iframe>
   </div>
   <p class="player-status">If the embedded video is blocked, use the Drive link below.</p>
-  <a href="https://drive.google.com/file/d/11ogtK6FopRz-g8o-gHLY6-TV4fTJ5GjN/view" target="_blank" rel="noopener noreferrer" class="btn secondary" style="display:block;text-align:center;text-decoration:none">Open video in Google Drive</a>
+  <button type="button" class="btn secondary" onclick="window.hcOpenOmVoice?.()">Listen inside HeartClear</button>
   <button class="btn secondary" onclick="closeOmVideo()">Back to Hindu Insight</button>
  </div>
 </section>
@@ -6642,15 +6642,15 @@ function hcDriveCard(item){
   btn.style.textAlign='left';
   const ico=document.createElement('span');ico.className='soundlab-icon';ico.textContent='▶';
   const body=document.createElement('span');
-  const name=document.createElement('b');name.textContent=item.key==='hinduOm'?'Mantra Bed · Long Listening':item.key==='generalDuduk'?'Duduk · April Improvisation':item.name;
-  const meta=document.createElement('small');meta.textContent=item.key==='hinduOm'?'Audio · 1 hour or 3 hours · Original OM video preserved':item.key==='generalDuduk'?'2:57 · instrumental MP3 · CC BY · different recording':item.type;
+  const name=document.createElement('b');name.textContent=item.key==='hinduOm'?'OM Chanting & Singing Bowls · 3:33:33':item.key==='generalDuduk'?'Duduk · April Improvisation':item.name;
+  const meta=document.createElement('small');meta.textContent=item.key==='hinduOm'?'Full recording · in-app playback · MP4 with audio':item.key==='generalDuduk'?'2:57 · instrumental MP3 · CC BY · different recording':item.type;
   body.append(name,meta);
   const arrow=document.createElement('span');arrow.className='soundlab-duration';arrow.textContent='Play';
   btn.append(ico,body,arrow);
   if(item.key==='hinduOm'){
     ico.textContent='♫';
     arrow.textContent='Listen ›';
-    btn.setAttribute('aria-label','Play Mantra Bed extended listening for one or three hours');
+    btn.setAttribute('aria-label','Play original OM Chanting and Singing Bowls, 3 hours 33 minutes, inside HeartClear');
     btn.addEventListener('click',()=>{if(typeof window.hcOpenOmVoice==='function')window.hcOpenOmVoice();else openSacred('hindu')});
   }else if(item.key==='generalDuduk'){
     ico.textContent='♫';arrow.textContent='▶';
