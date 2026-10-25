@@ -123,7 +123,7 @@
    'body.hc-cinema #hcCinemaHero :is(h1,p){overflow-wrap:normal!important}',
    'body.hc-cinema #hcCinemaTitle{color:#fff!important}',
    '@media(prefers-reduced-motion:reduce){body.hc-cinema #hcCinemaHero *{animation:none!important;transition:none!important}}'
-  ].join('\\n');
+  ].join(String.fromCharCode(10));
   document.head.append(shared);
  }
  const normal=make('hcCorePathsClassic'),daily=home.querySelector('.hc-v139-daily')||home.querySelector('.hc-home-greeting-row');
