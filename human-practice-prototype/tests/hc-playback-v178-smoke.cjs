@@ -54,7 +54,21 @@ const assert=require('node:assert/strict');
   await page.evaluate(()=>show('sacredDetail'));
   await page.locator('#hcFlowDockListen').click();
   assert.equal(await page.locator('#hcListening.active').count(),1,'Headphones from Islamic/Hindu detail must open unified listening');
+  assert.equal(await page.locator('#hclTabs [data-category="all"]').getAttribute('aria-pressed'),'true','Re-entering Listening resets All');
+  assert.equal(await page.locator('#hclSearch').inputValue(),'','Re-entering Listening clears search');
   assert.equal(await page.evaluate(()=>document.getElementById('humanSoundAudio').paused),false,'Opening audio library must preserve already-playing media');
+
+  // Regression: changing categories/search must not stick after leaving and returning.
+  await page.locator('#hclTabs [data-category="books"]').click();
+  await page.locator('#hclSearch').fill('Shadows');
+  await page.evaluate(()=>show('home'));
+  await page.locator('#hcFlowDockListen').click();
+  assert.equal(await page.locator('#hclTabs [data-category="all"]').getAttribute('aria-pressed'),'true','Listening return selects All');
+  assert.equal(await page.locator('#hclSearch').inputValue(),'','Listening return clears stale search');
+  assert.ok(await page.locator('#hcListening [data-record="guided-wake"]').count(),'All Listening shows meditation again');
+  assert.ok(await page.locator('#hcListening [data-record="book-en"]').count(),'All Listening still includes audiobooks');
+  assert.equal(await page.locator('#hclStatus').innerText(),'','Old Selected recording status must not look like an active filter');
+  assert.equal(await page.evaluate(()=>document.getElementById('humanSoundAudio').paused),false,'Reset does not pause audio');
   console.log('PASS: headphones always show one full Islamic/Hindu/meditation/breathwork/books library without interrupting audio');
 
   console.log('PASS: Human Practice continues through Home, Practice, Library with visible mini-player');
