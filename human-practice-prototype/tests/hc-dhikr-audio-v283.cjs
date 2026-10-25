@@ -21,7 +21,6 @@ assert.match(listening,/record\('dhikr-extended'.*'dhikr-audio','islamDhir120'/)
 assert.match(listening,/item\.key==='islamDhir120'\)return/);
 assert.match(listening,/item\.kind==='dhikr-audio'/);
 assert.match(audio,/method:'HEAD'/);
-assert.match(audio,/^|[\s\S]*^/); // Do not imply the M4A is already hosted.
 assert.match(audio,/response\.ok/);
 assert.match(audio,/hcQuickPlaySound\(key\)/);
 assert.match(index,/hc-dhikr-audio-v283\.js\?v=283/);
