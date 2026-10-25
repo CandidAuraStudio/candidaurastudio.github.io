@@ -3,13 +3,38 @@
  'use strict';
  const home=document.getElementById('home'),bubble=document.getElementById('hcBubbleHome');
  if(!home||!bubble||document.getElementById('hcCorePathsClassic'))return;
- const faith=[['islam','Islam','Play Morning Adhkar'],['bible','Bible','Open Genesis reader'],['hindu','Hindu','Play Mantra']];
+ const faith=[['islam','Islam','Qur’an audio · 114 surahs'],['bible','Bible','Listen to Genesis · 50 chapters'],['hindu','Hindu','Bhagavad Gita · 18 chapters']];
  const paths=[['books','Books','All reading and audiobooks'],['audio','Audio Journeys','Meditation and listening'],['kitchen','Kitchen','Cooking and heritage recipes'],['human','Human Journey','Daily care and attention'],['nature','Nature Sounds','Forest, flute and rain'],['explore','More','All HeartClear experiences']];
  function go(key){
   try{switch(key){
-   case 'islam':if(typeof window.hcPlayAdhkar==='function')window.hcPlayAdhkar('listen');else window.openSacred?.('islamic');break;
-   case 'bible':if(typeof window.hcBubbleHome?.bible==='function')window.hcBubbleHome.bible();else window.show?.('library');break;
-   case 'hindu':if(typeof window.hcQuickPlaySound==='function')window.hcQuickPlaySound('mantra');else window.openSacred?.('hindu');break;
+   case 'islam':{
+    // Open the complete Qur'an listening controls on Home. Adhkar stays separate.
+    window.show?.('home');
+    const player=document.getElementById('hcQuranFirst');
+    const directory=document.getElementById('hcqBrowse');
+    if(directory)directory.open=true;
+    player?.scrollIntoView({behavior:'smooth',block:'start'});
+    document.getElementById('hcqPlay')?.focus({preventScroll:true});
+    break;
+   }
+   case 'bible':{
+    window.show?.('home');
+    const card=document.getElementById('hcGenesisCard');
+    const chapterMenu=document.getElementById('hcGenSelect')?.closest('details');
+    if(chapterMenu)chapterMenu.open=true;
+    card?.scrollIntoView({behavior:'smooth',block:'start'});
+    const audio=document.getElementById('hcGenesisAudio');
+    if(audio?.paused)document.getElementById('hcGenPlay')?.click();
+    break;
+   }
+   case 'hindu':{
+    window.show?.('home');
+    document.getElementById('hcHinduHome')?.scrollIntoView({behavior:'smooth',block:'center'});
+    const audioLanguage=document.querySelector('#hcHinduHome .hc-gita-language-chips [aria-pressed="true"]')?.dataset.gitaLang;
+    const chapter=Number(document.querySelector('#hcHinduHome .hc-gita-home-chapter')?.value)||1;
+    window.hcGitaHomeToggle?.(chapter,audioLanguage);
+    break;
+   }
    case 'books':window.show?.('library');break;
    case 'audio':if(typeof window.hcOpenAllListening==='function')window.hcOpenAllListening();else window.openSoundLab?.();break;
    case 'kitchen':if(typeof window.hcBubbleHome?.recipe==='function')window.hcBubbleHome.recipe('');else window.hcFlow?.openExplore?.();break;
@@ -21,8 +46,7 @@
  function make(id){
   const s=document.createElement('section');s.id=id;s.className='hc-core-paths';s.setAttribute('aria-label','Main HeartClear choices');
   const cap=document.createElement('div');cap.textContent='YOUR DAY · YOUR CHOICE';cap.className='hc-path-cap';
-  const a=document.createElement('h2');a.textContent='Prayer & reflection';
-  const p=document.createElement('p');p.textContent='Choose a tradition or simply listen to nature. Nothing plays automatically.';
+  const a=document.createElement('h2');a.textContent='Prayer · meditation · reflection';
   const b=document.createElement('h2');b.textContent='Explore your journeys';
   const f=document.createElement('div');f.className='hc-path-faith';
   const g=document.createElement('div');g.className='hc-path-main';
@@ -31,9 +55,23 @@
    const text=document.createElement('span'),strong=document.createElement('strong'),small=document.createElement('small'),arrow=document.createElement('span');
    strong.textContent=title;small.textContent=desc;arrow.textContent='›';arrow.setAttribute('aria-hidden','true');text.append(strong,small);button.append(text,arrow);holder.append(button);
   }
-  s.append(cap,a,p,f,b,g);
+  s.append(cap,a,f,b,g);
   s.addEventListener('click',e=>{const btn=e.target.closest?.('button[data-path]');if(btn&&s.contains(btn))go(btn.dataset.path)});
   return s;
+ }
+ // Official HeartClear infinity, aligned with the single Home language switch.
+ const appLanguage=document.getElementById('hcAppLanguageHome');
+ if(appLanguage&&!document.getElementById('hcHomeBrandBar')){
+  const bar=document.createElement('div');bar.id='hcHomeBrandBar';
+  const symbol=document.createElementNS('http://www.w3.org/2000/svg','svg');
+  symbol.id='hcHomeInfinity';symbol.setAttribute('viewBox','0 0 512 512');
+  symbol.setAttribute('role','img');symbol.setAttribute('aria-label','HeartClear infinity logo');
+  const curve=document.createElementNS('http://www.w3.org/2000/svg','path');
+  curve.setAttribute('d','M128 341.333c106.667 0 149.333-170.666 256-170.666a85.333 85.333 0 0 1 0 170.666c-106.667 0-149.333-170.666-256-170.666a85.333 85.333 0 1 0 0 170.666');
+  curve.setAttribute('fill','none');curve.setAttribute('stroke','currentColor');curve.setAttribute('stroke-width','32');
+  curve.setAttribute('stroke-linecap','round');curve.setAttribute('stroke-linejoin','round');
+  symbol.append(curve);bar.append(symbol);
+  appLanguage.before(bar);bar.append(appLanguage);
  }
  const normal=make('hcCorePathsClassic'),daily=home.querySelector('.hc-v139-daily')||home.querySelector('.hc-home-greeting-row');
  if(daily)daily.after(normal);else home.prepend(normal);
@@ -42,6 +80,10 @@
  const status=document.createElement('p');status.id='hcCorePathStatus';status.setAttribute('role','status');normal.append(status);
  const style=document.createElement('style');style.id='hcCorePathsCss';
  style.textContent=[
+ '#home #hcHomeBrandBar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:4px 0 10px;min-height:52px;width:100%;box-sizing:border-box}',
+ '#home #hcHomeInfinity{display:block;flex:none;color:#fff;width:54px;height:54px;max-width:18vw}',
+ '#home #hcHomeBrandBar #hcAppLanguageHome{display:flex!important;align-items:center!important;max-width:calc(100% - 70px)!important;width:max-content!important;margin:0 0 0 auto!important;padding:2px!important;border:1px solid #83949e;border-radius:16px!important;background:#111b22}',
+ '#home #hcHomeBrandBar #hcAppLanguageHome button{min-width:65px!important;min-height:42px!important;padding:7px 10px!important;font-size:13px!important;border-radius:12px!important}',
  '#home .hc-core-paths{display:grid;gap:12px;width:100%;max-width:680px;box-sizing:border-box;margin:8px auto 16px;padding:17px;border:1px solid rgba(210,231,241,.17);border-radius:20px;background:linear-gradient(145deg,#12303e,#091d29)}',
  '#home .hc-core-paths *{box-sizing:border-box}',
  '#home .hc-path-cap{letter-spacing:.13em;color:#d9bb89;font:700 10px system-ui}',
