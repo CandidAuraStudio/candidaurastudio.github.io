@@ -93,3 +93,94 @@ body.hc-flow-enabled #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail) .h
   body.hc-flow-enabled #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail) #hcHinduHome{grid-template-columns:minmax(0,1fr) 48px 48px!important;}
   body.hc-flow-enabled #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail) #hcHinduHome button{width:48px!important;min-width:48px!important;}
 }
+
+/* v244: mobile Sounds player typography and spacing.
+   Fix overgrown global v220 buttons and forced mid-word breaks.
+   These rules only affect presentation; playback state/handlers are unchanged. */
+body.hc-flow-enabled #soundLabPlayer.active>.glass.soundlab-player{
+  box-sizing:border-box;min-width:0;padding:clamp(14px,3.8vw,21px)!important;
+}
+body.hc-flow-enabled #soundLabPlayer.active #soundLabTitle{
+  font-size:clamp(25px,6.8vw,31px)!important;line-height:1.2!important;
+  margin:8px 0!important;overflow-wrap:normal;word-break:normal;
+}
+body.hc-flow-enabled #soundLabPlayer.active :is(#soundLabDesc,#soundLabStatus,#hcBgPlaybackStatus){
+  font-size:14px!important;line-height:1.45!important;overflow-wrap:normal;
+  word-break:normal;max-width:100%;
+}
+body.hc-flow-enabled #soundLabPlayer.active .hc-native-toolbar{
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:nowrap;
+  gap:8px;margin-bottom:12px;
+}
+body.hc-flow-enabled #soundLabPlayer.active .hc-native-toolbar button{
+  flex:0 1 auto;min-width:0;min-height:44px!important;padding:8px 10px!important;
+  font-size:14px!important;line-height:1.3!important;white-space:nowrap;
+  overflow-wrap:normal!important;word-break:normal!important;
+}
+body.hc-flow-enabled #soundLabPlayer.active .soundlab-transport{
+  gap:8px;margin-top:11px;
+}
+body.hc-flow-enabled #soundLabPlayer.active .soundlab-transport button{
+  min-width:0;min-height:46px!important;padding:9px 8px!important;
+  font-size:15px!important;line-height:1.3!important;white-space:nowrap;
+  overflow-wrap:normal!important;word-break:normal!important;
+}
+body.hc-flow-enabled #soundLabPlayer.active .soundlab-options{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  align-items:stretch;gap:8px;margin-top:10px;
+}
+body.hc-flow-enabled #soundLabPlayer.active>.glass>.soundlab-options{
+  grid-template-columns:minmax(0,1fr) minmax(0,1.35fr) minmax(0,.75fr);
+}
+body.hc-flow-enabled #soundLabPlayer.active .soundlab-options button{
+  box-sizing:border-box;width:100%;min-width:0;min-height:46px!important;height:auto;
+  padding:9px 7px!important;font-size:clamp(13px,3.6vw,15px)!important;
+  line-height:1.3!important;white-space:normal;
+  overflow-wrap:normal!important;word-break:normal!important;hyphens:none;
+  border-radius:16px!important;
+}
+body.hc-flow-enabled #soundLabPlayer.active .soundlab-continuity{
+  box-sizing:border-box;width:100%;min-width:0;
+  margin:12px 0 0;padding:12px;
+  border-radius:20px;
+}
+body.hc-flow-enabled #soundLabPlayer.active .soundlab-continuity>label{
+  font-size:14px!important;line-height:1.35!important;margin:0 0 8px!important;
+}
+body.hc-flow-enabled #soundLabPlayer.active #hcSoundTimerChips{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:6px;margin:8px 0 10px;min-width:0;
+}
+body.hc-flow-enabled #soundLabPlayer.active #hcSoundTimerChips button{
+  box-sizing:border-box;display:grid;place-items:center;
+  width:100%;min-width:0!important;min-height:46px!important;height:auto;
+  padding:8px 3px!important;
+  font-size:clamp(12px,3.35vw,14px)!important;line-height:1.2!important;
+  white-space:nowrap!important;overflow-wrap:normal!important;
+  word-break:keep-all!important;hyphens:none!important;
+  border-radius:15px!important;
+}
+body.hc-flow-enabled #soundLabPlayer.active .soundlab-continuity #soundLabQueueStatus{
+  font-size:14px!important;line-height:1.45!important;
+  margin:10px 0 0!important;max-width:100%;
+  overflow-wrap:normal!important;word-break:normal!important;
+}
+body.hc-flow-enabled #soundLabPlayer.active .soundlab-continuity .soundlab-options{
+  margin-top:8px;
+}
+/* Carry the four balanced timer cells into the Sounds multi-layer mixer. */
+body.hc-flow-enabled #soundLab.active #hcMixTimerChips{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;min-width:0;
+}
+body.hc-flow-enabled #soundLab.active #hcMixTimerChips button{
+  min-width:0!important;min-height:46px!important;padding:8px 3px!important;
+  font-size:clamp(12px,3.35vw,14px)!important;line-height:1.2!important;
+  white-space:nowrap!important;overflow-wrap:normal!important;
+  word-break:keep-all!important;hyphens:none!important;
+}
+@media(max-width:355px){
+  body.hc-flow-enabled #soundLabPlayer.active #hcSoundTimerChips,
+  body.hc-flow-enabled #soundLab.active #hcMixTimerChips{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
