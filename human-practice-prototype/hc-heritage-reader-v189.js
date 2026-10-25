@@ -170,7 +170,9 @@ function render(){
  if(route.level==='index'){
   main.innerHTML='<span class="hc-heritage-kicker">HEARTCLEAR · READ</span><h1>'+tr('Human knowledge, across time','மனித அறிவு · காலங்களின் வழியே')+'</h1>'+
   '<p>'+tr('Explore Qur’an, Bible, Vedas and traditions in their own contexts, alongside everyday knowledge.','குர்ஆன், பைபிள், வேதம், பிற மரபுகள் மற்றும் அன்றாட அறிவை அவற்றின் சொந்தச் சூழலில் அறியலாம்.')+'</p>'+
-  '<div class="hc-heritage-list">'+topics.map(t=>'<button type="button" class="hc-heritage-tile" data-topic="'+t[0]+'"><span><strong>'+E(tr(t[1],t[2]))+'</strong><small>'+rows(t[0]).length+' '+tr('articles','கட்டுரைகள்')+'</small></span><span class="chev" aria-hidden="true">›</span></button>').join('')+'</div>'+
+  '<div class="hc-heritage-list">'+
+  '<a class="hc-heritage-tile" style="color:inherit;text-decoration:none" href="./human-knowledge/ali-letter-31.html" aria-label="Read Letter 31: A Letter to a Son, A Letter for Every Human"><span><strong>A Letter to a Son · Every Human</strong><small>Nahj al-Balagha · Letter 31 · complete Arabic and sourced English</small></span><span class="chev" aria-hidden="true">›</span></a>'+
+  topics.map(t=>'<button type="button" class="hc-heritage-tile" data-topic="'+t[0]+'"><span><strong>'+E(tr(t[1],t[2]))+'</strong><small>'+rows(t[0]).length+' '+tr('articles','கட்டுரைகள்')+'</small></span><span class="chev" aria-hidden="true">›</span></button>').join('')+'</div>'+
   '<p>'+tr('Medical science uses clinical sources. History is shown only where documented.','மருத்துவ அறிவியலுக்கு மருத்துவ ஆதாரங்கள். வரலாற்றுக்கு ஆவண ஆதாரம் உள்ள இடங்கள் மட்டுமே.')+'</p>';
  }else if(route.level==='topic'){
   if(!chapter.length){navigate('index');return}
