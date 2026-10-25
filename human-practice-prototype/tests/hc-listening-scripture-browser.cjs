@@ -18,7 +18,7 @@ const {chromium}=require('playwright');
      window.hcPlaybackTriggered=[];
      const old=HTMLMediaElement.prototype.play;
      HTMLMediaElement.prototype.play=function(){
-       window.hcPlaybackTriggered.push(this.id||this.tagName);return Promise.reject(new DOMException('Browser test: intentional audio block','NotAllowedError'));
+       window.hcPlaybackTriggered.push({id:this.id||this.tagName,src:this.currentSrc||this.src||'',stack:new Error('media.play() trace').stack});return Promise.reject(new DOMException('Browser test: intentional audio block','NotAllowedError'));
      };
      window.hcOriginalPlay=old;
    });
