@@ -87,7 +87,8 @@ hub.querySelectorAll('[data-mantra-play]').forEach(button=>{
   }
  });
 });
-const drive=window.openHcDriveMedia;
+// Always call the stable in-app Drive dock, not another wrapper that can call us again.
+const drive=typeof window.hcOpenDriveDock==='function'?window.hcOpenDriveDock:window.openHcDriveMedia;
 function hcPlayOriginalMantraVideo(key){
  if(typeof drive!=='function')return;
  const status=document.getElementById('hcMantraStatusV216');
