@@ -219,3 +219,33 @@ body.hc-cinema.hc-mini-visible #home.hc-bubble-mode{overflow:visible!important;m
 /* All audio screens, including Home, need real document scroll behind the fixed mini-player. */
 body.hc-cinema.hc-mini-visible:not(.hc-reels-active):not(.hc-flow-modal-open):not(.hc-search-open){overflow-y:auto!important}
 body.hc-cinema.hc-mini-visible:not(.hc-reels-active) .app{min-height:calc(100dvh + 390px)!important}
+
+/* v241: restore the original Home's approved words and daily-start sections.
+   Cinematic visuals remain; the separate large-card browser is opt-in. */
+body.hc-cinema #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail) > .hc-home-greeting-row{
+  display:flex!important;align-items:center;justify-content:space-between;
+  gap:12px;margin:10px 0 18px!important;padding:8px 4px!important;
+}
+body.hc-cinema #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail) .home-greeting{
+  color:#fff!important;font-size:clamp(27px,7.1vw,36px)!important;
+  font-weight:750!important;line-height:1.18!important;letter-spacing:-.03em;
+}
+body.hc-cinema #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail) .hc-daily-family{
+  font-size:clamp(14px,3.7vw,17px)!important;color:#d8dddf!important;line-height:1.45;
+}
+body.hc-cinema #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail) > #hcBubbleClassic{
+  display:block!important;min-height:44px!important;width:auto;max-width:100%;
+  margin:2px 0 8px auto!important;padding:8px 15px!important;
+  background:#161d22!important;border:1px solid #7f8d97!important;
+  border-radius:18px!important;color:#f5f5f5!important;font-size:13px!important;
+}
+body.hc-cinema #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail)
+ :is(.hc-simple-start,#hcHomeRoutineV155,#hcHomeKitchenQuickV155){
+  border-radius:26px!important;border:1px solid #ffffff40!important;
+  background:linear-gradient(145deg,rgba(24,35,41,.94),rgba(8,13,19,.96))!important;
+  color:#f9fafb!important;box-shadow:none!important;
+}
+body.hc-cinema #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail)
+ :is(.hc-simple-start,#hcHomeRoutineV155,#hcHomeKitchenQuickV155) :is(button,input,select){
+  max-width:100%;
+}

@@ -32,7 +32,7 @@ search.innerHTML='<div class="hcb-search-body"><div class="hcb-search-top"><stro
  '<label for="hcBubbleSearchInput">What would you like?</label><input type="search" id="hcBubbleSearchInput" placeholder="Food, Qur’an, Bible, sounds…" enterkeyhint="search" autocomplete="off" maxlength="120">'+
  '<div class="hcb-results" id="hcBubbleResults" aria-live="polite"></div><p class="hcb-search-caption">Choose one result to open it.</p></div>';
 document.body.append(search);
-const back=document.createElement('button');back.id='hcBubbleReturn';back.type='button';back.textContent='← Big view';back.hidden=true;home.prepend(back);
+const back=document.createElement('button');back.id='hcBubbleReturn';back.type='button';back.textContent='← Home';back.hidden=true;home.prepend(back);
 const classic=document.createElement('button');classic.id='hcBubbleClassic';classic.type='button';classic.textContent='Big view';classic.hidden=true;home.prepend(classic);
 const $=id=>document.getElementById(id);
 // Always start at the first real activity: a previously saved 8/8 is not a useful Home.
@@ -64,10 +64,24 @@ function big(){
  index=0;draw();
  window.scrollTo({top:0,behavior:'auto'});
 }
-function legacy(){setMode('classic',true);window.scrollTo({top:0,behavior:'auto'})}
+function legacy(){
+ if(typeof window.show==='function'&&!isHome())window.show('home');
+ setMode('classic',true);
+ window.scrollTo({top:0,behavior:'auto'});
+}
 // Each fresh load returns to Home, not a previously opened player/detail.
 if(!isHome()&&typeof window.show==='function')window.show('home');
-setMode('big',false);
+setMode('classic',false);
+// Keep the approved local-time Home greeting current; never replace the copy.
+function refreshHomeGreeting(){
+ const greeting=document.getElementById('timeGreeting');if(!greeting)return;
+ const h=new Date().getHours();
+ greeting.textContent=h>=5&&h<12?'Good morning':h>=12&&h<17?'Good afternoon':h>=17&&h<21?'Good evening':'Good night';
+}
+refreshHomeGreeting();
+window.addEventListener('focus',refreshHomeGreeting);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshHomeGreeting()});
+setInterval(refreshHomeGreeting,60000);
 // Keep a valid saved listening position but do not cover Home with a paused mini.
 document.body.classList.add('hc-fresh-home');
 const resumeBtn=$('hcBubbleResume');
@@ -124,7 +138,7 @@ function genesis(){
  setMode('detail',false);
  requestAnimationFrame(function(){
   const target=$('hcGenesisCard');
-  if(!target){setMode('big',false);return}
+  if(!target){setMode('classic',false);return}
   const reading=$('hcGenReading'),toggle=$('hcGenRead');
   if(reading&&reading.hidden&&toggle)toggle.click();
   target.scrollIntoView({block:'start',behavior:'auto'});
@@ -176,7 +190,7 @@ $('hcBubbleSwitch').addEventListener('click',()=>{
  if(typeof window.hcFlow?.openExplore==='function')window.hcFlow.openExplore();
  else legacy();
 });
-classic.addEventListener('click',big);back.addEventListener('click',big);
+classic.addEventListener('click',big);back.addEventListener('click',legacy);
 const searchInput=$('hcBubbleSearchInput'),results=$('hcBubbleResults');
 let searchReturn=null,originalOverflow=null;
 function closeSearch(){
@@ -285,15 +299,15 @@ const originalShow=window.show;
 if(typeof originalShow==='function')window.show=function(id){
  const result=originalShow.apply(this,arguments);
  if(id==='home'){
-  setMode('big',false);
+  setMode('classic',false);
   requestAnimationFrame(()=>window.scrollTo({top:0,behavior:'auto'}));
  }
  return result;
 };
-window.addEventListener('pageshow',()=>{if(isHome()&&!home.classList.contains('hc-bubble-detail')){setMode('big',false);requestAnimationFrame(()=>window.scrollTo({top:0,behavior:'auto'}))}});
+window.addEventListener('pageshow',()=>{if(isHome()&&!home.classList.contains('hc-bubble-detail')){setMode('classic',false);requestAnimationFrame(()=>window.scrollTo({top:0,behavior:'auto'}))}});
 // Mobile Chrome may restore an old vertical scroll offset across reloads.
 // A fresh HeartClear launch begins at the top of Home, never halfway down Kitchen.
-window.addEventListener('load',()=>{if(isHome()&&home.classList.contains('hc-bubble-mode'))requestAnimationFrame(()=>window.scrollTo({top:0,behavior:'auto'}))},{once:true});
+window.addEventListener('load',()=>{if(isHome()&&!home.classList.contains('hc-bubble-detail'))requestAnimationFrame(()=>window.scrollTo({top:0,behavior:'auto'}))},{once:true});
 draw();syncButtons();
 window.hcBubbleHome={open:big,classic:legacy,search:openSearch,recipe:recipe,bible:genesis};
 })();

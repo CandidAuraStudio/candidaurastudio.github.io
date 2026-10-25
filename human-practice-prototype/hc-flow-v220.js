@@ -94,7 +94,7 @@ function current(){return document.querySelector('.screen.active')?.id||'home'}
 function bigHome(){
  if(!explore.hidden)closeExplore();
  if(!$('hcBubbleSearchPanel')?.hidden)$('hcBubbleSearchClose')?.click();
- if(typeof window.hcBubbleHome?.open==='function')window.hcBubbleHome.open();
+ if(typeof window.hcBubbleHome?.classic==='function')window.hcBubbleHome.classic();
  else window.show?.('home');
  window.scrollTo(0,0);
 }
