@@ -67,6 +67,10 @@ styles.textContent=[
  '#hcHinduHome .hc-hindu-info{flex:1 1 165px}',
  '#hcHinduHome .hc-gita-home-chapter{max-width:105px}',
  '#hcHinduHome .hc-hindu-play{min-width:45px}',
+ '#hcHinduHome .hc-gita-home-lang{display:none!important}',
+ '#hcHinduHome .hc-gita-language-chips{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;order:3;flex:0 0 100%;width:100%}',
+ '#hcHinduHome .hc-gita-language-chips button{min-width:0;min-height:37px;padding:5px 1px;border:1px solid #44616f;background:#173b4b;border-radius:9px;color:#e2eff2;font:600 clamp(9px,2.5vw,11px)/1.2 system-ui;overflow-wrap:anywhere}',
+ '#hcHinduHome .hc-gita-language-chips button[aria-pressed=true]{background:#eff6f5;border-color:#eff6f5;color:#132f3a;font-weight:750}',
 '#hcHinduHome button{height:36px;min-width:36px;border:1px solid #647b86;border-radius:10px;background:#203a47;color:#fff;font:600 14px system-ui}',
 '#hcHinduHome .hc-hindu-play{background:#f1f2eb;color:#0d212d}',
 '#hcHinduHome .hc-hindu-open{font-size:19px}',
@@ -126,6 +130,11 @@ const homeLanguageSelect=homeBar.querySelector('.hc-gita-home-lang');
   const option=document.createElement('option');option.value=String(n);option.textContent='Ch '+n;homeChapterSelect.add(option);
  }
  homeLanguageSelect.value=homeLang;homeChapterSelect.value=String(homeChapter);
+ const languageChips=document.createElement('div');languageChips.className='hc-gita-language-chips';languageChips.setAttribute('role','group');languageChips.setAttribute('aria-label','Choose a Gita audio language');
+ for(const [key,label] of Object.entries(gitaLanguages)){
+  const btn=document.createElement('button');btn.type='button';btn.dataset.gitaLang=key;btn.textContent=label;btn.setAttribute('aria-pressed',String(key===homeLang));languageChips.append(btn);
+ }
+ homeBar.append(languageChips);
  shelf.querySelectorAll('.hc-hindu-lang').forEach(populateSelect);
 const groupContainer=shelf.querySelector('.hc-hindu-groups');
 for(const w of works){
@@ -151,6 +160,7 @@ for(const w of works){
 function update(message=''){
  homeLanguageSelect.value=homeLang;
   homeChapterSelect.value=String(homeChapter);
+  languageChips.querySelectorAll('button[data-gita-lang]').forEach(btn=>btn.setAttribute('aria-pressed',String(btn.dataset.gitaLang===homeLang)));
   homeBar.querySelector('.hc-hindu-info b').textContent='Bhagavad Gita · Chapter '+homeChapter;
   homeBar.querySelector('.hc-hindu-info small').textContent=(homeLang==='ne'?'Nepali audio pending · ':'Original recording · ')+gitaLanguages[homeLang];
  shelf.querySelector('.hc-hindu-lang').value=lang;
@@ -216,6 +226,12 @@ function homeChoose(){
  if((homeLang==='en'||homeLang==='ta')&&window.HCAppLanguage?.get?.()!==homeLang)window.HCAppLanguage?.set?.(homeLang);
  homePlay(); // Explicit selection starts native audio directly, never a new page.
 }
+languageChips.addEventListener('click',event=>{
+ const btn=event.target.closest?.('button[data-gita-lang]');
+ if(!btn)return;
+ homeLanguageSelect.value=btn.dataset.gitaLang;
+ homeChoose();
+});
 homeLanguageSelect.addEventListener('change',homeChoose);
 homeChapterSelect.addEventListener('change',homeChoose);
 window.addEventListener('hc:gita-state',event=>{
