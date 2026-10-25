@@ -1,0 +1,271 @@
+/* HeartClear — unified charcoal interface, v278.
+   Applies only presentation; all existing media nodes, event handlers, URLs,
+   saved progress, sacred-text reading settings and offline data remain intact. */
+:root {
+ --hc-ui-bg:#090909;--hc-ui-surface:#191919;--hc-ui-raised:#222223;
+ --hc-ui-border:#4a4846;--hc-ui-type:#f7f7f6;--hc-ui-secondary:#c9c8c6;
+ --hc-ui-gold:#dcc39a;
+}
+html:has(body.hc-cinema),body.hc-cinema{background:#090909!important;color:var(--hc-ui-type)!important}
+body.hc-cinema .app{background:transparent!important;min-width:0!important;
+  padding-bottom:calc(175px + env(safe-area-inset-bottom,0px))!important}
+body.hc-cinema #hcCinemaBackdrop{background:#090909!important;opacity:1!important}
+body.hc-cinema .screen.active:not(#hcReels){min-width:0!important;max-width:100%!important;
+  row-gap:10px!important;color:var(--hc-ui-type)!important}
+body.hc-cinema .screen.active:not(#hcReels) :is(h1,h2,h3){color:#fff!important;
+  letter-spacing:-.025em!important;overflow-wrap:normal!important;word-break:normal!important}
+body.hc-cinema .screen.active:not(#hcReels) :is(h1,h2):not(.hcqs-arabic){
+  font-size:clamp(23px,5.7vw,29px)!important;line-height:1.22!important;margin-bottom:8px!important}
+body.hc-cinema .screen.active:not(#hcReels) h3{font-size:clamp(18px,4.7vw,22px)!important;line-height:1.28!important}
+body.hc-cinema .screen.active:not(#hcReels) :is(p,li):not(.hcqs-arabic):not(.hcqs-meaning):not(.hcqs-ta):not(.hcqs-en):not(.reader-page):not(.hc-heritage-main){
+  font-size:clamp(14px,3.7vw,16px)!important;line-height:1.52!important}
+body.hc-cinema .screen.active:not(#hcReels) :is(small,.kicker,.eyebrow,.hub-note,.library-label,.setting-row small,.hc-settings-toggle small,.hub-card small){
+  font-size:clamp(11px,3.1vw,13px)!important;line-height:1.4!important;letter-spacing:normal!important;
+  color:var(--hc-ui-secondary)!important}
+body.hc-cinema .screen.active:not(#hcReels) :is(button,summary,select,input:not([type=checkbox]):not([type=range]),textarea){
+  max-width:100%;min-width:0;line-height:1.35!important;font-size:clamp(13px,3.65vw,15px)!important;
+  border-radius:12px!important}
+body.hc-cinema .screen.active:not(#hcReels) :is(button,summary,select,input:not([type=checkbox]):not([type=range]),textarea):not(.hc-path-begin){
+  min-height:44px!important}
+body.hc-cinema .screen.active:not(#hcReels) :is(input:not([type=checkbox]),textarea,select){
+  border:1px solid #686560!important;color:#f7f7f6!important;background:#252525!important;
+  padding:9px 12px!important;box-sizing:border-box}
+body.hc-cinema .screen.active:not(#hcReels) :is(input,textarea)::placeholder{color:#aaa9a8!important}
+body.hc-cinema .screen.active:not(#hcReels) :is(.glass,.choice,.hub-card,.human-card,.sacred-card,.fear-card,.practice-card,.hc-mix-card,.hc-personal,.hc-settings-clean,.hc-settings-section,.hcqs-verse,.hc-home-section,.hc-recommended-card,.hc-secondary-resume,.hc-sound-row,.hc-sounds-hub-card,.hc-drive-card,.hc-sacred-quick){
+  background:#1a1a1a!important;border-color:var(--hc-ui-border)!important;color:#f7f7f6!important;
+  box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+  border-radius:16px!important}
+body.hc-cinema .screen.active:not(#hcReels) :is(.glass,.hc-personal,.hc-mix-card,.hc-settings-clean){
+  padding:clamp(12px,3.6vw,19px)!important}
+body.hc-cinema .screen.active:not(#hcReels) :is(.hub-card,.human-card,.sacred-card,.fear-card,.practice-card,.choice,.hc-sound-row,.hc-sounds-hub-card){
+  min-height:70px!important;padding:12px 13px!important;gap:10px!important;
+  border-radius:16px!important}
+body.hc-cinema .screen.active:not(#hcReels) :is(.hub-card,.human-card,.sacred-card,.fear-card,.practice-card) :is(b,strong){
+  color:#fff!important;font-size:clamp(15px,4vw,17px)!important;line-height:1.32!important;
+  white-space:normal!important;word-break:normal!important;overflow-wrap:normal!important}
+body.hc-cinema .screen.active:not(#hcReels) :is(.hub-card,.human-card,.sacred-card,.fear-card,.practice-card) small{
+  font-size:clamp(12px,3.25vw,14px)!important;line-height:1.45!important;color:#c8c8c7!important}
+body.hc-cinema .screen.active:not(#hcReels) :is(.hub-icon,.human-symbol,.sacred-symbol){
+  flex:0 0 auto;font-size:clamp(23px,7vw,30px)!important;
+  color:#e8d1a9!important;background:#262626!important;border:1px solid #454545!important;
+  border-radius:12px!important}
+body.hc-cinema .screen.active:not(#hcReels) :is(.hub-grid,.human-grid,.sacred-grid,.library-list,.collection-list,.hc-sound-track-list){
+  gap:10px!important;min-width:0!important}
+body.hc-cinema .screen.active:not(#hcReels) :is(button,summary):focus-visible{
+  outline:2px solid #fff!important;outline-offset:2px!important}
+body.hc-cinema .screen.active:not(#hcReels) :is(.btn.primary,.control.main,.hc-home-primary-btn){
+  background:#f6f5f2!important;color:#121212!important;border:1px solid #fff!important}
+
+/* A single understated header on every regular route; no duplicated Library title. */
+body.hc-cinema .screen.active:not(#home):not(#hcReels) > #hcCinemaHero,
+body.hc-cinema #home.active.hc-bubble-detail > #hcCinemaHero{
+  min-height:124px!important;margin:0 0 13px!important;padding:15px 17px!important;
+  border-radius:19px!important;border:1px solid #444!important;background:#191919!important;
+  background-image:none!important;box-shadow:none!important}
+body.hc-cinema #hcCinemaHero::before{display:none!important}
+body.hc-cinema #hcCinemaEyebrow{font:650 10px/1.3 system-ui!important;color:#c5c3bf!important;
+  letter-spacing:.12em!important}
+body.hc-cinema #hcCinemaTitle{font:750 clamp(25px,6vw,31px)/1.18 system-ui!important;
+  color:#fff!important;letter-spacing:-.025em!important;margin:6px 0 3px!important}
+body.hc-cinema #hcCinemaSubtitle{font:440 clamp(13px,3.45vw,15px)/1.4 system-ui!important;
+  color:#d0cecb!important;margin:0!important}
+body.hc-cinema #library.active > .hub-hero{display:none!important}
+body.hc-cinema #hcListening.active .hcl-heading{display:none!important}
+body.hc-cinema #library .hc-library-offline-link{
+  background:transparent!important;border:0!important;color:#ddc49b!important;
+  width:max-content!important;font-size:13px!important;padding:5px 4px!important;min-height:36px!important}
+body.hc-cinema #library .hub-grid{margin-top:2px!important}
+body.hc-cinema #library .hub-card{display:grid!important;grid-template-columns:52px minmax(0,1fr) 16px!important;
+  align-items:center!important;gap:11px!important}
+body.hc-cinema #library .hub-icon{width:50px!important;height:50px!important;
+  display:grid!important;place-items:center!important;font-size:21px!important;
+  background:#252525!important;color:#dac5a2!important;border:1px solid #444!important}
+body.hc-cinema #library .hub-arrow{color:#c8c1b8!important}
+body.hc-cinema #collection .collection-head{margin-bottom:12px!important}
+body.hc-cinema #collection .collection-list :is(button,.choice,.collection-item){background:#202020!important;color:#fff!important;border-color:#484848!important}
+body.hc-cinema #collection .collection-list :is(b,strong){font-size:clamp(15px,4vw,18px)!important;line-height:1.3!important}
+body.hc-cinema #collection .collection-list :is(p,small){font-size:clamp(12px,3.3vw,14px)!important}
+
+/* Shared library, nature, sound and listening language — charcoal not blue. */
+body.hc-cinema #hcListening #hclSearch{height:49px!important;min-height:49px!important;
+  background:#232323!important;border:1px solid #656360!important;color:#fff!important;
+  border-radius:12px!important;font:500 15px/1.3 system-ui!important}
+body.hc-cinema #hcListening #hclTabs button,
+body.hc-cinema .screen.active:not(#hcReels) :is(.category-tabs,.hc-sound-filters,.hcq-langs,.hcqs-langs) button{
+  background:#222!important;border:1px solid #595959!important;color:#e8e8e7!important;
+  border-radius:11px!important;padding:8px 12px!important;font:600 13px/1.2 system-ui!important;
+  min-height:43px!important;white-space:nowrap!important}
+body.hc-cinema #hcListening #hclTabs button[aria-pressed="true"],
+body.hc-cinema .screen.active:not(#hcReels) :is(.category-tabs,.hc-sound-filters,.hcq-langs,.hcqs-langs) button[aria-pressed="true"]{
+  background:#f6f5f2!important;color:#0b0b0b!important;border-color:white!important}
+body.hc-cinema #hcListening .hcl-group-title h3{font-size:20px!important}
+body.hc-cinema #hcListening .hcl-group-title button{background:#222!important;border-color:#585858!important;color:#fff!important}
+body.hc-cinema #hcListening button.hcl-record{background:#202020!important;border:1px solid #4f4f4f!important;
+  border-radius:15px!important;min-height:74px!important;padding:11px 12px!important;
+  grid-template-columns:43px minmax(0,1fr) 40px!important}
+body.hc-cinema #hcListening .hcl-record-icon{background:#303030!important;border-radius:12px!important;
+  width:42px!important;height:42px!important;color:#fff!important}
+body.hc-cinema #hcListening .hcl-record-info strong{font-size:15px!important;line-height:1.35!important}
+body.hc-cinema #hcListening .hcl-record-info small{font-size:12px!important;color:#c7c7c6!important}
+body.hc-cinema #hcListening .hcl-record-action{font-size:11px!important;color:#dfd3c5!important}
+body.hc-cinema :is(#soundHub,#soundLab,#sacred,#history,#downloads,#human,#practices,#settings) .hub-hero,
+body.hc-cinema :is(#soundHub,#soundLab,#sacred,#history,#downloads,#human,#practices) .human-hero{
+  background:#191919!important;border-color:#4a4a4a!important}
+body.hc-cinema :is(#soundHub,#soundLab,#sacred,#history,#downloads,#human,#practices) :is(.hc-sound-row,.hc-drive-card,.hc-sounds-hub-card,.sacred-card){
+  background:#202020!important;border-color:#4d4d4d!important}
+
+/* Settings should feel like Home; keep the original functioning controls. */
+body.hc-cinema #settings > .hc-settings-clean{background:#141414!important;border:1px solid #414141!important;
+  border-radius:18px!important;padding:13px!important}
+body.hc-cinema #settings .hc-settings-stack{gap:8px!important}
+body.hc-cinema #settings :is(.hc-settings-section,.setting-row,.hc-settings-toggle){
+  padding:10px 12px!important;background:#202020!important;border:1px solid #4c4c4c!important;
+  border-radius:13px!important;min-height:57px!important;gap:10px!important;
+  color:#fff!important}
+body.hc-cinema #settings .hc-settings-section>summary{padding:8px 2px!important;
+  min-height:48px!important;font-size:15px!important}
+body.hc-cinema #settings .hc-settings-section>summary :is(b,strong),
+body.hc-cinema #settings .setting-row :is(b,strong),body.hc-cinema #settings .hc-settings-toggle strong{
+  font-size:clamp(14px,3.8vw,16px)!important;color:#fff!important;line-height:1.35!important}
+body.hc-cinema #settings :is(.hc-settings-section,.setting-row,.hc-settings-toggle) small{font-size:12px!important}
+body.hc-cinema #settings .setting-row{min-height:61px!important;align-items:center!important}
+body.hc-cinema #settings .setting-row>div:first-child{min-width:0;flex:1 1 auto}
+body.hc-cinema #settings :is(.switch,.offline-action){min-width:0!important;
+  padding:8px 12px!important;font-size:13px!important;border-radius:12px!important;
+  background:#eeeae5!important;color:#101010!important;max-width:45%!important;
+  min-height:43px!important;white-space:normal!important;word-break:normal!important}
+body.hc-cinema #settings .hc-settings-section[open]{background:#1a1a1a!important}
+
+/* Gita audio languages: five complete labels without single-letter columns. */
+body.hc-cinema #home.active #hcHinduHome{
+  display:grid!important;grid-template-columns:minmax(0,1fr) 51px 51px!important;
+  gap:8px!important;background:#1b1b1b!important;border-color:#4a4a4a!important}
+body.hc-cinema #home.active #hcHinduHome .hc-hindu-info{grid-column:1/-1!important}
+body.hc-cinema #home.active #hcHinduHome select.hc-gita-home-chapter{
+  grid-column:1!important;min-width:0!important;width:100%!important;
+  background:#282828!important;color:#fff!important;min-height:46px!important}
+body.hc-cinema #home.active #hcHinduHome .hc-gita-language-chips{
+  grid-column:1/-1!important;display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:7px!important;
+  width:100%!important;min-width:0!important}
+body.hc-cinema #home.active #hcHinduHome .hc-gita-language-chips button{
+  box-sizing:border-box!important;width:100%!important;min-width:0!important;
+  height:auto!important;min-height:44px!important;margin:0!important;padding:7px 3px!important;
+  background:#252525!important;color:#fff!important;border:1px solid #5d5d5d!important;
+  font:600 clamp(12px,3.15vw,14px)/1.25 system-ui!important;word-break:normal!important;
+  overflow-wrap:normal!important;white-space:normal!important}
+body.hc-cinema #home.active #hcHinduHome .hc-gita-language-chips button[aria-pressed="true"]{
+  background:#f6f5f2!important;color:#141414!important;border-color:#fff!important}
+body.hc-cinema #home.active #hcHinduHome .hc-hindu-play,
+body.hc-cinema #home.active #hcHinduHome .hc-hindu-open{
+  width:50px!important;min-width:50px!important;height:46px!important;
+  border:1px solid #666!important;color:#fff!important;background:#242424!important}
+body.hc-cinema #home.active #hcHinduHome .hc-hindu-play{
+  background:#f7f6f3!important;color:#111!important;border-color:#fff!important}
+
+/* Explore: accessible 17-destination index, not a giant one-card maze. */
+body.hc-cinema #hcFlowExplore{background:#090909!important;min-width:0!important;
+  padding:calc(16px + env(safe-area-inset-top,0px)) 15px calc(25px + env(safe-area-inset-bottom,0px))!important}
+body.hc-cinema #hcFlowExplore .hc-flow-explore-inner{max-width:690px!important}
+body.hc-cinema #hcFlowExplore header{gap:12px!important}
+body.hc-cinema #hcFlowExplore header strong{font:750 clamp(22px,5.5vw,29px)/1.3 system-ui!important}
+body.hc-cinema #hcFlowExplore #hcFlowExploreClose{min-height:46px!important;width:46px!important;
+  font:700 26px system-ui!important;background:#202020!important;
+  border:1px solid #555!important;border-radius:13px!important}
+body.hc-cinema #hcFlowExplore .hc-flow-explore-card{
+  min-height:165px!important;max-height:none!important;margin:13px 0 8px!important;padding:12px 16px!important;
+  gap:8px!important;border-radius:16px!important;border:1px solid #494949!important;
+  background:#1c1c1c!important;box-shadow:none!important}
+body.hc-cinema #hcFlowExplore .hc-flow-explore-orb{
+  width:35px!important;height:35px!important;min-height:35px!important;
+  box-shadow:none!important;background:#cbbda7!important;opacity:.9}
+body.hc-cinema #hcFlowExplore #hcFlowExploreTitle{font:750 20px/1.23 system-ui!important;margin:0!important}
+body.hc-cinema #hcFlowExplore #hcFlowExploreDesc{font:450 13px/1.4 system-ui!important;
+  margin:0!important;color:#cecdca!important}
+body.hc-cinema #hcFlowExplore #hcFlowExploreOpen{
+  min-height:42px!important;max-width:100%!important;width:100%!important;
+  border-radius:12px!important;background:#f6f5f2!important;color:#111!important;
+  font:700 14px/1.25 system-ui!important}
+body.hc-cinema #hcFlowExplore .hc-flow-explore-pager{
+  display:grid!important;grid-template-columns:46px minmax(0,1fr) 46px!important;
+  margin:4px 0 9px!important;gap:9px!important}
+body.hc-cinema #hcFlowExplore .hc-flow-explore-pager button{
+  min-height:42px!important;height:42px!important;padding:3px!important;
+  font:700 23px system-ui!important;background:#202020!important;border-radius:11px!important}
+body.hc-cinema #hcFlowExplore .hc-flow-explore-pager span{
+  color:#cacaca!important;font:600 13px/1.4 system-ui!important}
+body.hc-cinema #hcFlowExplore .hc-flow-explore-help{display:none!important}
+body.hc-cinema #hcFlowExplore #hcFlowExploreGrid{
+  display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:8px!important;margin:14px 0 0!important}
+body.hc-cinema #hcFlowExplore #hcFlowExploreGrid button{
+  display:flex!important;flex-direction:column!important;justify-content:center!important;align-items:flex-start!important;
+  gap:5px!important;min-width:0!important;min-height:71px!important;padding:10px 12px!important;
+  background:#202020!important;border:1px solid #4b4b4b!important;color:#fff!important;
+  border-radius:13px!important;text-align:left!important;box-shadow:none!important}
+body.hc-cinema #hcFlowExplore #hcFlowExploreGrid button strong{font:700 14px/1.25 system-ui!important}
+body.hc-cinema #hcFlowExplore #hcFlowExploreGrid button small{
+  font:450 11px/1.35 system-ui!important;color:#c5c5c4!important}
+body.hc-cinema #hcFlowExplore #hcFlowExploreGrid button:focus-visible{outline:2px solid white!important;outline-offset:2px!important}
+body.hc-cinema #hcExploreDialog{background:#171717!important;color:#fff!important;
+  border:1px solid #555!important;border-radius:18px!important}
+body.hc-cinema #hcExploreDialog :is(button,input,select,textarea){min-height:44px!important;font-size:14px!important}
+body.hc-cinema #hcExploreDialog :is(h2,h3){font-size:23px!important}
+body.hc-cinema #hcExploreDialog :is(p,small,span,label){font-size:14px!important;line-height:1.45!important}
+
+/* Larger text belongs to the actual reading pages, not ordinary menu cards. */
+body.hc-cinema #hcHeritageReader :is(h2,h3,.hc-heritage-header strong){
+  font-size:clamp(22px,5.7vw,28px)!important}
+body.hc-cinema #hcHeritageReader :is(button,summary,select){font-size:14px!important;min-height:44px!important}
+body.hc-cinema #hcQuranStudy .hcqs-arabic{font-size:clamp(27px,7vw,36px)!important;line-height:1.85!important}
+body.hc-cinema :is(#hcQuranStudy,#hcFatiha,#hcLivingQuran) :is(.hcqs-meaning,.hcqs-ta,.hcqs-en){
+  font-size:16px!important;line-height:1.7!important}
+/* Book reader A+/A- and user-chosen size remain the authority; do not override reader-page font size. */
+
+/* Fixed dock and mini-player: preserve controls, free content below their overlay. */
+body.hc-cinema #hcFlowDock{
+  min-height:66px!important;padding:5px 7px!important;
+  border:1px solid #454545!important;background:#141414f5!important;
+  width:min(calc(100vw - 24px),550px)!important}
+body.hc-cinema #hcFlowDock button{width:100%!important;min-height:50px!important;
+  height:52px!important;max-width:100%!important;background:transparent!important}
+body.hc-cinema #hcFlowDock button[aria-current="page"]{
+  background:#f5f4f1!important;color:#111!important}
+body.hc-cinema #hcFlowDock button :is(svg,img){max-width:28px!important;max-height:28px!important}
+body.hc-cinema .global-mini.show{bottom:calc(90px + env(safe-area-inset-bottom,0px))!important}
+body.hc-cinema .hc-mini-library{bottom:calc(90px + env(safe-area-inset-bottom,0px))!important;
+  background:#191919!important;color:#fff!important;border-color:#555!important}
+body.hc-cinema.hc-mini-visible:not(.hc-reels-active) .app{
+  min-height:100dvh!important;padding-bottom:calc(270px + env(safe-area-inset-bottom,0px))!important}
+body.hc-cinema #globalMini{max-width:calc(100vw - 18px)!important;box-sizing:border-box;
+  background:#151515f5!important;border:1px solid #555!important;color:#fff!important;
+  border-radius:16px!important}
+body.hc-cinema #globalMini .global-mini-btn{font-size:clamp(12px,3.5vw,17px)!important}
+body.hc-cinema #globalMini .global-mini-copy{min-width:0!important}
+body.hc-cinema #globalMini :is(#globalMiniTitle,#globalMiniMeta){overflow-wrap:normal!important;word-break:normal!important}
+
+/* Focused Kitchen and deeper Home activities stay readable and consistent. */
+body.hc-cinema #home.active.hc-bubble-detail .hc-flow-feature-target{
+  background:#1a1a1a!important;border-color:#4d4d4d!important;border-radius:18px!important;
+  min-height:0!important;padding:13px!important}
+body.hc-cinema #home.active.hc-bubble-detail .hc-flow-feature-target :is(h2,h3,strong){
+  font-size:clamp(17px,4.8vw,22px)!important;line-height:1.3!important}
+body.hc-cinema #home.active.hc-bubble-detail .hc-flow-feature-target :is(p,small,li,label){
+  font-size:clamp(13px,3.5vw,15px)!important;line-height:1.5!important}
+body.hc-cinema #home.active.hc-bubble-detail .hc-flow-feature-target :is(button,summary,select,input){
+  font-size:14px!important;min-height:44px!important;border-radius:12px!important}
+body.hc-cinema #home.active #hcHomeKitchenQuickV155 :is(button,select,input){
+  background:#252525!important;color:#fff!important;border-color:#535353!important}
+@media(max-width:370px){
+ body.hc-cinema #hcFlowExplore #hcFlowExploreGrid{gap:6px!important}
+ body.hc-cinema #hcFlowExplore #hcFlowExploreGrid button{padding:9px!important}
+ body.hc-cinema #hcFlowDock{width:calc(100vw - 12px)!important}
+ body.hc-cinema #hcFlowDock button{height:48px!important;min-height:48px!important}
+ body.hc-cinema #settings :is(.setting-row,.hc-settings-toggle){flex-wrap:wrap!important}
+}
+@media(prefers-reduced-motion:reduce){
+ body.hc-cinema .screen.active:not(#hcReels) *,
+ body.hc-cinema .screen.active:not(#hcReels) *::before,
+ body.hc-cinema .screen.active:not(#hcReels) *::after{
+  animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}

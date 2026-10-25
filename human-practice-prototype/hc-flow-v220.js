@@ -95,6 +95,21 @@ explore.innerHTML='<div class="hc-flow-explore-inner"><header><strong>All experi
  '<div class="hc-flow-explore-card" id="hcFlowExploreCard"><span class="hc-flow-explore-orb" aria-hidden="true"></span><h2 id="hcFlowExploreTitle"></h2><p id="hcFlowExploreDesc"></p><button id="hcFlowExploreOpen" type="button">Open ›</button></div>'+
  '<div class="hc-flow-explore-pager"><button id="hcFlowExplorePrev" type="button" aria-label="Previous activity">‹</button><span id="hcFlowExploreCount"></span><button id="hcFlowExploreNext" type="button" aria-label="Next activity">›</button></div><p class="hc-flow-explore-help">Swipe left or right to browse.</p></div>';
 document.body.append(explore);
+
+/* v279: visible index of all original HeartClear experiences, no replacement routes. */
+const exploreGrid=document.createElement('nav');
+exploreGrid.id='hcFlowExploreGrid';
+exploreGrid.setAttribute('aria-label','Explore all HeartClear sections');
+for(const [title,description,action] of experiences){
+ const button=document.createElement('button');button.type='button';
+ const name=document.createElement('strong');name.textContent=title;
+ const sub=document.createElement('small');sub.textContent=description;
+ button.append(name,sub);button.setAttribute('aria-label','Open '+title);
+ button.addEventListener('click',()=>{closeExplore();action()});
+ exploreGrid.append(button);
+}
+$('hcFlowExploreCard').after(exploreGrid);
+
 let exIndex=0,exFocus=null,exX=0,exY=0;
 function current(){return document.querySelector('.screen.active')?.id||'home'}
 function bigHome(){
