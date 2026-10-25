@@ -28,11 +28,12 @@ body[data-lang="en"] #content{font-family:Georgia,"Times New Roman",serif;line-h
 footer{margin-top:20px;text-align:center}
 :focus-visible{outline:2px solid currentColor;outline-offset:2px}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.hc-book-header{display:flex;align-items:center;gap:18px;margin:2px 0 18px}.hc-book-cover{display:block;flex:0 0 105px;width:105px;height:auto;aspect-ratio:5/7;object-fit:cover;border-radius:3px;box-shadow:0 12px 28px #0005}.hc-book-header h1{margin-bottom:5px}@media(max-width:390px){.hc-book-cover{flex-basis:83px;width:83px}.hc-book-header{gap:12px}}
 </style></head>
 <body>
 <header><div class="top"><a class="action" href="../" aria-label="Return to HeartClear">‹ HC</a><strong id="readerHeading">Shadows of Truth</strong><div class="tools"><button id="minus" aria-label="Smaller text">A−</button><button id="plus" aria-label="Larger text">A+</button><button id="theme" aria-label="Switch reading theme">◐</button></div></div>
 <div class="toolbar"><label for="jump">Reading position</label><select id="jump" aria-label="Select reading page"></select><span id="number" class="status">—</span></div></header>
-<main><h1 id="bookTitle">Shadows of Truth</h1><div id="bookMeta" class="subtitle">A Memoir of Mind vs Body</div><article class="page"><div id="content" role="document" aria-live="polite">Opening the book…</div></article><footer class="status" id="footerNote">Your reading position is saved on this device.</footer></main>
+<main><div class="hc-book-header"><img class="hc-book-cover" src="./shadows-of-truth-cover.jpg" width="105" height="147" alt="Shadows of Truth original English book cover"><div><h1 id="bookTitle">Shadows of Truth</h1><div id="bookMeta" class="subtitle">A Memoir of Mind vs Body</div></div></div><article class="page"><div id="content" role="document" aria-live="polite">Opening the book…</div></article><footer class="status" id="footerNote">Your reading position is saved on this device.</footer></main>
 <nav class="bottom" aria-label="Reading navigation"><button id="prev" type="button">‹ Previous</button><button id="next" type="button">Next ›</button></nav>
 <script>
 (function(){

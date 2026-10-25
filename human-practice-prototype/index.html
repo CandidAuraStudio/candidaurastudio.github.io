@@ -6588,8 +6588,9 @@ window.addEventListener('pagehide',saveBookBookmark);
 document.addEventListener('visibilitychange',()=>{if(document.hidden)saveBookBookmark()});
 
 function hcReadingBookCard(book,lang){
+  const cover=book.cover?'<img src="'+book.cover+'" alt="'+book.title+' original cover" width="104" height="156" loading="lazy" decoding="async">':'';
   const review=book.review?'<small style="display:block;margin-top:6px">Reading review · proofreading pending</small>':'';
-  return '<div class="hc-human-reading-entry" lang="'+lang+'">'+
+  return '<div class="hc-human-reading-entry" lang="'+lang+'">'+cover+
     '<div class="hc-human-reading-copy">'+
     '<div class="kicker">'+book.label+'</div>'+
     '<h3>'+book.title+'</h3>'+
@@ -6601,15 +6602,15 @@ function hcReadingBookShelf(language){
   const back='<button class="collection-back" type="button" onclick="openCollection(\'readingLanguages\')">‹ Reading languages</button>';
   const items={
     en:[
-      {label:'BOOK ONE · ENGLISH',title:'Shadows of Truth — A Memoir of Mind vs Body',details:'Complete memoir text · English edition',href:'./books/shadows-of-truth-reader.html?lang=en'},
-      {label:'BOOK TWO · ENGLISH',title:'HUMAN — WHEN YOU ARE ALONE',details:'27 chapters · English Reader 1.5',href:'./books/human-when-you-are-alone.html',review:true}
+      {label:'BOOK ONE · ENGLISH',title:'Shadows of Truth — A Memoir of Mind vs Body',details:'Complete memoir text · English edition',cover:'./books/shadows-of-truth-cover.jpg',href:'./books/shadows-of-truth-reader.html?lang=en'},
+      {label:'BOOK TWO · ENGLISH',title:'HUMAN — WHEN YOU ARE ALONE',details:'27 chapters · English Reader 1.5',cover:'./books/human-cover.svg',href:'./books/human-when-you-are-alone.html',review:true}
     ],
     ta:[
-      {label:'BOOK ONE · தமிழ்',title:'உண்மையின் நிழல்கள்',details:'மனம் vs உடல் · முழு தமிழ் வாசிப்பு · 60 அத்தியாயங்கள்',href:'./books/shadows-of-truth-reader.html?lang=ta'},
-      {label:'BOOK TWO · புதிய தமிழ் பதிப்பு',title:'மனிதன் — நீ தனியாக இருக்கும்போது',details:'27 அத்தியாயங்கள் · தமிழ் வாசிப்பு',href:'./books/human-when-you-are-alone-tamil.html',review:true}
+      {label:'BOOK ONE · தமிழ்',title:'உண்மையின் நிழல்கள்',details:'மனம் vs உடல் · முழு தமிழ் வாசிப்பு · 60 அத்தியாயங்கள்',cover:'./books/shadows-of-truth-cover.jpg',href:'./books/shadows-of-truth-reader.html?lang=ta'},
+      {label:'BOOK TWO · புதிய தமிழ் பதிப்பு',title:'மனிதன் — நீ தனியாக இருக்கும்போது',details:'27 அத்தியாயங்கள் · தமிழ் வாசிப்பு',cover:'./books/human-cover.svg',href:'./books/human-when-you-are-alone-tamil.html',review:true}
     ],
     si:[
-      {label:'BOOK ONE · සිංහල',title:'Shadows of Truth · සිංහල',details:'Complete Sinhala reader · 61 chapters',href:'./books/shadows-of-truth-sinhala.html'}
+      {label:'BOOK ONE · සිංහල',title:'Shadows of Truth · සිංහල',details:'Complete Sinhala reader · 61 chapters',cover:'./books/shadows-of-truth-cover.jpg',href:'./books/shadows-of-truth-sinhala.html'}
     ]
   };
   return back+'<div class="hc-reading-book-list">'+items[language].map(x=>hcReadingBookCard(x,language)).join('')+'</div>';
