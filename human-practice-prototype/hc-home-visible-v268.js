@@ -56,7 +56,7 @@
  const settings=document.getElementById('settings');
  if(settings){
    const stamp=document.createElement('small');stamp.id='hcHomeVersion268';
-   stamp.textContent='HeartClear interface · v269';
+   stamp.textContent='HeartClear interface · v275';
    stamp.style.cssText='display:block;margin:12px 0 18px;text-align:center;font:500 11px/1.4 system-ui;color:#b6b2aa';
    settings.append(stamp);
  }else{
