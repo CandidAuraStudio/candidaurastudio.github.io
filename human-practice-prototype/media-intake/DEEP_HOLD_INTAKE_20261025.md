@@ -1,38 +1,46 @@
-# HeartClear — single-video intake
+# HeartClear — two verified breathwork video uploads (October 25, 2026)
 
-**Requested label:** Deep Hold (requested display: 17 min)
-**Original filename from user screenshot:** `videoplayback (9).mp4` (about 44.95 MB according to the phone file picker).
+## Both originals found in Google Drive
 
-## Verified in this intake
-- The canonical master specification, latest `main` and open PRs were reviewed.
-- The connected Drive search did not return a file named `videoplayback (9).mp4`. The HeartClear Breathwork folder visible in the connected account was empty.
-- The only original `videoplayback` MP4 made available to this conversation by a connected Drive fetch was `videoplayback (8).mp4` (265,105,056 bytes; 2:00:05), the **existing Islamic Dhikr extended playlist**, which is unrelated to Deep Hold and MUST NOT be substituted for it.
-- No binary or direct media URL for Deep Hold has been verified, so the JSON in this PR is deliberately nonplayable and is **not loaded by the app**.
+The files are in the user's **main "Meditation "** folder (Drive ID `1pFPnugHcZ1l0OqiQpM4MBFMERMLs8xq4`), not the empty "HeartClear — Breathwork (10 New Uploads)" subfolder. Earlier filename searches missed media because the connector returned no video search results; retrieving the parent folder's actual contents revealed both files.
 
-## Preservation / release gate
-- Do not alter source voice, background audio, tempo, fidelity, or video; no noise suppression or filtering is requested.
-- Do not invent a Google Drive ID, public MP4 URL, MP3, or duration metadata; the name and 17-minute label are user-requested, not confirmed by video inspection.
-- Confirm redistribution permission and review the recording's content suitability before publishing.
-- Do not create a visible Play button until the exact, permitted source is present and verified.
-- Release manager to coordinate any future integration; no changes to live app, offline media, existing player, or stored progress in this PR.
+| Requested HeartClear label | Drive original | Drive ID | Uploaded (UTC) | Exact size | Verified playback duration |
+| --- | --- | --- | --- | --- | --- |
+| **Deep Hold** | `videoplayback (9).mp4` | `1I-DTKONkn-cbg0n-hst0iKldgnOJ6b-J` | 2026-10-25 17:50:50 | 44,947,258 bytes | **17:11** (1031.058866 s) |
+| **Resilience · 5 Rounds** | `(Resilience) Psychedelic Breathwork I 5 Rounds Of Guided Rhythmic Breathing To Increase Breath Hold.mp4` | `1JJpsuYRe792yC5FpvPsx4zyQcig-YkMM` | 2026-10-25 17:54:22 | 62,747,290 bytes | **26:29** (1589.034376 s) |
 
-**This is a verified-intake PR, not a claim that a video has been uploaded or published.**
+The user's estimated "30-something minutes" was checked against the actual second file: the verified running time is **26 minutes 29 seconds**, not 30-plus minutes.
 
+## Format, source integrity and preserved sound
 
-## Source identity / media checks added
+Both original MP4s were retrieved from the connected Drive for **read-only inspection**. Both have H.264 640×360 video and AAC 44.1-kHz **two-channel stereo** audio. No video, audio or voice was altered. No denoising, noise gates, EQ, normalization, automatic processing, audio replacement or re-encoding was applied.
 
-The phone screenshots identify the source as `videoplayback (9).mp4` (displayed approximately 44.95 MB) and show the public creator **Breathe With Sandy** and a video described as **(Resilience) Psychedelic Breathwork — 5 Rounds**. This identifies what to look for, **not proof of its Drive ID, running time, or redistribution authorization**. The temporary HeartClear title remains the short **Deep Hold**.
+- Deep Hold SHA-256: `755969e2218fc511590bf37afdecec39a024a0124c08e5a9aff19fc9b46545b1`
+- Resilience SHA-256: `53678fb188bac04ee33c0d1440e25c57bf296260f64c70adf5d36988befaed8d`
 
-Run from the repository root:
+The second recording's title and the user's screenshot indicate the third-party instructor **Breathe With Sandy**. Neither recording is represented as an original HeartClear-produced meditation or as owned by HeartClear.
 
-```bash
+## PR integration and release decision
+
+The two original Drive **IDs are now grounded** in the intake JSONs. This PR is intentionally **not a public-media upload, MP3 conversion or playable HeartClear release**. Permission to redistribute the third-party audiovisual materials via a public app remains unverified. Also review breath-holding instructions for content safety before exposing them as guided sessions, particularly to younger users.
+
+A release manager can inspect the original files without changing them:
+
+```sh
 node human-practice-prototype/tests/hc-deep-hold-media-gate.cjs
-node human-practice-prototype/tests/hc-deep-hold-media-gate.cjs --inspect "/path/to/videoplayback (9).mp4"
-node human-practice-prototype/tests/hc-deep-hold-media-gate.cjs --release "/path/to/videoplayback (9).mp4"
+node human-practice-prototype/tests/hc-deep-hold-media-gate.cjs --inspect deep-hold "/path/to/videoplayback (9).mp4"
+node human-practice-prototype/tests/hc-deep-hold-media-gate.cjs --inspect resilience-five-rounds "/path/to/resilience.mp4"
 ```
 
-The first command checks that the intake is honest. The second **reads but does not edit** the actual file and reports SHA-256, video codec, audio codec, duration, and channel/sample-rate information. The release command blocks missing media, missing rights verification, missing release review, or a mismatched approved hash/duration.
+The separate `--release` mode rejects unapproved public distribution, source substitutions, invalid formats and mismatched fingerprints.
 
-**Sound fidelity:** Leave the original MP4 audio, soundtrack, ambient/background sound, and timing untouched. Do not apply noise cancellation, normalization, filters, or voice replacement. If an audio-only version is permitted, prefer stream-copying the existing compatible AAC track into M4A without re-encoding; any requested MP3 is a separate derived copy and must not replace the master. Do not label an MP3 lossless.
+**Next release-manager steps:** confirm authorization from the creator/source license and content safety, then decide whether to embed an authorized source or publish licensed audio-only media. Preserve the master MP4s. For a permitted audio-only M4A derivative, stream-copy the original AAC sound where technically possible; any MP3 is a distinct lossy derivative and must never replace the original. Confirm mobile browser, headset, mini-player, persistent progress, Android PWA, and offline behavior before merging. Do not invent direct MP3 URLs or mislabel Google Drive videos as native audio.
 
-**Not yet complete:** No Deep Hold video is in the project; no exact file ID or direct streaming source is confirmed; a 17-minute runtime is only the user's requested label; the source-creator's redistribution authorization has not been verified. Do not add a visible/broken Play button. Integrate only after the authorized media and Android mobile playback checks pass.
+## Files and live status
+
+- `media-intake/deep-hold-20261025.json` — found 17:11 source, exact Drive ID, hash, original sound details.
+- `media-intake/resilience-five-rounds-20261025.json` — found 26:29 source, exact Drive ID, hash, original sound details.
+- `tests/hc-deep-hold-media-gate.cjs` — checks both originals and blocks premature release.
+- This handoff file.
+
+**No main-branch modification, public publication, public video player, media deletion, filename replacement, paid service, or audio processing occurred in this feature PR.**
