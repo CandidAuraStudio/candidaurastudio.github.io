@@ -1,0 +1,45 @@
+/* HeartClear v254: one unified headphone destination. Scoped to new listening page. */
+#hcListening #hcCinemaHero{display:none!important}
+body.hc-flow-enabled #hcListening.active{padding-bottom:245px!important;gap:0!important}
+#hcListening .hcl-page{display:grid;gap:13px;width:100%;max-width:650px;margin:0 auto;padding-bottom:20px}
+#hcListening .hcl-heading{padding:4px 3px 0}
+#hcListening .hcl-heading>span{font:650 12px/1.4 system-ui;letter-spacing:.13em;color:#abbec7}
+body.hc-flow-enabled #hcListening .hcl-heading h2{font:750 clamp(31px,8vw,39px)/1.2 system-ui!important;margin:8px 0 3px!important;letter-spacing:-.035em;color:#fff}
+body.hc-flow-enabled #hcListening .hcl-heading p{font:450 16px/1.4 system-ui!important;margin:0!important;color:#cbd7dd!important}
+body.hc-flow-enabled #hcListening #hclSearch{min-height:57px!important;height:57px!important;width:100%;padding:10px 16px!important;border-radius:16px!important;box-sizing:border-box;border:1px solid #71828c!important;background:#142530!important;color:#f8fcfd!important;font:500 17px/1.3 system-ui!important}
+#hcListening #hclSearch::placeholder{color:#c5cfd3}
+#hcListening #hclTabs{display:flex;flex-wrap:nowrap;gap:8px;overflow-x:auto;overflow-y:hidden;padding:2px 2px 10px;scroll-snap-type:x proximity;scrollbar-width:thin;touch-action:pan-x}
+body.hc-flow-enabled #hcListening #hclTabs button{min-height:46px!important;min-width:max-content!important;flex:none;padding:8px 14px!important;border-radius:14px!important;border:1px solid #687d88!important;background:#13252e!important;color:#e9f0f3!important;font:650 15px/1.2 system-ui!important;scroll-snap-align:start;white-space:nowrap;cursor:pointer}
+body.hc-flow-enabled #hcListening #hclTabs button[aria-pressed=true]{background:#f0f0ee!important;color:#0b1820!important;border-color:#fff!important}
+body.hc-flow-enabled #hcListening #hclStatus{font:500 13px/1.4 system-ui!important;color:#bcc9cd!important;margin:0!important;padding:0 3px!important;min-height:18px}
+#hcListening #hclResults{display:grid;gap:18px;min-width:0}
+#hcListening .hcl-group{display:grid;gap:8px;min-width:0}
+#hcListening .hcl-group-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:3px 0}
+body.hc-flow-enabled #hcListening .hcl-group-title h3{font:750 23px/1.25 system-ui!important;color:#f5f5f3!important;margin:0!important}
+body.hc-flow-enabled #hcListening .hcl-group-title button{min-height:40px!important;border:1px solid #708693!important;border-radius:13px!important;background:#172b37!important;color:white!important;padding:6px 12px!important;font:650 14px/1.2 system-ui!important;white-space:nowrap}
+body.hc-flow-enabled #hcListening button.hcl-record{
+ display:grid!important;grid-template-columns:49px minmax(0,1fr) 48px!important;column-gap:11px!important;align-items:center!important;box-sizing:border-box;
+ width:100%!important;min-height:78px!important;height:auto!important;max-width:100%;border:1px solid #5e7582!important;border-radius:20px!important;
+ background:#132936!important;color:#f7f9fa!important;padding:13px!important;box-shadow:none!important;text-align:left!important;
+ touch-action:manipulation;cursor:pointer
+}
+#hcListening .hcl-record-icon{width:48px;height:48px;display:grid;place-items:center;border-radius:14px;background:#203e4d;font-size:21px;color:#e8e8e7}
+#hcListening .hcl-record-info{display:block;min-width:0}
+#hcListening .hcl-record-info strong{display:block;overflow-wrap:normal;word-break:normal;white-space:normal;color:#fff;font:700 17px/1.3 system-ui!important}
+body.hc-flow-enabled #hcListening .hcl-record-info small{display:block;margin-top:4px;overflow-wrap:normal;word-break:normal;color:#cad7de!important;font:450 13px/1.4 system-ui!important}
+#hcListening .hcl-record-action{display:block;min-width:0;text-align:right;white-space:nowrap;overflow-wrap:normal;word-break:keep-all;color:#e3e8eb;font:650 12px/1.3 system-ui}
+body.hc-flow-enabled #hcListening .hcl-empty{font:450 15px/1.5 system-ui!important;color:#ced8dd!important;margin:0 0 4px!important;padding:10px 4px}
+body.hc-flow-enabled #hcListening :is(button,input):focus-visible{outline:3px solid #fff!important;outline-offset:2px!important}
+/* While browsing, compact existing transports rather than stacking huge fullscreen
+   media boxes above the bottom six-icon navigation. Playback can continue. */
+body.hc-listening-visible #globalMini.show{box-sizing:border-box;width:min(420px,calc(100vw - 20px));bottom:calc(94px + env(safe-area-inset-bottom,0px))!important;max-height:68px!important;min-height:52px!important;padding:6px 10px!important;gap:7px!important;flex-wrap:nowrap!important;align-items:center!important;z-index:110!important}
+body.hc-listening-visible #globalMini :is(#hcMiniSeek,#hcMiniPrev,#hcMiniNext,#hcMiniExpand,.hc-global-mini-progress){display:none!important}
+body.hc-listening-visible #globalMini .global-mini-copy{min-width:0!important;flex:1!important;padding:0!important}
+body.hc-listening-visible #globalMini :is(#globalMiniPlay,.global-mini-stop){min-width:42px!important;min-height:42px!important;max-width:42px!important;flex:none!important}
+body.hc-listening-visible #hcOmMiniV252:not([hidden]){bottom:calc(94px + env(safe-area-inset-bottom,0px));max-height:88px!important;padding:8px 10px!important}
+body.hc-listening-visible #hcOmMiniV252 :is(.hcom-wave,.hcom-progress,.hcom-fallback,#hcomStatus){display:none!important}
+body.hc-listening-visible #hcOmMiniV252 .hcom-top{margin:0!important}
+body.hc-listening-visible #hcOneTapDrive.hc-ot-collapsed:not([hidden]){bottom:calc(96px + env(safe-area-inset-bottom,0px))!important;width:min(340px,calc(100vw - 20px));z-index:111}
+body.hc-listening-visible #hcOneTapDrive.hc-ot-collapsed .hc-ot-minimize{width:34px!important;height:34px!important;font-size:15px!important}
+@media(max-width:360px){body.hc-flow-enabled #hcListening button.hcl-record{grid-template-columns:42px minmax(0,1fr) 43px!important;column-gap:9px!important;padding:11px!important}#hcListening .hcl-record-icon{height:42px;width:42px}#hcListening .hcl-record-info strong{font-size:15px!important}#hcListening .hcl-record-action{font-size:11px}}
+@media(prefers-reduced-motion:reduce){#hcListening *{scroll-behavior:auto!important;animation:none!important}}
