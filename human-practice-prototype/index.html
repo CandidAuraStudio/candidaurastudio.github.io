@@ -3803,7 +3803,7 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
         </div>
       </details>
     </div>
-    <div class="app-version">HeartClear · HC v277</div>
+    <div class="app-version">HeartClear · HC v280 (review candidate)</div>
   </div>
 </section>
 
@@ -9617,7 +9617,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=277');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=280');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
@@ -9705,7 +9705,7 @@ const heartclearAutoInstallPrompt=false;
 <link rel="stylesheet" href="./hc-content-stability-v243.css?v=251">
 <link rel="stylesheet" href="./hc-global-language-v245.css?v=245">
 <script src="./hc-global-language-v245.js?v=263"></script>
-<link rel="stylesheet" href="./hc-reels-minimal-v248.css?v=248">
+<link rel="stylesheet" href="./hc-reels-minimal-v248.css?v=280">
 <script src="./hc-om-mini-v252.js?v=252"></script>
 <link rel="stylesheet" href="./hc-listening-hub-v254.css?v=258">
 <script src="./hc-listening-hub-v254.js?v=261"></script>
