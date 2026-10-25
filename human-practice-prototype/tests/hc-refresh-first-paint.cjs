@@ -23,7 +23,7 @@ assert.match(html,/hc-home-visible-v268\.js\?v=284/);
 assert.match(sw,/const APP_CACHE='heartclear-v284'/);
 assert.match(sw,/const MEDIA_CACHE='heartclear-media-v1'/);
 assert.match(sw,/hc-design-unified-v279\.css\?v=280/);
-assert.match(sw,/hc-home-visible-v268\.js\?v=280/);
+assert.match(sw,/hc-home-visible-v268\.js\?v=284/);
 assert.match(home,/HeartClear · HC v284/);
 assert.doesNotMatch(html,/hcReelsBottomTabGuard/,'Old nav owner must not reorder Reels after the third tab');
 console.log('PASS: refresh theme gate and offline shell version alignment');
