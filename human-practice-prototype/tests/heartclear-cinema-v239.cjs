@@ -56,9 +56,14 @@ const BASE='http://127.0.0.1:8765/human-practice-prototype/';
      return {screen:screen?.id,heroParent:hero.parentElement?.id,hidden:hero.hidden,
        title:document.getElementById('hcCinemaTitle').textContent,
        display:getComputedStyle(hero).display,height:box.height,scene:document.body.dataset.hcCinemaScene,
+       ownHeaderHeight:screen?.querySelector('.hci-header')?.getBoundingClientRect().height||0,
        dockCount:document.querySelectorAll('#hcFlowDock button').length};
     },id);
-    if(got.screen!==id||got.heroParent!==id||got.hidden||got.display==='none'||got.height<80||!got.title||got.dockCount!==6){
+    // Infinity Journey has its own functional, full-screen navigation header.
+    // Its app-wide poster is deliberately CSS-hidden to avoid duplicate headings.
+    const dedicated=id==='hcInfinityJourney';
+    if(got.screen!==id||got.heroParent!==id||got.hidden||!got.title||got.dockCount!==6||
+       (dedicated?got.ownHeaderHeight<40:(got.display==='none'||got.height<80))){
      defects.push({id,got});
     }
    }
