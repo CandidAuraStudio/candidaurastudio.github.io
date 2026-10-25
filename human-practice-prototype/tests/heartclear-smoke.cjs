@@ -82,8 +82,9 @@ const assert = require('node:assert/strict');
     }
     console.log('PASS: five primary bottom navigation routes');
 
-    // An actual Begin click must reach the audio player and request playback once,
-    // without opening additional preparation/intro/instruction steps.
+    // The approved Home 'Begin meditation' starts existing guided audio on Home
+    // with the persistent mini-player. The legacy recommended-card Begin button
+    // is no longer the primary entry and must not be used to assert navigation.
     await page.evaluate(()=>{
       window.hcObservedPlay=[];
       window.hcOldPlay=HTMLMediaElement.prototype.play;
@@ -92,24 +93,29 @@ const assert = require('node:assert/strict');
         return Promise.reject(new DOMException('Test gesture stub','NotAllowedError'));
       };
     });
-    await page.locator('#homeRecommendedCard .hc-home-primary-btn').evaluate(el=>el.click());
-    assert.ok(await page.locator('#player').evaluate(el=>el.classList.contains('active')),
-      'Begin should open the full player directly');
-    assert.ok((await page.evaluate(()=>window.hcObservedPlay)).includes('audio'),
-      'Begin must request guided audio immediately');
-    await page.evaluate(()=>{HTMLMediaElement.prototype.play=window.hcOldPlay});
-    console.log('PASS: one-click Begin calls the existing guided audio');
-    await page.locator('#player .hc-minimize-audio').evaluate(el=>el.click());
+    await page.locator('#hcCorePathsClassic .hc-path-begin').evaluate(el=>el.click());
     assert.ok(await page.locator('#home').evaluate(el=>el.classList.contains('active')),
-      'Minimize must return directly Home without stopping the guided session');
+      'Begin should keep the simple Home visible while launching guided listening');
+    assert.ok((await page.evaluate(()=>window.hcObservedPlay)).includes('audio'),
+      'Begin must request existing guided audio immediately');
     assert.ok(await page.locator('#globalMini').evaluate(el=>el.classList.contains('show')),
-      'Paused/loading guided audio must leave a visible mini controller on Home');
+      'Home Begin must reveal the persistent mini-player');
+    await page.evaluate(()=>{HTMLMediaElement.prototype.play=window.hcOldPlay});
+    console.log('PASS: one-click Home Begin requests guided audio and shows mini-player');
     assert.equal((await page.locator('#globalMiniPlay').innerText()).trim(),'▶',
-      'Stopped/blocked audio must show Play, not a false playing state');
+      'Blocked audio must show Play rather than a false playing state');
     await page.locator('#globalMini .global-mini-copy').evaluate(el=>el.click());
     assert.ok(await page.locator('#player').evaluate(el=>el.classList.contains('active')),
-      'Mini title should expand same original player');
-    console.log('PASS: minimized Deep Sleep/meditation returns Home and retains native play/back/forward controls');
+      'Mini title must open the existing original full player');
+    await page.locator('#player .hc-minimize-audio').evaluate(el=>el.click());
+    assert.ok(await page.locator('#home').evaluate(el=>el.classList.contains('active')),
+      'Minimize must return Home without losing the guided session');
+    assert.ok(await page.locator('#globalMini').evaluate(el=>el.classList.contains('show')),
+      'Minimizing should leave mini-player visible');
+    await page.locator('#globalMini .global-mini-copy').evaluate(el=>el.click());
+    assert.ok(await page.locator('#player').evaluate(el=>el.classList.contains('active')),
+      'Mini-title reopen must retain the original player');
+    console.log('PASS: Home Begin, full-player expansion and minimize/reopen preserve controls');
     await page.locator('#finishBtn').evaluate(el=>el.click());
     assert.ok(await page.locator('#home').evaluate(el=>el.classList.contains('active')),
       'Finish should go straight to Home, not another Done screen');
