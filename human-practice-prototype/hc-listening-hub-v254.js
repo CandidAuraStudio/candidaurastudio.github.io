@@ -42,7 +42,7 @@ function list(){
  add(record('adhkar','Morning Adhkar','28:18 · native audio','islamic','adhkar','adhkar'));
  add(record('allahu','Allahu Hu · Akmal','24:32 · native audio','islamic','audio','allahuAkmal'));
  add(record('mantra','Mantra Bed','8 min · separate native audio','hindu','audio','mantra'));
- add(record('flute','Acoustic Bansuri · Original audio','7:54 · original recording','hindu','audio','organicBansuri'));
+ add(record('flute','Acoustic Bansuri · Original audio','7:54 · original recording','nature','audio','organicBansuri'));
  add(record('gita','Bhagavad Gita · Human voice','18 chapters · original readings','hindu','gita','gita'));
  if(typeof HC_DRIVE_COLLECTIONS!=='undefined')HC_DRIVE_COLLECTIONS.forEach(item=>{
   if(item.key==='islamHuAkmal'||item.key==='generalDuduk')return;
@@ -55,7 +55,7 @@ function list(){
   if(item.category==='quran')add(record('quran-'+item.key,item.name,item.detail,'quran','audio',item.key));
   else if(item.category==='sounds'&&item.kind==='audio'){
    const flute=/bansuri|flute|duduk/i.test(item.name+' '+item.key);
-   add(record('sound-'+item.key,item.name,item.detail,flute?'hindu':'nature','audio',item.key));
+   add(record('sound-'+item.key,item.name,item.detail,/mantra/i.test(item.key)?'hindu':/allahu|dhikr/i.test(item.key+' '+item.name)?'islamic':'nature','audio',item.key));
   }else if(item.kind==='practice'&&item.el&&!/adhkar/i.test(item.name)&&!guided.some(row=>row[1]===item.name))
    add(record('extra-'+item.name,item.name,item.detail,'meditation','practice',null,item.el));
  });
@@ -80,8 +80,8 @@ function itemButton(item){
  const title=document.createElement('strong');title.textContent=item.name;
  const desc=document.createElement('small');desc.textContent=item.detail;
  info.append(title,desc);
- const action=document.createElement('span');action.className='hcl-record-action';action.textContent='Play';
- b.append(icon,info,action);b.setAttribute('aria-label','Play '+item.name+(item.kind==='drive'?' in the embedded video player':''));
+ const action=document.createElement('span');action.className='hcl-record-action';action.textContent=item.kind==='drive'?'Video':['book','bible','hindu-library','gita','practice'].includes(item.kind)?'Open':'Play';
+ b.append(icon,info,action);b.setAttribute('aria-label',(['drive','book','bible','hindu-library','gita','practice'].includes(item.kind)?'Open ':'Play ')+item.name);
  b.addEventListener('click',()=>play(item));return b;
 }
 function section(cat,items,limit=0){
@@ -146,7 +146,7 @@ function play(item){
    say('Audiobook selected · saved chapter '+chapter);
   }
   // All Listening remains the destination, even when a legacy player opens a screen.
-  if(!$('hcListening').classList.contains('active')&&!['gita','hindu-library','bible','drive'].includes(item.kind))window.show('hcListening');
+  if(!$('hcListening').classList.contains('active')&&['audio','adhkar'].includes(item.kind))window.show('hcListening');
   if(typeof renderGlobalMini==='function')renderGlobalMini();
  }catch(e){say('Unable to open the selected recording.')}
 }
