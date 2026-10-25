@@ -9556,10 +9556,14 @@ document.addEventListener('visibilitychange',async()=>{
 });
 
 let heartclearReloading=false;
+let heartclearUpdateNoticeShown=false;
+// A first-time service worker claiming this page is not an app update.
+let hcHadSWController=Boolean(navigator.serviceWorker?.controller);
 
 function showUpdateBanner(){
+  if(heartclearUpdateNoticeShown || heartclearReloading)return;
   const b=document.getElementById('updateBanner');
-  if(b)b.classList.add('show');
+  if(b){heartclearUpdateNoticeShown=true;b.classList.add('show')}
 }
 
 function reloadHeartClear(){
@@ -9570,7 +9574,10 @@ function reloadHeartClear(){
 
 if('serviceWorker' in navigator){
   navigator.serviceWorker.addEventListener('controllerchange',()=>{
-    if(!heartclearReloading)showUpdateBanner();
+    const wasControlled=hcHadSWController;
+    hcHadSWController=Boolean(navigator.serviceWorker.controller);
+    // No false refresh notice on first install/first claim.
+    if(wasControlled && hcHadSWController && !heartclearReloading)showUpdateBanner();
   });
 
   window.addEventListener('load',async()=>{
@@ -9578,7 +9585,7 @@ if('serviceWorker' in navigator){
       const reg=await navigator.serviceWorker.register('./sw.js?v=280');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
-      if(reg.waiting)showUpdateBanner();
+      if(reg.waiting && navigator.serviceWorker.controller)showUpdateBanner();
       reg.addEventListener('updatefound',()=>{
         const worker=reg.installing;
         if(!worker)return;
