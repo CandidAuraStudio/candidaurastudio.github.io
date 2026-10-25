@@ -89,7 +89,7 @@ const reels=newAction('hcCinemaReels','Reels','reels',()=>{
  else window.show?.('hcReels');
 });
 byId('hcFlowDockSearch')?.remove();
-dock.append(byId('hcFlowDockHome'),byId('hcFlowDockListen'),reels,explore,library,settings);
+dock.append(byId('hcFlowDockHome'),byId('hcFlowDockListen'),explore,library,reels,settings);
 function chooseScene(id){
  if(id==='home'&&home.classList.contains('hc-bubble-detail')){
   const type=home.dataset.hcbDetail;
