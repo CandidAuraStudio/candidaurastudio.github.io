@@ -3796,7 +3796,7 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
         </div>
       </details>
     </div>
-    <div class="app-version">HeartClear · HC v277</div>
+    <div class="app-version">HeartClear · HC v284 (review candidate)</div>
   </div>
 </section>
 
@@ -9547,7 +9547,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=277');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=284');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting)showUpdateBanner();
@@ -9567,7 +9567,7 @@ if('serviceWorker' in navigator){
 // No automatic install modal on load or resume. Open it from Settings only.
 const heartclearAutoInstallPrompt=false;
 </script>
-<script src="./hc-explorer.js?v=126"></script>
+<script src="./hc-explorer.js?v=284"></script>
 <script src="./hc-inline-audio.js?v=156"></script>
 <script src="./hc-home-one-tap-v139.js?v=145"></script>
 <script src="./hc-family-kitchen-v144.js?v=154"></script>
@@ -9583,7 +9583,7 @@ const heartclearAutoInstallPrompt=false;
 <script src="./hc-mind-broader-v207.js?v=212"></script>
 <script src="./hc-explore-ui.js?v=212"></script>
 <script src="./hc-health-talk-v156.js?v=160"></script>
-<script src="./hc-home-routine-v155.js?v=195"></script>
+<script src="./hc-home-routine-v155.js?v=284"></script>
 <script src="./hc-genesis-v156.js?v=188"></script>
 <script src="./hc-hindu-scriptures-v162.js?v=262"></script>
 <script>
@@ -9627,7 +9627,7 @@ const heartclearAutoInstallPrompt=false;
 <script src="./hc-bubble-v207.js?v=242"></script>
 <script src="./hc-mantra-one-place-v216.js?v=251"></script>
 <link rel="stylesheet" href="./hc-flow-v220.css?v=269">
-<script src="./hc-flow-v220.js?v=274"></script>
+<script src="./hc-flow-v220.js?v=284"></script>
 <script src="./hc-meditation-navigation-v237.js?v=237"></script>
 <script src="./hc-kitchen-language-v234.js?v=234"></script>
 <link rel="stylesheet" href="./hc-cinema-v239.css?v=270">
