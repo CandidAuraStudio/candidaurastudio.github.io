@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="hc-booting">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -7,9 +7,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="HeartClear">
-<link rel="manifest" href="./manifest.webmanifest?v=235">
-<link rel="icon" type="image/svg+xml" href="./icon.svg?v=235">
-<link rel="apple-touch-icon" href="./icon-192.png">
+<link rel="manifest" href="./manifest.webmanifest?v=284">
+<link rel="icon" type="image/svg+xml" href="./icon.svg?v=284">
+<link rel="apple-touch-icon" href="./icon-192.png?v=284">
 <title>HeartClear · Meditation, Sounds & Reflection</title>
 <meta name="description" content="HeartClear brings together guided meditation, nature sounds, gentle breathing, Sacred Sound and reading. Listen, reflect and save your progress on your device.">
 <meta name="application-name" content="HeartClear">
@@ -2423,8 +2423,36 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
 @media(max-width:365px){.hc-human-reading-entry img{width:80px;min-width:80px}.hc-human-reading-copy h3{font-size:16px}}
 </style>
 <link rel="stylesheet" href="./quran-study.css?v=232">
+<style id="hc-refresh-first-paint">
+/* Gate the first paint until the existing approved v279 theme finishes loading. */
+html.hc-booting body{background:#090909!important}
+html.hc-booting body::before,html.hc-booting body::after{display:none!important}
+html.hc-booting .app,
+html.hc-booting #hcFlowDock,
+html.hc-booting #hcCinemaBackdrop,
+html.hc-booting #globalMini,
+html.hc-booting #updateBanner{visibility:hidden!important}
+.hc-boot-screen{display:none}
+html.hc-booting .hc-boot-screen{
+ position:fixed;inset:0;display:flex;flex-direction:column;
+ align-items:center;justify-content:center;gap:13px;
+ padding:24px;background:#090909;color:#f5f5f5;z-index:2147483646;
+ font:600 16px/1.25 system-ui,-apple-system,sans-serif;letter-spacing:.02em;
+}
+.hc-boot-screen img{width:70px;height:70px;object-fit:contain}
+</style>
 </head>
 <body>
+<div class="hc-boot-screen" role="status" aria-label="Loading HeartClear">
+ <img src="./icon.svg" width="70" height="70" alt="" aria-hidden="true">
+ <span>HeartClear</span>
+</div>
+<script id="hcBootSafety">
+/* Fail open if a stylesheet becomes unavailable; never lock the user's screen. */
+window.setTimeout(function(){
+ document.documentElement.classList.remove('hc-booting');
+},10000);
+</script>
 <div class="update-banner" id="updateBanner">
   <div><b>HeartClear updated</b><small>A newer version is ready.</small></div>
   <button onclick="reloadHeartClear()">Refresh</button>
@@ -2608,12 +2636,13 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
       <button class="hc-reels-back" type="button" onclick="hcCloseReels()" aria-label="Close Reels and return Home"><span aria-hidden="true">×</span><span class="hc-reels-back-label"> Close</span></button>
       <span class="kicker">HEARTCLEAR · REELS</span>
       <h2 id="hcReelsHeading">Reels</h2>
-      <p>Swipe the right edge ↑ ↓</p>
+      <p>Swipe up or down · left or right side</p>
    </div>
    <div class="hc-reels-stage" id="hcReelsStage" aria-label="Swipe up for next reel, down for previous">
      <button id="hcReelPoster" class="hc-reel-drive-poster" type="button" onclick="hcReelToggle()" aria-label="Play or retry current reel"><span class="hc-reel-playmark" aria-hidden="true">▶</span><strong>Play this reel</strong><span>Videos load when you open Reels or swipe. Tap if your browser requires a playback gesture.</span></button>
      <iframe id="hcReelFrame" class="hc-reel-drive-frame" title="Google Drive reel video player" loading="eager" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="no-referrer-when-downgrade" hidden></iframe>
-      <div id="hcReelSwipeRail" class="hc-reel-swipe-rail" aria-label="Swipe up and down or use small arrows to change reels">
+      <div id="hcReelSwipeLeft" class="hc-reel-swipe-wide" aria-hidden="true"></div>
+      <div id="hcReelSwipeRail" class="hc-reel-swipe-rail" aria-label="Swipe up or down on either side of the video; arrow buttons are a fallback">
         <button type="button" class="hc-reel-rail-btn" aria-label="Previous unwatched reel" onclick="hcReelRailTap('previous')">↑</button>
         <small aria-hidden="true">SWIPE</small>
         <button type="button" class="hc-reel-rail-btn" aria-label="Next unwatched reel" onclick="hcReelRailTap('next')">↓</button>
@@ -2630,7 +2659,7 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
      
    </div>
 
-   <p class="hc-reels-hint" id="hcReelHint" role="status" aria-live="polite">Swipe either edge to change reels. Tap Play in the video if your browser blocks autoplay.</p>
+   <p class="hc-reels-hint" id="hcReelHint" role="status" aria-live="polite">Swipe once on either side to change reels. Tap Play in the centre if needed.</p>
 </section>
 
 <section class="screen practice-library" id="practices">
@@ -3796,7 +3825,7 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
         </div>
       </details>
     </div>
-    <div class="app-version">HeartClear · HC v284 (review candidate)</div>
+    <div class="app-version">HeartClear · HC v285 (review candidate)</div>
   </div>
 </section>
 
@@ -4805,7 +4834,7 @@ function hcReelRender(){
  const title=document.getElementById('hcReelTitle');if(title)title.textContent='Reel';
  const caption=document.getElementById('hcReelCaption');if(caption)caption.textContent='Swipe up or down to change';
  const progress=document.getElementById('hcReelProgress');if(progress)progress.style.width='0%';
- const hint=document.getElementById('hcReelHint');if(hint)hint.textContent='Swipe ↑ / ↓ on the right edge to change reels.';
+ const hint=document.getElementById('hcReelHint');if(hint)hint.textContent='Swipe ↑ / ↓ once on either side to change reels.';
  hcReelUpdatePlayButton();
  if(hcReelAutoload)hcReelToggle();
 }
@@ -4833,7 +4862,7 @@ function hcReelToggle(){
  if(cover)cover.hidden=true;
  hcReelFrameLoaded=true;
  const hint=document.getElementById('hcReelHint');
- if(hint)hint.textContent='Swipe ↑ / ↓ on the right edge to change reels.';
+ if(hint)hint.textContent='Swipe ↑ / ↓ once on either side to change reels.';
  hcReelUpdatePlayButton();
 }
 {
@@ -4846,28 +4875,39 @@ function hcReelToggle(){
    if(delta<-55)hcReelNext();else if(delta>55)hcReelPrevious();
   },{passive:true});
  }
- // The Drive iframe is cross-origin: it cannot deliver swipes to the parent.
- // Reserve a narrow right-edge gesture zone without blocking central playback.
- // Drive's iframe is cross-origin. Keep a sizeable swipe gesture zone on BOTH edges
- // so the central player remains available for native Play/Pause controls.
- for(const rail of [document.getElementById('hcReelSwipeRail')]){
-  if(!rail)continue;
-  let startY=null,lastStep=0;
-  rail.addEventListener('touchstart',event=>{
-   if(event.touches.length===1)startY=event.touches[0].clientY;
+ // Google Drive owns touch inside its cross-origin iframe. Two generous
+ // side swipe lanes leave the middle unobstructed for video playback controls.
+ // One clean vertical gesture changes exactly one original reel.
+ for(const zone of [document.getElementById('hcReelSwipeLeft'),document.getElementById('hcReelSwipeRail')]){
+  if(!zone)continue;
+  let start=null;
+  zone.addEventListener('touchstart',event=>{
+   if(event.touches.length!==1){start=null;return}
+   const t=event.touches[0];
+   start={x:t.clientX,y:t.clientY,time:Date.now()};
   },{passive:true});
-  rail.addEventListener('touchend',event=>{
-   if(startY===null||!event.changedTouches.length)return;
-   const delta=event.changedTouches[0].clientY-startY;startY=null;
-   const now=Date.now();if(now-lastStep<450)return;
-   if(delta<-45){lastStep=now;hcReelLastSwipeAt=now;hcReelNext()}
-   else if(delta>45){lastStep=now;hcReelLastSwipeAt=now;hcReelPrevious()}
-   event.stopPropagation();
-  },{passive:true});
-  rail.addEventListener('wheel',event=>{
-   if(currentScreenId!=='hcReels'||Math.abs(event.deltaY)<25)return;
+  zone.addEventListener('touchmove',event=>{
+   if(!start||event.touches.length!==1)return;
+   const t=event.touches[0],dy=t.clientY-start.y,dx=t.clientX-start.x;
+   if(Math.abs(dy)>10&&Math.abs(dy)>Math.abs(dx)*1.15)event.preventDefault();
+  },{passive:false});
+  zone.addEventListener('touchcancel',()=>{start=null},{passive:true});
+  zone.addEventListener('touchend',event=>{
+   if(!start||!event.changedTouches.length){start=null;return}
+   const t=event.changedTouches[0],dy=t.clientY-start.y,dx=t.clientX-start.x;
+   const elapsed=Date.now()-start.time;start=null;
+   if(Math.abs(dy)<35||Math.abs(dy)<Math.abs(dx)*1.2||elapsed>1500)return;
+   const now=Date.now();
+   if(now-hcReelLastSwipeAt<340)return;
+   hcReelLastSwipeAt=now;
+   event.preventDefault();event.stopPropagation();
+   if(dy<0)hcReelNext();else hcReelPrevious();
+  },{passive:false});
+  zone.addEventListener('wheel',event=>{
+   if(currentScreenId!=='hcReels'||Math.abs(event.deltaY)<24)return;
    event.preventDefault();
-   const now=Date.now();if(now-lastStep<600)return;lastStep=now;
+   const now=Date.now();if(now-hcReelLastSwipeAt<450)return;
+   hcReelLastSwipeAt=now;
    if(event.deltaY>0)hcReelNext();else hcReelPrevious();
   },{passive:false});
  }
@@ -9528,10 +9568,14 @@ document.addEventListener('visibilitychange',async()=>{
 });
 
 let heartclearReloading=false;
+let heartclearUpdateNoticeShown=false;
+// A first-time service worker claiming this page is not an app update.
+let hcHadSWController=Boolean(navigator.serviceWorker?.controller);
 
 function showUpdateBanner(){
+  if(heartclearUpdateNoticeShown || heartclearReloading)return;
   const b=document.getElementById('updateBanner');
-  if(b)b.classList.add('show');
+  if(b){heartclearUpdateNoticeShown=true;b.classList.add('show')}
 }
 
 function reloadHeartClear(){
@@ -9542,15 +9586,18 @@ function reloadHeartClear(){
 
 if('serviceWorker' in navigator){
   navigator.serviceWorker.addEventListener('controllerchange',()=>{
-    if(!heartclearReloading)showUpdateBanner();
+    const wasControlled=hcHadSWController;
+    hcHadSWController=Boolean(navigator.serviceWorker.controller);
+    // No false refresh notice on first install/first claim.
+    if(wasControlled && hcHadSWController && !heartclearReloading)showUpdateBanner();
   });
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=284');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=285');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
-      if(reg.waiting)showUpdateBanner();
+      if(reg.waiting && navigator.serviceWorker.controller)showUpdateBanner();
       reg.addEventListener('updatefound',()=>{
         const worker=reg.installing;
         if(!worker)return;
@@ -9569,7 +9616,7 @@ const heartclearAutoInstallPrompt=false;
 </script>
 <script src="./hc-explorer.js?v=284"></script>
 <script src="./hc-inline-audio.js?v=156"></script>
-<script src="./hc-home-one-tap-v139.js?v=145"></script>
+<script src="./hc-home-one-tap-v139.js?v=284"></script>
 <script src="./hc-family-kitchen-v144.js?v=154"></script>
 <script src="./hc-monthly-kitchen-v145.js?v=202"></script>
 <script src="./hc-kitchen-teaching-v149.js?v=150"></script>
@@ -9581,7 +9628,7 @@ const heartclearAutoInstallPrompt=false;
 <script src="./hc-mind-catalog.js?v=190"></script>
 <script src="./hc-mind-game.js?v=190"></script>
 <script src="./hc-mind-broader-v207.js?v=212"></script>
-<script src="./hc-explore-ui.js?v=212"></script>
+<script src="./hc-explore-ui.js?v=280"></script>
 <script src="./hc-health-talk-v156.js?v=160"></script>
 <script src="./hc-home-routine-v155.js?v=284"></script>
 <script src="./hc-genesis-v156.js?v=188"></script>
@@ -9617,7 +9664,7 @@ const heartclearAutoInstallPrompt=false;
 <script src="./hc-kitchen-world-v207.js?v=210"></script>
 <script src="./hc-kitchen-compact-v163.js?v=240"></script>
 <script src="./hc-kitchen-worldwide-v207.js?v=222"></script>
-<script src="./hc-playback-one-tap-v174.js?v=251"></script>
+<script src="./hc-playback-one-tap-v174.js?v=284"></script>
 <script src="./hc-accounts-preview-v176.js?v=177"></script>
 <script src="./hc-mini-transport-v185.js?v=187"></script>
 <script src="./hc-human-daily-path-v192.js?v=196"></script>
@@ -9627,68 +9674,25 @@ const heartclearAutoInstallPrompt=false;
 <script src="./hc-bubble-v207.js?v=242"></script>
 <script src="./hc-mantra-one-place-v216.js?v=251"></script>
 <link rel="stylesheet" href="./hc-flow-v220.css?v=269">
-<script src="./hc-flow-v220.js?v=284"></script>
+<script src="./hc-flow-v220.js?v=285"></script>
 <script src="./hc-meditation-navigation-v237.js?v=237"></script>
 <script src="./hc-kitchen-language-v234.js?v=234"></script>
 <link rel="stylesheet" href="./hc-cinema-v239.css?v=270">
-<script src="./hc-cinema-v239.js?v=274"></script>
+<script src="./hc-cinema-v239.js?v=284"></script>
 <link rel="stylesheet" href="./hc-content-stability-v243.css?v=251">
 <link rel="stylesheet" href="./hc-global-language-v245.css?v=245">
 <script src="./hc-global-language-v245.js?v=263"></script>
-<link rel="stylesheet" href="./hc-reels-minimal-v248.css?v=248">
+<link rel="stylesheet" href="./hc-reels-minimal-v248.css?v=284">
 <script src="./hc-om-mini-v252.js?v=252"></script>
 <link rel="stylesheet" href="./hc-listening-hub-v254.css?v=258">
-<script src="./hc-listening-hub-v254.js?v=261"></script>
+<script src="./hc-listening-hub-v254.js?v=280"></script>
 <script src="./hc-home-layout-v256.js?v=257"></script>
 <script src="./hc-home-core-paths-v259.js?v=268"></script>
 <link rel="stylesheet" href="./hc-unified-visual-v259.css?v=267">
 <link rel="stylesheet" href="./hc-home-visible-v268.css?v=277">
-<script src="./hc-home-visible-v268.js?v=279"></script>
-<script id="hcReelsBottomTabGuard">
-/* Defensive bottom navigation repair: Reels always replaces the legacy Search icon. */
-(function(){
-  'use strict';
-  var reelIcon='<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M3 9h18M7 4l3 5M14 4l3 5"/><path d="m10 11 5 3-5 3z"/></svg>';
-  var css=document.createElement('style');
-  css.textContent='body.hc-cinema #hcFlowDock #hcCinemaReels.hc-reels-tab{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:2px!important}body.hc-cinema #hcFlowDock #hcCinemaReels.hc-reels-tab svg{display:block;width:25px;height:25px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}body.hc-cinema #hcFlowDock #hcCinemaReels.hc-reels-tab .hc-reels-tab-label{display:block!important;font:600 10px/1.1 system-ui!important;color:currentColor!important}body.hc-cinema #hcFlowDock #hcCinemaReels.hc-reels-tab::after{content:none!important}';
-  document.head.appendChild(css);
-  function openReels(){
-    if(typeof window.hcOpenReels==='function')window.hcOpenReels();
-    else if(typeof window.show==='function')window.show('hcReels');
-  }
-  function apply(){
-    var dock=document.getElementById('hcFlowDock');
-    if(!dock)return;
-    var search=dock.querySelector('#hcFlowDockSearch,[aria-label="Search HeartClear"]');
-    var reels=dock.querySelector('#hcCinemaReels');
-    if(search){
-      if(reels)search.remove();
-      else{
-        reels=document.createElement('button');
-        reels.id='hcCinemaReels';
-        reels.type='button';
-        reels.addEventListener('click',openReels);
-        search.replaceWith(reels);
-      }
-    }
-    if(!reels)return;
-    reels.type='button';
-    reels.classList.add('hc-reels-tab');
-    reels.setAttribute('aria-label','Reels');
-    reels.setAttribute('title','Reels');
-    if(reels.dataset.hcReelsTabGuard!=='1'){
-      reels.innerHTML=reelIcon+'<span class="hc-reels-tab-label">Reels</span>';
-      reels.dataset.hcReelsTabGuard='1';
-    }
-    if(dock.children[4]!==reels)dock.insertBefore(reels,dock.children[4]||null);
-  }
-  apply();
-  var dock=document.getElementById('hcFlowDock');
-  if(dock)new MutationObserver(apply).observe(dock,{childList:true});
-  window.addEventListener('pageshow',apply);
-})();
-</script>
-<link rel="stylesheet" href="./hc-design-unified-v279.css?v=279">
+<script src="./hc-home-visible-v268.js?v=284"></script>
+
+<link rel="stylesheet" href="./hc-design-unified-v279.css?v=284" onload="document.documentElement.classList.remove('hc-booting')" onerror="document.documentElement.classList.remove('hc-booting')">
 </body>
 </html>
 
