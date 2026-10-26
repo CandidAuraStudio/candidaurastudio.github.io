@@ -6,6 +6,9 @@ const assert=require('node:assert/strict');const path=require('node:path');
  try{
   const context=await browser.newContext({viewport:{width:360,height:800}}),page=await context.newPage();
   const errors=[];page.on('pageerror',e=>errors.push(e.stack||e.message));
+  // Preserve the original evidence-engine interaction suite, separate from the
+  // later broader-207 enhancement. The enhancement has its own assertions below.
+  await page.route('**/hc-mind-broader-v207.js*',r=>r.abort());
   await page.route('**/*',r=>r.request().url().startsWith('http://127.0.0.1:8765/')?r.continue():r.abort());
   await page.addInitScript(()=>{window.__voices=[];window.SpeechRecognition=class{constructor(){window.__voices.push(this)}start(){this.saved=this.onresult}abort(){this.aborted=true}};});
   await page.goto('http://127.0.0.1:8765/human-practice-prototype/',{waitUntil:'domcontentloaded'});
@@ -55,6 +58,38 @@ const assert=require('node:assert/strict');const path=require('node:path');
   assert.match(await dialog.locator('#hcxTitle').innerText(),/do not know|another clue/);
   await context.setOffline(false);
   assert.deepEqual(errors,[]);
-  console.log('PASS: sourced public-figure stack, grandfather, Epstein not Jackson, visible evidence/source, reject, confirmed voice, stale mic, mobile layout, cached catalog offline and honest uncertainty');
+  // Production uses broader-207; do not mislabel it as the evidence-1 engine.
+  // The new stack extends the sourced catalog rather than replacing it.
+  const broadContext=await browser.newContext({viewport:{width:360,height:800}});
+  const broadPage=await broadContext.newPage();
+  const broadErrors=[];
+  broadPage.on('pageerror',e=>broadErrors.push(e.message));
+  await broadPage.route('**/*',r=>r.request().url().startsWith('http://127.0.0.1:8765/')?r.continue():r.abort());
+  await broadPage.goto('http://127.0.0.1:8765/human-practice-prototype/',{waitUntil:'domcontentloaded'});
+  const broad=await broadPage.evaluate(()=>{
+    const core=window.HCExploreCore;
+    const epstein=core.bank.find(x=>x.name==='Jeffrey Epstein');
+    const first=core.gameStep([]);
+    const afterPublic=core.gameStep([{id:'person',answer:'yes'},{id:'public',answer:'yes'}]);
+    const allUnsure=[];let step=first;
+    while(step.kind==='question'&&allUnsure.length<core.gameQuestionLimit){
+      allUnsure.push({id:step.id,answer:'unsure'});
+      step=core.gameStep(allUnsure);
+    }
+    return {version:core.gameVersion,limit:core.gameQuestionLimit,publicFigures:core.gameStats?.publicFigures,
+      epsteinSource:epstein?.source,first:first.id,publicStepKind:afterPublic.kind,
+      unknownKind:step.kind,answers:allUnsure.length};
+  });
+  assert.equal(broad.version,'broader-207');
+  assert.equal(broad.limit,24);
+  assert.ok(broad.publicFigures>=100);
+  assert.match(broad.epsteinSource,/^https:\/\/www\.wikidata\.org\/wiki\/Q\d+$/);
+  assert.equal(broad.first,'person');
+  assert.equal(broad.publicStepKind,'question');
+  assert.ok(['unknown','ambiguous'].includes(broad.unknownKind));
+  assert.ok(broad.answers<=broad.limit);
+  assert.deepEqual(broadErrors,[]);
+  await broadContext.close();
+  console.log('PASS: evidence-1 sourced inference, mobile, voice, offline and honest uncertainty; production broader-207 catalog, question cap and source-backed public figures');
  }finally{await browser.close()}
 })().catch(e=>{console.error(e);process.exit(1)});
