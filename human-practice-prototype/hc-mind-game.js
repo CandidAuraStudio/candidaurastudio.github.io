@@ -102,7 +102,17 @@
    const kind=knownKinds[0];
    const used=new Set(answered.map(h=>h.id));
    const pool=candidates(history);
-   if(!pool.length)return {kind:'unknown',message:'I do not have a subject that fits these answers. It may be outside this collection, or an earlier answer may need changing.'};
+   if(!pool.length){
+    // A mistaken answer must not force an invented guess or erase the round.
+    // Identify one recent non-category answer that, by itself, causes the
+    // contradiction. The listener can change it in the existing review UI.
+    const clue=[...answered].reverse().find(h=>
+     h.answer!=='unsure'&&!KINDS.includes(h.id)&&
+     candidates(history.filter(item=>item!==h)).length>0
+    );
+    if(clue)return {kind:'unknown',reviewId:clue.id,message:'One answer may be ruling out every known possibility. Review the highlighted answer below; nothing has been changed.'};
+    return {kind:'unknown',message:'I do not have a subject that fits these answers. It may be outside this collection, or an earlier answer may need changing.'};
+   }
    const ask=id=>({kind:'question',...definitions.get(id)});
    if(!kind){
     if(answered.length>=20)return {kind:'unknown',message:'I could not establish a clear category from these answers.'};
