@@ -2426,6 +2426,8 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
 .hc-human-reading-copy p{font-size:12px;line-height:1.45;margin:0 0 10px;color:#b2bec3}
 .hc-human-reading-link{display:inline-flex;align-items:center;color:#15181c!important;background:#e8c58e;text-decoration:none;font-weight:700;font-size:13px;border-radius:11px;padding:11px 14px;min-height:42px}
 @media(max-width:365px){.hc-human-reading-entry img{width:80px;min-width:80px}.hc-human-reading-copy h3{font-size:16px}}
+/* Keep explicit aftercare controls hidden until their intended state. */
+#hcAftercareCueBtn[hidden],#hcAftercareMinimizeBtn[hidden]{display:none!important}
 </style>
 <link rel="stylesheet" href="./quran-study.css?v=232">
 <style id="hc-refresh-first-paint">
@@ -3903,14 +3905,15 @@ window.setTimeout(function(){
 <section class="screen" id="aftercare">
   <div class="glass center" style="max-width:440px;margin:auto;width:100%">
     <div class="kicker">HeartClear · After meditation</div>
-    <h2>Stay a little longer.</h2>
-    <button class="hc-minimize-audio" onclick="hcMinimizeNativeAudio('meditation')" aria-label="Minimize nature sound and continue on Home">▾ Minimize to Home</button>
-    <p>The guided practice is complete. Remain comfortable and listen to nature sounds.</p>
+    <h2 id="hcAftercareHeading">Stay a little longer.</h2>
+    <button class="hc-minimize-audio" id="hcAftercareMinimizeBtn" onclick="hcMinimizeNativeAudio('meditation')" aria-label="Minimize nature sound and continue on Home">▾ Minimize to Home</button>
+    <p id="hcAftercareIntroduction">The guided practice is complete. Remain comfortable and listen to nature sounds.</p>
+    <button class="btn secondary" id="hcAftercareCueBtn" type="button" onclick="hcSpeakNaturalBreathCue()" hidden>Hear a gentle reminder</button>
     <div class="player-orb" aria-hidden="true"><div class="play-core">♪</div></div>
     <div class="clock" id="natureElapsed">00:00</div>
     <div class="progress-meta"><span>Nature sounds</span><span id="natureTotal">03:00</span></div>
-    <div class="player-status" id="naturePlaybackStatus" role="status">Nature starts automatically after meditation.</div>
-    <button class="btn" id="naturePlayBtn" onclick="togglePlay()">Pause</button>
+    <div class="player-status" id="naturePlaybackStatus" role="status" aria-live="polite">Choose whether to continue with nature sounds.</div>
+    <button class="btn" id="naturePlayBtn" onclick="togglePlay()">Play</button>
     <button class="btn secondary" onclick="finishNature()">Finish listening</button>
   </div>
 </section>
@@ -4203,7 +4206,7 @@ function setNatureAfterSeconds(value){
   const sel=document.getElementById('natureAfterSeconds');
   if(sel)sel.value=String(next);
   const note=document.getElementById('natureAfterNote');
-  if(note)note.textContent=next?'Nature sounds start automatically when the guided audio ends · '+natureDurationLabel():'Nature after meditation is off';
+  if(note)note.textContent=next?'The original guidance finishes before you choose to play nature · '+natureDurationLabel():'Nature after meditation is off';
 }
 function meditationActualDuration(){
   return Number.isFinite(audio.duration)&&audio.duration>10?audio.duration:chosenSeconds;
@@ -4232,31 +4235,74 @@ function beginNatureSound(url){
     syncNature();
   });
 }
-function startAftercare(){
-  if(playbackPhase!=='meditation')return;
-  if(!natureAfterSeconds){completeSession(true);return}
-  recordSession(true);
-  clearLastSession();
-  playbackPhase='nature';
-  natureCycleCount=0;
-  natureLastPosition=0;
-  const visual=document.getElementById('practiceVisual');
-  if(visual)visual.pause();
-  document.getElementById('natureTotal').textContent=fmt(natureAfterSeconds);
-  document.getElementById('natureElapsed').textContent='00:00';
-  document.getElementById('naturePlayBtn').textContent='Pause';
-  show('aftercare');
+/* Aftercare is a handoff, not a new guided breathing exercise.
+   Preserve original voice/music: this runs only on the source media ended event.
+   The user must explicitly tap before nature audio starts. */
+let hcAftercareCueSpoken=false;
+function hcStopNaturalBreathCue(){
+  if(!hcAftercareCueSpoken)return;
+  hcAftercareCueSpoken=false;
+  try{window.speechSynthesis?.cancel()}catch(_){}
+}
+function hcSpeakNaturalBreathCue(){
+  if(playbackPhase!=='handoff'||!('speechSynthesis' in window)||typeof SpeechSynthesisUtterance!=='function')return;
+  try{
+    hcStopNaturalBreathCue();
+    const message=new SpeechSynthesisUtterance('Let your breathing return to a comfortable, natural rhythm.');
+    message.lang='en';message.rate=.9;message.volume=.65;
+    hcAftercareCueSpoken=true;
+    window.speechSynthesis.speak(message);
+  }catch(_){
+    hcAftercareCueSpoken=false;
+    const status=document.getElementById('naturePlaybackStatus');
+    if(status)status.textContent='Spoken reminder unavailable. Continue whenever you feel ready.';
+  }
+}
+function hcOfferNaturalBreathReturn(){
+  playbackPhase='handoff';
+  hcStopNaturalBreathCue();
+  const visual=document.getElementById('practiceVisual');if(visual)visual.pause();
+  audio.pause();audio.removeAttribute('src');audio.load();
+  const total=document.getElementById('natureTotal');if(total)total.textContent=fmt(natureAfterSeconds);
+  const elapsed=document.getElementById('natureElapsed');if(elapsed)elapsed.textContent='00:00';
+  const button=document.getElementById('naturePlayBtn');if(button)button.textContent='Continue with nature';
+  const heading=document.getElementById('hcAftercareHeading');if(heading)heading.textContent='Return to easy breathing.';
+  const intro=document.getElementById('hcAftercareIntroduction');
+  if(intro)intro.textContent='The original guided recording has finished. Allow your breath to feel natural and comfortable. Nature sounds begin only when you choose.';
   const status=document.getElementById('naturePlaybackStatus');
-  if(status)status.textContent='Preparing nature sounds…';
-  if(natureAfterTrack!=='nature' && soundLabTracks[natureAfterTrack]){
-    beginNatureSound(soundLabTracks[natureAfterTrack].url);
-  }else if(natureSoundURL)beginNatureSound(natureSoundURL);
+  if(status)status.textContent='No further breath-holding instructions. Select Continue with nature or Finish listening.';
+  const cue=document.getElementById('hcAftercareCueBtn');
+  if(cue)cue.hidden=!('speechSynthesis' in window&&typeof SpeechSynthesisUtterance==='function');
+  const minimize=document.getElementById('hcAftercareMinimizeBtn');if(minimize)minimize.hidden=true;
+  show('aftercare');
+  renderGlobalMini();
+}
+function hcBeginNatureAfterGuidance(){
+  if(playbackPhase!=='handoff')return;
+  hcStopNaturalBreathCue();
+  playbackPhase='nature';natureCycleCount=0;natureLastPosition=0;
+  const cue=document.getElementById('hcAftercareCueBtn');if(cue)cue.hidden=true;
+  const minimize=document.getElementById('hcAftercareMinimizeBtn');if(minimize)minimize.hidden=false;
+  const heading=document.getElementById('hcAftercareHeading');if(heading)heading.textContent='Stay a little longer.';
+  const intro=document.getElementById('hcAftercareIntroduction');
+  if(intro)intro.textContent='The original guided recording is complete. Enjoy your chosen nature sounds at a comfortable volume.';
+  const button=document.getElementById('naturePlayBtn');if(button)button.textContent='Play';
+  const status=document.getElementById('naturePlaybackStatus');if(status)status.textContent='Preparing nature sounds…';
+  if(natureAfterTrack!=='nature'&&soundLabTracks[natureAfterTrack])beginNatureSound(soundLabTracks[natureAfterTrack].url);
+  else if(natureSoundURL)beginNatureSound(natureSoundURL);
   else loadNatureSound().then(beginNatureSound).catch(()=>{
     if(playbackPhase==='nature'){
-      if(status)status.textContent='Nature audio is not available. Check the connection or finish.';
-      document.getElementById('naturePlayBtn').textContent='Play';
+      if(status)status.textContent='Nature audio is unavailable. Tap Play to retry or Finish listening.';
+      if(button)button.textContent='Play';
     }
   });
+}
+function startAftercare(){
+  if(playbackPhase!=='meditation')return;
+  if(!natureAfterSeconds){completeSession(true);return;}
+  recordSession(true);
+  clearLastSession();
+  hcOfferNaturalBreathReturn();
 }
 function syncNature(){
   if(playbackPhase!=='nature')return;
@@ -4276,6 +4322,12 @@ function syncNature(){
   if(elapsed>=natureAfterSeconds-.12){finishNature();}
 }
 function finishNature(){
+  if(playbackPhase==='handoff'){
+    hcStopNaturalBreathCue();
+    playbackPhase='meditation';
+    completeSession(true);
+    return;
+  }
   if(playbackPhase!=='nature')return;
   audio.pause();
   audio.loop=false;
@@ -8751,6 +8803,7 @@ function nextStep(){
 }
 
 function preparePlayer(){
+  hcStopNaturalBreathCue();
   playbackPhase='meditation';
   audio.loop=false;
   audio.pause();
@@ -9377,6 +9430,7 @@ function syncPracticeVisual(force=false){
 }
 
 async function togglePlay(){
+  if(playbackPhase==='handoff'){hcBeginNatureAfterGuidance();return;}
   if(playbackPhase==='nature'){
     if(audio.paused){
       try{
@@ -9443,9 +9497,10 @@ function restart(){
   sync();
 }
 
-function finish(){ if(playbackPhase==='nature'){finishNature();show('home');return;} completeSession(false);show('home'); }
+function finish(){ if(playbackPhase==='nature'||playbackPhase==='handoff'){finishNature();show('home');return;} completeSession(false);show('home'); }
 
 function sync(){
+  if(playbackPhase==='handoff')return;
   if(playbackPhase==='nature'){syncNature();return;}
   if(document.getElementById('completion').classList.contains('active'))return;
   const actualDuration=meditationActualDuration();
