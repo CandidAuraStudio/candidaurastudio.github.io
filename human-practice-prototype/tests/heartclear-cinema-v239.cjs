@@ -57,13 +57,25 @@ const BASE='http://127.0.0.1:8765/human-practice-prototype/';
        title:document.getElementById('hcCinemaTitle').textContent,
        display:getComputedStyle(hero).display,height:box.height,scene:document.body.dataset.hcCinemaScene,
        ownHeaderHeight:screen?.querySelector('.hci-header')?.getBoundingClientRect().height||0,
+       // Explorer and Human Knowledge deliberately replace the shared cinematic
+       // masthead with their own compact title. Require visible real content,
+       // not merely a hidden poster that could leave an empty screen.
+       ownContentHeight:(
+         id==='hcExplorer'?screen?.querySelector('#hcxeHeading'):
+         id==='hcHeritageReader'?screen?.querySelector('#hcHeritageMain h1'):
+         null
+       )?.getBoundingClientRect().height||0,
        dockCount:document.querySelectorAll('#hcFlowDock button').length};
     },id);
     // Infinity Journey has its own functional, full-screen navigation header.
-    // Its app-wide poster is deliberately CSS-hidden to avoid duplicate headings.
+    // Explorer and Human Knowledge show their own compact headings instead
+    // of duplicated blue mastheads; require meaningful content to be visible.
     const dedicated=id==='hcInfinityJourney';
-    if(got.screen!==id||got.heroParent!==id||got.hidden||!got.title||got.dockCount!==6||
-       (dedicated?got.ownHeaderHeight<40:(got.display==='none'||got.height<80))){
+    const compact=id==='hcExplorer'||id==='hcHeritageReader';
+    const posterOk=compact
+      ?got.display==='none'&&got.ownContentHeight>=20
+      :dedicated?got.ownHeaderHeight>=40:(got.display!=='none'&&got.height>=80);
+    if(got.screen!==id||got.heroParent!==id||got.hidden||!got.title||got.dockCount!==6||!posterOk){
      defects.push({id,got});
     }
    }
