@@ -3746,6 +3746,10 @@ window.setTimeout(function(){
         </div>
       </details>
 
+      <div class="setting-row">
+        <div><strong>Closing stillness autoplay</strong><small>Optionally start the existing 2-minute sound only after a completed meditation; off by default</small></div>
+        <button type="button" class="switch" id="hcClosingAutoplaySwitch" role="switch" aria-checked="false" aria-label="Autoplay closing stillness after meditation" onclick="hcToggleClosingAutoplay()"></button>
+      </div>
       <label class="hc-settings-toggle hc-audio-pref" for="hcAudioOnlySettings">
         <span><strong>Audio only</strong><small>Listen without video</small></span>
         <input id="hcAudioOnlySettings" type="checkbox" checked onchange="hcSetAudioOnly(this.checked)">
@@ -3860,7 +3864,8 @@ window.setTimeout(function(){
     <div class="hub-note" style="margin:18px 0">
       <b style="display:block;margin-bottom:8px">Continue in stillness</b>
       <p>After the guided practice, stay in a comfortable position and listen gently. Press Play to start the closing soundtrack.</p>
-      <audio class="heartclear-stillness-audio" controls playsinline preload="metadata" src="./media/HeartClear_DeepSleep_Stillness_2min_PREVIEW.mp3" style="width:100%;margin:10px 0;display:block"></audio>
+      <audio id="hcClosingAudio" class="heartclear-stillness-audio" controls playsinline preload="metadata" src="./media/HeartClear_DeepSleep_Stillness_2min_PREVIEW.mp3" style="width:100%;margin:10px 0;display:block"></audio>
+      <p id="hcClosingSoundStatus" role="status" aria-live="polite" style="font-size:12px;margin:8px 0 0"></p>
       <div style="font-size:12px;margin-top:8px"><a href="./media/HeartClear_DeepSleep_Stillness_2min_PREVIEW.mp3" target="_blank" rel="noopener">Open 2-minute MP3 directly</a></div>
       <div style="font-size:12px;margin-top:8px">Longer previews: <a href="https://drive.google.com/file/d/17WzV9SRm0EHqe4vWSAadEZq27GpEZYNa/view" target="_blank" rel="noopener">3 min</a> · <a href="https://drive.google.com/file/d/1q9ljNUjNyrptWvubnKrz3sNsYqO4CDqy/view" target="_blank" rel="noopener">5 min</a> (open in Drive)</div>
     </div>
@@ -8332,11 +8337,47 @@ async function hcCopyPlaybackCheck(){
 
 function renderSettings(){
   setGreeting();
+  hcUpdateClosingAutoplaySwitch();
   renderLocalContext();
   const reduced=document.body.classList.contains('reduce-motion');
   const sw=document.getElementById('reduceMotionSwitch'); if(sw)sw.classList.toggle('on',reduced);
   const ww=document.getElementById('wakeLockSwitch'); if(ww)ww.classList.toggle('on',wakeLockEnabled);
   updateOfflineStorageText();
+}
+
+/* Closing audio is opt-in; never start on navigation, refresh, or an unfinished session. */
+let hcClosingAutoplayFallback=false;
+function hcClosingAutoplayEnabled(){
+  try{const stored=localStorage.getItem('heartclearClosingAutoplay');
+    return stored===null?hcClosingAutoplayFallback:stored==='1';
+  }catch(_){return hcClosingAutoplayFallback}
+}
+function hcUpdateClosingAutoplaySwitch(){
+  const enabled=hcClosingAutoplayEnabled(),el=document.getElementById('hcClosingAutoplaySwitch');
+  if(el){el.setAttribute('aria-checked',String(enabled));el.classList.toggle('on',enabled)}
+}
+function hcToggleClosingAutoplay(){
+  hcClosingAutoplayFallback=!hcClosingAutoplayEnabled();
+  try{localStorage.setItem('heartclearClosingAutoplay',hcClosingAutoplayFallback?'1':'0')}catch(_){}
+  hcUpdateClosingAutoplaySwitch();
+}
+function hcTryAutoplayClosingSound(){
+  if(!hcClosingAutoplayEnabled())return;
+  const player=document.getElementById('hcClosingAudio');
+  const status=document.getElementById('hcClosingSoundStatus');
+  if(!player)return;
+  if(status)status.textContent='Starting your selected closing stillness…';
+  try{
+    player.currentTime=0;
+    const started=player.play();
+    if(started&&typeof started.then==='function')started.then(()=>{
+      if(status)status.textContent='Closing stillness is playing.';
+    }).catch(()=>{
+      if(status)status.textContent='Automatic playback was blocked. Press Play on the stillness player when ready.';
+    });
+  }catch(_){
+    if(status)status.textContent='Press Play on the stillness player when ready.';
+  }
 }
 
 function toggleReduceMotion(){
@@ -9216,6 +9257,7 @@ function completeSession(completed=false){
   const memo=document.getElementById('hcSessionNote');if(memo)memo.value='';
   const msg=document.getElementById('hcNoteStatus');if(msg)msg.textContent='';
   show('completion');
+  if(completed)hcTryAutoplayClosingSound();
   renderDashboard();
 }
 
