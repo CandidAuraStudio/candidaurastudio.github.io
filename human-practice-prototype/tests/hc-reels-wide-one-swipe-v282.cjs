@@ -25,7 +25,7 @@ assert.match(html,/function hcReelPreviewUrl\(item\)/);
 assert.match(html,/HC_REELS_SEEN_KEY='heartclearReelsSeenV1'/);
 assert.match(html,/serviceWorker\.register\('\.\/sw\.js\?v=286'\)/);
 assert.match(html,/hc-reels-minimal-v248\.css\?v=284/);
-assert.match(html,/hc-home-visible-v268\.js\?v=285/);
+assert.match(html,/hc-home-visible-v268\.js\?v=286/);
 assert.match(css,/#hcReels\.active #hcReelSwipeLeft/);
 assert.match(css,/width:30%!important/);
 assert.match(css,/@media\(prefers-reduced-motion:reduce\)/);
