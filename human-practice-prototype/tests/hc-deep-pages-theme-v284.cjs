@@ -40,7 +40,7 @@ check('Reader progress key remains',reader.includes('hcHeritageReadingProgressV1
 check('Existing global bottom tab nav unchanged',index.includes('id="hcReelsBottomTabGuard"'));
 check('Explorer loader uses current version',explorer.includes('./hc-explorer.css?v=284')&&index.includes('./hc-explorer.js?v=284'));
 check('Knowledge loader chain uses current version',flow.includes('./hc-daily-care-v182.js?v=284')&&homeRoutine.includes('./hc-daily-care-v182.js?v=284')&&daily.includes('./hc-deep-heritage-v185.js?v=284')&&launcher.includes('./hc-heritage-reader-v189.js?v=284'));
-check('PWA shell version aligned',index.includes("register('./sw.js?v=285')")&&sw.includes("const APP_CACHE='heartclear-v285'"));
+check('PWA shell version aligned',index.includes("register('./sw.js?v=286')")&&sw.includes("const APP_CACHE='heartclear-v286'"));
 check('Existing offline media untouched',sw.includes("const MEDIA_CACHE='heartclear-media-v1'"));
 check('No new global theme override module',!index.includes('hc-deep-pages-overlay'));
 let depth=0;
