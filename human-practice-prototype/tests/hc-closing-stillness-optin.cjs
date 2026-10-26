@@ -1,4 +1,4 @@
-/* HeartClear: after-practice two-minute closing audio is opt-in (v287).
+/* HeartClear: after-practice two-minute closing audio is opt-in (v288).
    Run: node human-practice-prototype/tests/hc-closing-stillness-optin.cjs */
 'use strict';
 const assert=require('node:assert/strict');
@@ -11,8 +11,8 @@ assert.equal((html.match(/id="hcClosingAudio"/g)||[]).length,1);
 assert.match(html,/id="hcClosingAutoplaySwitch" role="switch" aria-checked="false"/);
 assert.match(html,/id="hcClosingAudio"[^>]+src="\.\/media\/HeartClear_DeepSleep_Stillness_2min_PREVIEW\.mp3"/);
 assert.match(html,/id="hcClosingSoundStatus" role="status" aria-live="polite"/);
-assert.match(html,/sw\.js\?v=287/);
-assert.match(html,/HeartClear · HC v287/);
+assert.match(html,/sw\.js\?v=288/);
+assert.match(html,/HeartClear · HC v288/);
 const completeStart=html.indexOf('function completeSession(completed=false){');
 const completeEnd=html.indexOf('function friendlyDuration(',completeStart);
 assert(completeStart>0&&completeEnd>completeStart);
