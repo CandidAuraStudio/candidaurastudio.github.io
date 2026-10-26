@@ -19,11 +19,11 @@ assert.ok(firstHead>=0&&splash>firstHead&&loader<splash+1000&&finalStyle>splash,
 assert.match(html,/hc-design-unified-v279\.css\?v=284" onload="document\.documentElement\.classList\.remove\('hc-booting'\)"/);
 assert.match(html,/onerror="document\.documentElement\.classList\.remove\('hc-booting'\)"/);
 assert.match(html,/navigator\.serviceWorker\.register\('\.\/sw\.js\?v=285'\)/);
-assert.match(html,/hc-home-visible-v268\.js\?v=284/);
+assert.match(html,/hc-home-visible-v268\.js\?v=285/);
 assert.match(sw,/const APP_CACHE='heartclear-v285'/);
 assert.match(sw,/const MEDIA_CACHE='heartclear-media-v1'/);
 assert.match(sw,/hc-design-unified-v279\.css\?v=284/);
-assert.match(sw,/hc-home-visible-v268\.js\?v=284/);
+assert.match(sw,/hc-home-visible-v268\.js\?v=285/);
 assert.match(home,/HeartClear · HC v285/);
 assert.doesNotMatch(html,/hcReelsBottomTabGuard/,'Old nav owner must not reorder Reels after the third tab');
 console.log('PASS: refresh theme gate and offline shell version alignment');
