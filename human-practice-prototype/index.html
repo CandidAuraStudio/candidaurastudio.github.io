@@ -747,6 +747,8 @@ body.reduce-motion *,body.reduce-motion *:before,body.reduce-motion *:after{
   position:absolute;inset:0;z-index:1;pointer-events:none;
   background:linear-gradient(180deg,rgba(4,12,18,.08),rgba(4,12,18,.20) 55%,rgba(4,12,18,.58))
 }
+.hc-practice-visual-note{position:absolute;z-index:4;left:12px;right:12px;top:12px;padding:8px 10px;border:1px solid #777;border-radius:10px;background:rgba(10,10,10,.88);color:#fff;font:500 12px/1.45 system-ui;pointer-events:none;text-align:center}
+.hc-practice-visual-note[hidden]{display:none!important}
 .player-artwork:before,.player-artwork:after{z-index:2}
 .waveform{z-index:3}
 
@@ -3923,6 +3925,7 @@ window.setTimeout(function(){
       <div class="player-visual-actions"><button class="pip-btn" id="practicePipBtn" onclick="event.stopPropagation();togglePip('practiceVisual')" aria-label="Open video in picture in picture">PiP</button></div>
       <video id="practiceVisual" class="practice-visual" muted loop playsinline preload="metadata"></video>
       <div class="practice-visual-shade"></div>
+      <p id="hcPracticeVisualFallback" class="hc-practice-visual-note" role="status" aria-live="polite" hidden></p>
       <div class="waveform" id="waveform" aria-hidden="true">
         <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
       </div>
@@ -8717,6 +8720,7 @@ function preparePlayer(){
   naturePrefetchStarted=false;
   setNatureAfterSeconds(natureAfterSeconds);
   setNatureAfterTrack(natureAfterTrack);
+  hcSetPracticeVisualFallback('');
   const pv=document.getElementById('practiceVisual');
   if(pv){
     pv.pause();
@@ -9286,9 +9290,20 @@ function fmt(sec){
   return String(m).padStart(2,'0')+':'+String(ss).padStart(2,'0');
 }
 
+function hcSetPracticeVisualFallback(message){
+  const note=document.getElementById('hcPracticeVisualFallback');
+  if(note){note.textContent=message||'';note.hidden=!message}
+}
+const hcVisualFallbackVideo=document.getElementById('practiceVisual');
+if(hcVisualFallbackVideo){
+  hcVisualFallbackVideo.addEventListener('error',()=>{
+    if(chosenVisualUrl&&!hcAudioOnly)hcSetPracticeVisualFallback('Video unavailable. Guided audio continues.');
+  });
+  hcVisualFallbackVideo.addEventListener('playing',()=>hcSetPracticeVisualFallback(''));
+}
 function syncPracticeVisual(force=false){
   const pv=document.getElementById('practiceVisual');
-  if(!pv || !chosenVisualUrl || hcAudioOnly){if(pv&&!pv.paused)pv.pause();return;}
+  if(!pv || !chosenVisualUrl || hcAudioOnly){if(pv&&!pv.paused)pv.pause();hcSetPracticeVisualFallback('');return;}
   const pipActive=document.pictureInPictureElement===pv;
   if((document.hidden||currentScreenId!=='player') && !pipActive){
     if(!pv.paused)pv.pause();
@@ -9304,7 +9319,7 @@ function syncPracticeVisual(force=false){
   // Seek only when visibly out of sync, not on every timeupdate event.
   if(!duration){
     if(audio.paused && !pv.paused)pv.pause();
-    else if(!audio.paused && pv.paused)pv.play().catch(()=>{});
+    else if(!audio.paused && pv.paused)pv.play().catch(()=>hcSetPracticeVisualFallback('Video unavailable. Guided audio continues.'));
     return;
   }
   const target=duration>.1?(audioPos%duration):0;
@@ -9315,7 +9330,7 @@ function syncPracticeVisual(force=false){
       pv.currentTime=Math.max(0,Math.min(target,Math.max(0,duration-.04)));
     }
     if(audio.paused)pv.pause();
-    else if(pv.paused)pv.play().catch(()=>{});
+    else if(pv.paused)pv.play().catch(()=>hcSetPracticeVisualFallback('Video unavailable. Guided audio continues.'));
   }catch(e){}
 }
 
