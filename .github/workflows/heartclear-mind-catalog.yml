@@ -1,0 +1,21 @@
+name: Build sourced HeartClear mind-game catalog
+on:
+  push:
+    branches: [feature/hc-mind-evidence]
+    paths: ['scripts/build-hc-mind-catalog.py', '.github/workflows/heartclear-mind-catalog.yml']
+permissions:
+  contents: read
+jobs:
+  catalog:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: python3 scripts/build-hc-mind-catalog.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sourced-mind-catalog
+          path: human-practice-prototype/hc-mind-catalog.js

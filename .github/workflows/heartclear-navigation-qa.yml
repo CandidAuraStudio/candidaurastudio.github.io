@@ -1,0 +1,41 @@
+name: HeartClear Current Navigation QA
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/heartclear-navigation-qa.yml'
+      - 'human-practice-prototype/tests/heartclear-navigation-qa.cjs'
+      - 'human-practice-prototype/index.html'
+      - 'human-practice-prototype/*.js'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/heartclear-navigation-qa.yml'
+      - 'human-practice-prototype/tests/heartclear-navigation-qa.cjs'
+      - 'human-practice-prototype/index.html'
+      - 'human-practice-prototype/*.js'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  mobile-navigation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright Chromium
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Test navigation and controls on mobile viewport
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8765 --directory . >/tmp/heartclear-navigation-server.log 2>&1 &
+          node human-practice-prototype/tests/heartclear-navigation-qa.cjs

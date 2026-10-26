@@ -1,0 +1,266 @@
+/* HeartClear v243 - content stability, not a redesign.
+   Override the oversized v220 global controls where they squeeze real content.
+   Preserve existing scripts, text, media, routes, and logo. */
+body.hc-flow-enabled .screen.active:not(#hcReels) select{
+  width:auto!important;max-width:100%!important;min-width:0;
+  padding:8px 10px!important;min-height:44px!important;height:auto;
+  font-size:16px!important;line-height:1.35!important;border-radius:12px!important;
+}
+/* Original simple Home: keep audio choices readable without giant bubble cards. */
+body.hc-flow-enabled #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail) .hc-simple-start{
+  box-sizing:border-box;width:100%;min-width:0;margin:12px 0 16px;
+  padding:16px!important;
+}
+body.hc-flow-enabled #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail) .hc-simple-audio-list{
+  display:grid;grid-template-columns:minmax(0,1fr);gap:10px;
+}
+body.hc-flow-enabled #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail) .hc-simple-audio-list > button{
+  display:flex!important;flex-direction:row!important;align-items:center;
+  justify-content:space-between;box-sizing:border-box;gap:12px!important;
+  width:100%;min-width:0;min-height:74px!important;height:auto!important;
+  padding:12px 14px!important;border-radius:18px!important;
+}
+body.hc-flow-enabled #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail) .hc-simple-audio-list > button > span:first-child{
+  display:block;flex:1 1 auto;min-width:0;overflow-wrap:normal;word-break:normal;
+}
+body.hc-flow-enabled #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail) .hc-simple-audio-list > button :is(b,small){
+  display:block;line-height:1.45!important;white-space:normal;word-break:normal;
+}
+body.hc-flow-enabled #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail) .hc-simple-audio-list > button b{
+  font-size:17px!important;
+}
+body.hc-flow-enabled #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail) .hc-simple-audio-list > button small{
+  font-size:14px!important;margin-top:3px;color:#ccd9df;
+}
+body.hc-flow-enabled #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail) .hc-simple-audio-list > button .hc-simple-play{
+  flex:none;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;
+  font-size:20px!important;
+}
+/* Real source of vertical-letter Gita text: the global select{width:100%;font-size:22px}
+   occupied the same flex row as the Gita title. Give all controls reliable cells. */
+body.hc-flow-enabled #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail) #hcHinduHome{
+  display:grid!important;grid-template-columns:minmax(0,1fr) 52px 52px!important;
+  align-items:center;gap:10px!important;width:100%!important;max-width:100%;
+  min-width:0!important;box-sizing:border-box;
+  padding:13px 14px!important;margin:12px 0!important;
+}
+body.hc-flow-enabled #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail) #hcHinduHome .hc-hindu-info{
+  grid-column:1/-1;display:block!important;min-width:0;width:100%;
+  text-align:left;white-space:normal;word-break:normal!important;overflow-wrap:normal!important;
+}
+body.hc-flow-enabled #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail) #hcHinduHome .hc-hindu-info :is(b,small){
+  display:block!important;width:auto;white-space:normal!important;
+  word-break:normal!important;overflow-wrap:normal!important;
+}
+body.hc-flow-enabled #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail) #hcHinduHome .hc-hindu-info b{
+  font-size:17px!important;line-height:1.4!important;
+}
+body.hc-flow-enabled #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail) #hcHinduHome .hc-hindu-info small{
+  font-size:14px!important;line-height:1.5!important;
+}
+body.hc-flow-enabled #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail) #hcHinduHome select{
+  grid-column:1;max-width:100%!important;min-width:0;
+  width:100%!important;min-height:48px!important;height:48px!important;
+  font-size:16px!important;line-height:1.3!important;
+  padding:8px 10px!important;border-radius:12px!important;
+  background:#183542!important;color:#fff!important;
+}
+body.hc-flow-enabled #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail) #hcHinduHome button{
+  width:52px!important;min-width:52px!important;height:48px!important;
+  min-height:48px!important;padding:6px!important;
+  font-size:20px!important;border-radius:12px!important;
+}
+body.hc-flow-enabled #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail) #hcHinduHomeStatus{
+  width:100%;box-sizing:border-box;overflow-wrap:break-word;
+}
+body.hc-flow-enabled #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail) .hc-simple-paths{
+  width:100%;min-width:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;
+}
+body.hc-flow-enabled #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail) .hc-simple-paths button{
+  min-width:0;width:100%;min-height:52px!important;
+  padding:10px 12px!important;font-size:15px!important;line-height:1.45!important;
+  text-align:left;overflow-wrap:normal;word-break:normal;
+}
+body.hc-flow-enabled #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail) .hc-v139-daily-grid{
+  min-width:0;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;
+}
+body.hc-flow-enabled #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail) .hc-v139-daily-grid button{
+  min-width:0;min-height:48px!important;height:auto!important;
+  padding:8px 3px!important;font-size:12px!important;line-height:1.3!important;
+}
+@media(max-width:370px){
+  body.hc-flow-enabled #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail) .hc-simple-paths{grid-template-columns:1fr;}
+  body.hc-flow-enabled #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail) #hcHinduHome{grid-template-columns:minmax(0,1fr) 48px 48px!important;}
+  body.hc-flow-enabled #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail) #hcHinduHome button{width:48px!important;min-width:48px!important;}
+}
+
+/* v244: mobile Sounds player typography and spacing.
+   Fix overgrown global v220 buttons and forced mid-word breaks.
+   These rules only affect presentation; playback state/handlers are unchanged. */
+body.hc-flow-enabled #soundLabPlayer.active>.glass.soundlab-player{
+  box-sizing:border-box;min-width:0;padding:clamp(14px,3.8vw,21px)!important;
+}
+body.hc-flow-enabled #soundLabPlayer.active #soundLabTitle{
+  font-size:clamp(25px,6.8vw,31px)!important;line-height:1.2!important;
+  margin:8px 0!important;overflow-wrap:normal;word-break:normal;
+}
+body.hc-flow-enabled #soundLabPlayer.active :is(#soundLabDesc,#soundLabStatus,#hcBgPlaybackStatus){
+  font-size:14px!important;line-height:1.45!important;overflow-wrap:normal;
+  word-break:normal;max-width:100%;
+}
+body.hc-flow-enabled #soundLabPlayer.active .hc-native-toolbar{
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:nowrap;
+  gap:8px;margin-bottom:12px;
+}
+body.hc-flow-enabled #soundLabPlayer.active .hc-native-toolbar button{
+  flex:0 1 auto;min-width:0;min-height:44px!important;padding:8px 10px!important;
+  font-size:14px!important;line-height:1.3!important;white-space:nowrap;
+  overflow-wrap:normal!important;word-break:normal!important;
+}
+body.hc-flow-enabled #soundLabPlayer.active .soundlab-transport{
+  gap:8px;margin-top:11px;
+}
+body.hc-flow-enabled #soundLabPlayer.active .soundlab-transport button{
+  min-width:0;min-height:46px!important;padding:9px 8px!important;
+  font-size:15px!important;line-height:1.3!important;white-space:nowrap;
+  overflow-wrap:normal!important;word-break:normal!important;
+}
+body.hc-flow-enabled #soundLabPlayer.active .soundlab-options{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  align-items:stretch;gap:8px;margin-top:10px;
+}
+body.hc-flow-enabled #soundLabPlayer.active>.glass>.soundlab-options{
+  grid-template-columns:minmax(0,1fr) minmax(0,1.35fr) minmax(0,.75fr);
+}
+body.hc-flow-enabled #soundLabPlayer.active .soundlab-options button{
+  box-sizing:border-box;width:100%;min-width:0;min-height:46px!important;height:auto;
+  padding:9px 7px!important;font-size:clamp(13px,3.6vw,15px)!important;
+  line-height:1.3!important;white-space:normal;
+  overflow-wrap:normal!important;word-break:normal!important;hyphens:none;
+  border-radius:16px!important;
+}
+body.hc-flow-enabled #soundLabPlayer.active .soundlab-continuity{
+  box-sizing:border-box;width:100%;min-width:0;
+  margin:12px 0 0;padding:12px;
+  border-radius:20px;
+}
+body.hc-flow-enabled #soundLabPlayer.active .soundlab-continuity>label{
+  font-size:14px!important;line-height:1.35!important;margin:0 0 8px!important;
+}
+body.hc-flow-enabled #soundLabPlayer.active #hcSoundTimerChips{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:6px;margin:8px 0 10px;min-width:0;
+}
+body.hc-flow-enabled #soundLabPlayer.active #hcSoundTimerChips button{
+  box-sizing:border-box;display:grid;place-items:center;
+  width:100%;min-width:0!important;min-height:46px!important;height:auto;
+  padding:8px 3px!important;
+  font-size:clamp(12px,3.35vw,14px)!important;line-height:1.2!important;
+  white-space:nowrap!important;overflow-wrap:normal!important;
+  word-break:keep-all!important;hyphens:none!important;
+  border-radius:15px!important;
+}
+body.hc-flow-enabled #soundLabPlayer.active .soundlab-continuity #soundLabQueueStatus{
+  font-size:14px!important;line-height:1.45!important;
+  margin:10px 0 0!important;max-width:100%;
+  overflow-wrap:normal!important;word-break:normal!important;
+}
+body.hc-flow-enabled #soundLabPlayer.active .soundlab-continuity .soundlab-options{
+  margin-top:8px;
+}
+/* Carry the four balanced timer cells into the Sounds multi-layer mixer. */
+body.hc-flow-enabled #soundLab.active #hcMixTimerChips{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;min-width:0;
+}
+body.hc-flow-enabled #soundLab.active #hcMixTimerChips button{
+  min-width:0!important;min-height:46px!important;padding:8px 3px!important;
+  font-size:clamp(12px,3.35vw,14px)!important;line-height:1.2!important;
+  white-space:nowrap!important;overflow-wrap:normal!important;
+  word-break:keep-all!important;hyphens:none!important;
+}
+@media(max-width:355px){
+  body.hc-flow-enabled #soundLabPlayer.active #hcSoundTimerChips,
+  body.hc-flow-enabled #soundLab.active #hcMixTimerChips{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+
+
+/* Sacred Sound v251 — restore full-width tap targets and readable transport labels.
+   Scope only to Sacred Sound cards, not other pages or existing content. */
+body.hc-flow-enabled #sacredDetail.active #hcSacredDriveLibrary .hc-sacred-quick,
+body.hc-flow-enabled #sacredDetail.active #hcSacredDriveLibrary .hc-drive-card {
+  display:grid!important;
+  grid-template-columns:52px minmax(0,1fr) minmax(60px,max-content)!important;
+  align-items:center!important;
+  column-gap:12px!important;
+  box-sizing:border-box!important;
+  width:100%!important;
+  min-width:0!important;
+  min-height:76px!important;
+  height:auto!important;
+  padding:12px!important;
+  text-align:left!important;
+  cursor:pointer!important;
+  touch-action:manipulation!important;
+  pointer-events:auto!important;
+}
+body.hc-flow-enabled #sacredDetail.active #hcSacredDriveLibrary :is(.hc-sacred-quick,.hc-drive-card) > span:nth-child(2) {
+  display:block!important;
+  min-width:0!important;
+  width:auto!important;
+  overflow-wrap:normal!important;
+  word-break:normal!important;
+}
+body.hc-flow-enabled #sacredDetail.active #hcSacredDriveLibrary :is(.hc-sacred-quick,.hc-drive-card) :is(b,small) {
+  overflow-wrap:normal!important;
+  word-break:normal!important;
+  white-space:normal!important;
+  line-height:1.4!important;
+}
+body.hc-flow-enabled #sacredDetail.active #hcSacredDriveLibrary :is(.hc-sacred-quick-status,.soundlab-duration) {
+  margin-left:0!important;
+  width:auto!important;
+  min-width:60px!important;
+  max-width:95px!important;
+  display:block!important;
+  white-space:nowrap!important;
+  text-align:right!important;
+  overflow-wrap:normal!important;
+  word-break:keep-all!important;
+  font-size:13px!important;
+  font-weight:650!important;
+  line-height:1.3!important;
+  padding:0!important;
+}
+body.hc-flow-enabled #sacredDetail.active #hcSacredDriveLibrary :is(.hc-sacred-quick-icon,.soundlab-icon){
+  flex:none!important;
+  width:52px!important;
+  min-width:52px!important;
+  height:52px!important;
+  display:grid!important;
+  place-items:center!important;
+}
+body.hc-flow-enabled #sacredDetail.active #hcSacredDriveLibrary .hc-more-recordings,
+body.hc-flow-enabled #sacredDetail.active #hcSacredDriveLibrary .soundlab-grid{
+  width:100%!important;min-width:0!important;
+}
+body.hc-flow-enabled :is(#sacred.active,#sacredDetail.active){
+  padding-bottom:max(148px,calc(125px + env(safe-area-inset-bottom,0px)))!important;
+}
+body.hc-flow-enabled #sacredDetail.active #hcSacredDriveLibrary :is(button,summary):focus-visible{
+  outline:3px solid #fff!important;outline-offset:3px!important;
+}
+@media(max-width:360px){
+ body.hc-flow-enabled #sacredDetail.active #hcSacredDriveLibrary :is(.hc-sacred-quick,.hc-drive-card){
+   grid-template-columns:44px minmax(0,1fr) 55px!important;
+   column-gap:9px!important;
+   padding:10px!important;
+ }
+ body.hc-flow-enabled #sacredDetail.active #hcSacredDriveLibrary :is(.hc-sacred-quick-icon,.soundlab-icon){
+   width:44px!important;min-width:44px!important;height:44px!important;
+ }
+ body.hc-flow-enabled #sacredDetail.active #hcSacredDriveLibrary :is(.hc-sacred-quick-status,.soundlab-duration){
+   min-width:55px!important;max-width:55px!important;font-size:12px!important;
+ }
+}

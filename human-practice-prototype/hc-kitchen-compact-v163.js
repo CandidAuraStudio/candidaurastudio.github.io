@@ -11,13 +11,36 @@ function load(key){try{return JSON.parse(localStorage.getItem(key)||'null')}catc
 const localDay=(date)=>date.getFullYear()+'-'+String(date.getMonth()+1).padStart(2,'0')+'-'+String(date.getDate()).padStart(2,'0');
 function tomorrow(){const d=new Date();d.setDate(d.getDate()+1);return localDay(d)}
 const dishes=[
- {name:'Dosa',ta:'தோசை',match:/dosa|தோசை|dosai/i,ingredients:'Rice, urad dal, clean water; fermented batter, chutney or sambar',ingredientsTa:'அரிசி, உளுந்து, சுத்தமான நீர்; புளித்த மாவு, சட்னி அல்லது சாம்பார்',
- ahead:'Check for ready fermented batter and keep it chilled. Starting from dry grains requires soaking, grinding and controlled fermentation; it may not be ready by morning.',aheadTa:'தயார் புளித்த மாவு உள்ளதா இன்று பார்க்கவும்; குளிர்சாதனத்தில் வைக்கவும். புதிய மாவுக்கு ஊறவைத்தல், அரைத்தல், பாதுகாப்பாகப் புளிக்கவைத்தல் ஆகியவற்றுக்கு நேரம் தேவை.',
- method:'Spread on a warm pan and cook fully. Serve with vegetables, dhal or sambar.',methodTa:'சூடான கல்லில் மாவைப் பரப்பி முழுவதும் சுடவும். காய்கறி, பருப்பு அல்லது சாம்பாருடன் வழங்கவும்.',alt:'Idli or freshly made vegetable upma'},
- {name:'Idli',ta:'இட்லி',match:/idli|இட்லி/i,ingredients:'Fermented rice and urad batter; idli steamer; sambar or chutney',ingredientsTa:'புளித்த அரிசி-உளுந்து மாவு; இட்லித் தட்டு; சாம்பார் அல்லது சட்னி',
- ahead:'Check ready batter, chill it and wash the steamer. Without fermented batter, choose a different breakfast.',aheadTa:'தயார் மாவைக் குளிராக வைத்து, இட்லித் தட்டைச் சுத்தம் செய்யவும். புளித்த மாவு இல்லையெனில் வேறு காலை உணவைத் தேர்வு செய்யவும்.',
- method:'Steam until cooked through; serve with sambar or chutney.',methodTa:'முழுவதும் வேகும் வரை ஆவியில் வேகவைத்து சாம்பார் அல்லது சட்னியுடன் வழங்கவும்.',alt:'Dosa or vegetable upma'},
- {name:'Rice and vegetables',ta:'சோறும் காய்கறியும்',match:/rice|arisi|saadam|sadham|சோறு|சாதம்|அரிசி/i,ingredients:'Rice, a seasonal vegetable, dhal or another protein-rich side',ingredientsTa:'அரிசி, பருவகாலக் காய்கறி, பருப்பு அல்லது புரதத் துணை உணவு',
+ {name:"Burger",ta:"பர்கர்",aliases:"burgers hamburger hamburgers cheeseburger beef burger healthy burger",ingredients:"For two: 2 whole-grain buns, 2 palm-sized lean minced beef patties, 1 handful lettuce, 1 tomato, half an onion, 2 spoons plain yoghurt or mustard, a little oil; cheese optional.",ingredientsTa:"இருவருக்கு: 2 முழுத் தானிய பன்கள், உள்ளங்கை அளவுள்ள 2 குறைந்த கொழுப்புள்ள அரைத்த மாட்டிறைச்சி துண்டுகள், ஒரு கைப்பிடி லெட்டூஸ் கீரை, 1 தக்காளி, அரை வெங்காயம், 2 கரண்டி தயிர் அல்லது கடுகுச் சாஸ், சிறிது எண்ணெய்; சீஸ் விருப்பம்.",ahead:"Refrigerate minced meat and keep it separate from salad vegetables.",aheadTa:"அரைத்த இறைச்சியை குளிராக வைத்து சாலட் காய்கறிகளிலிருந்து தனியாக வைக்கவும்.",method:"1. Wash lettuce; slice tomato and onion. 2. Season lean minced beef with pepper and a pinch of salt; form two even patties. 3. Cook in a lightly oiled pan until the centre reaches 71°C. 4. Toast buns and layer lettuce, patty, vegetables and yoghurt-mustard sauce. Serve with more vegetables if you like.",methodTa:"1. கீரையைக் கழுவி தக்காளி, வெங்காயத்தை நறுக்கவும். 2. அரைத்த மாட்டிறைச்சியில் மிளகு, சிட்டிகை உப்பு சேர்த்து இரு துண்டுகளாகத் தட்டவும். 3. சிறிது எண்ணெயில் நடுப்பகுதி 71°C அடையும் வரை சமைக்கவும். 4. பன்களைச் சூடாக்கிக் கீரை, இறைச்சி, காய்கறிகள், தயிர்-கடுகுச் சாஸ் அடுக்கவும். விருப்பப்படி கூடுதல் காய்கறியுடன் பரிமாறவும்.",match:/burgers?|hamburgers?|cheeseburgers?/i},
+ {name:"Chicken burger",ta:"கோழி பர்கர்",aliases:"healthy chicken burger grilled chicken burger",ingredients:"For two: 2 buns, 2 palm-sized minced chicken patties, 1 handful lettuce, 1 tomato, garlic, pepper, 1 spoon yoghurt and a little oil.",ingredientsTa:"இருவருக்கு: 2 பன்கள், உள்ளங்கை அளவுள்ள 2 அரைத்த கோழி இறைச்சித் துண்டுகள், ஒரு கைப்பிடி கீரை, ஒரு தக்காளி, பூண்டு, மிளகு, ஒரு கரண்டி தயிர், சிறிது எண்ணெய்.",ahead:"Keep chicken refrigerated and separate from ready-to-eat toppings.",aheadTa:"கோழி இறைச்சியைக் குளிராக வைத்து உடனே சாப்பிடும் காய்கறிகளிலிருந்து தனியாக வைக்கவும்.",method:"1. Mix minced chicken with crushed garlic and pepper, then shape into two patties. 2. Pan-cook with a little oil until the centre reaches 74°C. 3. Wash and cut the vegetables. 4. Toast buns; add lettuce, cooked chicken, tomato and yoghurt sauce.",methodTa:"1. அரைத்த கோழியுடன் நசுக்கிய பூண்டு, மிளகு கலந்து இரு துண்டுகளாகத் தட்டவும். 2. சிறிது எண்ணெயில் நடுப்பகுதி 74°C அடையும் வரை சமைக்கவும். 3. காய்கறிகளைக் கழுவி நறுக்கவும். 4. பன்களைச் சூடாக்கி கீரை, வெந்த கோழி, தக்காளி, தயிர் சாஸ் சேர்க்கவும்.",match:/chicken\s*burgers?/i},
+ {name:"Veggie burger",ta:"காய்கறி பயறு பர்கர்",aliases:"bean burger chickpea burger vegetarian burger vegan burger healthy veggie burger",ingredients:"For two: 2 buns, 1 cup fully cooked and drained chickpeas or beans, 2 spoons oats, 1 small onion, pepper or cumin, 1 handful lettuce, 1 tomato and a little oil.",ingredientsTa:"இருவருக்கு: 2 பன்கள், 1 கோப்பை முழுவதும் வெந்த வடிகட்டிய கொண்டைக்கடலை அல்லது பயறு, 2 கரண்டி ஓட்ஸ், ஒரு சிறு வெங்காயம், மிளகு அல்லது சீரகம், ஒரு கைப்பிடி கீரை, ஒரு தக்காளி, சிறிது எண்ணெய்.",ahead:"Cook dried beans fully ahead of time, or use prepared canned beans.",aheadTa:"உலர் பயறை முன்பே முழுமையாக வேகவைக்கவும்; அல்லது தயாரிக்கப்பட்ட டின் பயறு பயன்படுத்தவும்.",method:"1. Mash the cooked drained beans with oats, chopped onion and spices. 2. Press firmly into two patties; add a teaspoon of water if too crumbly. 3. Pan-cook in a little oil until browned and hot throughout. 4. Put into buns with washed lettuce and tomato.",methodTa:"1. வெந்த வடிகட்டிய பயறுடன் ஓட்ஸ், நறுக்கிய வெங்காயம், மசாலா சேர்த்து மசிக்கவும். 2. இரு பர்கர் துண்டுகளாக அழுத்திப் பிடிக்கவும்; அதிகம் உதிர்ந்தால் ஒரு தேக்கரண்டி நீர் சேர்க்கவும். 3. சிறிது எண்ணெயில் இருபுறமும் பொன்னிறமாகி உள்ளே சூடாகும் வரை சமைக்கவும். 4. பன்களில் கழுவிய கீரை, தக்காளியுடன் வைக்கவும்.",match:/veggie\s*burgers?|vegetarian\s*burgers?|bean\s*burgers?/i},
+ {name:"Vegetable pizza",ta:"காய்கறி பீட்சா",aliases:"pizza pizzas healthy pizza homemade pizza",ingredients:"One whole-grain pizza base or flatbread, 2 spoons tomato sauce, 1 handful sliced vegetables, 1 small handful mozzarella and oregano.",ingredientsTa:"ஒரு முழுத் தானிய பீட்சா பேஸ் அல்லது தட்டையான ரொட்டி, 2 கரண்டி தக்காளி சாஸ், ஒரு கைப்பிடி நறுக்கிய காய்கறிகள், ஒரு சிறு கைப்பிடி மொசரெல்லா சீஸ், ஓரிகானோ.",ahead:"Wash and slice toppings; preheat the oven according to the base package.",aheadTa:"காய்கறிகளைக் கழுவி நறுக்கி பேஸ் பொதியின் வழிமுறைக்கு ஏற்ப ஓவனைச் சூடாக்கவும்.",method:"1. Spread tomato sauce on the base. 2. Top with vegetables, mozzarella and oregano. 3. Bake according to the base package until the crust is cooked and cheese is melted. 4. Slice and serve.",methodTa:"1. பீட்சா பேஸில் தக்காளி சாஸ் தடவவும். 2. காய்கறிகள், மொசரெல்லா சீஸ், ஓரிகானோ சேர்க்கவும். 3. பொதியின் வழிமுறைக்கு ஏற்ப அடிப்பகுதி வெந்து சீஸ் உருகும் வரை சுடவும். 4. துண்டுகளாக வெட்டிப் பரிமாறவும்.",match:/pizzas?/i},
+ {name:"Vegetable pasta",ta:"காய்கறி பாஸ்தா",aliases:"pasta spaghetti tomato pasta healthy pasta",ingredients:"For two: 1 cup dry pasta, 2 tomatoes, garlic, 1 handful spinach or vegetables, 1 spoon olive oil and optional cooked beans.",ingredientsTa:"இருவருக்கு: 1 கோப்பை உலர் பாஸ்தா, 2 தக்காளி, பூண்டு, ஒரு கைப்பிடி கீரை அல்லது காய்கறிகள், ஒரு கரண்டி ஆலிவ் எண்ணெய், விருப்பப்படி வெந்த பயறு.",ahead:"Wash and chop vegetables; keep cooked beans chilled until needed.",aheadTa:"காய்கறிகளைக் கழுவி நறுக்கி, வெந்த பயறைத் தேவைப்படும் வரை குளிராக வைக்கவும்.",method:"1. Boil pasta according to its packet; save a splash of cooking water. 2. Soften garlic and chopped tomato in a little oil. 3. Add vegetables and cooked beans, heating until cooked. 4. Toss with pasta, adding reserved water as needed.",methodTa:"1. பொதியின் வழிமுறைக்கு ஏற்ப பாஸ்தாவை வேகவைத்து சிறிது நீர் வைத்துக்கொள்ளவும். 2. சிறிது எண்ணெயில் பூண்டு, நறுக்கிய தக்காளியை வதக்கவும். 3. காய்கறிகள், வெந்த பயறு சேர்த்து சமைக்கவும். 4. பாஸ்தாவுடன் கலந்து, தேவையெனில் வைத்த நீர் சேர்க்கவும்.",match:/pastas?|spaghetti/i},
+ // Specific dish names are ranked ahead of generic ingredients.
+ {name:"Butter chicken",ta:"பட்டர் சிக்கன்",ingredients:"For two: 2 handfuls boneless chicken, 1 onion, 2 tomatoes, 2 spoons yoghurt, 1 spoon butter, ginger-garlic, chilli and garam masala; a little cream if available.",ingredientsTa:"இருவருக்கு: 2 கைப்பிடி கோழி, 1 வெங்காயம், 2 தக்காளி, 2 கரண்டி தயிர், 1 கரண்டி வெண்ணெய், இஞ்சி-பூண்டு, மிளகாய், கரம் மசாலா; விருப்பப்படி சிறிது கிரீம்.",ahead:"Keep the chicken chilled. Mix it with yoghurt and spices before cooking.",aheadTa:"கோழியை குளிராக வைத்து, சமைக்கும் முன் தயிர், மசாலாவுடன் கலக்கவும்.",method:"1. Soften onion and ginger-garlic in butter. 2. Cook tomatoes and spices until saucy. 3. Add chicken and a splash of water; cook completely (74°C inside). 4. Finish with a little cream and butter.",methodTa:"1. வெங்காயம், இஞ்சி-பூண்டை வெண்ணெயில் வதக்கவும். 2. தக்காளி, மசாலாவைச் சாஸ் போலச் சமைக்கவும். 3. கோழி, சிறிது நீர் சேர்த்து முற்றிலும் வேகவைக்கவும் (74°C). 4. கிரீம், வெண்ணெய் சேர்த்துப் பரிமாறவும்.",alt:"Chicken curry",match:new RegExp("butter[\\s-]*chicken|murgh\\s*makhani|பட்டர்\\s*சிக்கன்|வெண்ணெய்\\s*கோழி",'i')},
+ {name:"Pepper chicken curry",ta:"மிளகு கோழிக் கறி",ingredients:"Chicken, onion, tomato, ginger, garlic, curry leaves, 1–2 spoons crushed black pepper, curry powder, turmeric and a little water. No coconut milk.",ingredientsTa:"கோழி, வெங்காயம், தக்காளி, இஞ்சி, பூண்டு, கறிவேப்பிலை, 1–2 கரண்டி நசுக்கிய மிளகு, கறித்தூள், மஞ்சள், சிறிது நீர். தேங்காய்ப்பால் வேண்டாம்.",ahead:"Keep the chicken chilled and crush black pepper freshly.",aheadTa:"கோழியை குளிராக வைத்து மிளகை புதிதாக நசுக்கவும்.",method:"1. Fry onion, garlic, ginger and curry leaves. 2. Add tomato, spices and chicken. 3. Add a little water and cover until chicken is cooked (74°C inside). 4. Reduce uncovered to a thick dark gravy; finish with pepper.",methodTa:"1. வெங்காயம், பூண்டு, இஞ்சி, கறிவேப்பிலை வதக்கவும். 2. தக்காளி, மசாலா, கோழி சேர்க்கவும். 3. சிறிது நீர் சேர்த்து மூடி முழுவதும் வேகவைக்கவும் (74°C). 4. கெட்டியான கருமை கறியாகச் சுண்டவிட்டு மிளகு சேர்க்கவும்.",alt:"Chicken curry",match:new RegExp("pepper[\\s-]*chicken|chicken[\\s-]*pepper|மிளகு\\s*கோழி|கோழி\\s*மிளகு",'i')},
+ {name:"Chicken curry",ta:"கோழிக் கறி",ingredients:"Chicken pieces, 1 onion, 2 tomatoes, ginger, garlic, curry powder, chilli, turmeric, salt and a little water; coconut milk optional.",ingredientsTa:"கோழித்துண்டுகள், 1 வெங்காயம், 2 தக்காளி, இஞ்சி, பூண்டு, கறித்தூள், மிளகாய், மஞ்சள், உப்பு, சிறிது நீர்; தேங்காய்ப்பால் விருப்பம்.",ahead:"Keep raw chicken away from ready-to-eat food and refrigerate until cooking.",aheadTa:"பச்சைக் கோழியைச் சாப்பிடத் தயாரான உணவிலிருந்து தனியே குளிராக வைக்கவும்.",method:"1. Fry onion, ginger and garlic. 2. Add tomato, spices and chicken. 3. Add a little water and simmer covered until fully cooked (74°C inside). 4. Reduce to the gravy thickness you like; add lemon if preferred.",methodTa:"1. வெங்காயம், இஞ்சி, பூண்டு வதக்கவும். 2. தக்காளி, மசாலா, கோழி சேர்க்கவும். 3. சிறிது நீர் சேர்த்து மூடி முழுவதும் வேகவைக்கவும் (74°C). 4. விருப்பமான பதத்திற்கு சுண்டவிட்டு எலுமிச்சை சேர்க்கலாம்.",alt:"Pepper chicken curry",match:new RegExp("\\bchicken\\b|கோழி|kozhi",'i')},
+ {name:"Appam",ta:"ஆப்பம்",
+ ingredients:"For two: 1¼ cups rice flour, about 1 cup lukewarm water, ⅔ cup coconut milk (or regular milk), ½ teaspoon yeast, 2 teaspoons sugar, ¼ teaspoon salt and 1 teaspoon oil.",
+ ingredientsTa:"இருவருக்கு: 1¼ கப் அரிசி மாவு, சுமார் 1 கப் இளஞ்சூடான நீர், ⅔ கப் தேங்காய்ப்பால் (அல்லது பால்), ½ தேக்கரண்டி ஈஸ்ட், 2 தேக்கரண்டி சர்க்கரை, ¼ தேக்கரண்டி உப்பு, 1 தேக்கரண்டி எண்ணெய்.",
+ ahead:"No prepared batter needed. Activate yeast 5–10 minutes, then rest mixed batter 60–90 minutes until bubbly; add milk just before cooking.",
+ aheadTa:"தயார் மாவு தேவையில்லை. ஈஸ்ட் 5–10 நிமிடம் செயல்படவும், மாவு 60–90 நிமிடம் பொங்கி வரவும் வைக்கவும்; பாலைச் சுடும் முன் சேர்க்கவும்.",
+ method:"1. Heat 2 spoonfuls of the measured rice flour with one-third of the measured water, stirring into a thick paste; cool to lukewarm. 2. Mix yeast and sugar into the remaining lukewarm water and wait 5–10 minutes for bubbles. 3. Add the cooled paste, remaining flour and salt; whisk into pourable batter and rest covered for 60–90 minutes until bubbly. 4. Add coconut milk (or regular milk), thinning with water if needed. 5. Heat an appam pan, lightly oil, add a ladle, swirl thin around the edges, cover and cook 2–4 minutes until the centre sets. Do not flip.",
+ methodTa:"1. அளந்த மாவில் 2 கரண்டியுடன் நீரில் மூன்றில் ஒரு பகுதி சேர்த்து கூழாக்கி ஆறவிடவும். 2. மீதமுள்ள இளஞ்சூடான நீரில் ஈஸ்ட், சர்க்கரை கலந்து 5–10 நிமிடம் குமிழ்கள் வரும் வரை வைக்கவும். 3. கூழ், மீதமுள்ள மாவு, உப்பு சேர்த்து ஊற்றும் மாவாக்கி மூடி 60–90 நிமிடம் புளிக்கவிடவும். 4. தேங்காய்ப்பால் அல்லது பால் சேர்க்கவும்; தேவைப்பட்டால் நீர் சேர்க்கவும். 5. எண்ணெய் தடவிய அப்பச்சட்டியில் மாவை ஊற்றிச் சுழற்றி மூடி 2–4 நிமிடம் நடு வெந்ததும் எடுக்கவும்; திருப்ப வேண்டாம்.",
+ alt:"Dosa",match:new RegExp("\\bappam\\b|ஆப்பம்|aappam",'i')},
+ {name:"Naan",ta:"நான் ரொட்டி",ingredients:"1 cup wheat flour, 2 spoons plain yoghurt, a pinch of salt and baking powder, water as needed and a little oil or butter.",ingredientsTa:"1 கோப்பை கோதுமை மாவு, 2 கரண்டி தயிர், சிட்டிகை உப்பு, சிறிது பேக்கிங் பவுடர், தேவையான நீர், வெண்ணெய்.",ahead:"Mix a soft dough and rest it covered.",aheadTa:"மென்மையான மாவைப் பிசைந்து மூடி ஓய்வெடுக்க விடவும்.",method:"Knead flour, yoghurt and water into a soft dough. Rest, flatten portions and cook on a hot pan until both sides are done. Brush with butter.",methodTa:"மாவு, தயிர், நீர் பிசைந்து ஓய்வெடுக்க விடவும். தட்டையாகத் தட்டி சூடான தவாவில் இருபுறமும் சுட்டு வெண்ணெய் தடவவும்.",alt:"Roti",match:new RegExp("\\bnaan\\b|நான்\\s*ரொட்டி",'i')},
+ {name:"Sambal kangkong",ta:"சம்பல் கங்கோங் கீரை",ingredients:"A handful of edible water spinach, 1 small onion, garlic, a spoon of sambal or chilli paste, a little oil.",ingredientsTa:"ஒரு கைப்பிடி உணவுக்கேற்ற கங்கோங் கீரை, சிறு வெங்காயம், பூண்டு, ஒரு கரண்டி சம்பல் அல்லது மிளகாய் விழுது, சிறிது எண்ணெய்.",ahead:"Use only correctly identified edible greens and wash well.",aheadTa:"உணவுக்கேற்ற கீரை என்று உறுதிப்படுத்தி நன்றாகக் கழுவவும்.",method:"Fry onion and garlic. Stir in sambal, add washed greens and cook until wilted and tender. Serve fresh.",methodTa:"வெங்காயம், பூண்டு வதக்கிச் சம்பல் சேர்க்கவும். கழுவிய கீரையைச் சேர்த்து மென்மையாகும் வரை வதக்கவும்.",alt:"Greens poriyal",match:new RegExp("sambal\\s*kangkong|sambal\\s*kangkung|கங்கோங்|kangkung|kangkong",'i')},
+ {name:'Dosa',ta:'தோசை',match:/dosa|தோசை|dosai/i,
+ ingredients:'For two: 1 cup raw rice, ¼ cup urad dal, pinch fenugreek (optional), water to soak and grind, pinch salt and 2 teaspoons oil.',
+ ingredientsTa:'இருவருக்கு: 1 கப் பச்சரிசி, ¼ கப் உளுந்து, விருப்பப்படி வெந்தயம், ஊறவும் அரைக்கவும் நீர், சிட்டிகை உப்பு, 2 தேக்கரண்டி எண்ணெய்.',
+ ahead:'Soak rice and dal for 4–6 hours, then ferment ground batter for 8–12 hours until airy.',aheadTa:'அரிசி, உளுந்தை 4–6 மணி நேரம் ஊறவைத்து அரைத்து 8–12 மணி நேரம் மாவைப் புளிக்கவிடவும்.',
+ method:'1. Wash and soak rice and urad separately for 4–6 hours. Drain, grind with clean water into pourable batter. 2. Cover loosely and ferment until bubbly, usually 8–12 hours. Add salt and refrigerate until cooking. 3. Heat a flat pan, spread one ladle thinly, add oil and cook 2–3 minutes until set.',methodTa:'1. அரிசி, உளுந்தை தனித்தனியாகக் கழுவி 4–6 மணி நேரம் ஊறவைத்து அரைக்கவும். 2. தளர்வாக மூடி 8–12 மணி நேரம் புளிக்கவிட்டு உப்பு சேர்த்துக் குளிர்விக்கவும். 3. சூடான கல்லில் மாவைப் பரப்பி எண்ணெய் விட்டு 2–3 நிமிடம் நடு வேகும் வரை சுடவும்.',alt:'Idli or vegetable upma'},
+ {name:'Idli',ta:'இட்லி',match:/idli|இட்லி/i,
+ ingredients:'For two: 1 cup idli rice, ¼ cup urad dal, pinch fenugreek (optional), water for soaking and grinding, pinch salt and a little oil.',
+ ingredientsTa:'இருவருக்கு: 1 கப் இட்லி அரிசி, ¼ கப் உளுந்து, விருப்பப்படி வெந்தயம், நீர், சிட்டிகை உப்பு, எண்ணெய்.',
+ ahead:'Plan ahead: soak grains 4–6 hours, grind, then ferment 8–12 hours until risen.',aheadTa:'தானியங்களை 4–6 மணி நேரம் ஊறவைத்து அரைத்து 8–12 மணி நேரம் மாவைப் புளிக்கவிடவும்.',
+ method:'1. Wash and soak rice and dal separately for 4–6 hours; drain and grind with water to thick smooth batter. 2. Cover loosely and ferment 8–12 hours until bubbly; add salt. 3. Boil water below the idli tray, grease moulds, fill with batter and steam covered 10–15 minutes until cooked. Rest a minute before removing.',methodTa:'1. அரிசி, உளுந்தைத் தனித்தனியாகக் கழுவி 4–6 மணி நேரம் ஊறவைத்து அரைக்கவும். 2. தளர்வாக மூடி 8–12 மணி நேரம் புளிக்கவிட்டு உப்புச் சேர்க்கவும். 3. இட்லித் தட்டின் கீழே நீரைக் கொதிக்கவிட்டு தட்டில் எண்ணெய் தடவி மாவை ஊற்றி மூடி 10–15 நிமிடம் வேகவைக்கவும்; சிறிது ஆறியதும் எடுக்கவும்.',alt:'Dosa or vegetable upma'},
+ {name:'Rice and vegetables',ta:'சோறும் காய்கறியும்',generic:true,match:/rice|arisi|saadam|sadham|சோறு|சாதம்|அரிசி/i,ingredients:'Rice, a seasonal vegetable, dhal or another protein-rich side',ingredientsTa:'அரிசி, பருவகாலக் காய்கறி, பருப்பு அல்லது புரதத் துணை உணவு',
  ahead:'Check rice, vegetables and dhal. Wash produce when preparing it and refrigerate perishable items. Prefer freshly cooked rice tomorrow.',aheadTa:'அரிசி, காய்கறி, பருப்பு உள்ளதா பார்க்கவும். கெடக்கூடிய பொருட்களைக் குளிராக வைக்கவும். முடிந்தால் நாளைச் சாதத்தைப் புதிதாகச் சமைக்கவும்.',
  method:'Cook rice appropriately; pair with vegetables and protein. White rice does not lower blood sugar. Less-polished red or brown varieties often provide more fibre, but no rice guarantees a lower glucose response.',methodTa:'அரிசியை வகைக்கேற்ப வேகவைத்து காய்கறி, பருப்புடன் சேர்க்கவும். வெள்ளை அரிசி தானாக இரத்தச் சர்க்கரையைக் குறைக்காது. குறைவாகத் தீட்டிய சிவப்பு அல்லது பழுப்பு அரிசியில் பொதுவாக நார் அதிகம் இருக்கும்; எந்த அரிசியும் சர்க்கரையைக் குறைக்கும் என உறுதியில்லை.',alt:'Brown/red rice, vegetables with dhal or millet'},
  {name:'Egg and vegetables',ta:'முட்டையும் காய்கறியும்',match:/eggs?|முட்டை|muttai/i,ingredients:'Eggs, tomato or greens; rice, bread or another staple',ingredientsTa:'முட்டை, தக்காளி அல்லது கீரை; சோறு, ரொட்டி அல்லது வேறு தானியம்',
@@ -56,11 +79,24 @@ css.textContent=[
 '#home #hcKitchenAskV163{margin:6px 0 0;border-top:1px solid #415764;padding-top:10px}',
 '#home #hcKitchenAskV163[hidden]{display:none!important}',
 '#home #hcKitchenAskV163 label{display:block;font-size:12px;color:#d2e1e7;margin-bottom:6px}',
-'#home #hcKitchenAskV163 textarea{box-sizing:border-box;width:100%;min-height:56px;border:1px solid #627783;border-radius:9px;padding:10px;background:#162e3b;color:#fff;font:inherit;font-size:13px;line-height:1.5;resize:vertical}',
+'#home #hcKitchenAskV163 input[type=search]{box-sizing:border-box;flex:1;min-width:0;min-height:43px;border:1px solid #627783;border-radius:9px;padding:10px;background:#162e3b;color:#fff;font:inherit;font-size:13px;line-height:1.4}',
 '#home #hcKitchenAskV163 .hc-ask-buttons{display:flex;gap:7px;margin:7px 0;flex-wrap:wrap}',
 '#home #hcKitchenAskV163 button{background:#213a47;border:1px solid #71838b;color:#fff;border-radius:9px;padding:8px 10px;min-height:39px;font:inherit;font-size:12px}',
 '#home #hcKitchenAskV163 .hc-ask-reply{font-size:12px;line-height:1.65;white-space:pre-line;color:#e2eef0;border:1px solid #435f69;border-radius:10px;padding:10px;background:#102733}',
+'#home #hcKitchenAskV163 .hc-search-line{display:flex;gap:7px;align-items:stretch}',
+'#home #hcKitchenAskV163 .hc-cuisine-line{display:flex;align-items:center;gap:8px;margin:7px 0 6px}',
+'#home #hcKitchenAskV163 .hc-cuisine-line label{white-space:nowrap;flex-shrink:0;font-size:11px;margin:0}',
+'#home #hcKitchenAskV163 .hc-cuisine-line select{min-width:0;flex:1;min-height:39px;font:inherit;font-size:12px;padding:6px 9px;color:#fff;background:#162e3b;border:1px solid #627783;border-radius:9px}',
+'#home #hcKitchenBrowse{display:none!important}',
+'#home #hcKitchenAskV163 .hc-kitchen-search-results{display:grid;gap:4px;margin:6px 0 4px;max-height:315px;overflow:auto}',
+'#home #hcKitchenAskV163 .hc-kitchen-search-results[hidden]{display:none}',
+'#home #hcKitchenAskV163 .hc-kitchen-search-results button{width:100%;text-align:left;font-size:12px;min-height:37px;background:#142a35}',
+'#home #hcKitchenAskV163 .hc-kitchen-search-results button[aria-pressed=true]{border-color:#e1edf2;background:#294552}',
+'#home #hcKitchenAskV163 .hc-kitchen-search-results p{font-size:12px;margin:6px 0}',
 '#home #hcKitchenAskV163 .hc-ask-caption{color:#adbec5;font-size:10px;line-height:1.6}',
+'#home #hcKitchenAskV163 .hc-kitchen-science{margin-top:10px;border-top:1px solid #4d6570;padding-top:9px;white-space:normal}',
+'#home #hcKitchenAskV163 .hc-kitchen-science summary{cursor:pointer;font-weight:650}',
+'#home #hcKitchenAskV163 .hc-kitchen-science a{display:inline-block;font-size:12px;color:#d7efff;text-decoration:underline;margin:4px 8px 0 0}',
 '#home #hcKitchenAskV163 .hc-ask-reply[hidden]{display:none}',
 '.bottom-nav .nav-item.active{color:#edf4f6!important}',
 '.bottom-nav .nav-item.active span{color:#edf4f6!important}',
@@ -79,32 +115,168 @@ kitchen.querySelector('.hcr-small')?.replaceChildren('FOOD · LEARN / உணவ�
 const title=kitchen.querySelector('strong');if(title)title.textContent='What can we cook? / என்ன சமைக்கலாம்?';
 const buttons=kitchen.querySelector('.hcr-food-actions'),mealButton=document.getElementById('hcrMeals');
 if(mealButton)mealButton.textContent='Meal ideas · உணவுகள்';
-const button=el('button',null,'Ask Kitchen · கேளுங்கள்');button.type='button';button.id='hcKitchenAskToggle';button.setAttribute('aria-expanded','false');
-buttons?.append(button);
-const section=el('div');section.id='hcKitchenAskV163';section.hidden=true;
-section.innerHTML='<label for="hcKitchenAskInput">Ask about a dish, ingredients, or tomorrow’s preparation. / உணவு அல்லது நாளைய தயாரிப்பு பற்றி கேளுங்கள்.</label>'+
- '<textarea id="hcKitchenAskInput" maxlength="350" placeholder="I have eggs and rice… / முட்டையும் அரிசியும் இருக்கிறது…"></textarea>'+
- '<div class="hc-ask-buttons"><button type="button" id="hcKitchenAskSend">Find ideas / யோசனை</button><button type="button" id="hcKitchenTomorrow">Tomorrow / நாளை</button><button type="button" id="hcKitchenSavePlan" hidden>Remember / நினைவில் வை</button></div>'+
- '<div id="hcKitchenAskReply" class="hc-ask-reply" role="status" aria-live="polite" hidden></div>'+
- '<div class="hc-ask-caption">Basic on-device suggestions, not live AI chat. Nothing typed here is uploaded. Saved plans appear when you reopen HC; push notifications are not enabled.</div>';
+// Search first; the optional tradition picker filters without changing any meal plan.
+const traditions=[
+ ['all','All traditions · அனைத்தும்'],
+ ['tamil','Tamil · தமிழ்'],['srilankantamil','Sri Lankan Tamil · ஈழத் தமிழ்'],
+ ['indian','Indian · இந்திய'],['chinese','Chinese · சீன'],
+ ['indonesian','Indonesian · இந்தோனேசிய'],['malaysian','Malaysian · மலேசிய'],
+ ['nepali','Nepali · நேபாள'],['bangladeshi','Bangladeshi · வங்கதேச'],
+ ['middleeastern','Middle East / Arab · அரபு'],['mediterranean','Mediterranean'],
+ ['italian','Italian · இத்தாலிய'],['scandinavian','Scandinavian · வட ஐரோப்பிய'],
+ ['european','Other European · ஐரோப்பிய'],['fusion','Tamil + world fusion · கலவை']
+];
+const traditionWords={
+ tamil:'tamil தமிழ் south indian',srilankantamil:'sri lanka sri lankan tamil eelam jaffna இலங்கை யாழ்ப்பாணம்',
+ indian:'indian india இந்திய',chinese:'chinese china சீன',
+ indonesian:'indonesian indonesia',malaysian:'malaysian malaysia',
+ nepali:'nepali nepal',bangladeshi:'bangladeshi bangladesh',
+ middleeastern:'arab arabic middle east middle eastern levant அரபு',
+ mediterranean:'mediterranean greek',italian:'italian italy',
+ scandinavian:'scandinavian nordic danish norwegian swedish',
+ european:'europe european spanish french british',fusion:'fusion mixed கலவை'
+};
+function traditionTags(d){
+ if(Array.isArray(d.cuisines))return d.cuisines;
+ const n=String(d.en||'').toLowerCase();
+ if(/burger/.test(n))return [];
+ if(/pizza|pasta|spaghetti|risotto/.test(n))return ['italian'];
+ if(/butter chicken|naan|chana masala|aloo gobi|biryani/.test(n))return ['indian'];
+ if(/sambal kangkong|mee goreng|nasi lemak/.test(n))return ['indonesian','malaysian'];
+ if(/pittu|puttu|appam|hopper|sothi|jaffna|dry fish/.test(n))return ['tamil','srilankantamil'];
+ if(/dosa|idli|poriyal|sambar|rasam|upma|adai|pongal|kuzhambu|chutney|kootu|keerai|roti|curry|dhal/.test(n))return ['tamil'];
+ if(d.source==='menu'||d.source==='side')return ['tamil'];
+ return [];
+}
+// One visible search field: results are drawn from the meal index and cooking guides.
+const section=el('div');section.id='hcKitchenAskV163';section.hidden=false;
+section.innerHTML='<label for="hcKitchenAskInput">Search food, drinks or ingredients / உணவு, பானம், பொருட்கள் தேடல்</label>'+
+ '<div class="hc-search-line"><input type="search" id="hcKitchenAskInput" maxlength="150" autocomplete="off" placeholder="Any food, drink or ingredient…">'+
+ '<button type="button" id="hcKitchenAskSend">Search / தேடு</button></div>'+
+ '<div class="hc-cuisine-line"><label for="hcKitchenTradition">Tradition / மரபு</label><select id="hcKitchenTradition" aria-label="Filter recipes by cuisine">'+traditions.map(([id,label])=>'<option value="'+id+'">'+label+'</option>').join('')+'</select></div>'+ 
+ '<div id="hcKitchenSearchResults" class="hc-kitchen-search-results" hidden></div>'+
+ '<div class="hc-ask-buttons"><button type="button" id="hcKitchenTomorrow">Tomorrow / நாளை</button><button type="button" id="hcKitchenSavePlan" hidden>Remember / நினைவில் வை</button></div>'+
+ '<div id="hcKitchenAskReply" class="hc-ask-reply" role="status" aria-live="polite" hidden></div>';
 kitchen.append(section);
-const reply=section.querySelector('#hcKitchenAskReply'),input=section.querySelector('#hcKitchenAskInput'),saveBtn=section.querySelector('#hcKitchenSavePlan');
-let lastPlan=null;
+const reply=section.querySelector('#hcKitchenAskReply'),input=section.querySelector('#hcKitchenAskInput'),
+      traditionSelect=section.querySelector('#hcKitchenTradition'),searchResults=section.querySelector('#hcKitchenSearchResults'),saveBtn=section.querySelector('#hcKitchenSavePlan');
+let lastPlan=null, currentSearch=[],visibleCount=10;
 const output=(txt,plan=null)=>{reply.hidden=false;reply.textContent=txt;lastPlan=plan;saveBtn.hidden=!plan};
-const brief=d=>'• '+d.name+' / '+d.ta;
-function help(){
- const ask=input.value.trim();if(!ask){output('Tell me a dish or an ingredient first. / முதலில் உணவு அல்லது பொருளைக் குறிப்பிடவும்.');return}
- const found=dishes.filter(d=>d.match.test(ask));
- const wantsHelp=/tomorrow|நாளை|prep|prepare|soak|ஊற|tonight|இன்று|before/i.test(ask);
- if(!found.length){
-  const matched=/chicken|கோழி/i.test(ask)?'Chicken curry / கோழிக் கறி':/potato|உருளை/i.test(ask)?'Vegetable curry / காய்கறிக் கறி':'';
-  output((matched?'Try: '+matched+'\n':'')+'I do not have a verified recipe for that exact request yet. Try “dosa”, “rice”, “eggs”, “fish”, “dhal” or “roti”, or open Meal ideas.\nஅந்த உணவுக்கான முழு செய்முறை இன்னும் இல்லை. தோசை, அரிசி, முட்டை, மீன், பருப்பு அல்லது ரொட்டி என்று கேளுங்கள்.');
-  return;
+function foldText(v){return String(v||'').normalize('NFKC').toLocaleLowerCase().replace(/[^\p{L}\p{M}\p{N}]+/gu,' ').trim()}
+function words(s){return foldText(s).split(/\s+/).filter(x=>x&&!['and','with','the','for','a','my','own','recipe','recipes','please','how','make','cook','of','to','or','healthy','healthier','balanced','homemade','easy','simple','quick','என்','செய்முறை'].includes(x))}
+function getCatalog(){
+ const items=[],seen=new Set();
+ const push=x=>{
+  if(!x||!x.en)return;
+  const key=foldText(x.en);
+  if(seen.has(key))return;
+  seen.add(key);items.push(x);
+ };
+ // Personal methods, general named guides and rotating family menu all appear.
+ (window.HCKitchenSearchGuide?.personal||[]).forEach(push);
+ dishes.forEach(d=>push({en:d.name,ta:d.ta,aliases:d.aliases||'',source:'quick'}));
+ (window.HCKitchenWorldRecipes?.catalog?.()||[]).forEach(push);
+ (window.HCKitchenUniversal?.catalog?.()||[]).forEach(push);
+ (window.HCKitchenMenu?.catalog?.()||[]).forEach(push);
+ return items;
+}
+function rank(d,q){
+ const name=foldText(d.en+' '+d.ta),aliases=foldText(d.aliases),ingredients=foldText(d.ingredients),category=foldText(d.category),culture=foldText(traditionTags(d).map(id=>traditionWords[id]||'').join(' ')),en=foldText(d.en),query=foldText(q),t=words(q);
+ if(!t.length)return 0;
+ const found=t.filter(w=>name.includes(w)||aliases.includes(w)||ingredients.includes(w)||category.includes(w)||culture.includes(w)), coverage=found.length/t.length;
+ const cultureTerms=t.filter(w=>['arab','tamil','chinese','indonesian','malaysian','nepali','bangladeshi','italian','mediterranean','scandinavian','indian'].includes(w));
+ if(cultureTerms.length>1&&cultureTerms.some(w=>![name,aliases,culture].some(part=>part.includes(w))))return 0;
+ const named=t.filter(w=>name.includes(w)).length,aliased=t.filter(w=>aliases.includes(w)).length;
+ if(!found.length||coverage<Math.min(0.65,1/t.length))return 0;
+ let score=coverage*35+named*85+aliased*47+(found.length-named)*8;
+ if(en===query||foldText(d.ta)===query)score+=220;
+ if(query.length>3&&en.includes(query))score+=65;
+ if(en.length>3&&query.includes(en))score+=75;
+ // Prefer a named dish over rice-only matches in "rice and butter chicken".
+ if(t.length>1&&found.length===1&&t.length>2)score-=35;
+ if(d.source==='personal')score+=8;
+ // Tamil searches should rank traditional dishes above modern cross-cultural fusion.
+ if(t.length===1&&t[0]==='tamil'&&traditionSelect.value!=='fusion'&&traditionTags(d).includes('fusion'))return 0;
+ return score;
+}
+function getMatches(q){
+ const chosen=traditionSelect.value;
+ const catalog=getCatalog().filter(d=>chosen==='all'||traditionTags(d).includes(chosen));
+ if(!q.trim())return chosen==='all'?[]:catalog.slice(0,120);
+ return catalog.map((d,i)=>({...d,score:rank(d,q),order:i}))
+  .filter(x=>x.score>0).sort((a,b)=>b.score-a.score||a.order-b.order).slice(0,120);
+}
+function showItem(item){
+ if(item?.source==='universal'){
+  const u=window.HCKitchenUniversal?.detail?.(item.en);
+  if(u){output(u.text);return}
  }
- const d=found[0];
- output(d.name+' · '+d.ta+'\n\nIngredients / தேவையானவை:\n'+d.ingredients+'\n'+d.ingredientsTa+
-  '\n\n'+(wantsHelp?'Prepare ahead / முன்தயாரிப்பு:\n'+d.ahead+'\n'+d.aheadTa+'\n\n':'')+
-  'Cooking / சமைப்பது:\n'+d.method+'\n'+d.methodTa+'\n\nAlternative / மாற்று: '+d.alt);
+ if(!item)return;
+ searchResults.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.recipe===item.en)));
+ if(item.source==='world'||(item.source==='personal'&&!window.HCKitchenSearchGuide?.detail?.(item.en,item.ta))){
+  const guide=window.HCKitchenWorldRecipes?.detail?.(item.en);
+  if(guide){
+   output(guide.text);
+   const box=document.createElement('details');box.className='hc-kitchen-science';
+   const heading=document.createElement('summary');heading.textContent='Food science & sources / அறிவியல் · ஆதாரம்';box.append(heading);
+   const fact=document.createElement('p');
+   fact.textContent=/ginger tea|lemon ginger|ginger coriander/i.test(item.en)?'Ginger is a culinary ingredient; a cup of ginger tea does not replace medical care.':
+   /turmeric milk/i.test(item.en)?'Culinary turmeric adds flavour. Concentrated turmeric supplements have different risks.':
+   /idli|dosa|batter/i.test(item.en)?'Natural microorganisms ferment rice-and-urad batter. Use safe water and clean equipment. Chill ready batter.':
+   /mutton|beef|chicken|egg|fish|prawn|burger|tuna|maasi|sprat|mayonnaise/i.test(item.en)?'Keep raw and ready-to-eat food separate, cook to safe temperatures, and refrigerate perishables.':
+   'Fresh ingredients, clean utensils and safe storage matter more than unsupported health claims.';
+   box.append(fact);
+   (guide.references||[]).forEach(ref=>{
+     const link=document.createElement('a');link.href=ref.url;link.target='_blank';link.rel='noopener noreferrer';link.textContent=ref.name+' ↗';box.append(link);
+   });
+   reply.append(box);return;
+  }
+ }
+ const guide=window.HCKitchenSearchGuide?.detail?.(item.en,item.ta);
+ // Original cooking notes override general methods if recorded.
+ if(item.source==='personal'&&guide){output(guide.en+' / '+guide.ta+'\n\n'+guide.text);return}
+ if(item.source!=='quick'&&guide){output(guide.text);return}
+ const quick=dishes.find(d=>foldText(d.name)===foldText(item.en));
+ if(quick){
+  const riceSide=/rice|arisi|saadam|sadham|சோறு|சாதம்|அரிசி/i.test(input.value)&&!quick.generic?
+   '\n\nRice / சாதம்: Rinse 1 cup rice. Use water suited to its variety; cook covered until tender.\nசாதம்: 1 கோப்பை அரிசியைக் கழுவி, அதன் வகைக்கு ஏற்ற நீரில் மூடி வேகவைக்கவும்.':'';
+  const heading=quick.name+' / '+quick.ta;
+  output(heading+'\n\nIngredients / தேவையானவை:\n'+quick.ingredients+'\n'+quick.ingredientsTa+
+   '\n\nBefore you cook / சமைக்கும் முன்:\n'+quick.ahead+'\n'+quick.aheadTa+'\n\nCooking / சமைப்பது:\n'+quick.method+'\n'+quick.methodTa+riceSide);
+ }else if(item.source==='personal'){
+  output(item.en+' / '+item.ta+'\n\nYour personal method is not recorded yet. / உங்கள் சொந்த செய்முறை இன்னும் பதிவு செய்யப்படவில்லை.');
+ }else{
+  output('The cooking guide is still loading. Try this recipe again shortly. / சமையல் வழிகாட்டி ஏற்றப்படுகிறது.');
+ }
+}
+function searchRecipes(openFirst){
+ const q=input.value.trim();
+ if(!q&&traditionSelect.value==='all'){searchResults.hidden=true;reply.hidden=true;return}
+ currentSearch=getMatches(q);
+ searchResults.replaceChildren();
+ searchResults.hidden=false;
+ if(!currentSearch.length){
+  const empty=el('p',null,'Not saved here yet. Checking worldwide recipes below… / இங்கு இல்லை; கீழே உலகச் செய்முறைகளைத் தேடுகிறோம்…');
+  const more=el('button',null,'Search more recipes on the web ↗ / இணையத்தில் மேலும் தேடவும்');
+   more.type='button';more.addEventListener('click',()=>window.open('https://www.google.com/search?q='+encodeURIComponent(q+' recipe ingredients cooking steps healthier option'),'_blank','noopener,noreferrer'));
+   searchResults.append(empty,more);reply.hidden=true;return;
+ }
+ searchResults.append(el('p','hc-kitchen-count',currentSearch.length+' recipes / செய்முறைகள்'));
+ currentSearch.slice(0,visibleCount).forEach((d,i)=>{
+  const b=el('button','hc-recipe-match',d.en+' · '+d.ta);
+  b.type='button';b.dataset.recipe=d.en;b.setAttribute('aria-pressed','false');
+  b.addEventListener('click',()=>showItem(d));
+  searchResults.append(b);
+ });
+ if(currentSearch.length>visibleCount){
+  const more=el('button','hc-kitchen-more','Show more / மேலும் · '+(currentSearch.length-visibleCount));
+  more.type='button';more.addEventListener('click',()=>{
+   visibleCount=Math.min(currentSearch.length,visibleCount+12);
+   searchRecipes(false);
+  });searchResults.append(more);
+ }
+ if(openFirst)showItem(currentSearch[0]);
+ else reply.hidden=true;
 }
 function tomorrowPlan(){
  const date=new Date();date.setDate(date.getDate()+1);
@@ -124,20 +296,21 @@ function tomorrowPlan(){
  const plan={date:dateStr,text:lines.join('\n')};
  output(plan.text,plan);
 }
-section.querySelector('#hcKitchenAskSend').addEventListener('click',help);
-input.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();help()}});
+traditionSelect.addEventListener('change',()=>{visibleCount=10;searchRecipes(false)});
+section.querySelector('#hcKitchenAskSend').addEventListener('click',()=>searchRecipes(true));
+input.addEventListener('input',()=>{visibleCount=10;searchRecipes(false)});
+input.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();searchRecipes(true)}});
 section.querySelector('#hcKitchenTomorrow').addEventListener('click',tomorrowPlan);
 saveBtn.addEventListener('click',()=>{if(!lastPlan)return;save(savedKey,lastPlan);output(lastPlan.text+'\n\nSaved on this device / இந்தச் சாதனத்தில் சேமிக்கப்பட்டது.',lastPlan)});
-button.addEventListener('click',()=>{section.hidden=!section.hidden;button.setAttribute('aria-expanded',String(!section.hidden));if(!section.hidden){const p=load(savedKey);if(p?.date===tomorrow()&&!input.value.trim())output(p.text+'\n\nRemembered here / இங்கே சேமிக்கப்பட்டுள்ளது.',p);input.focus();}});
 mealButton?.addEventListener('click',()=>{const drawer=document.getElementById('hcKitchenDrawer');if(drawer)drawer.open=true;const target=document.getElementById('hcMonthlyKitchen');if(target){target.hidden=false;requestAnimationFrame(()=>target.scrollIntoView({block:'start',behavior:'smooth'}));}},true);
 })();
 
-/* Measured, bilingual cooking guides — loaded after the existing Kitchen. */
+/* Household-measure, bilingual cooking guides — loaded after the existing Kitchen. */
 (function(){
   if(document.getElementById('hcKitchenRecipesScriptV181'))return;
   const s=document.createElement('script');
   s.id='hcKitchenRecipesScriptV181';
-  s.src='./hc-kitchen-recipes-v181.js?v=181';
+  s.src='./hc-kitchen-recipes-v181.js?v=240';
   s.async=true;
   document.body.append(s);
 })();

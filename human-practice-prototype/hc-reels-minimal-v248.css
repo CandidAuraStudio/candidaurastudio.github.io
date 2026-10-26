@@ -1,0 +1,139 @@
+/* HeartClear v248: minimal, persistent Reels navigation.
+ * The external Google Drive player's controls cannot be restyled by this page.
+ * Keep native video aspect ratio, controls and accessibility completely intact.
+ * Reverses the v247 fade/hide experiment; no more disappearing swipe controls.
+ */
+#hcReels.active .hc-reels-head{
+  display:flex!important;position:absolute!important;
+  top:0!important;left:0!important;right:auto!important;
+  width:max-content!important;max-width:calc(100vw - 85px)!important;
+  padding:calc(12px + env(safe-area-inset-top,0px)) 10px 8px!important;
+  margin:0!important;z-index:31!important;
+  background:transparent!important;gap:0!important;
+  opacity:1!important;pointer-events:none!important;
+}
+#hcReels.active .hc-reels-head h2,
+#hcReels.active .hc-reels-head .kicker,
+#hcReels.active .hc-reels-head p{display:none!important}
+#hcReels.active .hc-reels-head .hc-reels-back{
+  min-height:44px!important;min-width:44px!important;
+  display:inline-flex!important;align-items:center;gap:4px!important;
+  border:1px solid rgba(255,255,255,.18)!important;
+  border-radius:24px!important;padding:6px 12px!important;
+  background:rgba(3,9,13,.38)!important;
+  color:#fff!important;font-size:14px!important;
+  font-weight:650!important;line-height:1.2!important;
+  pointer-events:auto!important;
+}
+#hcReels.active .hc-reels-badge{
+  top:calc(14px + env(safe-area-inset-top,0px))!important;
+  right:10px!important;font-size:11px!important;max-width:100px!important;
+  opacity:.8!important;
+}
+/* Once Drive is playing, the counter duplicates Home and overlaps Drive's top icon. */
+#hcReels.active:has(#hcReelFrame:not([hidden])) .hc-reels-badge{
+  display:none!important;
+}
+/* Swipe strip remains live, visible and small even while the video is playing. */
+#hcReels.active #hcReelSwipeRail{
+  position:absolute!important;z-index:32!important;
+  left:auto!important;right:4px!important;
+  top:calc(103px + env(safe-area-inset-top,0px))!important;
+  bottom:calc(100px + env(safe-area-inset-bottom,0px))!important;
+  width:50px!important;max-width:50px!important;
+  display:flex!important;flex-direction:column!important;
+  align-items:center!important;justify-content:center!important;
+  gap:14px!important;padding:0!important;
+  opacity:1!important;visibility:visible!important;
+  background:transparent!important;border:0!important;
+  pointer-events:auto!important;touch-action:none!important;
+}
+#hcReels.active #hcReelSwipeRail .hc-reel-rail-btn{
+  box-sizing:border-box!important;
+  width:44px!important;height:44px!important;
+  min-width:44px!important;min-height:44px!important;
+  display:grid!important;place-items:center!important;
+  padding:0!important;border-radius:50%!important;
+  background:rgba(5,12,17,.36)!important;color:#fff!important;
+  border:1px solid rgba(255,255,255,.26)!important;
+  font:500 19px/1 system-ui!important;
+  opacity:.84!important;visibility:visible!important;
+  pointer-events:auto!important;
+  backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+}
+#hcReels.active #hcReelSwipeRail .hc-reel-rail-btn:focus-visible{
+  opacity:1!important;outline:2px solid white!important;outline-offset:2px!important;
+}
+#hcReels.active #hcReelSwipeRail small,
+#hcReels.active .hc-reels-hint{display:none!important}
+/* No masks, zoom, transforms, pointer shields or crop on the Drive frame. */
+#hcReels.active #hcReelFrame{
+  width:100%!important;height:100%!important;
+  object-fit:contain!important;transform:none!important;
+}
+@media(max-height:650px){
+  #hcReels.active #hcReelSwipeRail{
+    top:calc(72px + env(safe-area-inset-top,0px))!important;
+    bottom:calc(70px + env(safe-area-inset-bottom,0px))!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  #hcReels.active #hcReelSwipeRail,
+  #hcReels.active .hc-reels-head{transition:none!important}
+}
+
+
+/* Wide one-swipe lanes for existing Drive reels. The middle 40% of the
+   video remains directly tappable for Drive play/pause/seek. No mode toggle. */
+#hcReels.active #hcReelSwipeLeft,
+#hcReels.active #hcReelSwipeRail{
+  box-sizing:border-box!important;
+  position:absolute!important;
+  top:calc(103px + env(safe-area-inset-top,0px))!important;
+  bottom:calc(100px + env(safe-area-inset-bottom,0px))!important;
+  width:30%!important;
+  max-width:none!important;
+  z-index:32!important;
+  touch-action:none!important;
+  overscroll-behavior:contain;
+  -webkit-user-select:none;
+  user-select:none;
+  background:transparent!important;
+  pointer-events:auto!important;
+}
+#hcReels.active #hcReelSwipeLeft{
+  left:0!important;
+  right:auto!important;
+  border:0!important;
+}
+#hcReels.active #hcReelSwipeRail{
+  left:auto!important;
+  right:0!important;
+  align-items:flex-end!important;
+  padding:0 5px!important;
+}
+/* Preserve existing accessible arrow fallback without requiring an arrow tap. */
+#hcReels.active #hcReelSwipeRail .hc-reel-rail-btn{
+  position:relative;
+  flex-shrink:0;
+}
+@media(max-height:650px){
+ #hcReels.active #hcReelSwipeLeft,
+ #hcReels.active #hcReelSwipeRail{
+   top:calc(72px + env(safe-area-inset-top,0px))!important;
+   bottom:calc(70px + env(safe-area-inset-bottom,0px))!important;
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ #hcReels.active #hcReelSwipeLeft,
+ #hcReels.active #hcReelSwipeRail{transition:none!important;animation:none!important}
+}
+
+/* A light transition as the replacement Drive iframe appears. */
+@keyframes hcReelSoftArrival{from{opacity:.72}to{opacity:1}}
+#hcReels.active #hcReelFrame:not([hidden]){
+  animation:hcReelSoftArrival .18s ease-out both;
+}
+@media(prefers-reduced-motion:reduce){
+ #hcReels.active #hcReelFrame:not([hidden]){animation:none}
+}

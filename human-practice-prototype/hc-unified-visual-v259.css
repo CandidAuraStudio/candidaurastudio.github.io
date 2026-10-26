@@ -1,0 +1,375 @@
+/* HeartClear v264 — warm black, white and restrained gold palette, used app-wide.
+   Presentation only: do not alter layout, text, media, controls or accessibility.
+   Use the same image and dark slate/navy colors already used by All Listening. */
+
+body.hc-flow-enabled.hc-cinema{
+  --hc-cinema-panel:rgba(14,14,16,.94);
+  --hc-cinema-soft:rgba(24,23,22,.92);
+  --hc-cinema-line:rgba(183,163,126,.34);
+  background:#080809!important;
+}
+
+/* Keep a single All Listening backdrop on Home, Explore, books, sacred,
+   meditation, kitchen, settings and every other regular screen. */
+body.hc-cinema:not([data-hc-cinema-scene="reels"]) #hcCinemaBackdrop{
+  background-image:
+    linear-gradient(180deg,rgba(6,6,7,.38) 0%,rgba(6,6,7,.52) 24%,rgba(6,6,7,.76) 53%,#080809eb 82%,#080809f7 100%),
+    url('./hc-cinema-scene-v239.svg')!important;
+  background-size:cover!important;
+  background-position:center 37%!important;
+  background-repeat:no-repeat!important;
+}
+
+/* Reels remain fullscreen video, never a decorative background layer. */
+body.hc-cinema[data-hc-cinema-scene="reels"] #hcCinemaBackdrop{display:none!important}
+
+/* Apply the Listening navy panels elsewhere. The Listening page remains
+   completely untouched to preserve the exact design shown in the reference. */
+body.hc-cinema .screen.active:not(#hcReels):not(#hcListening)
+:is(.glass,.choice,.hub-card,.human-card,.sacred-card,.fear-card,.practice-card,.hc-mix-card,.hc-settings-clean,.hc-settings-section,.hcqs-verse){
+  background:linear-gradient(145deg,rgba(24,24,25,.94),rgba(9,9,10,.96))!important;
+  border-color:rgba(183,163,126,.34)!important;
+  box-shadow:none!important;
+}
+
+/* The Home artwork and the space behind its Explore / daily tiles now read
+   like All Listening instead of opaque black panels. */
+body.hc-cinema #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail)
+:is(.hc-simple-start,#hcHomeKitchenQuickV155,#hcQuranFirst,#hcGenesisCard,
+    .hc-recommended-card,.hc-primary-resume,.hc-secondary-resume,.hc-home-more){
+  background:linear-gradient(145deg,rgba(24,24,25,.93),rgba(9,9,10,.96))!important;
+  border-color:rgba(183,163,126,.32)!important;
+}
+body.hc-cinema #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail)
+:is(.hc-simple-audio-list>button,.hc-simple-paths>button,
+    .hc-v139-daily-grid>button,.hc-quick-tile,.hc-sound-card,.hc-reels-home-card){
+  background:#19191b!important;
+  border-color:#645b4c!important;
+  color:#f7f9fa!important;
+}
+body.hc-cinema #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail)
+:is(.hc-simple-audio-list>button,.hc-simple-paths>button,.hc-v139-daily-grid>button) :is(b,strong){
+  color:#fff!important;
+}
+
+/* All other content surfaces use the same deep-blue reading contrast. */
+body.hc-cinema .screen.active:not(#hcReels):not(#hcListening)
+:is(.hc-sound-row,.hc-sounds-hub-card,.hc-drive-card,.hc-sacred-quick,
+    .hc-home-section,.hc-recommended-card,.hc-secondary-resume){
+  background:linear-gradient(145deg,rgba(25,24,23,.93),rgba(11,11,12,.95))!important;
+  border-color:rgba(183,163,126,.32)!important;
+}
+body.hc-cinema #settings :is(.hc-settings-section,.setting-row,.hc-settings-toggle){
+  background:rgba(21,21,22,.94)!important;
+  border-color:rgba(183,163,126,.32)!important;
+}
+body.hc-cinema #settings .hc-settings-section[open]{
+  background:rgba(11,11,12,.97)!important;
+}
+
+/* The standalone Explore sheet should keep the same illustrated background. */
+body.hc-cinema #hcFlowExplore{
+  background:
+    linear-gradient(180deg,rgba(8,8,9,.46),rgba(8,8,9,.96)),
+    url('./hc-cinema-scene-v239.svg') center 37%/cover no-repeat!important;
+}
+body.hc-cinema #hcFlowExplore .hc-flow-explore-card{
+  background:
+    linear-gradient(180deg,rgba(29,28,26,.79),rgba(9,9,10,.94)),
+    url('./hc-cinema-scene-v239.svg') center/cover no-repeat!important;
+  border-color:rgba(183,163,126,.38)!important;
+}
+body.hc-cinema #hcFlowExplore button:not(#hcFlowExploreOpen){
+  background:#19191b!important;
+  border-color:#5e7582!important;
+}
+
+/* No filters, animation, blur or interaction changes to audio/video players. */
+@media(prefers-reduced-motion:reduce){
+  body.hc-cinema #hcCinemaBackdrop{animation:none!important;transition:none!important}
+}
+
+/* v264: Sounds mixer readability. Black surface, gold for optional accents.
+   Play logic and audio URLs are unchanged; six available choices, max three active. */
+body.hc-flow-enabled.hc-cinema #soundLab.active #hcMixCard{
+ background:linear-gradient(155deg,#1b1a1a,#090909)!important;
+ border:1px solid #76664d!important;
+ border-radius:22px!important;
+ padding:clamp(13px,3.5vw,19px)!important;
+ box-shadow:none!important;
+}
+body.hc-flow-enabled #soundLab.active .hc-mix-heading h3{
+ font-size:clamp(22px,5.4vw,25px)!important;line-height:1.2!important;color:#fff!important;
+}
+body.hc-flow-enabled #soundLab.active .hc-mix-heading p{
+ font-size:13px!important;line-height:1.45!important;word-break:normal!important;color:#ddd9d3!important;
+}
+body.hc-flow-enabled #soundLab.active .hc-mix-symbol{background:#30291f!important;color:#e2c18a!important}
+body.hc-flow-enabled #soundLab.active #hcMixEditV149{
+ min-height:44px!important;padding:9px 13px!important;font-size:13px!important;
+ line-height:1.25!important;white-space:nowrap!important;word-break:normal!important;
+ color:#f4e7d2!important;background:#24201a!important;border:1px solid #897354!important;
+ border-radius:12px!important;
+}
+body.hc-flow-enabled #soundLab.active .hc-mix-layers{gap:7px!important;margin:12px 0 9px!important}
+body.hc-flow-enabled #soundLab.active .hc-mix-layer{
+ grid-template-columns:minmax(98px,1fr) minmax(90px,1.15fr)!important;
+ min-height:47px!important;gap:8px!important;padding:7px 10px!important;
+ border:1px solid #45413b!important;background:#121213!important;border-radius:12px!important;
+}
+body.hc-flow-enabled #soundLab.active .hc-mix-layer:has(input[type=checkbox]:checked){
+ border-color:#9b815a!important;background:#201b15!important;
+}
+body.hc-flow-enabled #soundLab.active .hc-mix-layer label{
+ color:#f5f4f2!important;font-size:14px!important;line-height:1.3!important;
+ word-break:normal!important;overflow-wrap:normal!important;
+}
+body.hc-flow-enabled #soundLab.active .hc-mix-layer input[type=checkbox],
+body.hc-flow-enabled #soundLab.active .hc-mix-layer input[type=range]{
+ accent-color:#d8b779!important;
+}
+body.hc-flow-enabled #soundLab.active .hc-mix-status{
+ color:#d7d1c6!important;font-size:13px!important;line-height:1.45!important;word-break:normal!important;
+}
+body.hc-flow-enabled #soundLab.active #hcMixTimerChips button{
+ background:#191919!important;border:1px solid #706557!important;color:#f3f2f0!important;
+ font-size:clamp(12px,3.3vw,14px)!important;line-height:1.2!important;
+ word-break:keep-all!important;overflow-wrap:normal!important;white-space:nowrap!important;
+}
+body.hc-flow-enabled #soundLab.active #hcMixTimerChips button.active{
+ background:#f8f7f4!important;color:#111!important;border-color:#fff!important;
+}
+body.hc-flow-enabled #soundLab.active .hc-mix-actions{
+ display:grid!important;grid-template-columns:minmax(0,1fr) minmax(88px,.46fr)!important;
+ gap:8px!important;align-items:stretch!important;
+}
+body.hc-flow-enabled #soundLab.active .hc-mix-actions button{
+ box-sizing:border-box!important;width:100%!important;min-width:0!important;
+ min-height:46px!important;margin:0!important;padding:9px 10px!important;
+ border-radius:13px!important;font-size:clamp(12px,3.5vw,15px)!important;
+ line-height:1.25!important;font-weight:700!important;
+ overflow-wrap:normal!important;word-break:keep-all!important;hyphens:none!important;
+ white-space:nowrap!important;display:grid!important;place-items:center!important;
+}
+body.hc-flow-enabled #soundLab.active .hc-mix-actions .hc-mix-start{
+ grid-column:1!important;background:#fff!important;color:#101010!important;border:1px solid #fff!important;
+}
+body.hc-flow-enabled #soundLab.active .hc-mix-actions .hc-mix-stop{
+ grid-column:2!important;background:#1d1c1b!important;color:#fff!important;border:1px solid #927c5a!important;
+ font-size:14px!important;
+}
+body.hc-flow-enabled #soundLab.active .hc-mix-actions button:nth-child(n+3){
+ grid-column:1/-1!important;background:#2b251d!important;color:#f5e6cf!important;
+ border:1px solid #927c5a!important;white-space:normal!important;
+}
+body.hc-flow-enabled #soundLab.active #hcMixRecent button{
+ background:#181818!important;border-color:#706557!important;color:#f5f2ee!important;
+ font-size:13px!important;line-height:1.3!important;
+}
+@media(max-width:350px){
+ body.hc-flow-enabled #soundLab.active .hc-mix-layer{grid-template-columns:minmax(84px,1fr) minmax(76px,1fr)!important}
+ body.hc-flow-enabled #soundLab.active .hc-mix-actions{grid-template-columns:minmax(0,1fr) 88px!important}
+}
+
+
+/* HC RESPONSIVE TYPE v267 */
+/* Legacy flow.css amplified every label. Restore a consistent distinction
+   between headings, ordinary content, secondary controls, and primary Play.
+   Leave Reels, the Listening hub and personal book text-size settings alone. */
+body.hc-flow-enabled .screen.active:not(#hcReels):not(#hcListening) :is(h1,h2){
+ font-size:clamp(23px,6vw,29px)!important;line-height:1.24!important;margin-bottom:9px!important
+}
+body.hc-flow-enabled .screen.active:not(#hcReels):not(#hcListening) h3{
+ font-size:clamp(18px,4.8vw,22px)!important;line-height:1.3!important
+}
+body.hc-flow-enabled .screen.active:not(#hcReels):not(#hcListening) p{
+ font-size:15px!important;line-height:1.55!important
+}
+body.hc-flow-enabled .screen.active:not(#hcReels):not(#hcListening) :is(
+ small,.hub-note,.setting-row small,.choice small,.human-card small,.sacred-card small,.hub-card small){
+ font-size:12.5px!important;line-height:1.45!important
+}
+body.hc-flow-enabled .screen.active:not(#hcReels):not(#hcListening) :is(.kicker,.eyebrow,.library-label){
+ font-size:11px!important;letter-spacing:.08em!important;line-height:1.4!important
+}
+body.hc-flow-enabled .screen.active:not(#hcReels):not(#hcListening) :is(
+ button,summary,select,input:not([type=checkbox]):not([type=range]),textarea,a.collection-back){
+ font-size:14px!important;min-height:44px!important;line-height:1.35!important
+}
+body.hc-flow-enabled .screen.active:not(#hcReels):not(#hcListening) :is(
+ select,input:not([type=checkbox]):not([type=range]),textarea){
+ min-height:44px!important;height:auto!important;padding:9px 11px!important;
+ font-size:16px!important;border-radius:12px!important
+}
+body.hc-flow-enabled .screen.active:not(#hcReels):not(#hcListening) .glass{
+ padding:clamp(13px,3.5vw,19px)!important;border-radius:19px!important
+}
+body.hc-flow-enabled .screen.active:not(#hcReels):not(#hcListening) :is(
+ .hub-card,.human-card,.sacred-card,.fear-card,.choice.practice-card,.hc-sound-row,.hc-simple-audio-list button,.hc-sounds-hub-card){
+ min-height:72px!important;padding:12px 14px!important;border-radius:17px!important;gap:10px!important
+}
+body.hc-flow-enabled .screen.active:not(#hcReels):not(#hcListening) :is(
+ .hub-card,.human-card,.sacred-card,.choice,.practice-card,.hc-sound-track-list button) b{
+ font-size:15px!important;line-height:1.3!important
+}
+body.hc-flow-enabled .screen.active:not(#hcReels):not(#hcListening) :is(.human-symbol,.sacred-symbol){
+ font-size:26px!important
+}
+body.hc-flow-enabled .screen.active:not(#hcReels):not(#hcListening) .choice{
+ min-height:54px!important;padding:11px 13px!important;border-radius:15px!important
+}
+body.hc-flow-enabled .screen.active:not(#hcReels):not(#hcListening) :is(.btn,.hc-home-primary-btn){
+ min-height:50px!important;font-size:16px!important;font-weight:700!important
+}
+body.hc-flow-enabled #home.active .hc-core-paths{gap:9px!important;padding:13px!important;margin:8px 0 13px!important}
+body.hc-flow-enabled #home.active .hc-core-paths h2{
+ font-size:20px!important;margin:0!important;line-height:1.25!important
+}
+body.hc-flow-enabled #home.active .hc-core-paths :is(.hc-path-faith,.hc-path-main) button{
+ min-height:54px!important;padding:9px 11px!important;border-radius:13px!important
+}
+body.hc-flow-enabled #home.active .hc-core-paths button strong{font-size:13px!important}
+body.hc-flow-enabled #home.active .hc-core-paths button small{font-size:11px!important}
+body.hc-flow-enabled #home.active .hc-core-paths button>span:last-child{font-size:17px!important}
+body.hc-flow-enabled #home.active .hc-simple-paths button{
+ min-height:46px!important;padding:9px 11px!important;font-size:14px!important;border-radius:13px!important
+}
+body.hc-flow-enabled #home.active .hc-simple-start :is(h2,h3){font-size:21px!important}
+body.hc-flow-enabled #home.active .hc-v139-daily-grid>button{
+ min-height:50px!important;font-size:12px!important
+}
+/* Qur'an and Genesis — compact captions, clear chapters, one obvious Play. */
+body.hc-flow-enabled #home.active :is(#hcQuranFirst,#hcGenesisCard){
+ box-sizing:border-box;width:100%;min-width:0;
+ padding:12px!important;margin:9px 0 13px!important;border-radius:17px!important
+}
+body.hc-flow-enabled #home.active #hcQuranFirst .hcq-kicker{
+ font-size:11px!important;letter-spacing:.1em!important
+}
+body.hc-flow-enabled #home.active #hcQuranFirst :is(#hcqSlot,#hcqCounter){
+ font-size:11px!important;line-height:1.3!important
+}
+body.hc-flow-enabled #home.active #hcQuranFirst #hcqCounter{
+ flex:none!important;white-space:nowrap!important;text-align:right!important
+}
+body.hc-flow-enabled #home.active #hcQuranFirst .hcq-current,
+body.hc-flow-enabled #home.active #hcGenesisCard .hc-gen-now{
+ gap:7px!important;margin:9px 0!important;min-width:0!important
+}
+body.hc-flow-enabled #home.active #hcQuranFirst .hcq-current>div{
+ min-width:0!important;flex:1 1 auto!important
+}
+body.hc-flow-enabled #home.active #hcQuranFirst .hcq-current>button,
+body.hc-flow-enabled #home.active #hcGenesisCard .hc-gen-now>button{
+ flex:none!important;width:42px!important;height:44px!important;min-height:44px!important;
+ padding:4px!important;border-radius:12px!important;font-size:21px!important
+}
+body.hc-flow-enabled #home.active #hcQuranFirst #hcqName{
+ font-size:clamp(16px,4.3vw,19px)!important;line-height:1.35!important;
+ overflow-wrap:break-word!important;word-break:normal!important
+}
+body.hc-flow-enabled #home.active #hcQuranFirst #hcqMeta,
+body.hc-flow-enabled #home.active #hcGenesisCard #hcGenChapterMeta{
+ font-size:12px!important;line-height:1.45!important
+}
+body.hc-flow-enabled #home.active #hcQuranFirst .hcq-langs{gap:6px!important;margin:7px 0!important}
+body.hc-flow-enabled #home.active #hcQuranFirst .hcq-langs button{
+ min-height:42px!important;padding:7px 5px!important;font-size:13px!important;border-radius:10px!important
+}
+body.hc-flow-enabled #home.active #hcQuranFirst .hcq-actions,
+body.hc-flow-enabled #home.active #hcGenesisCard .hc-gen-actions{
+ gap:8px!important;margin:10px 0!important
+}
+body.hc-flow-enabled #home.active :is(#hcQuranFirst #hcqPlay,#hcGenesisCard #hcGenPlay){
+ min-width:0!important;flex:1 1 auto!important;min-height:50px!important;
+ padding:9px 8px!important;font-size:15px!important;border-radius:13px!important
+}
+body.hc-flow-enabled #home.active :is(#hcQuranFirst #hcqRead,#hcGenesisCard #hcGenRead){
+ flex:0 0 70px!important;width:70px!important;min-height:44px!important;
+ padding:7px 5px!important;font-size:13px!important;border-radius:11px!important
+}
+body.hc-flow-enabled #home.active #hcQuranFirst .hcq-bottom{
+ gap:10px!important;flex-wrap:wrap!important
+}
+body.hc-flow-enabled #home.active #hcQuranFirst .hcq-bottom details{
+ flex:1 1 125px!important;min-width:0!important
+}
+body.hc-flow-enabled #home.active #hcQuranFirst .hcq-bottom summary,
+body.hc-flow-enabled #home.active #hcGenesisCard .hc-gen-bottom summary{
+ min-height:44px!important;padding:8px 0!important;font-size:13px!important
+}
+body.hc-flow-enabled #home.active #hcQuranFirst #hcqMorningAdhkar,
+body.hc-flow-enabled #home.active #hcQuranFirst .hcq-browse-list button{
+ font-size:13px!important;min-height:44px!important;padding:9px 11px!important
+}
+body.hc-flow-enabled #home.active #hcQuranFirst #hcqBrowse[open]{
+ min-width:100%!important;flex-basis:100%!important
+}
+body.hc-flow-enabled #home.active #hcGenesisCard .hc-gen-top{
+ font-size:10px!important;letter-spacing:.08em!important
+}
+body.hc-flow-enabled #home.active #hcGenesisCard #hcGenChapter{
+ font-size:11px!important;white-space:nowrap!important
+}
+body.hc-flow-enabled #home.active #hcGenesisCard #hcGenTitle{
+ font-size:clamp(16px,4.4vw,19px)!important;line-height:1.3!important
+}
+body.hc-flow-enabled #home.active #hcGenesisCard .hc-gen-bottom{
+ display:flex!important;flex-wrap:wrap!important;gap:8px!important;margin-top:10px!important
+}
+body.hc-flow-enabled #home.active #hcGenesisCard #hcGenJoseph{
+ min-height:44px!important;font-size:12px!important;padding:8px 10px!important
+}
+body.hc-flow-enabled #home.active #hcGenesisCard .hc-gen-bottom details{
+ flex:1 1 115px!important;min-width:0!important;font-size:13px!important
+}
+body.hc-flow-enabled #home.active #hcGenesisCard #hcGenSelect{
+ min-width:0!important;width:100%!important;font-size:16px!important;min-height:44px!important
+}
+body.hc-flow-enabled #home.active #hcGenesisCard :is(#hcGenReadText,.hc-gen-text){
+ font-size:16px!important;line-height:1.75!important
+}
+/* Reading remains larger than control labels; preserve variable book text size. */
+body.hc-flow-enabled #hcQuranStudy .hcqs-arabic{
+ font-size:clamp(27px,7vw,33px)!important;line-height:1.95!important
+}
+body.hc-flow-enabled :is(#hcQuranStudy,#hcFatiha,#hcLivingQuran)
+ :is(.hcqs-meaning,.hcqs-editorial,.hcqs-ta,.hcqs-en){
+ font-size:17px!important;line-height:1.75!important
+}
+body.hc-flow-enabled :is(#hcQuranStudy,#hcLivingQuran,#hcFatiha,#bookAudio) :is(button,select){
+ min-height:44px!important;font-size:14px!important
+}
+body.hc-flow-enabled #hcHeritageReader :is(h2,h3,.hc-heritage-header strong){
+ font-size:clamp(22px,5.7vw,27px)!important
+}
+body.hc-flow-enabled #hcHeritageReader :is(p,li,.hc-heritage-main,article){
+ font-size:16px!important;line-height:1.65!important
+}
+body.hc-flow-enabled #hcHeritageReader :is(button,select){
+ min-height:44px!important;font-size:14px!important
+}
+body.hc-flow-enabled #settings .hc-settings-section>summary{font-size:17px!important}
+body.hc-flow-enabled :is(#settings,#history,#downloads)
+ :is(.setting-row,.hc-settings-toggle,.hc-settings-section>summary){
+ min-height:52px!important;padding:10px 6px!important
+}
+body.hc-flow-enabled #hcBubbleCard .hcb-title{
+ font-size:clamp(26px,7vw,34px)!important
+}
+body.hc-flow-enabled #hcBubbleCard .hcb-description{
+ font-size:15px!important;line-height:1.45!important
+}
+body.hc-flow-enabled #hcExploreDialog :is(h2,h3){font-size:clamp(22px,5.5vw,27px)!important}
+body.hc-flow-enabled #hcExploreDialog :is(p,small,span,label){
+ font-size:14px!important;line-height:1.5!important
+}
+body.hc-flow-enabled #hcExploreDialog :is(button,input,select,textarea){
+ font-size:16px!important;min-height:44px!important
+}
+@media(max-width:390px){
+ body.hc-flow-enabled #home.active :is(#hcQuranFirst,#hcGenesisCard){padding:10px!important}
+ body.hc-flow-enabled #home.active :is(#hcQuranFirst #hcqRead,#hcGenesisCard #hcGenRead){
+  flex-basis:62px!important;width:62px!important
+ }
+}

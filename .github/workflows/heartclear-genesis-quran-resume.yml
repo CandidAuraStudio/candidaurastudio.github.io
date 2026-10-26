@@ -1,0 +1,40 @@
+name: HeartClear Sacred Audio Resume
+on:
+  pull_request:
+    paths:
+      - 'human-practice-prototype/hc-genesis-v156.js'
+      - 'human-practice-prototype/hc-quran-home-v153.js'
+      - 'human-practice-prototype/index.html'
+      - 'human-practice-prototype/sw.js'
+      - 'human-practice-prototype/tests/resume-genesis-quran.cjs'
+      - '.github/workflows/heartclear-genesis-quran-resume.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'human-practice-prototype/hc-genesis-v156.js'
+      - 'human-practice-prototype/hc-quran-home-v153.js'
+      - 'human-practice-prototype/index.html'
+      - 'human-practice-prototype/sw.js'
+      - 'human-practice-prototype/tests/resume-genesis-quran.cjs'
+      - '.github/workflows/heartclear-genesis-quran-resume.yml'
+permissions:
+  contents: read
+jobs:
+  sacred-audio-resume:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install browser
+        run: |
+          npm install --no-save playwright
+          npx playwright install chromium --with-deps
+      - name: Verify paused resume after browser restart
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8765 --directory . > /tmp/hc-resume-http.log 2>&1 &
+          node human-practice-prototype/tests/resume-genesis-quran.cjs

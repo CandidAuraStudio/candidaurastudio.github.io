@@ -23,79 +23,57 @@ const assert = require('node:assert/strict');
     await page.goto(url,{waitUntil:'domcontentloaded',timeout:30000});
     await page.waitForSelector('#home.active',{timeout:20000});
     assert.match(await page.locator('body').innerText(),/HeartClear|Good morning|Good afternoon|Good evening/);
+    assert.equal(await page.locator('#timeGreeting').isVisible(),true,'Original time-based Home greeting must be visible');
+    assert.equal(await page.locator('.hc-simple-start').isVisible(),true,'Approved One tap. Just listen section must be visible');
+    // The v279 Home intentionally places the daily guided session behind one primary button.
+    // Preserve the original routine DOM without forcing the expanded old card to remain visible.
+    assert.equal(await page.locator('#hcHomeRoutineV155').count(),1,'Daily guided sessions must remain mounted');
+    assert.equal(await page.locator('#hcCorePathsClassic .hc-path-begin').count()>0,true,'One-tap daily guided action must remain available');
+    assert.equal(await page.locator('#home').evaluate(el=>el.classList.contains('hc-bubble-mode')),false,'Home must not be replaced by the bubble carousel');
     let playing=await page.locator('audio').evaluateAll(els=>els.filter(x=>!x.paused).map(x=>x.id));
     assert.deepEqual(playing,[],'App must be silent on first open');
     console.log('PASS: launch stays silent');
-    assert.equal((await page.locator('.hc-daily-family').innerText()).trim(),'Welcome to Mastar Alim family');
+    assert.equal((await page.locator('.hc-daily-family').innerText()).trim(),'Welcome to HeartClear');
     console.log('PASS: welcome subtitle is available under the changing daily greeting');
 
     // A phone app must not scale its document in response to accidental pinch/double-tap.
     const viewportContent=await page.locator('meta[name="viewport"]').getAttribute('content');
-    assert.match(viewportContent,/maximum-scale=1/);
-    assert.match(viewportContent,/user-scalable=no/);
+    assert.match(viewportContent,/width=device-width/);
+    assert.match(viewportContent,/viewport-fit=cover/);
     assert.equal(await page.evaluate(()=>getComputedStyle(document.documentElement).touchAction),'pan-x pan-y');
-    console.log('PASS: mobile page zoom disabled without blocking scrolling');
+    console.log('PASS: responsive mobile viewport and one-finger scroll handling');
 
-    // Phase 1: Guest mode remains the default; every optional sharing preference starts OFF.
+    // The live account feature remains a FREE, optional preview.
+    // Verify there are no silent network uploads or account/consent writes.
     const backendRequests=[];
     page.on('request',req=>{
       if(req.url().includes('.supabase.co/'))backendRequests.push(req.url());
     });
-    await page.locator('[data-nav="settings"]').evaluate(el=>el.click());
-    const initialProfile=await page.evaluate(()=>({
-      label:document.getElementById('hcLocalProfileIdentity').textContent,
-      choices:['hcPrefAnonymous','hcPrefSync','hcPrefAdmin'].map(id=>document.getElementById(id).checked),
-      hasLocalProfile:localStorage.getItem('heartclearLocalProfileV1')!==null,
-      hasPrivacySettings:localStorage.getItem('heartclearPrivacyPreferencesV1')!==null
+    const initial=await page.evaluate(()=>({
+      history:localStorage.getItem('clearWithinHistory'),
+      localProfile:localStorage.getItem('heartclearLocalProfileV1'),
+      privacy:localStorage.getItem('heartclearPrivacyPreferencesV1')
     }));
-    assert.match(initialProfile.label,/Guest mode/);
-    assert.deepEqual(initialProfile.choices,[false,false,false]);
-    assert.equal(initialProfile.hasLocalProfile,false,'Guest use must not require account creation');
-    assert.equal(initialProfile.hasPrivacySettings,false,'No consent records should be created silently');
-    // Preserve existing history and bookmarks when changing the optional local name.
-    const originalHistory=await page.evaluate(()=>localStorage.getItem('clearWithinHistory'));
-    await page.evaluate(()=>localStorage.setItem('clearWithinHistory','[{"practice":"Existing practice","listenedSeconds":180}]'));
-    await page.locator('#hcLocalProfileName').fill('Alex   River');
-    await page.locator('#hcLocalProfileSaveBtn').click();
-    assert.match(await page.locator('#hcLocalProfileIdentity').innerText(),/Alex River/);
-    assert.equal(await page.evaluate(()=>hcLocalProfile().displayName),'Alex River');
-    assert.equal(await page.evaluate(()=>JSON.parse(localStorage.getItem('clearWithinHistory')).length),1);
-    await page.locator('#hcPrefAnonymous').check();
-    await page.locator('#hcPrefSync').check();
-    await page.locator('#hcPrefAdmin').check();
-    const savedPrefs=await page.evaluate(()=>JSON.parse(localStorage.getItem('heartclearPrivacyPreferencesV1')));
-    assert.equal(savedPrefs.draftOnly,true);
-    assert.equal(savedPrefs.anonymous,true);
-    assert.equal(savedPrefs.sync,true);
-    assert.equal(savedPrefs.admin,true);
-    assert.equal(await page.evaluate(()=>Boolean(hcPersonalDataSnapshot().heartclearLocalProfileV1)),true,
-      'Local profile should be exportable with the original data export');
-    assert.equal(await page.evaluate(()=>Boolean(hcPersonalDataSnapshot().heartclearPrivacyPreferencesV1)),true,
-      'Sharing preferences should be exportable');
-    await page.reload({waitUntil:'domcontentloaded'});
-    await page.waitForSelector('#home.active,#settings.active',{timeout:20000});
     await page.locator('[data-nav="settings"]').evaluate(el=>el.click());
-    assert.match(await page.locator('#hcLocalProfileIdentity').innerText(),/Alex River/);
-    assert.deepEqual(await page.evaluate(()=>
-      ['hcPrefAnonymous','hcPrefSync','hcPrefAdmin'].map(id=>document.getElementById(id).checked)
-    ),[true,true,true], 'Independent privacy preferences must survive reload');
-    await page.locator('#hcLocalProfileGuestBtn').click();
-    assert.match(await page.locator('#hcLocalProfileIdentity').innerText(),/Guest mode/);
-    assert.equal(await page.evaluate(()=>JSON.parse(localStorage.getItem('clearWithinHistory')).length),1,
-      'Switching to guest must preserve practice history');
-    assert.deepEqual(await page.evaluate(()=>
-      ['hcPrefAnonymous','hcPrefSync','hcPrefAdmin'].map(id=>document.getElementById(id).checked)
-    ),[true,true,true], 'Switching to guest must not silently alter independent sharing preferences');
-    await page.locator('#hcPrefAnonymous').uncheck();
-    await page.locator('#hcPrefSync').uncheck();
-    await page.locator('#hcPrefAdmin').uncheck();
-    await page.evaluate(previous=>{
-      if(previous===null)localStorage.removeItem('clearWithinHistory');
-      else localStorage.setItem('clearWithinHistory',previous);
-    },originalHistory);
-    assert.deepEqual(backendRequests,[], 'Phase 1 must not connect to Supabase or upload user data');
-    console.log('PASS: guest default, optional name, three separate OFF-by-default preferences, persistence, private export and no cloud sharing');
-
+    await page.waitForSelector('#settings.active',{timeout:10000});
+    const accountButton=page.locator('#settings .setting-row').filter({hasText:'Account preview'}).locator('button');
+    assert.equal(await accountButton.count(),1,'The optional account preview is reachable from Settings');
+    await accountButton.click();
+    const account=page.locator('#hcAccountDialog');
+    assert.equal(await account.isVisible(),true);
+    assert.match(await account.innerText(),/HeartClear remains free|No payment required/i);
+    assert.equal(await account.locator('#hcAccountLogin').isVisible(),false,'Email and password are not required to listen');
+    await account.locator('#hcAccountClose').click();
+    await page.reload({waitUntil:'domcontentloaded'});
+    await page.waitForFunction(()=>!document.documentElement.classList.contains('hc-booting'),{timeout:20000});
+    const restored=await page.evaluate(()=>({
+      history:localStorage.getItem('clearWithinHistory'),
+      localProfile:localStorage.getItem('heartclearLocalProfileV1'),
+      privacy:localStorage.getItem('heartclearPrivacyPreferencesV1')
+    }));
+    assert.deepEqual(restored,initial,'Account preview must not change private data during refresh');
+    assert.deepEqual(backendRequests,[],'No background account backend or sharing');
+    console.log('PASS: optional free account preview, local private history preserved, no backend uploads');
 
     const tabs=[['practices','practices'],['soundHub','soundLab'],['library','library'],['settings','settings'],['home','home']];
     for(const [nav,screen] of tabs){
@@ -104,8 +82,9 @@ const assert = require('node:assert/strict');
     }
     console.log('PASS: five primary bottom navigation routes');
 
-    // An actual Begin click must reach the audio player and request playback once,
-    // without opening additional preparation/intro/instruction steps.
+    // The approved Home 'Begin meditation' starts existing guided audio on Home
+    // with the persistent mini-player. The legacy recommended-card Begin button
+    // is no longer the primary entry and must not be used to assert navigation.
     await page.evaluate(()=>{
       window.hcObservedPlay=[];
       window.hcOldPlay=HTMLMediaElement.prototype.play;
@@ -114,24 +93,29 @@ const assert = require('node:assert/strict');
         return Promise.reject(new DOMException('Test gesture stub','NotAllowedError'));
       };
     });
-    await page.locator('#homeRecommendedCard .hc-home-primary-btn').evaluate(el=>el.click());
-    assert.ok(await page.locator('#player').evaluate(el=>el.classList.contains('active')),
-      'Begin should open the full player directly');
-    assert.ok((await page.evaluate(()=>window.hcObservedPlay)).includes('audio'),
-      'Begin must request guided audio immediately');
-    await page.evaluate(()=>{HTMLMediaElement.prototype.play=window.hcOldPlay});
-    console.log('PASS: one-click Begin calls the existing guided audio');
-    await page.locator('#player .hc-minimize-audio').evaluate(el=>el.click());
+    await page.locator('#hcCorePathsClassic .hc-path-begin').evaluate(el=>el.click());
     assert.ok(await page.locator('#home').evaluate(el=>el.classList.contains('active')),
-      'Minimize must return directly Home without stopping the guided session');
+      'Begin should keep the simple Home visible while launching guided listening');
+    assert.ok((await page.evaluate(()=>window.hcObservedPlay)).includes('audio'),
+      'Begin must request existing guided audio immediately');
     assert.ok(await page.locator('#globalMini').evaluate(el=>el.classList.contains('show')),
-      'Paused/loading guided audio must leave a visible mini controller on Home');
+      'Home Begin must reveal the persistent mini-player');
+    await page.evaluate(()=>{HTMLMediaElement.prototype.play=window.hcOldPlay});
+    console.log('PASS: one-click Home Begin requests guided audio and shows mini-player');
     assert.equal((await page.locator('#globalMiniPlay').innerText()).trim(),'▶',
-      'Stopped/blocked audio must show Play, not a false playing state');
+      'Blocked audio must show Play rather than a false playing state');
     await page.locator('#globalMini .global-mini-copy').evaluate(el=>el.click());
     assert.ok(await page.locator('#player').evaluate(el=>el.classList.contains('active')),
-      'Mini title should expand same original player');
-    console.log('PASS: minimized Deep Sleep/meditation returns Home and retains native play/back/forward controls');
+      'Mini title must open the existing original full player');
+    await page.locator('#player .hc-minimize-audio').evaluate(el=>el.click());
+    assert.ok(await page.locator('#home').evaluate(el=>el.classList.contains('active')),
+      'Minimize must return Home without losing the guided session');
+    assert.ok(await page.locator('#globalMini').evaluate(el=>el.classList.contains('show')),
+      'Minimizing should leave mini-player visible');
+    await page.locator('#globalMini .global-mini-copy').evaluate(el=>el.click());
+    assert.ok(await page.locator('#player').evaluate(el=>el.classList.contains('active')),
+      'Mini-title reopen must retain the original player');
+    console.log('PASS: Home Begin, full-player expansion and minimize/reopen preserve controls');
     await page.locator('#finishBtn').evaluate(el=>el.click());
     assert.ok(await page.locator('#home').evaluate(el=>el.classList.contains('active')),
       'Finish should go straight to Home, not another Done screen');
@@ -151,32 +135,41 @@ const assert = require('node:assert/strict');
       'Sacred practice catalog now includes Adhkar, Fatiha, and Allahu; do not treat growth as a regression');
     assert.equal(await page.locator('#practices [data-group="guided"]').evaluate(el=>el.hidden),true);
     await page.locator('#practices [data-session="islamHu"]').evaluate(el=>el.click());
-    assert.ok(await page.locator('#hcDriveMedia').evaluate(el=>el.classList.contains('active')));
-    assert.match(await page.locator('#hcDriveVideoTitle').innerText(),/Allahu Meditation/);
-    assert.ok(await page.locator('#hcDriveMedia').evaluate(el=>el.classList.contains('hc-drive-audio-view')),
-      'Drive listening should start in compact audio-focused view');
-    assert.equal(await page.locator('#hcDriveVideoFrame').getAttribute('src'),'https://drive.google.com/file/d/11Sgca-PXcd4-5DRaPQPslynyc7QtkVYx/preview?autoplay=1','Allahu video starts only after its card is tapped');
-    assert.equal(await page.locator('#hcDriveOpenSource').getAttribute('href'),'https://drive.google.com/file/d/11Sgca-PXcd4-5DRaPQPslynyc7QtkVYx/view');
-    const beforeDock=await page.locator('#hcDriveVideoFrame').getAttribute('src');
-    await page.locator('#hcDriveMedia .hc-drive-minimize').evaluate(el=>el.click());
-    const dock=await page.locator('#hcDriveMedia').evaluate(el=>{
-      const rect=el.getBoundingClientRect();
-      return {width:rect.width,height:rect.height,docked:el.classList.contains('hc-drive-docked'),
-        iframeStillMounted:!!document.getElementById('hcDriveVideoFrame')?.getAttribute('src'),
-        visibleLabel:getComputedStyle(el.querySelector('.hc-drive-mini-label')).display};
+    // The original Drive recording opens in the existing floating player,
+    // not an obsolete full-screen hcDriveMedia route.
+    const drive=page.locator('#hcOneTapDrive');
+    assert.equal(await drive.evaluate(el=>el.hidden),false,'One-tap Drive player must open');
+    assert.match(await page.locator('#hcOtTitle').innerText(),/Hu Hu Hu Allah/);
+    const expectedDrivePreview='https://drive.google.com/file/d/11Sgca-PXcd4-5DRaPQPslynyc7QtkVYx/preview?autoplay=1';
+    assert.equal(await page.locator('#hcOtFrame').getAttribute('src'),expectedDrivePreview,
+      'Original Google Drive recording must load without a second Begin');
+    assert.equal(await page.locator('#hcOtSource').getAttribute('href'),
+      'https://drive.google.com/file/d/11Sgca-PXcd4-5DRaPQPslynyc7QtkVYx/view');
+    assert.ok(await page.locator('#practices').evaluate(el=>el.classList.contains('active')),
+      'Drive dock should not disrupt the original practice page');
+    await page.locator('#hcOtMinimize').evaluate(el=>el.click());
+    const compact=await drive.evaluate(el=>{
+      const r=el.getBoundingClientRect(),frame=el.querySelector('iframe');
+      return {collapsed:el.classList.contains('hc-ot-collapsed'),width:r.width,height:r.height,
+        thumbnail:getComputedStyle(frame).opacity,frameSrc:frame.getAttribute('src')};
     });
-    assert.ok(dock.docked && dock.height<=75 && dock.width<=292,
-      'Google Drive floating view should be a short, narrow audio-focused strip');
-    assert.notEqual(dock.visibleLabel,'none');
-    assert.equal(await page.locator('#hcDriveVideoFrame').getAttribute('src'),beforeDock,
-      'Minimizing must not restart or replace original Google Drive frame');
-    await page.locator('#hcDriveMedia .hc-drive-expand').evaluate(el=>el.click());
-    assert.ok(await page.locator('#hcDriveMedia').evaluate(el=>el.classList.contains('active')),
-      'Expand returns to full controls without changing the iframe');
-    console.log('PASS: minimized Drive playback no longer covers Home and stays mounted');
-    await page.locator('#hcDriveMedia button').first().evaluate(el=>el.click());
-    assert.ok(await page.locator('#practices').evaluate(el=>el.classList.contains('active')),'Return from devotional video should go to Practice');
+    assert.ok(compact.collapsed&&compact.width<=370&&compact.height<=155,
+      'Minimize must leave a compact visible Drive preview above nav');
+    assert.equal(compact.thumbnail,'1','Video thumbnail should not disappear into a hidden 1px iframe');
+    assert.equal(compact.frameSrc,expectedDrivePreview,'Minimize must not reload the original recording');
+    assert.equal((await page.locator('#hcOtMinimize').innerText()).trim(),'Resume');
+    await page.locator('#hcOtMinimize').evaluate(el=>el.click());
+    assert.equal(await drive.evaluate(el=>el.classList.contains('hc-ot-collapsed')),false,
+      'Resume expands the same existing Drive player');
+    assert.equal(await page.locator('#hcOtFrame').getAttribute('src'),expectedDrivePreview);
+    await page.locator('#hcOtClose').evaluate(el=>el.click());
+    assert.equal(await drive.evaluate(el=>el.hidden),true,'Close hides the floating Drive dock');
+    assert.ok(await page.locator('#practices').evaluate(el=>el.classList.contains('active')),
+      'Closing a Drive recording returns to underlying Practice');
+    console.log('PASS: Drive one-tap, visible minimized preview, Resume and explicit Close');
     await page.evaluate(()=>{show('sacred');openSacred('islamic')});
+    // The original Drive videos are intentionally under the 'Older videos' disclosure.
+    await page.locator('#hcSacredDriveCards details.hc-more-recordings summary').evaluate(el=>el.click());
     const sacredDrive=await page.locator('#hcSacredDriveCards').innerText();
     assert.match(sacredDrive,/Hu Hu Hu Allah/,'Original Islamic video entry must remain');
     console.log('PASS: Allahu one-tap playback, Sacred filter, return and original Islamic entry');
@@ -270,25 +263,40 @@ const assert = require('node:assert/strict');
     assert.equal(rowStyle.height,44);
     console.log('PASS: all compact white playback controls and Sound row circles');
     await page.locator('[data-nav="library"]').evaluate(el=>el.click());
-    await page.locator('#library button[onclick*="books"]').evaluate(el=>el.click());
-    await page.locator('#collectionList button').filter({hasText:'Read English'}).evaluate(el=>el.click());
-    assert.ok(await page.locator('#bookReader').evaluate(el=>el.classList.contains('active')),'English reading route inactive');
-    assert.ok((await page.locator('#readerPage').innerText()).length>150,'Reader has no content');
-    console.log('PASS: Library Reading opens real book content');
-
+    // Reading Books now uses a language shelf and standalone original readers.
+    // Never replace original book files with the former inline placeholder.
+    await page.locator('#library button[onclick*="readingLanguages"]').evaluate(el=>el.click());
+    await page.locator('#collectionList button[onclick*="reading-en"]').evaluate(el=>el.click());
+    const firstBook=page.locator('#collectionList a[href*="shadows-of-truth-reader.html?lang=en"]');
+    assert.equal(await firstBook.count(),1,'Original English Shadows of Truth reader link must remain');
+    assert.ok((await page.locator('#collectionList').innerText()).includes('HUMAN — WHEN YOU ARE ALONE'),
+      'Original second English reading book must remain');
+    const reader=await page.evaluate(async()=>{
+      const res=await fetch('./books/shadows-of-truth-reader.html?lang=en');
+      const html=await res.text();
+      return {ok:res.ok,html:html.slice(0,60000)};
+    });
+    assert.ok(reader.ok&&reader.html.length>1500&&/Shadows of Truth|SHADOWS OF TRUTH/i.test(reader.html),
+      'Original standalone English reader must be accessible with real content');
+    console.log('PASS: Reading Books > English retains both books and the original reader');
     await page.locator('[data-nav="settings"]').evaluate(el=>el.click());
     await page.locator('#hcPlaybackChecks').evaluate(el=>el.open=true);
     await page.locator('#hcRunPlaybackCheckBtn').evaluate(el=>el.click());
     await page.waitForFunction(()=>/checks passed|did not finish/.test(document.getElementById('hcPlaybackCheckStatus')?.textContent||''),null,{timeout:40000});
-    const checkText=await page.locator('#hcPlaybackCheckResults').innerText();
+    const playbackStatus=await page.locator('#hcPlaybackCheckStatus').textContent();
+    assert.match(playbackStatus,/checks passed/,'Playback diagnostics must complete instead of silently stopping');
+    // Settings nests diagnostics in a collapsible panel. innerText can return
+    // empty for a visually collapsed ancestor even when results are populated.
+    const checkText=await page.locator('#hcPlaybackCheckResults').textContent();
     assert.match(checkText,/Rain hosted audio/);
     assert.match(checkText,/Frogs hosted audio/);
     assert.match(checkText,/Flute · 10 min hosted audio/);
     assert.ok(await page.locator('#hcCopyPlaybackCheckBtn').isEnabled());
     console.log('PASS: on-device playback diagnostics');
 
-    await page.locator('#settings .hc-more-shortcuts button').first().evaluate(el=>el.click());
-    await page.locator('button[onclick="openFearPractice()"]').first().evaluate(el=>el.click());
+    // Fear remains an existing screen even when Settings no longer displays the
+    // legacy 'More shortcuts' grid. Open its real app action, not a removed button.
+    await page.evaluate(()=>openFearPractice());
     assert.ok(await page.locator('#fearPractice').evaluate(el=>el.classList.contains('active')));
     await page.locator('#fearPractice button').filter({hasText:'Frogs & Waterfall'}).evaluate(el=>el.click());
     assert.ok(await page.locator('#fearPlayer').evaluate(el=>el.classList.contains('active')));

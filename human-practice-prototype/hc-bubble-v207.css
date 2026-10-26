@@ -1,0 +1,136 @@
+/* HeartClear v207 — accessible bubble-first navigation. Existing media and content stay unchanged. */
+#home.hc-bubble-mode{justify-content:flex-start;padding-top:0}
+#home.hc-bubble-mode > :not(#hcBubbleHome){display:none!important}
+#hcBubbleHome{display:none;width:100%;max-width:470px;margin:0 auto;padding:clamp(8px,2vh,22px) 0 18px;color:#f6f7f8}
+#home.hc-bubble-mode #hcBubbleHome{display:block}
+#hcBubbleHome *{box-sizing:border-box}
+#hcBubbleHome button{cursor:pointer;font-family:inherit}
+#hcBubbleHome .hcb-small{font-size:15px;font-weight:650;letter-spacing:.02em;color:#d0d6d9}
+#hcBubbleHome h1{font-size:clamp(32px,8vw,43px);line-height:1.1;letter-spacing:-.045em;margin:7px 0 18px;color:#fff}
+#hcBubbleSearch{display:flex;align-items:center;gap:14px;width:100%;min-height:70px;border:2px solid #6b7a81;border-radius:22px;background:#f5f5f1;color:#12202b;text-align:left;padding:13px 18px;font:inherit;font-size:20px;font-weight:650}
+#hcBubbleSearch svg{flex:none}
+#hcBubbleCard{width:100%;margin:20px 0 12px;padding:clamp(22px,6vw,34px) 22px 26px;border:1px solid rgba(240,244,247,.35);border-radius:42px;min-height:min(49vh,450px);background:radial-gradient(ellipse at 60% 12%,var(--hcb-glow,rgba(170,190,220,.22)),transparent 65%),linear-gradient(160deg,#1a2630,#0d151b 78%);display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:10px;text-align:center;color:#fff;box-shadow:0 18px 44px rgba(0,0,0,.22);touch-action:none;position:relative;overflow:hidden}
+#hcBubbleCard .hcb-orb{width:clamp(118px,32vw,155px);height:clamp(118px,32vw,155px);border-radius:50%;background:radial-gradient(circle at 34% 29%,rgba(255,255,255,.78),var(--hcb-orb,#8ba9b6) 45%,rgba(27,40,50,.65) 82%);box-shadow:0 12px 38px var(--hcb-glow,rgba(170,190,220,.2)),inset -16px -20px 34px rgba(0,0,0,.23);flex:none;pointer-events:none}
+#hcBubbleCard .hcb-title{display:block;font-size:clamp(31px,9vw,47px);line-height:1.06;font-weight:780;letter-spacing:-.045em;color:#fff}
+#hcBubbleCard .hcb-description{display:block;max-width:320px;font-size:clamp(17px,4.5vw,21px);line-height:1.35;color:#e2e6e9}
+#hcBubbleCard .hcb-action{display:flex;align-items:center;justify-content:center;min-width:70%;min-height:61px;margin-top:3px;padding:11px 21px;border-radius:999px;background:#fff;color:#111d24;font-size:21px;font-weight:750}
+#hcBubbleHome .hcb-navigation{display:grid;grid-template-columns:64px 1fr 64px;align-items:center;gap:10px}
+#hcBubbleHome .hcb-navigation button{min-height:62px;border:1px solid #637079;background:#202a31;color:#fff;border-radius:20px;font-size:30px}
+#hcBubbleHome .hcb-count{text-align:center;font-size:19px;color:#e0e5e8;font-weight:600}
+#hcBubbleHome .hcb-hint{font-size:16px;line-height:1.45;color:#bfc9ce;text-align:center;margin:15px 0 7px}
+#hcBubbleHome .hcb-switch{min-height:51px;display:block;margin:5px auto;background:transparent;color:#d7e2e5;border:0;text-decoration:underline;font-size:16px;padding:9px 18px}
+#hcBubbleHome :is(button):focus-visible,#hcBubbleSearchPanel :is(button,input):focus-visible,#hcBubbleReturn:focus-visible{outline:3px solid #ffe5a4;outline-offset:3px}
+#hcBubbleSearchPanel[hidden],#hcBubbleReturn[hidden],#hcBubbleClassic[hidden]{display:none!important}
+#hcBubbleSearchPanel{position:fixed;inset:0;z-index:9999;overflow-y:auto;overscroll-behavior:contain;background:#091116;color:#fff;padding:calc(18px + env(safe-area-inset-top)) 16px calc(24px + env(safe-area-inset-bottom));}
+#hcBubbleSearchPanel .hcb-search-body{max-width:520px;margin:auto}
+#hcBubbleSearchPanel .hcb-search-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}
+#hcBubbleSearchPanel .hcb-search-top strong{font-size:26px}
+#hcBubbleSearchPanel .hcb-search-top button{flex:none;width:60px;height:60px;background:#26343d;color:#fff;border:1px solid #82929a;border-radius:20px;font-size:28px}
+#hcBubbleSearchPanel label{display:block;font-size:20px;margin-bottom:12px;font-weight:650}
+#hcBubbleSearchPanel input{display:block;width:100%;min-height:72px;border:2px solid #c8d1d5;border-radius:22px;background:#f8f8f5;color:#091b24;font:inherit;font-size:23px;padding:14px 18px;outline:none}
+#hcBubbleSearchPanel .hcb-results{display:grid;gap:11px;margin:18px 0}
+#hcBubbleSearchPanel .hcb-result{min-height:72px;width:100%;padding:15px 19px;display:flex;align-items:center;justify-content:space-between;gap:12px;background:#1b2b33;border:1px solid #5d7783;border-radius:22px;color:white;text-align:left;font:inherit;font-size:21px;font-weight:650}
+#hcBubbleSearchPanel .hcb-result small{font-size:16px;color:#c4d3d9;display:block;font-weight:450;margin-top:4px;line-height:1.35}
+#hcBubbleSearchPanel .hcb-empty{font-size:19px;line-height:1.5;color:#d8e3e8}
+#hcBubbleSearchPanel .hcb-search-caption{font-size:17px;line-height:1.45;color:#bdcbd1}
+/* Navigation stays within its page: never cover the native player or content. */
+#hcBubbleReturn,#hcBubbleClassic{position:static;max-width:100%;box-sizing:border-box;z-index:auto;border:1px solid #a3b1b7;border-radius:17px;background:#f6f6f3;color:#0a1b24;padding:10px 15px;min-height:48px;font:700 16px system-ui;box-shadow:none}
+#hcBubbleReturn{display:block;width:100%;margin:0 0 16px;text-align:left}
+#hcBubbleClassic{display:block;margin:12px auto 16px;width:min(100%,300px);text-align:center}
+#home.hc-bubble-detail :is(#hcHomeKitchenQuickV155,#hcGenesisCard){min-width:0;max-width:100%;box-sizing:border-box}
+#home.hc-bubble-detail :is(#hcWorldCategory,#hcWorldArea){min-width:0;width:100%;max-width:100%;box-sizing:border-box}
+#home.hc-bubble-detail #hcKitchenAskV163,
+#home.hc-bubble-detail #hcKitchenWorldV207{min-width:0;max-width:100%;box-sizing:border-box}
+#home.hc-bubble-detail #hcKitchenAskV163 .hc-search-line,
+#home.hc-bubble-detail #hcKitchenWorldV207 .hc-world-filters{min-width:0;max-width:100%}
+#home.hc-bubble-detail #hcKitchenWorldV207 .hc-world-filters{display:grid;grid-template-columns:minmax(0,1fr)}
+@media(max-width:600px){
+ #home.hc-bubble-mode #hcBubbleHome{max-width:100%;padding-inline:2px}
+ #hcBubbleCard{max-width:100%;min-height:min(46dvh,420px)}
+ #globalMini{left:8px!important;right:8px!important;width:auto!important;max-width:calc(100vw - 16px)!important;box-sizing:border-box!important;padding:8px!important;gap:4px!important;display:none}
+ #globalMini.show{display:grid!important;grid-template-columns:minmax(66px,1fr) repeat(5,minmax(31px,39px));align-items:center}
+ #globalMini .global-mini-copy{min-width:0!important;min-height:40px!important;overflow:hidden;text-align:left}
+ #globalMini .global-mini-copy :is(b,small){overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+ body.hc-bubble-on #globalMini .global-mini-copy b{font-size:12px!important}
+ body.hc-bubble-on #globalMini .global-mini-btn,
+ #globalMini .global-mini-btn{height:38px!important;min-height:38px!important;min-width:0!important;width:100%!important;font-size:13px!important;padding:2px!important}
+ #globalMini .hc-mini-scrubber{grid-column:1/-1;min-width:0;order:10}
+ #globalMini .hc-mini-scrubber input{min-width:0}
+ #globalMini .hc-mini-scrubber time{font-size:11px!important}
+ #globalMini #hcMiniSpeed{font-size:12px!important;min-height:33px!important}
+}
+
+body.hc-bubble-detail-on #home #hcGenesisCard :is(.hc-gen-top,#hcGenChapterMeta,#hcGenReadMode,#hcGenReadNote,.hc-gen-sources){font-size:clamp(17px,4.3vw,21px)!important}
+body.hc-bubble-detail-on #home #hcGenesisCard :is(#hcGenTitle,.hc-gen-text,#hcGenReadText){font-size:clamp(21px,5.3vw,27px)!important;max-height:none;line-height:1.8}
+body.hc-bubble-detail-on #home #hcGenesisCard button,
+body.hc-bubble-detail-on #home #hcGenesisCard select{font-size:19px!important;min-height:54px!important}
+body.hc-bubble-detail-on #home #hcHomeKitchenQuickV155 :is(label,strong,p,.hc-ask-reply,.hcr-sub,.hc-recipe-match,.hc-kitchen-count){font-size:clamp(18px,4.5vw,22px)!important;line-height:1.65}
+body.hc-bubble-detail-on #home #hcKitchenAskInput{min-height:68px!important;font-size:22px!important}
+body.hc-bubble-detail-on #home #hcHomeKitchenQuickV155 button{font-size:18px!important;min-height:54px!important}
+body.hc-bubble-on .global-mini .global-mini-copy b{font-size:17px!important}
+body.hc-bubble-on #globalMini .global-mini-btn{min-height:47px;min-width:44px;font-size:18px}
+body.hc-bubble-on #globalMini .hc-mini-scrubber time{font-size:13px}
+body.hc-bubble-on #globalMini #hcMiniSpeed{font-size:15px;min-height:40px}
+body.hc-bubble-on #globalMini .global-mini-copy{min-height:50px}
+@media(max-width:370px){#hcBubbleCard{min-height:350px;padding:20px 14px;border-radius:35px}#hcBubbleCard .hcb-orb{width:112px;height:112px}#hcBubbleHome .hcb-navigation{grid-template-columns:58px 1fr 58px}#hcBubbleHome .hcb-navigation button{min-height:58px}#hcBubbleHome h1{font-size:31px}}
+@media(min-width:700px){#hcBubbleCard{min-height:440px}}
+@media(prefers-reduced-motion:no-preference){#hcBubbleCard.hcb-enter{animation:hcbArrive .22s ease-out both}@keyframes hcbArrive{from{opacity:.7;transform:translateY(7px) scale(.985)}to{opacity:1;transform:none}}}
+@media(prefers-reduced-motion:reduce){#hcBubbleCard,.hcb-orb{animation:none!important;transition:none!important}}
+
+/* Larger reading text and touch targets across the existing screens. */
+html,body{touch-action:pan-x pan-y}
+body.hc-bubble-on #bottomNav .nav-item{font-size:clamp(11px,2.95vw,14px)!important;min-height:58px!important}
+body.hc-bubble-on #bottomNav .nav-item svg{width:24px;height:24px}
+body.hc-bubble-on .screen.active:not(#hcReels) .collection-back{font-size:18px!important;min-height:50px!important}
+body.hc-bubble-on .screen.active:not(#hcReels) .kicker{font-size:14px!important;letter-spacing:.07em}
+body.hc-bubble-on .screen.active:not(#hcReels):not(#home) p{font-size:clamp(17px,4.5vw,22px);line-height:1.65}
+body.hc-bubble-on #hcQuranStudy .hcqs-arabic{font-size:clamp(31px,8vw,43px)!important;line-height:2.15!important}
+body.hc-bubble-on #hcQuranStudy :is(.hcqs-meaning,.hcqs-editorial,.hcqs-private-note){font-size:clamp(20px,5.3vw,25px)!important;line-height:1.85}
+body.hc-bubble-on #hcQuranStudy :is(.hcqs-subhead,.hcqs-verse-head strong,.hcqs-verse-head a,.hcqs-header>p,.hcqs-summary>p){font-size:17px!important}
+body.hc-bubble-on #hcQuranStudy :is(button,select){font-size:18px!important;min-height:51px}
+body.hc-bubble-on #hcQuranStudy .hcqs-picker span{font-size:18px!important}
+body.hc-bubble-on #hcQuranStudy .hcqs-picker small{font-size:16px!important}
+body.hc-bubble-on #hcQuranStudy .hcqs-caution{font-size:17px!important}
+body.hc-bubble-on #bookReader :is(p,li,#readerText,.reader-paragraph){font-size:clamp(21px,5.2vw,27px)!important;line-height:1.85}
+body.hc-bubble-on :is(#library,#collection,#practices) :is(.choice b,.practice-card b,.hub-card b){font-size:clamp(19px,5vw,23px)!important}
+body.hc-bubble-on :is(#library,#collection,#practices) :is(.choice small,.practice-card small,.hub-card small){font-size:clamp(16px,4.1vw,19px)!important;line-height:1.5}
+body.hc-bubble-on :is(#library,#collection,#practices) button{min-height:50px}
+body.hc-bubble-on #home.hc-bubble-detail :is(#hcKitchenAskReply,#hcKitchenSearchResults){font-size:20px!important;line-height:1.6}
+
+/* Focused activity view: never reopen the whole legacy Home below a recipe or chapter. */
+#home.hc-bubble-detail{justify-content:flex-start;padding-top:8px;padding-bottom:110px}
+#home.hc-bubble-detail[data-hcb-detail="recipes"] > :not(#hcHomeKitchenQuickV155){display:none!important}
+#home.hc-bubble-detail[data-hcb-detail="bible"] > :not(#hcGenesisCard){display:none!important}
+#home.hc-bubble-detail[data-hcb-detail="recipes"] > #hcHomeKitchenQuickV155,
+#home.hc-bubble-detail[data-hcb-detail="bible"] > #hcGenesisCard{display:block!important;min-height:65vh;margin:8px 0 20px!important;padding:clamp(18px,5vw,26px)!important;border-radius:34px!important;scroll-margin-top:32px}
+#home.hc-bubble-detail[data-hcb-detail="recipes"] #hcKitchenAskV163,
+#home.hc-bubble-detail[data-hcb-detail="bible"] #hcGenReading{display:block}
+#home.hc-bubble-detail[data-hcb-detail="recipes"] #hcKitchenAskV163[hidden],
+#home.hc-bubble-detail[data-hcb-detail="bible"] #hcGenReading[hidden]{display:none!important}
+
+/* A fresh visit starts at Home; resume remains available without a large overlay. */
+body.hc-fresh-home #globalMini,
+body.hc-fresh-home #hcMiniLibrary{display:none!important}
+#hcBubbleHome #hcBubbleResume{display:block;width:100%;box-sizing:border-box;margin:13px 0 6px;min-height:47px;border:1px solid #8699a3;border-radius:16px;background:#1a303b;color:#f4f7f7;font:650 15px system-ui;white-space:normal;text-align:center;padding:10px}
+#hcBubbleHome #hcBubbleResume[hidden]{display:none!important}
+/* Home's vertical swipe is handled on the active card, not normal content scrolling. */
+#home.hc-bubble-mode #hcBubbleCard{overscroll-behavior:contain}
+@media(max-width:600px){
+ #hcBubbleHome .hcb-hint{font-size:13px;line-height:1.35}
+ #hcBubbleHome .hcb-switch{font-size:14px}
+}
+/* Keep world-food cards and all filters inside the viewport at all sizes. */
+#home #hcHomeKitchenQuickV155{min-width:0;max-width:100%;box-sizing:border-box}
+#home #hcKitchenAskV163 .hc-search-line{min-width:0;display:flex;flex-wrap:wrap;align-items:stretch}
+#home #hcKitchenAskV163 #hcKitchenAskInput{min-width:0;flex:1 1 180px;max-width:100%;box-sizing:border-box}
+#home #hcKitchenAskV163 #hcKitchenAskSend{flex:0 0 auto}
+#home #hcKitchenAskV163 .hc-cuisine-line{min-width:0;max-width:100%;flex-wrap:wrap}
+#home #hcKitchenAskV163 #hcKitchenTradition{min-width:0;max-width:100%;width:100%;box-sizing:border-box}
+#home #hcKitchenAskV163 .hc-kitchen-search-results,
+#home #hcKitchenAskV163 .hc-ask-reply{min-width:0;max-width:100%;box-sizing:border-box;overflow-wrap:anywhere}
+#home.hc-bubble-detail #hcKitchenTomorrow{font-size:clamp(15px,4vw,18px)!important;min-height:48px!important;height:auto!important;width:100%!important;max-width:100%!important;padding:9px 12px!important}
+
+/* v236: the launcher should remain scrollable on compact Android displays. */
+#home.hc-bubble-mode #hcBubbleHome{padding-bottom:calc(115px + env(safe-area-inset-bottom))}
+#hcBubbleHome .hcb-orb,#hcBubbleHome .hcb-action{pointer-events:none}
+#home.hc-bubble-mode #hcBubbleSearch,#home.hc-bubble-mode #hcBubbleCard{pointer-events:auto}

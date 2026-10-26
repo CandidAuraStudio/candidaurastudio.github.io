@@ -1,4 +1,4 @@
-/* HeartClear: featured surah, nonrepeating four-a-day shuffle, QuranEnc spoken meanings. */
+/* HeartClear: fresh nonrepeating Surah recommendation on each load, QuranEnc spoken meanings. */
 (function(){
 'use strict';
 const home=document.getElementById('home'),greeting=home?.querySelector('.hc-home-greeting-row');
@@ -10,7 +10,7 @@ const spoken={en:'English meaning',ta:'தமிழ் பொருள்',ar:'A
 let lang='en';try{const x=localStorage.getItem('hcQuranHomeLanguageV1');if(['en','ta','ar'].includes(x))lang=x;}catch(e){}
 const order=Array.from({length:114},(_,i)=>i+1);let rand=20261023;
 for(let i=113;i>0;i--){rand=(Math.imul(rand,1664525)+1013904223)>>>0;const j=rand%(i+1);[order[i],order[j]]=[order[j],order[i]];}
-let manual=null,period='',active=null,serial=0;
+let manual=null,active=null,serial=0;
 const versesText=new Map(),versions=new Map();
 const audio=document.createElement('audio');audio.id='hcQuranMeaningAudio';audio.preload='metadata';audio.playsInline=true;audio.hidden=true;document.body.appendChild(audio);
 const panel=document.createElement('section');panel.id='hcQuranFirst';panel.setAttribute('aria-label','Featured Surah');
@@ -19,7 +19,8 @@ panel.innerHTML='<header class="hcq-head"><div><span class="hcq-kicker">SURAH FO
  '<div class="hcq-langs" role="group" aria-label="Listening language"><button type="button" data-hcq="en">English</button><button type="button" data-hcq="ta">தமிழ்</button><button type="button" data-hcq="ar">العربية</button></div>'+
  '<div class="hcq-actions"><button type="button" id="hcqPlay"><span id="hcqIcon">▶</span><span id="hcqAction">Listen in English</span></button><button type="button" id="hcqRead">Read</button></div>'+
  '<div id="hcqLive" class="hcq-live" hidden><div class="hcq-livehead"><b id="hcqVerseNumber">Verse 1</b><small id="hcqStatus" role="status">Ready</small></div><p id="hcqVerse">Translation appears while listening.</p></div>'+
- '<div class="hcq-bottom"><details id="hcqBrowse"><summary>All 114 surahs</summary><select id="hcqSelect" aria-label="Choose one of the 114 surahs"></select></details>'+
+ '<button type="button" id="hcqMorningAdhkar" class="hcq-morning">▶ Morning Adhkar · 28 min</button>'+
+ '<div class="hcq-bottom"><details id="hcqBrowse"><summary>All 114 surahs</summary><input id="hcqBrowseSearch" type="search" placeholder="Find a surah or number" aria-label="Search all 114 surahs"><div id="hcqBrowseList" class="hcq-browse-list" role="list"></div><select id="hcqSelect" aria-label="Choose one of the 114 surahs"></select></details>'+
  '<details><summary>Audio sources</summary><p>English-only spoken meaning: Rowwad Translation Center. Tamil-only spoken meaning: Omar Brief. QuranEnc. Arabic recitation: Mishary Alafasy via Al Quran Cloud. Translators’ meanings are separate from the original Arabic Qur’an.</p><p id="hcqVersion"></p><a href="https://quranenc.com/en/home/api/" target="_blank" rel="noopener noreferrer">QuranEnc source</a></details></div>';
 greeting.insertAdjacentElement('afterend',panel);
 const old=home.querySelector('.hc-v139-quran');if(old)old.remove();
@@ -48,26 +49,101 @@ const style=document.createElement('style');style.textContent=[
  '#hcQuranFirst .hcq-bottom details{flex:1;min-width:110px;font-size:11px;color:#baccd3}',
  '#hcQuranFirst .hcq-bottom summary{padding:5px 0;cursor:pointer}',
  '#hcQuranFirst #hcqSelect{width:100%;min-height:44px;background:#122f3f;color:#fff;border:1px solid #536873;border-radius:10px;padding:7px}',
+ '#hcQuranFirst #hcqMorningAdhkar{width:100%;min-height:40px;display:block;text-align:left;padding:9px 12px;margin:0 0 9px;border:1px solid #436372;border-radius:11px;background:#163a47;color:#f2f7f7;font:600 12px system-ui}',
+ '#hcQuranFirst #hcqBrowseSearch{display:block;width:100%;min-height:40px;box-sizing:border-box;margin:7px 0;border:1px solid #536873;border-radius:9px;padding:8px;background:#17313e;color:#fff;font-size:12px}',
+ '#hcQuranFirst .hcq-browse-list{display:grid;gap:5px;max-height:310px;overflow:auto;padding:4px 1px 6px;overscroll-behavior:contain}',
+ '#hcQuranFirst .hcq-browse-list button{display:flex;align-items:center;text-align:left;gap:6px;width:100%;min-height:42px;padding:8px 10px;border-radius:9px;border:1px solid #3b5d6d;background:#123644;color:#eff5f6;font-size:12px}',
+ '#hcQuranFirst .hcq-browse-list button[aria-current=true]{border-color:#e8e9e7;background:#244e60}',
+ '#hcQuranFirst .hcq-browse-list button span{flex:1}',
+ '#hcQuranFirst #hcqBrowse[open]{min-width:100%;width:100%}',
  '#hcQuranFirst .hcq-bottom p{font-size:11px;line-height:1.5}',
  '#hcQuranFirst .hcq-bottom a{color:#e8cb9a}',
  '@media(max-width:350px){#hcQuranFirst #hcqName{font-size:16px}#hcQuranFirst #hcqPlay{font-size:12px}}'
 ].join('\n');document.head.appendChild(style);
 const $=id=>document.getElementById(id);
 const slot=d=>{const h=d.getHours();return h>=5&&h<11?0:h>=11&&h<17?1:h>=17&&h<22?2:3;};
-const recommendedIndex=()=>{const d=new Date(),day=Math.round(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/864e5),start=Math.round(Date.UTC(2026,9,23)/864e5);return (((day-start)*4+slot(d))%114+114)%114;};
-const index=()=>manual===null?recommendedIndex():manual;
+/* The 114 recommendations form a locally saved shuffle bag: no repetition
+   until all chapters have been offered. A page reload draws the next chapter;
+   language changes, tab changes, and minute ticks do not redraw it. */
+const RECOMMENDATION_KEY='hcQuranHomeRefreshBagV1';
+function drawFreshRecommendation(){
+ let saved=null;
+ try{saved=JSON.parse(localStorage.getItem(RECOMMENDATION_KEY)||'null')}catch(e){}
+ let remaining=Array.isArray(saved?.remaining)?saved.remaining:[];
+ const valid=remaining.length<=114&&remaining.every((n,i)=>Number.isInteger(n)&&n>=0&&n<114&&remaining.indexOf(n)===i);
+ if(!valid||!remaining.length){
+  remaining=Array.from({length:114},(_,i)=>i);
+  for(let i=113;i>0;i--){const j=Math.floor(Math.random()*(i+1));[remaining[i],remaining[j]]=[remaining[j],remaining[i]];}
+  if(remaining[0]===saved?.last)[remaining[0],remaining[1]]=[remaining[1],remaining[0]];
+ }
+ const chosen=remaining.shift();
+ try{localStorage.setItem(RECOMMENDATION_KEY,JSON.stringify({remaining,last:chosen}))}catch(e){}
+ return chosen;
+}
+const suggestedIndex=drawFreshRecommendation();
+const index=()=>manual===null?suggestedIndex:manual;
 const number=()=>order[index()];
-const title=n=>typeof soundLabTracks!=='undefined'&&soundLabTracks['hcSurah'+n]?.title||'Surah '+n;
+/* Names come from the same chapter directory used by the full Qur'an reader.
+   Cache names for later offline display; do not generate any verse text. */
+const CHAPTER_NAMES_KEY='hcQuranChapterDirectoryV1',chapterNames=new Map();
+try{
+ const saved=JSON.parse(localStorage.getItem(CHAPTER_NAMES_KEY)||'null');
+ if(Array.isArray(saved))for(const entry of saved){
+  if(Number.isInteger(entry?.n)&&entry.n>=1&&entry.n<=114&&typeof entry.en==='string'&&entry.en.length<100)
+   chapterNames.set(entry.n,{en:entry.en,ar:typeof entry.ar==='string'?entry.ar.slice(0,100):''});
+ }
+}catch(e){}
+const title=n=>chapterNames.get(n)?.en?'Surah '+chapterNames.get(n).en:
+ (typeof soundLabTracks!=='undefined'&&soundLabTracks['hcSurah'+n]?.title||'Surah '+n);
+const displayTitle=n=>title(n)+(chapterNames.get(n)?.ar?' · '+chapterNames.get(n).ar:'');
+async function loadChapterDirectory(){
+ if(chapterNames.size!==114){
+  try{
+   const r=await fetch('https://api.alquran.cloud/v1/surah',{headers:{Accept:'application/json'}});
+   if(!r.ok)throw Error('Chapter directory unavailable');
+   const json=await r.json();
+   for(const item of json?.data||[]){
+    const n=Number(item.number);
+    if(Number.isInteger(n)&&n>=1&&n<=114&&typeof item.englishName==='string')
+     chapterNames.set(n,{en:item.englishName,ar:typeof item.name==='string'?item.name:''});
+   }
+   if(chapterNames.size===114)try{
+    localStorage.setItem(CHAPTER_NAMES_KEY,JSON.stringify(Array.from(chapterNames,([n,x])=>({n,...x}))));
+   }catch(e){}
+  }catch(e){ /* Keep existing names when offline. */ }
+ }
+ for(const opt of $('hcqSelect').options){const n=Number(opt.value);opt.textContent=String(n).padStart(3,'0')+' · '+title(n);}
+ updateDirectory();render();
+}
 const arabicSelected=n=>currentSoundKey==='hcSurah'+n&&!!soundLabAudio.getAttribute('src');
 const nowPlaying=()=>lang==='ar'?(arabicSelected(number())&&!soundLabAudio.paused):(active?.n===number()&&active.lang===lang&&!audio.paused);
+function updateDirectory(){
+ const filter=($('hcqBrowseSearch')?.value||'').trim().toLocaleLowerCase();
+ const root=$('hcqBrowseList');
+ if(!root)return;
+ // 114 buttons are built only on demand, not on every 10-second audio update.
+ const fragment=document.createDocumentFragment();
+ for(let n=1;n<=114;n++){
+  const name=title(n);
+  if(filter&&!String(n).includes(filter)&&!name.toLocaleLowerCase().includes(filter))continue;
+  const btn=document.createElement('button');btn.type='button';btn.dataset.surah=String(n);
+  btn.setAttribute('role','listitem');
+  btn.setAttribute('aria-current',String(n===number()));
+  const label=document.createElement('span');label.textContent=String(n).padStart(3,'0')+' · '+name;
+  const action=document.createElement('strong');action.textContent='▶';action.setAttribute('aria-hidden','true');
+  btn.append(label,action);fragment.append(btn);
+ }
+ root.replaceChildren(fragment);
+}
 function render(){
  const n=number(),d=new Date(),time=['Morning','Afternoon','Evening','Night'][slot(d)];
- $('hcqName').textContent=title(n);$('hcqMeta').textContent=(spoken[lang]||spoken.en)+' · '+counts[n-1]+' verses';
- $('hcqCounter').textContent=n+' / 114';$('hcqSlot').textContent=time+' · changes 4 times a day';
+ $('hcqName').textContent=displayTitle(n);$('hcqMeta').textContent=(spoken[lang]||spoken.en)+' · '+counts[n-1]+' '+({en:'verses',ta:'வசனங்கள்',ar:'آيات'}[lang]||'verses');
+ $('hcqCounter').textContent=n+' / 114';$('hcqSlot').textContent=time+' · new Surah on refresh';
  $('hcqSelect').value=String(n);
+ $('hcqBrowseList')?.querySelectorAll('[data-surah]').forEach(b=>b.setAttribute('aria-current',String(Number(b.dataset.surah)===n)));
  panel.querySelectorAll('[data-hcq]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.hcq===lang)));
  $('hcqIcon').textContent=nowPlaying()?'Ⅱ':'▶';
- $('hcqAction').textContent=nowPlaying()?'Pause':lang==='ar'?(arabicSelected(n)?'Resume':'Listen in Arabic'):lang==='ta'?'தமிழில் கேளுங்கள்':'Listen in English';
+ $('hcqAction').textContent=nowPlaying()?'Pause':lang==='ar'?(arabicSelected(n)?'Resume':'Listen in Arabic'):(active?.n===n&&active?.lang===lang&&audio.getAttribute('src')?'Resume':lang==='ta'?'தமிழில் கேளுங்கள்':'Listen in English');
  $('hcqPlay').setAttribute('aria-pressed',String(nowPlaying()));
 }
 for(let i=1;i<=114;i++){const opt=document.createElement('option');opt.value=String(i);opt.textContent=String(i).padStart(3,'0')+' · '+title(i);$('hcqSelect').appendChild(opt);}
@@ -78,6 +154,33 @@ function clearMeaning(){
  if(typeof renderGlobalMini==='function')renderGlobalMini();
 }
 window.hcStopQuranMeaning=()=>{clearMeaning();active=null;render();};
+
+/* Resume the same surah/verse after a browser restart, with audio paused. */
+window.hcQuranMeaningPlaybackSnapshot=()=>{
+ if(!active||active.lang==='ar'||!audio.getAttribute('src'))return null;
+ return {surah:active.n,language:active.lang,verse:active.verse,
+  seconds:Math.max(0,Number(audio.currentTime)||0)};
+};
+window.hcQuranMeaningRestorePaused=saved=>{
+ const n=Number(saved?.surah),v=Number(saved?.verse),l=saved?.language;
+ if(!Number.isInteger(n)||n<1||n>114||!['en','ta'].includes(l)||
+   !Number.isInteger(v)||v<1||v>counts[n-1])return false;
+ const time=Math.max(0,Number(saved.seconds)||0);
+ clearMeaning();
+ lang=l;active={n,lang:l,verse:v}; // Resume in the mini-player without replacing today's freshly recommended card.
+ window.hcQuranMeaningNowTitle=title(n)+' · '+spoken[l];
+ audio.src=verseURL(n,v,l);audio.preload='metadata';audio.load();
+ $('hcqLive').hidden=false;
+ displayVerse();fetchText(n,l,serial);fetchVersion(l);setupSession();
+ if(typeof hcSeekRestored==='function')hcSeekRestored(audio,time,render);
+ if(typeof hcMiniPinnedKey!=='undefined')hcMiniPinnedKey='quran-meaning';
+ try{localStorage.setItem('heartclearActiveMedia','quran-meaning')}catch(e){}
+ $('hcqStatus').textContent='Verse restored. Tap Play to continue.';
+ render();
+ if(typeof renderGlobalMini==='function')renderGlobalMini();
+ return true;
+};
+
 function verseURL(n,v,l){return 'https://d.quranenc.com/data/audio/'+audioKeys[l]+'/'+String(n).padStart(3,'0')+String(v).padStart(3,'0')+'.mp3';}
 function displayVerse(){
  if(!active||active.lang==='ar')return;
@@ -132,12 +235,12 @@ function playVerse(v){
  const current=serial;
  audio.play().catch(()=>{if(serial===current)$('hcqStatus').textContent='Tap Play again or check your connection';});
 }
-function start(n,l){
- clearMeaning();focus();active={n,lang:l,verse:1};
+function start(n,l,verse=1){
+ clearMeaning();focus();active={n,lang:l,verse};
  window.hcQuranMeaningNowTitle=title(n)+' · '+spoken[l];
  $('hcqLive').hidden=false;$('hcqStatus').textContent='Loading…';
  const current=serial;
- fetchText(n,l,current);fetchVersion(l);playVerse(1);
+ fetchText(n,l,current);fetchVersion(l);playVerse(verse);
  hcMiniPinnedKey='quran-meaning';render();renderGlobalMini();
 }
 function toggle(){
@@ -163,6 +266,59 @@ function toggle(){
  }
  start(n,lang);
 }
+/* The full Qur'an reader reuses this audio and the existing global mini-player. */
+function notifyQuranReader(){window.dispatchEvent(new Event('hcQuranAudioChange'));}
+window.hcQuranReaderState=()=>{
+ if(active&&active.lang!=='ar'&&audio.getAttribute('src')&&(!audio.paused||!/^hcSurah[0-9]+$/.test(String(currentSoundKey||''))||soundLabAudio.paused))return {
+  chapter:active.n,language:active.lang,verse:active.verse,playing:!audio.paused,
+  seconds:Number(audio.currentTime)||0,duration:Number(audio.duration)||0,error:!!audio.error
+ };
+ const ar=/^hcSurah([1-9][0-9]?|10[0-9]|11[0-4])$/.exec(String(currentSoundKey||''));
+ if(ar&&soundLabAudio.getAttribute('src'))return {
+  chapter:Number(ar[1]),language:'ar',verse:1,playing:!soundLabAudio.paused,
+  seconds:Number(soundLabAudio.currentTime)||0,duration:Number(soundLabAudio.duration)||0,error:!!soundLabAudio.error
+ };
+ return null;
+};
+window.hcQuranReaderPlay=(chapter,language='ar',verse=1)=>{
+ const n=Number(chapter),l=String(language),v=Number(verse);
+ if(!Number.isInteger(n)||n<1||n>114||!['ar','en','ta'].includes(l)||
+    !Number.isInteger(v)||v<1||v>counts[n-1])return false;
+ if(l==='ar'){
+  if(currentSoundKey==='hcSurah'+n&&soundLabAudio.getAttribute('src')){
+   if(soundLabAudio.paused){
+    focus();active={n,lang:'ar',verse:1};
+    if(typeof setSoundLabMediaSession==='function')setSoundLabMediaSession();
+    soundLabAudio.play().catch(()=>{});
+    hcMiniPinnedKey='soundlab';renderGlobalMini();
+   }else soundLabAudio.pause();
+  }else{
+   clearMeaning();focus();active={n,lang:'ar',verse:1};$('hcqLive').hidden=true;
+   if(typeof hcPlayQuranSurah==='function')hcPlayQuranSurah(n);
+  }
+ }else if(active?.n===n&&active.lang===l&&audio.getAttribute('src')){
+  if(active.verse!==v){audio.pause();playVerse(v);}
+  else if(audio.paused){focus();setupSession();audio.play().catch(()=>{});}
+  else audio.pause();
+ }else start(n,l,v);
+ notifyQuranReader();render();return true;
+};
+window.hcQuranReaderStep=delta=>{
+ if(!active||active.lang==='ar'||!audio.getAttribute('src'))return false;
+ const next=active.verse+Number(delta);
+ if(!Number.isInteger(next)||next<1||next>counts[active.n-1])return false;
+ audio.pause();playVerse(next);notifyQuranReader();return true;
+};
+window.hcQuranReaderSeek=fraction=>{
+ const s=window.hcQuranReaderState();if(!s)return false;
+ const el=s.language==='ar'?soundLabAudio:audio,d=Number(el.duration);
+ if(!Number.isFinite(d)||d<=0)return false;
+ el.currentTime=Math.max(0,Math.min(d,d*Number(fraction)));
+ notifyQuranReader();return true;
+};
+for(const event of ['play','pause','waiting','error','ended','loadedmetadata','timeupdate'])audio.addEventListener(event,notifyQuranReader);
+for(const event of ['play','pause','waiting','error','ended','emptied','loadedmetadata','timeupdate'])soundLabAudio.addEventListener(event,notifyQuranReader);
+notifyQuranReader();
 window.hcMeaningStepVerse=delta=>{
  if(!active||active.lang==='ar')return;
  const v=active.verse+Number(delta);
@@ -195,9 +351,22 @@ panel.querySelectorAll('[data-hcq]').forEach(b=>b.addEventListener('click',()=>{
 $('hcqPrevious').addEventListener('click',()=>{manual=(index()+113)%114;render();});
 $('hcqNext').addEventListener('click',()=>{manual=(index()+1)%114;render();});
 $('hcqSelect').addEventListener('change',()=>{const i=order.indexOf(Number($('hcqSelect').value));if(i>=0){manual=i;render();$('hcqBrowse').open=false;}});
+$('hcqBrowseSearch').addEventListener('input',updateDirectory);
+$('hcqBrowse').addEventListener('toggle',()=>{if($('hcqBrowse').open)updateDirectory()});
+$('hcqBrowseList').addEventListener('click',event=>{
+ const button=event.target.closest?.('button[data-surah]');
+ if(!button)return;
+ const n=Number(button.dataset.surah),i=order.indexOf(n);
+ if(i<0)return;
+ manual=i;render();toggle(); // Explicit tap starts the selected surah in native audio.
+});
+$('hcqMorningAdhkar').addEventListener('click',()=>{
+ if(typeof window.hcInlineToggleAdhkar==='function')window.hcInlineToggleAdhkar();
+ else document.getElementById('hcIslamicAdhkarQuick')?.click();
+});
 let lastStamp='';
-function refresh(){const d=new Date(),stamp=[d.getFullYear(),d.getMonth(),d.getDate(),slot(d)].join('-');if(lastStamp===stamp)return;lastStamp=stamp;if(!active||audio.paused){manual=null;render();}}
-refresh();render();setInterval(refresh,60000);
+function refresh(){const d=new Date(),stamp=[d.getFullYear(),d.getMonth(),d.getDate(),slot(d)].join('-');if(lastStamp===stamp)return;lastStamp=stamp;render();}
+refresh();render();loadChapterDirectory();setInterval(refresh,60000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh();});
 window.addEventListener('focus',refresh);
 })();

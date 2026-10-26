@@ -156,12 +156,22 @@ function render(){
 render();
 })();
 
+/* Short, bilingual medical-science guide appears above the daily checklist. */
+(function(){
+ if(document.getElementById('hcBodyScienceScriptV193'))return;
+ const script=document.createElement('script');
+ script.id='hcBodyScienceScriptV193';
+ script.src='./hc-body-science-v193.js?v=193';
+ script.async=true;
+ document.body.append(script);
+})();
+
 /* Source-backed deeper learning lives above the quick Daily Care routine. */
 (function(){
  if(document.getElementById('hcDeepHeritageScriptV185'))return;
  const s=document.createElement('script');
  s.id='hcDeepHeritageScriptV185';
  s.async=true;
- s.src='./hc-deep-heritage-v185.js?v=185';
+ s.src='./hc-deep-heritage-v185.js?v=284';
  document.body.append(s);
 })();

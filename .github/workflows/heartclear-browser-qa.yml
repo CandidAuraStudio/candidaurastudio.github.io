@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/workflows/heartclear-browser-qa.yml'
       - 'human-practice-prototype/tests/heartclear-smoke.cjs'
+      - 'human-practice-prototype/tests/heartclear-all-screens.cjs'
       - 'human-practice-prototype/index.html'
       - 'human-practice-prototype/sw.js'
   pull_request:
@@ -33,10 +34,13 @@ jobs:
         run: |
           npm install --no-save playwright
           npx playwright install --with-deps chromium
+      - name: Syntax check every JavaScript module
+        run: find human-practice-prototype -type f -name '*.js' -print0 | xargs -0 -n1 node --check
       - name: Exercise real navigation and cached audio seeking
         shell: bash
         run: |
           set -euo pipefail
           python3 -m http.server 8765 --directory . > /tmp/heartclear-http.log 2>&1 &
           echo $! > /tmp/heartclear-server.pid
+          node human-practice-prototype/tests/heartclear-all-screens.cjs
           node human-practice-prototype/tests/heartclear-smoke.cjs

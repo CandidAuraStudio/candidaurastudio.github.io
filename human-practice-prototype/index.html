@@ -1,15 +1,15 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="hc-booting">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#07131d">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#090b0e">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="HeartClear">
-<link rel="manifest" href="./manifest.webmanifest?v=126">
-<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
-<link rel="apple-touch-icon" href="./icon-192.png">
+<link rel="manifest" href="./manifest.webmanifest?v=284">
+<link rel="icon" type="image/svg+xml" href="./icon.svg?v=284">
+<link rel="apple-touch-icon" href="./icon-192.png?v=284">
 <title>HeartClear · Meditation, Sounds & Reflection</title>
 <meta name="description" content="HeartClear brings together guided meditation, nature sounds, gentle breathing, Sacred Sound and reading. Listen, reflect and save your progress on your device.">
 <meta name="application-name" content="HeartClear">
@@ -422,9 +422,9 @@ body{overscroll-behavior-y:none}
 .brand-lockup{display:flex;align-items:center;gap:10px}
 .brand-mark{
   width:34px;height:34px;border-radius:12px;display:grid;place-items:center;
-  background:linear-gradient(145deg,rgba(215,177,110,.17),rgba(22,52,66,.44));
-  border:1px solid rgba(218,184,124,.18);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.035),0 10px 30px rgba(0,0,0,.18)
+  background:#050505;
+  border:1px solid rgba(255,255,255,.32);
+  box-shadow:none
 }
 .brand-mark svg{width:21px;height:21px}
 .brand-copy strong{display:block;font-size:14px;letter-spacing:-.015em}
@@ -1100,8 +1100,8 @@ p,.hub-card small,.sacred-card small,.human-card small,.practice-copy small,.hub
 .install-head{display:flex;align-items:center;gap:12px}
 .install-logo{
   width:54px;height:54px;border-radius:17px;display:grid;place-items:center;
-  background:linear-gradient(145deg,rgba(215,177,110,.18),rgba(22,52,66,.52));
-  border:1px solid rgba(218,184,124,.18);color:#d9bd85;font-weight:800;font-size:18px
+  background:#050505;
+  border:1px solid rgba(255,255,255,.3);color:#fff;font-weight:600;font-size:32px
 }
 .install-head b{display:block;font-size:17px}.install-head small{display:block;color:#8fa4ae;margin-top:3px}
 .install-steps{display:grid;gap:9px;margin-top:16px}
@@ -2412,10 +2412,47 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
 #hcDriveMedia .hc-drive-caution{font-size:11px;line-height:1.45;color:#9aadb8;margin:10px 0 0}
 #hcDriveMedia .hc-drive-source-details{margin:7px 0 0;font-size:12px}
 #hcDriveMedia .hc-drive-video-wrap{max-height:46vh}
+
+/* HUMAN reader book card: standalone readable master without downloading large files */
+.hc-human-reading-entry{display:flex;align-items:center;gap:15px;border:1px solid rgba(235,202,144,.28);background:#0a1017;border-radius:18px;padding:15px;margin:0 0 18px;color:#f8f6f2;box-shadow:0 12px 28px rgba(0,0,0,.16)}
+.hc-human-reading-entry img{width:104px;min-width:104px;aspect-ratio:2/3;object-fit:cover;box-shadow:0 10px 20px #0006;border-radius:3px}
+.hc-human-reading-copy{min-width:0}.hc-human-reading-copy .kicker{font-size:10px;color:#dbc18f}
+.hc-human-reading-copy h3{font-size:18px;line-height:1.2;margin:7px 0 5px}
+.hc-human-reading-copy p{font-size:12px;line-height:1.45;margin:0 0 10px;color:#b2bec3}
+.hc-human-reading-link{display:inline-flex;align-items:center;color:#15181c!important;background:#e8c58e;text-decoration:none;font-weight:700;font-size:13px;border-radius:11px;padding:11px 14px;min-height:42px}
+@media(max-width:365px){.hc-human-reading-entry img{width:80px;min-width:80px}.hc-human-reading-copy h3{font-size:16px}}
 </style>
-<link rel="stylesheet" href="./quran-study.css?v=135">
+<link rel="stylesheet" href="./quran-study.css?v=232">
+<style id="hc-refresh-first-paint">
+/* Gate the first paint until the existing approved v279 theme finishes loading. */
+html.hc-booting body{background:#090909!important}
+html.hc-booting body::before,html.hc-booting body::after{display:none!important}
+html.hc-booting .app,
+html.hc-booting #hcFlowDock,
+html.hc-booting #hcCinemaBackdrop,
+html.hc-booting #globalMini,
+html.hc-booting #updateBanner{visibility:hidden!important}
+.hc-boot-screen{display:none}
+html.hc-booting .hc-boot-screen{
+ position:fixed;inset:0;display:flex;flex-direction:column;
+ align-items:center;justify-content:center;gap:13px;
+ padding:24px;background:#090909;color:#f5f5f5;z-index:2147483646;
+ font:600 16px/1.25 system-ui,-apple-system,sans-serif;letter-spacing:.02em;
+}
+.hc-boot-screen img{width:70px;height:70px;object-fit:contain}
+</style>
 </head>
 <body>
+<div class="hc-boot-screen" role="status" aria-label="Loading HeartClear">
+ <img src="./icon.svg" width="70" height="70" alt="" aria-hidden="true">
+ <span>HeartClear</span>
+</div>
+<script id="hcBootSafety">
+/* Fail open if a stylesheet becomes unavailable; never lock the user's screen. */
+window.setTimeout(function(){
+ document.documentElement.classList.remove('hc-booting');
+},10000);
+</script>
 <div class="update-banner" id="updateBanner">
   <div><b>HeartClear updated</b><small>A newer version is ready.</small></div>
   <button onclick="reloadHeartClear()">Refresh</button>
@@ -2423,7 +2460,7 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
 <div class="install-sheet" id="installSheet" role="dialog" aria-modal="true" aria-labelledby="installTitle" onclick="if(event.target===this)dismissInstallSheet()">
   <div class="install-card">
     <div class="install-head">
-      <div class="install-logo">HC</div>
+      <div class="install-logo" aria-label="HeartClear infinity logo">∞</div>
       <div>
         <b id="installTitle">Install HeartClear</b>
         <small id="installSubtitle">Use it like a normal app from your Home Screen.</small>
@@ -2456,19 +2493,18 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
 <div class="app-shell-top" id="appTopBar">
   <div class="brand-lockup">
     <div class="brand-mark" aria-hidden="true">
-      <svg viewBox="0 0 24 24">
-        <path d="M12 20.2c-4.7-2.6-7.9-5.7-7.9-9.7 0-2.5 1.6-4.5 4-4.5 1.5 0 2.8.8 3.9 2.2C13.1 6.8 14.4 6 15.9 6c2.4 0 4 2 4 4.5 0 4-3.2 7.1-7.9 9.7Z" fill="none" stroke="#d6b276" stroke-width="1.4"/>
-        <path d="M12 8.2v7.2M9.5 11.1h5" stroke="#7fb0c0" stroke-width="1.1" stroke-linecap="round"/>
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none">
+        <path d="M6 16c5 0 7-8 12-8a4 4 0 0 1 0 8c-5 0-7-8-12-8a4 4 0 1 0 0 8" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </div>
-    <div class="brand-copy"><strong>HC · HeartClear</strong><span id="topContext">Home</span></div>
+    <div class="brand-copy"><strong>HeartClear</strong><span id="topContext">Home</span></div>
   </div>
-  <button class="top-action" onclick="show('settings')" aria-label="Settings">⋯</button>
+  <button class="top-action" id="hcTopSettingsAction" type="button" onclick="hcToggleTopSettings()" aria-label="Open settings" title="Open settings">⋯</button>
 </div>
 
 <section class="screen active" id="home">
   <div class="hc-home-greeting-row">
-    <div class="hc-home-greeting-copy"><div class="home-greeting" id="timeGreeting">Welcome</div><div class="hc-daily-family">Welcome to Mastar Alim family</div></div>
+    <div class="hc-home-greeting-copy"><div class="home-greeting" id="timeGreeting">Welcome</div><div class="hc-daily-family">Welcome to HeartClear</div></div>
     <button class="hc-home-install-link" id="hcHomeInstallBtn" onclick="showInstallSheet(true)" type="button" aria-label="Install HeartClear on your phone">Install app <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v4h16v-4"/></svg></button>
   </div>
   <script>
@@ -2600,12 +2636,13 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
       <button class="hc-reels-back" type="button" onclick="hcCloseReels()" aria-label="Close Reels and return Home"><span aria-hidden="true">×</span><span class="hc-reels-back-label"> Close</span></button>
       <span class="kicker">HEARTCLEAR · REELS</span>
       <h2 id="hcReelsHeading">Reels</h2>
-      <p>Swipe the right edge ↑ ↓</p>
+      <p>Swipe up or down · left or right side</p>
    </div>
    <div class="hc-reels-stage" id="hcReelsStage" aria-label="Swipe up for next reel, down for previous">
      <button id="hcReelPoster" class="hc-reel-drive-poster" type="button" onclick="hcReelToggle()" aria-label="Play or retry current reel"><span class="hc-reel-playmark" aria-hidden="true">▶</span><strong>Play this reel</strong><span>Videos load when you open Reels or swipe. Tap if your browser requires a playback gesture.</span></button>
      <iframe id="hcReelFrame" class="hc-reel-drive-frame" title="Google Drive reel video player" loading="eager" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="no-referrer-when-downgrade" hidden></iframe>
-      <div id="hcReelSwipeRail" class="hc-reel-swipe-rail" aria-label="Swipe up and down or use small arrows to change reels">
+      <div id="hcReelSwipeLeft" class="hc-reel-swipe-wide" aria-hidden="true"></div>
+      <div id="hcReelSwipeRail" class="hc-reel-swipe-rail" aria-label="Swipe up or down on either side of the video; arrow buttons are a fallback">
         <button type="button" class="hc-reel-rail-btn" aria-label="Previous unwatched reel" onclick="hcReelRailTap('previous')">↑</button>
         <small aria-hidden="true">SWIPE</small>
         <button type="button" class="hc-reel-rail-btn" aria-label="Next unwatched reel" onclick="hcReelRailTap('next')">↓</button>
@@ -2613,7 +2650,7 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
      <div class="hc-reels-screen-shade" aria-hidden="true"></div>
      <div class="hc-reels-progress" aria-hidden="true"><span id="hcReelProgress"></span></div>
      <div class="hc-reel-all-seen" id="hcReelAllSeen" hidden role="status"><h3>All caught up</h3><p>You've opened all available reels on this device. You can replay older reels or return when new ones are uploaded.</p><button type="button" onclick="hcReelReplayAll()">Watch again · மீண்டும் பார்க்க</button><button type="button" onclick="hcCloseReels()">Back to Home</button></div>
-     <div class="hc-reels-badge" id="hcReelNumber">1 / 78</div>
+     <div class="hc-reels-badge" id="hcReelNumber">1 / 122</div>
      <div class="hc-reels-copy">
        <div class="hc-reels-kicker" id="hcReelKicker">UPLOADED REEL</div>
        <h3 id="hcReelTitle">Video 01</h3>
@@ -2622,7 +2659,7 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
      
    </div>
 
-   <p class="hc-reels-hint" id="hcReelHint" role="status" aria-live="polite">Swipe either edge to change reels. Tap Play in the video if your browser blocks autoplay.</p>
+   <p class="hc-reels-hint" id="hcReelHint" role="status" aria-live="polite">Swipe once on either side to change reels. Tap Play in the centre if needed.</p>
 </section>
 
 <section class="screen practice-library" id="practices">
@@ -3084,21 +3121,14 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
 
   <div class="hub-grid">
     <button class="hub-card" onclick="hcOpenQuranStudy()"><span class="hub-icon">۞</span><span><b>Qur'an &amp; Inner Journey · குர்ஆன்</b><small>114 surahs online · original Arabic, English/Tamil translations and your private notes.</small></span><span class="hub-arrow">›</span></button>
-    <button class="hub-card" onclick="openCollection('english')">
-      <span class="hub-icon">EN</span>
-      <span><b>English Audiobooks</b><small>Long-form listening, reflection and learning.</small></span>
+    <button class="hub-card" onclick="openCollection('audioLanguages')">
+      <span class="hub-icon" aria-hidden="true">♫</span>
+      <span><b>Audiobooks</b><small>English · Tamil</small></span>
       <span class="hub-arrow">›</span>
     </button>
-
-    <button class="hub-card" onclick="openCollection('tamil')">
-      <span class="hub-icon">த</span>
-      <span><b>Tamil Audiobooks</b><small>Tamil listening library for your own and licensed recordings.</small></span>
-      <span class="hub-arrow">›</span>
-    </button>
-
-    <button class="hub-card" onclick="openCollection('books')">
-      <span class="hub-icon">Aa</span>
-      <span><b>Reading</b><small>Read available English and Tamil book excerpts.</small></span>
+    <button class="hub-card" onclick="openCollection('readingLanguages')">
+      <span class="hub-icon" aria-hidden="true">Aa</span>
+      <span><b>Reading Books</b><small>English · தமிழ் · සිංහල</small></span>
       <span class="hub-arrow">›</span>
     </button>
   </div>
@@ -3141,7 +3171,7 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
 <article class="fatiha-card"><div class="kicker">Verse 4 · வசனம் 4</div><p class="fatiha-ar" lang="ar" dir="rtl">مَالِكِ يَوْمِ الدِّينِ</p><div data-fatiha-lang="en"><b>Meaning · English</b><p>Master of the Day of Judgment.</p></div><div data-fatiha-lang="ta" lang="ta"><b>பொருள் · தமிழ்</b><p>நியாயத்தீர்ப்பு நாளின் அதிபதி.</p></div><div class="fatiha-reflection"><div data-fatiha-lang="en"><b>Reflection</b><p>This verse speaks of divine judgment; reflect also on today's responsibility.</p></div><div data-fatiha-lang="ta" lang="ta"><b>வாழ்க்கைச் சிந்தனை</b><p>இது இறைத் தீர்ப்பைப் பேசுகிறது; இன்றைய பொறுப்புகளையும் சிந்தியுங்கள்.</p></div></div></article>
 <article class="fatiha-card"><div class="kicker">Verse 5 · வசனம் 5</div><p class="fatiha-ar" lang="ar" dir="rtl">إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ</p><div data-fatiha-lang="en"><b>Meaning · English</b><p>You alone we worship, and You alone we ask for help.</p></div><div data-fatiha-lang="ta" lang="ta"><b>பொருள் · தமிழ்</b><p>உன்னையே நாங்கள் வணங்குகிறோம்; உன்னிடமே உதவி தேடுகிறோம்.</p></div><div class="fatiha-reflection"><div data-fatiha-lang="en"><b>Reflection</b><p>Humility means recognising we cannot control everything.</p></div><div data-fatiha-lang="ta" lang="ta"><b>வாழ்க்கைச் சிந்தனை</b><p>எல்லாவற்றையும் கட்டுப்படுத்த முடியாது என்பதை உணர்வதே பணிவு.</p></div></div></article>
 <article class="fatiha-card"><div class="kicker">Verse 6 · வசனம் 6</div><p class="fatiha-ar" lang="ar" dir="rtl">اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ</p><div data-fatiha-lang="en"><b>Meaning · English</b><p>Guide us to the straight path.</p></div><div data-fatiha-lang="ta" lang="ta"><b>பொருள் · தமிழ்</b><p>எங்களை நேரான வழியில் நடத்துவாயாக.</p></div><div class="fatiha-reflection"><div data-fatiha-lang="en"><b>Reflection</b><p>Ask for guidance in how you live today: truthfulness, justice and care.</p></div><div data-fatiha-lang="ta" lang="ta"><b>வாழ்க்கைச் சிந்தனை</b><p>இன்றைய வாழ்வில் உண்மை, நீதி, அக்கறையுடன் நடக்க வழிகாட்டுதலை வேண்டுங்கள்.</p></div></div></article>
-<article class="fatiha-card"><div class="kicker">Verse 7 · வசனம் 7</div><p class="fatiha-ar" lang="ar" dir="rtl">صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ</p><div data-fatiha-lang="en"><b>Meaning · English</b><p>The path of those You have blessed, not those who incur anger or lose their way.</p></div><div data-fatiha-lang="ta" lang="ta"><b>பொருள் · தமிழ்</b><p>நீ அருள் புரிந்தவர்களின் வழியில் எங்களை நடத்துவாயாக; கோபத்திற்கு ஆளானவர்களின் வழியிலும் வழிதவறியவர்களின் வழியிலும் அல்ல.</p></div><div class="fatiha-reflection"><div data-fatiha-lang="en"><b>Reflection</b><p>Ask not only to recognise what is right, but to practise it.</p></div><div data-fatiha-lang="ta" lang="ta"><b>வாழ்க்கைச் சிந்தனை</b><p>சரியானதை அறிவதோடு அதை வாழ்விலும் கடைப்பிடிக்க வேண்டுங்கள்.</p></div></div></article><button class="hc-living-button" onclick="show('hcLivingQuran')" style="display:block;width:100%;margin:14px 0;padding:14px;border:0;border-radius:14px;background:white;color:#0d2330;font:inherit;font-weight:700">Next: Three Qul · மூன்று குல் ஸூராக்கள் →</button><div class="fatiha-note"><b>About the straight path · நேர்வழி</b><p data-fatiha-lang="en">Verse 1:6 asks for guidance to the straight path. Al-Fatiha does not describe a hair-thin bridge. A bridge in the afterlife is discussed in hadith sources, including Sahih al-Bukhari 6573. This study focuses on the Qur'an's words and guidance for how we live.</p><p data-fatiha-lang="ta" lang="ta">1:6 ஆம் வசனம் நேர்வழியில் நடத்தும்படி வேண்டுகிறது. முடியை விட மெலிந்த பாலம் பற்றிய விளக்கம் ஃபாத்திஹாவில் இல்லை. மறுமை பாலம் பற்றிய செய்திகள் ஸஹீஹ் புகாரி 6573 போன்ற ஹதீஸ் நூல்களில் வருகின்றன. இங்கு குர்ஆன் கூறும் நேர்வழியும் நமது வாழ்வில் அதன் பொருளுமே மையம்.</p><p><a href="https://quran.com/al-fatihah" target="_blank" rel="noopener noreferrer">Qur'an 1:1–7 · Arabic / Translation / Audio</a></p></div></div></section>
+<article class="fatiha-card"><div class="kicker">Verse 7 · வசனம் 7</div><p class="fatiha-ar" lang="ar" dir="rtl">صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ</p><div data-fatiha-lang="en"><b>Meaning · English</b><p>The path of those You have blessed, not those who incur anger or lose their way.</p></div><div data-fatiha-lang="ta" lang="ta"><b>பொருள் · தமிழ்</b><p>நீ அருள் புரிந்தவர்களின் வழியில் எங்களை நடத்துவாயாக; கோபத்திற்கு ஆளானவர்களின் வழியிலும் வழிதவறியவர்களின் வழியிலும் அல்ல.</p></div><div class="fatiha-reflection"><div data-fatiha-lang="en"><b>Reflection</b><p>Ask not only to recognise what is right, but to practise it.</p></div><div data-fatiha-lang="ta" lang="ta"><b>வாழ்க்கைச் சிந்தனை</b><p>சரியானதை அறிவதோடு அதை வாழ்விலும் கடைப்பிடிக்க வேண்டுங்கள்.</p></div></div></article><button class="hc-living-button" onclick="show('hcLivingQuran')" style="display:block;width:100%;margin:14px 0;padding:14px;border:0;border-radius:14px;background:white;color:#0d2330;font:inherit;font-weight:700">Next: Three Qul · மூன்று குல் ஸூராக்கள் →</button><div class="fatiha-note"><b>About the straight path · நேர்வழி</b><p data-fatiha-lang="en">Verse 1:6 asks for guidance to the straight path. We read Al-Fatiha on its own terms and reflect on how its prayer may guide everyday choices.</p><p data-fatiha-lang="ta" lang="ta">1:6 ஆம் வசனம் நேர்வழியில் நடத்தும்படி வேண்டுகிறது. அல்-ஃபாத்திஹாவை அதன் சொந்த வசனங்களின் அடிப்படையில் வாசித்து, அந்த வேண்டுதல் அன்றாட முடிவுகளுக்கு என்ன பொருள் தருகிறது எனச் சிந்திக்கலாம்.</p><p><a href="https://quran.com/al-fatihah" target="_blank" rel="noopener noreferrer">Qur'an 1:1–7 · Arabic / Translation / Audio</a></p></div></div></section>
 
 
 <section class="screen" id="hcLivingQuran" data-living-mode="both">
@@ -3275,10 +3305,10 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
       <button class="hc-sacred-quick" id="hcIslamicAdhkarQuick" type="button" onclick="hcInlineToggleAdhkar()" aria-label="Play or pause Morning Adhkar" aria-pressed="false">
         <span class="hc-sacred-quick-icon">▶</span><span><b>Morning Adhkar</b><small>28:18 · Audio</small></span><span class="hc-sacred-quick-status">Play</span>
       </button>
-      <button class="hc-sacred-quick" id="hcHinduBansuriQuick" type="button" hidden onclick="hcQuickPlaySound('organicBansuri')" aria-label="Play original bansuri audio">
+      <button class="hc-sacred-quick" id="hcHinduBansuriQuick" type="button" hidden data-inline-audio="organicBansuri" onclick="hcQuickPlaySound('organicBansuri')" aria-label="Play original bansuri audio">
         <span class="hc-sacred-quick-icon">▶</span><span><b>Acoustic Bansuri · Original audio</b><small>7:54 · CC0 · Not the Krishna Drive video</small></span><span class="hc-sacred-quick-status">Play</span>
       </button>
-      <div id="hcSacredDriveCards" class="soundlab-grid"></div>
+      <div id="hcSacredPlaybackStatus" role="status" aria-live="polite" style="font-size:12px;line-height:1.4;color:#cfdee3;margin:0 0 8px"></div><div id="hcSacredDriveCards" class="soundlab-grid"></div>
     </div>
     <details class="hc-sacred-learn"><summary>Prayer, readings &amp; other options</summary>
 
@@ -3315,7 +3345,7 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
       <small>Traditional seed-syllable practice: LAM · VAM · RAM · YAM · HAM · OM · Silence.</small>
       <button onclick="openChakraGuide()">Learn & Practice</button>
       <button onclick="openSoundTrack('mantra')" style="margin-top:8px">Play 8 min Mantra Bed</button>
-      <button onclick="window.hcOpenOmVoice?.()" style="margin-top:8px">Mantra Bed · 1h / 3h audio</button>
+      <button onclick="window.hcOpenMantraHub?.()" style="margin-top:8px">Mantra &amp; Chanting · all recordings</button>
     </div>
 
     <div class="chakra-feature" id="buddhistFeatured" style="display:none;margin-top:12px">
@@ -3413,7 +3443,7 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
     <iframe id="omVideoFrame" title="OM chanting meditation video" allow="autoplay;fullscreen;picture-in-picture" allowfullscreen loading="lazy" style="border:0;width:100%;height:100%"></iframe>
   </div>
   <p class="player-status">If the embedded video is blocked, use the Drive link below.</p>
-  <a href="https://drive.google.com/file/d/11ogtK6FopRz-g8o-gHLY6-TV4fTJ5GjN/view" target="_blank" rel="noopener noreferrer" class="btn secondary" style="display:block;text-align:center;text-decoration:none">Open video in Google Drive</a>
+  <button type="button" class="btn secondary" onclick="window.hcOpenOmVoice?.()">Listen inside HeartClear</button>
   <button class="btn secondary" onclick="closeOmVideo()">Back to Hindu Insight</button>
  </div>
 </section>
@@ -3795,7 +3825,7 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
         </div>
       </details>
     </div>
-    <div class="app-version">HeartClear · Version 1.3.11 · HC v177</div>
+    <div class="app-version">HeartClear · HC v286</div>
   </div>
 </section>
 
@@ -3816,7 +3846,7 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
       <div class="stat-tile"><b id="histTotalSessions">0</b><span>all sessions</span></div>
     </div>
     <div class="history-list" id="historyList"></div>
-    <button class="btn secondary" onclick="show('home')">Back</button>
+    <button class="btn secondary" onclick="hcBackFromHistory()">Back</button>
   </div>
 </section>
 
@@ -4080,7 +4110,7 @@ body:has(.bottom-nav.hidden) .hc-mini-library{bottom:calc(97px + env(safe-area-i
 
 <script src="./quran-study-data.js?v=122"></script>
 <script src="./quran-study-reflections.js?v=122"></script>
-<script src="./quran-study-ui.js?v=135"></script>
+<script src="./quran-study-ui.js?v=233"></script>
 <script>
 function hcSetLivingLanguage(lang){
   if(!['both','ta','en'].includes(lang))lang='both';
@@ -4254,6 +4284,10 @@ let sessionRecorded=false;
 let completionHistoryIndex=-1;
 let wakeLock=null;
 let currentScreenId='home';
+// Keep Settings reversible even when entered from the bottom More tab.
+let hcSettingsReturnScreen='home';
+let hcSettingsReturnScrollY=0;
+let hcHistoryReturnScreen='home';
 let wakeLockEnabled=false;
 let prepIndex=0;
 let prepElapsed=0;
@@ -4565,6 +4599,10 @@ function hcCaptureReturnState(force=false){
       humanChoice:humanSoundChoice,humanTime:Number(humanSoundAudio.currentTime)||0,
       humanRemaining:Number(humanRemaining)||0,
      driveKey:hcDriveActiveKey||null,driveFrom:hcDriveBackScreen||null};
+   if(active?.key==='genesis'&&typeof window.hcGenesisPlaybackSnapshot==='function')
+     item.genesis=window.hcGenesisPlaybackSnapshot();
+   if(active?.key==='quran-meaning'&&typeof window.hcQuranMeaningPlaybackSnapshot==='function')
+     item.quranMeaning=window.hcQuranMeaningPlaybackSnapshot();
    if((screen==='player'||item.kind==='meditation')&&chosenUrl){
      item.meditation={url:chosenUrl,seconds:chosenSeconds,introUrl:chosenIntroUrl,
        visualUrl:chosenVisualUrl,kicker:chosenKicker,title:chosenTitle};
@@ -4591,6 +4629,14 @@ function hcRestorePreviousScreen(){
   let success=false;hcReturnRestoring=true;
  try{
   switch(saved.screen){
+   case 'home':{
+    if(saved.kind==='genesis'&&typeof window.hcGenesisRestorePaused==='function'){
+      success=window.hcGenesisRestorePaused(saved.genesis)===true;
+    }else if(saved.kind==='quran-meaning'&&typeof window.hcQuranMeaningRestorePaused==='function'){
+      success=window.hcQuranMeaningRestorePaused(saved.quranMeaning)===true;
+    }else success=true;
+    break;
+   }
    case 'player':{
     const p=saved.meditation;
     if(!p||typeof p.url!=='string'||!/^https:\/\//.test(p.url)){show('practices');break}
@@ -4645,7 +4691,7 @@ function hcRestorePreviousScreen(){
    case 'sacredDetail':openSacred('islamic');success=true;break;
    default:show(saved.screen);success=true;
   }
-  if(success&&['player','sacredSession','soundLabPlayer','bookAudio','fearPlayer','humanSession'].includes(currentScreenId)){
+  if(success&&(['player','sacredSession','soundLabPlayer','bookAudio','fearPlayer','humanSession'].includes(currentScreenId)||['genesis','quran-meaning'].includes(saved.kind))){
    hcMiniPinnedKey=saved.kind||null;
     const note=document.getElementById('hcReturnNotice');
    if(note){note.hidden=false;note.textContent='Session restored. Tap Play to continue listening.'}
@@ -4656,10 +4702,8 @@ function hcRestorePreviousScreen(){
 }
 
 
-/* Reels · 111 linked Drive MP4 IDs; new uploads prioritized until opened.
-   Not related to the four meditation practice visuals. Loading is user-initiated and
-   the cross-origin Drive player owns playback/volume/seek controls. */
-const hcReelItems=[{"id":"14rhxM8P88gM1xWLitLVjLNiihcnsIvFH","short":"01"},{"id":"1_bWlCW3Zgv8RZm74LIk6H3utpQSdvr6C","short":"02"},{"id":"1k_3vWitGE2syhrJOkxraKKjS7h5kotgO","short":"03"},{"id":"157j4JrUZoBWJla6YrOP2ravJ5A4v8jD0","short":"04"},{"id":"11egb0iT5b7NwIdnJdGp2cWqVqnnD7_XP","short":"05"},{"id":"1OV7sh9vYunWOuGpwsc21vwAO4mPrpGGm","short":"06"},{"id":"1vVS4rFd203WLlKIkh1N5oe8F6g3diwsf","short":"07"},{"id":"1YkYNSjEvkFRYMT95fwEJTGS5LmnazElX","short":"08"},{"id":"1q7g8_TTi1yeyfWLZWJbmA7z_DKSN8qtc","short":"09"},{"id":"1E43R4dkBlx8iPF58muZEMpQM9hnWKRSY","short":"10"},{"id":"1oUIDwLNJpmNX0CNY8fuqo5Nqxy7iD20n","short":"11"},{"id":"1c2ILWbonYxysQG_QTcLzG7QzwK5HYGd5","short":"12"},{"id":"1pQ0c-_rh00yWSqxVSH-vrwhJYsxFGKBk","short":"13"},{"id":"1lXLxkP7ZJfAgC8ImNQ_Qd3FsVZMHyIl9","short":"14"},{"id":"15vZozQgAZsMw2zeN2LokeZd_93lwzYPK","short":"15"},{"id":"12fbY_G1H8N0aav2cLnDgIfAnB2z2XNzG","short":"16"},{"id":"1ZPIqLNSI4r_hQF334NeOQSRSstPRyHyk","short":"17"},{"id":"1tUSLXBo77iw7PrW2GNaArw5_V3RX48Wc","short":"18"},{"id":"1P1_JQXG6dRn8zNxBt2diKG1SXjdV7vda","short":"19"},{"id":"1MwoPkELjCsBS9yZ9HtJtttOdS76U0SOi","short":"20"},{"id":"1JaU3Pzvq-daim9e6m4Tv_A5yvKyO4bPj","short":"21"},{"id":"1pPtrL5s4gCyy4g0lZ4A97AGs0EEwrBA6","short":"22"},{"id":"1iyvz4LH-3rkGpgrAcaDsBwc_82LZ_MPM","short":"23"},{"id":"1DFxG0_o90pctOn_pWnqSzlwLtNGrZQWp","short":"24"},{"id":"1xaxoC9ZzbCUTVJxv9jsPT0E885mZchsO","short":"25"},{"id":"1fYqQqJIwear7KfnggwzYuoFF8CW14Hsb","short":"26"},{"id":"1RGVEQydljciXipzkuj3YEw_wFe2vunpA","short":"27"},{"id":"1hHznvoSNCwRBHrx1qXM4ACJjIKrathMe","short":"28"},{"id":"1ZjxbW2cJCb33apj6bNIT9pqyjrZeb34n","short":"29"},{"id":"1sVw7jh8Ava82p0nsgJcox0UA3ckQW_7-","short":"30"},{"id":"1Xr7TWqtqi0yQySEqihhJCQsiTjciq-89","short":"31"},{"id":"1-jAXg880YY0-u4-DTYIJCufiagUFM-UN","short":"32"},{"id":"1Wqe6yS-zX1tP-1ek3_MCgphpjbdOHOrj","short":"33"},{"id":"1RUKhmz6UyoghdmuopM8JxeXx_bwcpGNa","short":"34"},{"id":"1wjFyjY5tdpGIjRaWizLaKdVoUPqCY5Nz","short":"35"},{"id":"1Vdv20kTTRbMLa4m6pvUASpZW_29O14lk","short":"36"},{"id":"1Q4dKDI2pyUsJKMGksRK31In4BbEvHRlZ","short":"37"},{"id":"15Dn1HMwUdabCpNR68DhPnjfgy6Ojm5DN","short":"38"},{"id":"1cSRPrDL0PdA36iu76Yx8LMzPMICUHAzN","short":"39"},{"id":"1iiY8P6UF9DbDynViQLSgyf6gcq-8_0oS","short":"40"},{"id":"1T6RwoUEXQN5hYB-yKjL-X6W-Uv5t5j95","short":"41"},{"id":"1UdnA5URzw2D4ATqfDCrB_YuxIIJujqMT","short":"42"},{"id":"1dM_8JnIGTIWkNes40ecR6OwetodAntx2","short":"43"},{"id":"1DgiBU3ezQnnhPxZCtf8YPgXY12HTAKS9","short":"44"},{"id":"1QtK0og_CzZt2nyzjhEydNOZdbz_NnvlC","short":"45"},{"id":"1VoWoN5mzgC_eYnVQejGCYTcl9RKs80_6","short":"46"},{"id":"167rAklkDpqsQNa5KEI-kVLiWbL9QgDI_","short":"47"},{"id":"1OYgnFKl6JfvKeZxENosQzdVmQucVOWTc","short":"48"},{"id":"1-MPU4NLO51__A5mA0plwUGtKsVDjazYu","short":"49"},{"id":"1SMcUnX6zhj1Y8dk40X9AUwgP6t2WBFD8","short":"50"},{"id":"1v7G9KauENqaX0sk8kORz52HwfP7tnzwX","short":"51"},{"id":"1-MRUeG1_uEsar8n1FEQ1386u9-edDraz","short":"52"},{"id":"1IjFAnpVRrckHgap07j1qrWddi6pSD5sL","short":"53"},{"id":"1QrB4idSip9meXLeoqG9r3Qzcp4eC9qzj","short":"54"},{"id":"1MrR8SVRIT2Q0_CzoCNkliSaULATWscRh","short":"55"},{"id":"1V1NK_xuK_5b76FB0XynIoAoSVOqU9G6A","short":"56"},{"id":"1OuI0CY3Su0q_i_INiiO_121yw4HjBXoN","short":"57"},{"id":"1kRsU4YzGNXZgrr-vH3rYpeR8qqk4GJm6","short":"58"},{"id":"10Uwr3HspjgrREwp7aHmLEFCMGwl7_Qk4","short":"59"},{"id":"1SCfmoc6Mor9CGoHP4qAsjmZaz4siW1Ru","short":"60"},{"id":"1W-_Qi3FXfwgpLyu2GYQ7HrbN_-riczuU","short":"61"},{"id":"1bKzlYjDry64JV0kp_Gys54x_OpPTPNN_","short":"62"},{"id":"1YOQKiil1YrojFT3T9xIpLdBLpMEI_5sV","short":"63"},{"id":"11A5FnuOYFvVOgTPSe_RdmUwWN2CCYrG_","short":"64"},{"id":"1xZuvEjxNaDRYRfIC1W6FiS7gErYOmbQz","short":"65"},{"id":"1C2A2rA7_0IXvRCmmn2FdC0tKt3h5zEYK","short":"66"},{"id":"12jwoQx7mNVCXIhbW-lqmP4VDAk5TMchM","short":"67"},{"id":"1GUmV-VyrbYIeYVowq5xgTBnl5jD3_VZZ","short":"68"},{"id":"1RlWoRRHNrXqDECBr77ZaJUSzscoP58Kw","short":"69"},{"id":"1zkUpnIDJtd2k3XM0Fv2WDyCS-IIONXZY","short":"70"},{"id":"16lWCLxgBy5GVDRCNug7PEJKUe3rWy_AB","short":"71"},{"id":"1iW6cMeM3rY19BUepyhniCWroIQfyz6Op","short":"73"},{"id":"1O393tcgamzIWdJ-DRu2Z1Smel_vcvo0N","short":"74"},{"id":"1HtoP8d5mM-gHa0q7_7b4QFeZ98JoMXiY","short":"75"},{"id":"17-PWyGYwZxsYukSJZ1zIpyCZXZZFDcy9","short":"76"},{"id":"1VPdzsmJh_Ii6k1F5doGrHufZriDe8adT","short":"77"},{"id":"1JXVkTMHUloUsmVtR7jZjyy9JXghgiXfQ","short":"78"},{"id":"1cZ9jdbEWrTbTlixKT9jX5EvY-aYYoZSa","short":"79"},{"id":"17YEhq5JHQzgnjAPMU3kci6D8OFIlih75","short":"80"},{"id":"1P2-AmsdblUEbVOg8r6joNlhmtwiT2NUU","short":"81"},{"id":"1SuUBfx6KVvXdUbiLS_nhe-uXpWEHs9Hu","short":"82"},{"id":"1esI4obleyx6T9WLBOymuEzuJN_COBI0A","short":"83"},{"id":"1i1QDY_-HjoYH_h_vqCYUJZrUDN4qoBfO","short":"84"},{"id":"168STguaGguNnP9xAFhHXMp9gjw5vP6YM","short":"85"},{"id":"15sMGMWR9njEWNJDineqVwrrfCZ5ZKrdm","short":"86"},{"id":"10gwCQWe_5CnEFaBVyLco0ErDVZMjREV4","short":"87"},{"id":"1G3r0wxH_z7m1FIYncwr4QqDGicJ8J9Rs","short":"88"},{"id":"1U1qKl-dQWXWN_VQc_rk8PTq5_IvBiAop","short":"89"},{"id":"1ca-zRroP3HaojNQbAJ8-ktZmO3jU87S4","short":"90"},{"id":"1k8qkMA8jmOvAXFfcCvCp6LjlLUNwAEXl","short":"91"},{"id":"10FWaFVE9bhEporA-xbnaMjCchq58yrmB","short":"92"},{"id":"1aqSgj87t5lH5kIgagRaWf1UTndLddK-r","short":"93"},{"id":"1EcN8i4XbHvLL4brtwMrnbJR4DU7OuxQV","short":"94"},{"id":"1Yl8hBZKb1GTVcgglq9HPG4c8furEM605","short":"95"},{"id":"1HARBEtj1-8QIm6Q6UWPDJfMvylMY4zxm","short":"96"},{"id":"1BJ7L_953SJ033Jl_e97-9lKjzIqSFMBg","short":"97"},{"id":"1DqwrKOnd-tpGuLnD3V6CBGYn3eEM9TOM","short":"98"},{"id":"1dBi6nFHXZI3CQFDk0dYGSTcn1Jqn38Gr","short":"99"},{"id":"1KrsCas5iQ_wXtOKcLktj8nIWv7B0NCBr","short":"100"},{"id":"1x5JDHv_RjyXEE1nltWk9qdCulSA6bAws","short":"101","new":true},{"id":"196Rtrmi6xHV6OIqhqI8W8OFycYi6Fz0f","short":"102","new":true},{"id":"110DeVdtNUveVwA-xE5cQ2K_R4_IwXblt","short":"103","new":true},{"id":"19imTv_g7tZFTrPOtdab7mHRxjI3KRojf","short":"104","new":true},{"id":"1JHCriv57mu3fqnjP48cQKPz2NXayzJwE","short":"105","new":true},{"id":"1ESxtKYb3kIh7G0b6iKrbZ8R3ppbUC-vZ","short":"106","new":true},{"id":"1UlZ704pf9_hbefMTkM-NcGlKqRUXxOXA","short":"107","new":true},{"id":"1R69h1j5G1_X88Id4Q4B0yzaTgP0fk4D9","short":"108","new":true},{"id":"1FsPCVrZ5832F0fLMR3fSB0LRVWqnhGJ-","short":"109","new":true},{"id":"1rT4pY6M5GxN-8HVWcNC4HeFxRJaIU9ZO","short":"110","new":true},{"id":"1ekcA4Y3pn1XJXVr_Zhf13aq0o7BNwZ-z","short":"111","new":true}]; // Owner-supplied Drive embeds only; MP4 files not copied to GitHub.
+/* Reels · 122 current unique videos in HeartClear Drive folder (audit 2026-10-25).\n   Missing IDs omitted, duplicates by name and size not repeated; new additions first.\n   Playbacks remain embedded Google Drive files. */
+const hcReelItems=[{"id":"14rhxM8P88gM1xWLitLVjLNiihcnsIvFH","short":"01"},{"id":"1_bWlCW3Zgv8RZm74LIk6H3utpQSdvr6C","short":"02"},{"id":"157j4JrUZoBWJla6YrOP2ravJ5A4v8jD0","short":"03"},{"id":"11egb0iT5b7NwIdnJdGp2cWqVqnnD7_XP","short":"04"},{"id":"1OV7sh9vYunWOuGpwsc21vwAO4mPrpGGm","short":"05"},{"id":"1vVS4rFd203WLlKIkh1N5oe8F6g3diwsf","short":"06"},{"id":"1YkYNSjEvkFRYMT95fwEJTGS5LmnazElX","short":"07"},{"id":"1q7g8_TTi1yeyfWLZWJbmA7z_DKSN8qtc","short":"08"},{"id":"1E43R4dkBlx8iPF58muZEMpQM9hnWKRSY","short":"09"},{"id":"1oUIDwLNJpmNX0CNY8fuqo5Nqxy7iD20n","short":"10"},{"id":"1c2ILWbonYxysQG_QTcLzG7QzwK5HYGd5","short":"11"},{"id":"1pQ0c-_rh00yWSqxVSH-vrwhJYsxFGKBk","short":"12"},{"id":"1lXLxkP7ZJfAgC8ImNQ_Qd3FsVZMHyIl9","short":"13"},{"id":"15vZozQgAZsMw2zeN2LokeZd_93lwzYPK","short":"14"},{"id":"12fbY_G1H8N0aav2cLnDgIfAnB2z2XNzG","short":"15"},{"id":"1ZPIqLNSI4r_hQF334NeOQSRSstPRyHyk","short":"16"},{"id":"1tUSLXBo77iw7PrW2GNaArw5_V3RX48Wc","short":"17"},{"id":"1P1_JQXG6dRn8zNxBt2diKG1SXjdV7vda","short":"18"},{"id":"1MwoPkELjCsBS9yZ9HtJtttOdS76U0SOi","short":"19"},{"id":"1JaU3Pzvq-daim9e6m4Tv_A5yvKyO4bPj","short":"20"},{"id":"1pPtrL5s4gCyy4g0lZ4A97AGs0EEwrBA6","short":"21"},{"id":"1iyvz4LH-3rkGpgrAcaDsBwc_82LZ_MPM","short":"22"},{"id":"1DFxG0_o90pctOn_pWnqSzlwLtNGrZQWp","short":"23"},{"id":"1xaxoC9ZzbCUTVJxv9jsPT0E885mZchsO","short":"24"},{"id":"1fYqQqJIwear7KfnggwzYuoFF8CW14Hsb","short":"25"},{"id":"1RGVEQydljciXipzkuj3YEw_wFe2vunpA","short":"26"},{"id":"1hHznvoSNCwRBHrx1qXM4ACJjIKrathMe","short":"27"},{"id":"1ZjxbW2cJCb33apj6bNIT9pqyjrZeb34n","short":"28"},{"id":"1sVw7jh8Ava82p0nsgJcox0UA3ckQW_7-","short":"29"},{"id":"1Xr7TWqtqi0yQySEqihhJCQsiTjciq-89","short":"30"},{"id":"1-jAXg880YY0-u4-DTYIJCufiagUFM-UN","short":"31"},{"id":"1Wqe6yS-zX1tP-1ek3_MCgphpjbdOHOrj","short":"32"},{"id":"1RUKhmz6UyoghdmuopM8JxeXx_bwcpGNa","short":"33"},{"id":"1wjFyjY5tdpGIjRaWizLaKdVoUPqCY5Nz","short":"34"},{"id":"1Vdv20kTTRbMLa4m6pvUASpZW_29O14lk","short":"35"},{"id":"1Q4dKDI2pyUsJKMGksRK31In4BbEvHRlZ","short":"36"},{"id":"15Dn1HMwUdabCpNR68DhPnjfgy6Ojm5DN","short":"37"},{"id":"1cSRPrDL0PdA36iu76Yx8LMzPMICUHAzN","short":"38"},{"id":"1iiY8P6UF9DbDynViQLSgyf6gcq-8_0oS","short":"39"},{"id":"1T6RwoUEXQN5hYB-yKjL-X6W-Uv5t5j95","short":"40"},{"id":"1UdnA5URzw2D4ATqfDCrB_YuxIIJujqMT","short":"41"},{"id":"1dM_8JnIGTIWkNes40ecR6OwetodAntx2","short":"42"},{"id":"1DgiBU3ezQnnhPxZCtf8YPgXY12HTAKS9","short":"43"},{"id":"1QtK0og_CzZt2nyzjhEydNOZdbz_NnvlC","short":"44"},{"id":"1VoWoN5mzgC_eYnVQejGCYTcl9RKs80_6","short":"45"},{"id":"167rAklkDpqsQNa5KEI-kVLiWbL9QgDI_","short":"46"},{"id":"1OYgnFKl6JfvKeZxENosQzdVmQucVOWTc","short":"47"},{"id":"1-MPU4NLO51__A5mA0plwUGtKsVDjazYu","short":"48"},{"id":"1SMcUnX6zhj1Y8dk40X9AUwgP6t2WBFD8","short":"49"},{"id":"1v7G9KauENqaX0sk8kORz52HwfP7tnzwX","short":"50"},{"id":"1-MRUeG1_uEsar8n1FEQ1386u9-edDraz","short":"51"},{"id":"1IjFAnpVRrckHgap07j1qrWddi6pSD5sL","short":"52"},{"id":"1QrB4idSip9meXLeoqG9r3Qzcp4eC9qzj","short":"53"},{"id":"1MrR8SVRIT2Q0_CzoCNkliSaULATWscRh","short":"54"},{"id":"1V1NK_xuK_5b76FB0XynIoAoSVOqU9G6A","short":"55"},{"id":"1OuI0CY3Su0q_i_INiiO_121yw4HjBXoN","short":"56"},{"id":"1kRsU4YzGNXZgrr-vH3rYpeR8qqk4GJm6","short":"57"},{"id":"10Uwr3HspjgrREwp7aHmLEFCMGwl7_Qk4","short":"58"},{"id":"1SCfmoc6Mor9CGoHP4qAsjmZaz4siW1Ru","short":"59"},{"id":"1W-_Qi3FXfwgpLyu2GYQ7HrbN_-riczuU","short":"60"},{"id":"1bKzlYjDry64JV0kp_Gys54x_OpPTPNN_","short":"61"},{"id":"1YOQKiil1YrojFT3T9xIpLdBLpMEI_5sV","short":"62"},{"id":"1xZuvEjxNaDRYRfIC1W6FiS7gErYOmbQz","short":"63"},{"id":"1C2A2rA7_0IXvRCmmn2FdC0tKt3h5zEYK","short":"64"},{"id":"12jwoQx7mNVCXIhbW-lqmP4VDAk5TMchM","short":"65"},{"id":"1GUmV-VyrbYIeYVowq5xgTBnl5jD3_VZZ","short":"66"},{"id":"1RlWoRRHNrXqDECBr77ZaJUSzscoP58Kw","short":"67"},{"id":"1zkUpnIDJtd2k3XM0Fv2WDyCS-IIONXZY","short":"68"},{"id":"16lWCLxgBy5GVDRCNug7PEJKUe3rWy_AB","short":"69"},{"id":"1O393tcgamzIWdJ-DRu2Z1Smel_vcvo0N","short":"70"},{"id":"1HtoP8d5mM-gHa0q7_7b4QFeZ98JoMXiY","short":"71"},{"id":"17-PWyGYwZxsYukSJZ1zIpyCZXZZFDcy9","short":"72"},{"id":"1cZ9jdbEWrTbTlixKT9jX5EvY-aYYoZSa","short":"73"},{"id":"17YEhq5JHQzgnjAPMU3kci6D8OFIlih75","short":"74"},{"id":"1P2-AmsdblUEbVOg8r6joNlhmtwiT2NUU","short":"75"},{"id":"1SuUBfx6KVvXdUbiLS_nhe-uXpWEHs9Hu","short":"76"},{"id":"1i1QDY_-HjoYH_h_vqCYUJZrUDN4qoBfO","short":"77"},{"id":"168STguaGguNnP9xAFhHXMp9gjw5vP6YM","short":"78"},{"id":"15sMGMWR9njEWNJDineqVwrrfCZ5ZKrdm","short":"79"},{"id":"10gwCQWe_5CnEFaBVyLco0ErDVZMjREV4","short":"80"},{"id":"1G3r0wxH_z7m1FIYncwr4QqDGicJ8J9Rs","short":"81"},{"id":"1U1qKl-dQWXWN_VQc_rk8PTq5_IvBiAop","short":"82"},{"id":"1ca-zRroP3HaojNQbAJ8-ktZmO3jU87S4","short":"83"},{"id":"1k8qkMA8jmOvAXFfcCvCp6LjlLUNwAEXl","short":"84"},{"id":"10FWaFVE9bhEporA-xbnaMjCchq58yrmB","short":"85"},{"id":"1aqSgj87t5lH5kIgagRaWf1UTndLddK-r","short":"86"},{"id":"1EcN8i4XbHvLL4brtwMrnbJR4DU7OuxQV","short":"87"},{"id":"1Yl8hBZKb1GTVcgglq9HPG4c8furEM605","short":"88"},{"id":"1HARBEtj1-8QIm6Q6UWPDJfMvylMY4zxm","short":"89"},{"id":"1BJ7L_953SJ033Jl_e97-9lKjzIqSFMBg","short":"90"},{"id":"1DqwrKOnd-tpGuLnD3V6CBGYn3eEM9TOM","short":"91"},{"id":"1dBi6nFHXZI3CQFDk0dYGSTcn1Jqn38Gr","short":"92"},{"id":"1KrsCas5iQ_wXtOKcLktj8nIWv7B0NCBr","short":"93"},{"id":"1x5JDHv_RjyXEE1nltWk9qdCulSA6bAws","short":"94"},{"id":"196Rtrmi6xHV6OIqhqI8W8OFycYi6Fz0f","short":"95"},{"id":"110DeVdtNUveVwA-xE5cQ2K_R4_IwXblt","short":"96"},{"id":"19imTv_g7tZFTrPOtdab7mHRxjI3KRojf","short":"97"},{"id":"1JHCriv57mu3fqnjP48cQKPz2NXayzJwE","short":"98"},{"id":"1ESxtKYb3kIh7G0b6iKrbZ8R3ppbUC-vZ","short":"99"},{"id":"1R69h1j5G1_X88Id4Q4B0yzaTgP0fk4D9","short":"100"},{"id":"1FsPCVrZ5832F0fLMR3fSB0LRVWqnhGJ-","short":"101"},{"id":"1rT4pY6M5GxN-8HVWcNC4HeFxRJaIU9ZO","short":"102"},{"id":"1ekcA4Y3pn1XJXVr_Zhf13aq0o7BNwZ-z","short":"103"},{"id":"1EmYLE8nA99k7cYoDjGb3R8ckyErv4fIS","new":true,"short":"104"},{"id":"1pngMKJFD_ZWaM4zdyVNl6Tk7i87Z--aO","new":true,"short":"105"},{"id":"1_R56vMcjk6Oc92du_REDB-lDiiP-VcuK","new":true,"short":"106"},{"id":"1xFRtAsoKZEa_mvuC08_eogQ0Zzf1wShL","new":true,"short":"107"},{"id":"1D3yLtq0_sMnl5fBdwRznlBoXQeeaq-Mc","new":true,"short":"108"},{"id":"1bxelc5ETLo5GNFHbmQj4nkdCIcVgCLqk","new":true,"short":"109"},{"id":"1P-OaiXUVPl2dWzQl1GmT6xi-V9HQvZey","new":true,"short":"110"},{"id":"1tfnI5_pZYs80ezN_sg4xJ92ERJ8BJfFV","new":true,"short":"111"},{"id":"19PPBXJVozjRm3WSKF58oJnwKcuCbmk63","new":true,"short":"112"},{"id":"1EJgUNP6Yc59P47el1NsYvRIZn2XeEXdL","new":true,"short":"113"},{"id":"1E5vGGFQciFz6AmyYwY_TjnpcU_D16cp4","new":true,"short":"114"},{"id":"1ZCoQiIU_-Wi_zwy3_C4dfrox5PNTfBnJ","new":true,"short":"115"},{"id":"1mt9SCU4FigAoy4kDKMP4N71BJBoenWIn","new":true,"short":"116"},{"id":"1m5rcJ3DHtp6aQhua11BAar4GxGAgx5_j","new":true,"short":"117"},{"id":"1swMc1P0Opa8kHloJvF1RhpRnMb55HGQy","new":true,"short":"118"},{"id":"1HkZaasUjdtuNa9I7mUtMFt5qCSMajv4-","new":true,"short":"119"},{"id":"13VxwiPzcILZVJaU2wgT208JS3iSlJS5K","new":true,"short":"120"},{"id":"1wNDdZEHbNFY-pDTymyHlvE4vl5k5QRor","new":true,"short":"121"},{"id":"1Jirir8zb_vEARWt-YFWm-O1snIZKDeKE","new":true,"short":"122"}]; // Owner-supplied Drive embeds only; MP4 files not copied to GitHub.
 
 const HC_REEL_LAST_KEY='heartclearLastReelV1';
 function hcRememberReel(){
@@ -4790,7 +4834,7 @@ function hcReelRender(){
  const title=document.getElementById('hcReelTitle');if(title)title.textContent='Reel';
  const caption=document.getElementById('hcReelCaption');if(caption)caption.textContent='Swipe up or down to change';
  const progress=document.getElementById('hcReelProgress');if(progress)progress.style.width='0%';
- const hint=document.getElementById('hcReelHint');if(hint)hint.textContent='Swipe ↑ / ↓ on the right edge to change reels.';
+ const hint=document.getElementById('hcReelHint');if(hint)hint.textContent='Swipe ↑ / ↓ once on either side to change reels.';
  hcReelUpdatePlayButton();
  if(hcReelAutoload)hcReelToggle();
 }
@@ -4818,7 +4862,7 @@ function hcReelToggle(){
  if(cover)cover.hidden=true;
  hcReelFrameLoaded=true;
  const hint=document.getElementById('hcReelHint');
- if(hint)hint.textContent='Swipe ↑ / ↓ on the right edge to change reels.';
+ if(hint)hint.textContent='Swipe ↑ / ↓ once on either side to change reels.';
  hcReelUpdatePlayButton();
 }
 {
@@ -4831,28 +4875,39 @@ function hcReelToggle(){
    if(delta<-55)hcReelNext();else if(delta>55)hcReelPrevious();
   },{passive:true});
  }
- // The Drive iframe is cross-origin: it cannot deliver swipes to the parent.
- // Reserve a narrow right-edge gesture zone without blocking central playback.
- // Drive's iframe is cross-origin. Keep a sizeable swipe gesture zone on BOTH edges
- // so the central player remains available for native Play/Pause controls.
- for(const rail of [document.getElementById('hcReelSwipeRail')]){
-  if(!rail)continue;
-  let startY=null,lastStep=0;
-  rail.addEventListener('touchstart',event=>{
-   if(event.touches.length===1)startY=event.touches[0].clientY;
+ // Google Drive owns touch inside its cross-origin iframe. Two generous
+ // side swipe lanes leave the middle unobstructed for video playback controls.
+ // One clean vertical gesture changes exactly one original reel.
+ for(const zone of [document.getElementById('hcReelSwipeLeft'),document.getElementById('hcReelSwipeRail')]){
+  if(!zone)continue;
+  let start=null;
+  zone.addEventListener('touchstart',event=>{
+   if(event.touches.length!==1){start=null;return}
+   const t=event.touches[0];
+   start={x:t.clientX,y:t.clientY,time:Date.now()};
   },{passive:true});
-  rail.addEventListener('touchend',event=>{
-   if(startY===null||!event.changedTouches.length)return;
-   const delta=event.changedTouches[0].clientY-startY;startY=null;
-   const now=Date.now();if(now-lastStep<450)return;
-   if(delta<-45){lastStep=now;hcReelLastSwipeAt=now;hcReelNext()}
-   else if(delta>45){lastStep=now;hcReelLastSwipeAt=now;hcReelPrevious()}
-   event.stopPropagation();
-  },{passive:true});
-  rail.addEventListener('wheel',event=>{
-   if(currentScreenId!=='hcReels'||Math.abs(event.deltaY)<25)return;
+  zone.addEventListener('touchmove',event=>{
+   if(!start||event.touches.length!==1)return;
+   const t=event.touches[0],dy=t.clientY-start.y,dx=t.clientX-start.x;
+   if(Math.abs(dy)>10&&Math.abs(dy)>Math.abs(dx)*1.15)event.preventDefault();
+  },{passive:false});
+  zone.addEventListener('touchcancel',()=>{start=null},{passive:true});
+  zone.addEventListener('touchend',event=>{
+   if(!start||!event.changedTouches.length){start=null;return}
+   const t=event.changedTouches[0],dy=t.clientY-start.y,dx=t.clientX-start.x;
+   const elapsed=Date.now()-start.time;start=null;
+   if(Math.abs(dy)<35||Math.abs(dy)<Math.abs(dx)*1.2||elapsed>1500)return;
+   const now=Date.now();
+   if(now-hcReelLastSwipeAt<340)return;
+   hcReelLastSwipeAt=now;
+   event.preventDefault();event.stopPropagation();
+   if(dy<0)hcReelNext();else hcReelPrevious();
+  },{passive:false});
+  zone.addEventListener('wheel',event=>{
+   if(currentScreenId!=='hcReels'||Math.abs(event.deltaY)<24)return;
    event.preventDefault();
-   const now=Date.now();if(now-lastStep<600)return;lastStep=now;
+   const now=Date.now();if(now-hcReelLastSwipeAt<450)return;
+   hcReelLastSwipeAt=now;
    if(event.deltaY>0)hcReelNext();else hcReelPrevious();
   },{passive:false});
  }
@@ -4870,7 +4925,43 @@ window.addEventListener('pagehide',()=>{
  if(currentScreenId==='hcReels')hcMarkCurrentReelSeen();
 });
 
+function hcToggleTopSettings(){
+  if(currentScreenId==='settings'){
+    const previous=document.getElementById(hcSettingsReturnScreen)?.classList.contains('screen')
+      && hcSettingsReturnScreen!=='settings' ? hcSettingsReturnScreen : 'home';
+    const scrollY=hcSettingsReturnScrollY;
+    show(previous);
+    requestAnimationFrame(()=>window.scrollTo(0,scrollY));
+    return;
+  }
+  show('settings');
+}
+
+function hcBackFromHistory(){
+  const previous=document.getElementById(hcHistoryReturnScreen)?.classList.contains('screen')
+    && hcHistoryReturnScreen!=='history' ? hcHistoryReturnScreen : 'home';
+  if(previous==='settings'){
+    // Keep the original Settings return destination rather than creating a Settings/History loop.
+    const prior=hcSettingsReturnScreen, scroll=hcSettingsReturnScrollY;
+    show('settings');
+    hcSettingsReturnScreen=prior;hcSettingsReturnScrollY=scroll;
+  }else{
+    show(previous);
+  }
+}
+
 function show(id){
+  if(id==='history' && currentScreenId!=='history'){
+    hcHistoryReturnScreen=document.getElementById(currentScreenId)?.classList.contains('screen')
+      ? currentScreenId : 'home';
+  }
+  // Save the actual previous route and scroll position whenever Settings opens,
+  // including through bottom More. Do not reset audio or session state.
+  if(id==='settings' && currentScreenId!=='settings'){
+    hcSettingsReturnScreen=document.getElementById(currentScreenId)?.classList.contains('screen')
+      ? currentScreenId : 'home';
+    hcSettingsReturnScrollY=window.scrollY||0;
+  }
   // Google Drive embeds have no reliable external Pause control.
   // Close archived video playback when navigating; never leave a large floating player.
   if(id!=='hcDriveMedia' && hcDriveActiveKey)hcStopDriveVideo(true);
@@ -4933,6 +5024,13 @@ function show(id){
     settings:'Settings'
   }[id]||'';
   const ctx=document.getElementById('topContext'); if(ctx)ctx.textContent=context;
+  const settingsAction=document.getElementById('hcTopSettingsAction');
+  if(settingsAction){
+    const settingsOpen=id==='settings';
+    settingsAction.textContent=settingsOpen?'×':'⋯';
+    settingsAction.setAttribute('aria-label',settingsOpen?'Close settings and return to previous page':'Open settings');
+    settingsAction.title=settingsOpen?'Back to previous page':'Open settings';
+  }
 
   const navMap={
     home:'home',
@@ -5358,9 +5456,9 @@ function hcSyncInlineAudioButtons(){
   document.querySelectorAll('[data-inline-audio]').forEach(btn=>{
     const key=btn.dataset.inlineAudio;
     const playing=currentSoundKey===key&&!soundLabAudio.paused&&!!soundLabAudio.getAttribute('src');
-    const ico=btn.querySelector('.hc-simple-play,.soundlab-icon,.hc-art-center');
+    const ico=btn.querySelector('.hc-simple-play,.soundlab-icon,.hc-art-center,.hc-sacred-quick-icon');
     if(ico)ico.textContent=playing?'Ⅱ':'▶';
-    const caption=btn.querySelector('.soundlab-duration,.duration');
+    const caption=btn.querySelector('.soundlab-duration,.duration,.hc-sacred-quick-status');
     if(caption)caption.textContent=playing?'Pause':'Play';
     btn.setAttribute('aria-pressed',String(playing));
   });
@@ -5439,7 +5537,7 @@ function hcRenderMiniLibrary(){
           hcPlayQuranSurah(Number(item.key.slice(7)));
         }else hcPlaySoundFromRow(item.key);
         hcMiniPinnedKey='soundlab';renderGlobalMini();
-      }else if(item.kind==='gita')window.hcOpenGitaVoice?.(1);
+      }else if(item.kind==='gita')window.hcGitaHomeToggle?.(1);
       else if(item.kind==='practice')item.el.click();
       else openHcDriveMedia(item.key);
     });
@@ -5556,7 +5654,7 @@ function stopGlobalMedia(){
 
 function openActiveMediaPlayer(){
   const state=getActiveMediaState();
-  if(state?.key==='gita'){show('sacredDetail');return;}
+  if(state?.key==='gita'){show('home');document.getElementById('hcHinduHome')?.scrollIntoView({block:'center',behavior:'smooth'});return;}
   if(state?.key==='genesis'){show('home');return;}
   if(state?.key==='quran-meaning'){show('home');return;}
   if(state?.key==='soundlab'&&currentSoundKey==='allahuAkmal'){show('home');return;}
@@ -5813,7 +5911,6 @@ function setFearMediaSession(){
 
 function finishFearPractice(){
   const heardSeconds=Math.max(0,Number(fearAudio.currentTime)||0);
-  // Do not record zero-audio visits as completed listening sessions.
   if(heardSeconds<1){
     const status=document.getElementById('fearAudioStatus');
     if(status)status.textContent='Press Play and listen before saving your session.';
@@ -6274,8 +6371,7 @@ function renderBookShelf(lang){
     '<p class="hub-note">Shadows of Truth has 61 verified numbered chapters. Only the listed voice recordings are currently available in HeartClear. The remaining chapters are being prepared; no extra chapter or recording is invented.</p>'+ 
     '<div class="book-shelf">'+chapterRows+'</div>'+
     '<div class="book-actions">'+
-      '<button onclick="openBookReader(\''+(isTamil?'ta':'en')+'\')">Read</button>'+
-      '<button class="primary" onclick="openBookAudio(\''+(isTamil?'ta':'en')+'\',1)">Start Chapter 1</button>'+
+            '<button class="primary" onclick="openBookAudio(\''+(isTamil?'ta':'en')+'\',1)">Start Chapter 1</button>'+
     '</div>'+
   '</div>';
 }
@@ -6464,7 +6560,7 @@ function setBookMediaSession(){
   }catch(e){}
 }
 
-const soundLabTracks={"allahuAkmal":{"title":"Allahu Hu · Breath Reflection — Akmal","duration":1472.484,"url":"./media/voice/Allahu_Hu_Breath_Reflection_Akmal.m4a","desc":"24:32 · Akmal · Devotional listening"},"organicBansuri":{"title":"Natural Bansuri · Nepal","duration":474,"url":"https://upload.wikimedia.org/wikipedia/commons/transcoded/5/50/%E0%A4%AC%E0%A4%BE%E0%A4%81%E0%A4%B8%E0%A5%81%E0%A4%B0%E0%A5%80%E0%A4%95%E0%A5%8B_%E0%A4%A7%E0%A5%81%E0%A4%A8_Basuri.ogg/%E0%A4%AC%E0%A4%BE%E0%A4%81%E0%A4%B8%E0%A5%81%E0%A4%B0%E0%A5%80%E0%A4%95%E0%A5%8B_%E0%A4%A7%E0%A5%81%E0%A4%A8_Basuri.ogg.mp3","originalUrl":"https://upload.wikimedia.org/wikipedia/commons/5/50/%E0%A4%AC%E0%A4%BE%E0%A4%81%E0%A4%B8%E0%A5%81%E0%A4%B0%E0%A5%80%E0%A4%95%E0%A5%8B_%E0%A4%A7%E0%A5%81%E0%A4%A8_Basuri.ogg","sourcePage":"https://commons.wikimedia.org/wiki/File:%E0%A4%AC%E0%A4%BE%E0%A4%81%E0%A4%B8%E0%A5%81%E0%A4%B0%E0%A5%80%E0%A4%95%E0%A5%8B_%E0%A4%A7%E0%A5%81%E0%A4%A8_Basuri.ogg","creator":"Learnerktm","license":"CC0 1.0","desc":"7:54 · community bansuri performance (Nepal, 2014) · CC0"},"horizon":{"title":"Horizon","duration":420,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/1e7ed74c-05be-4554-af16-152684e0bad5.mp3","desc":"7 min · slow ambient field"},"mantra":{"title":"Mantra Bed","duration":480,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/24c10e62-fbde-483b-bb36-5646c5715d2d.mp3","desc":"8 min · steady chant background"},"deep":{"title":"Deep Stillness","duration":1020,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/e13e7587-23c0-408a-9f0c-b75177ce8fbe.mp3","desc":"17 min · long quiet ambient"},"nature":{"title":"Nature Weave","duration":180,"url":"","desc":"3 min · birds, streams, ocean, wind and fire"},"birds":{"title":"Birdsong","duration":245,"url":"./media/cc0-nature/birds_original.mp3","desc":"4:05 · morning birds · CC0","originalUrl":"https://bigsoundbank.com/UPLOAD/mp3/0999.mp3","urlLow":"./media/cc0-nature/birds_96k.m4a","sourcePage":"https://bigsoundbank.com/UPLOAD/mp3/0999.mp3","creator":"BigSoundBank / Joseph SARDIN","license":"CC0 1.0 (free and royalty-free source)"},"fire":{"title":"Fire Crackling","duration":60,"url":"./media/cc0-nature/fire_original.mp3","desc":"1:00 · natural fireplace · CC0","originalUrl":"https://bigsoundbank.com/UPLOAD/mp3/0031.mp3","urlLow":"./media/cc0-nature/fire_96k.m4a","sourcePage":"https://bigsoundbank.com/UPLOAD/mp3/0031.mp3","creator":"BigSoundBank / Joseph SARDIN","license":"CC0 1.0 (free and royalty-free source)"},"rain":{"title":"Rain","duration":78,"url":"./media/cc0-nature/rain_original.mp3","desc":"1:18 · natural rainfall · CC0","originalUrl":"https://bigsoundbank.com/UPLOAD/mp3/1290.mp3","urlLow":"./media/cc0-nature/rain_96k.m4a","sourcePage":"https://bigsoundbank.com/UPLOAD/mp3/1290.mp3","creator":"BigSoundBank / Joseph SARDIN","license":"CC0 1.0 (free and royalty-free source)"},"ocean":{"title":"Ocean","duration":167,"url":"./media/cc0-nature/ocean_original.mp3","desc":"2:47 · ocean waves · CC0","originalUrl":"https://bigsoundbank.com/UPLOAD/mp3/0698.mp3","urlLow":"./media/cc0-nature/ocean_96k.m4a","sourcePage":"https://bigsoundbank.com/UPLOAD/mp3/0698.mp3","creator":"BigSoundBank / Joseph SARDIN","license":"CC0 1.0 (free and royalty-free source)"},"storm":{"title":"Storm","duration":158,"url":"./media/cc0-nature/storm_original.mp3","desc":"2:38 · rain and thunder · CC0","originalUrl":"https://bigsoundbank.com/UPLOAD/mp3/0740.mp3","urlLow":"./media/cc0-nature/storm_96k.m4a","sourcePage":"https://bigsoundbank.com/UPLOAD/mp3/0740.mp3","creator":"BigSoundBank / Joseph SARDIN","license":"CC0 1.0 (free and royalty-free source)"},"thunder":{"title":"Distant Thunder","duration":42,"url":"./media/cc0-nature/thunder_original.mp3","desc":"0:42 · distant thunder · CC0","originalUrl":"https://bigsoundbank.com/UPLOAD/mp3/3181.mp3","urlLow":"./media/cc0-nature/thunder_96k.m4a","sourcePage":"https://bigsoundbank.com/UPLOAD/mp3/3181.mp3","creator":"BigSoundBank / Joseph SARDIN","license":"CC0 1.0 (free and royalty-free source)"},"stillness2":{"title":"Deep Sleep Stillness","duration":120,"url":"./media/HeartClear_DeepSleep_Stillness_2min_PREVIEW.mp3","desc":"2 min · gentle closing music"},"foreststream":{"title":"Forest Stream","duration":300,"url":"./media/cc0-nature/foreststream_original.mp3","desc":"5:00 · forest stream · CC0","originalUrl":"https://bigsoundbank.com/UPLOAD/mp3/2713.mp3","urlLow":"./media/cc0-nature/foreststream_96k.m4a","sourcePage":"https://bigsoundbank.com/UPLOAD/mp3/2713.mp3","creator":"BigSoundBank / Joseph SARDIN","license":"CC0 1.0 (free and royalty-free source)"},"treewind":{"title":"Wind in a Tree","duration":115,"url":"./media/cc0-nature/treewind_original.mp3","desc":"1:55 · wind in a tree · CC0","originalUrl":"https://bigsoundbank.com/UPLOAD/mp3/0659.mp3","urlLow":"./media/cc0-nature/treewind_96k.m4a","sourcePage":"https://bigsoundbank.com/UPLOAD/mp3/0659.mp3","creator":"BigSoundBank / Joseph SARDIN","license":"CC0 1.0 (free and royalty-free source)"},"windfield":{"title":"Wind in a Field","duration":204,"url":"./media/cc0-nature/windfield_original.mp3","desc":"3:24 · field wind · CC0","originalUrl":"https://bigsoundbank.com/UPLOAD/mp3/1097.mp3","urlLow":"./media/cc0-nature/windfield_96k.m4a","sourcePage":"https://bigsoundbank.com/UPLOAD/mp3/1097.mp3","creator":"BigSoundBank / Joseph SARDIN","license":"CC0 1.0 (free and royalty-free source)"},"nightforest":{"title":"Forest After Rain","duration":29,"url":"./media/cc0-nature/nightforest_original.mp3","desc":"0:29 · night forest ambience · CC0","originalUrl":"https://bigsoundbank.com/UPLOAD/mp3/0555.mp3","urlLow":"./media/cc0-nature/nightforest_96k.m4a","sourcePage":"https://bigsoundbank.com/UPLOAD/mp3/0555.mp3","creator":"BigSoundBank / Joseph SARDIN","license":"CC0 1.0 (free and royalty-free source)"},"countryside":{"title":"Countryside","duration":112,"url":"./media/cc0-nature/countryside_original.mp3","desc":"1:52 · birds, wind and insects · CC0","originalUrl":"https://bigsoundbank.com/UPLOAD/mp3/0097.mp3","urlLow":"./media/cc0-nature/countryside_96k.m4a","sourcePage":"https://bigsoundbank.com/UPLOAD/mp3/0097.mp3","creator":"BigSoundBank / Joseph SARDIN","license":"CC0 1.0 (free and royalty-free source)"},"frogswater":{"title":"Frogs & Waterfall","duration":149,"url":"./media/cc0-nature/frogswater_original.mp3","desc":"2:29 · frogs and distant waterfall · CC0","originalUrl":"https://bigsoundbank.com/UPLOAD/mp3/0998.mp3","urlLow":"./media/cc0-nature/frogswater_96k.m4a","sourcePage":"https://bigsoundbank.com/UPLOAD/mp3/0998.mp3","creator":"BigSoundBank / Joseph SARDIN","license":"CC0 1.0 (free and royalty-free source)"},"bansuri7":{"title":"Organic Bansuri · 7 min","duration":420,"url":"./media/HeartClear_Organic_Bansuri_7min_192k.mp3","urlLow":"./media/HeartClear_Organic_Bansuri_7min_96k.m4a","creator":"Learnerktm","license":"CC0 1.0","sourcePage":"https://commons.wikimedia.org/wiki/File:%E0%A4%AC%E0%A4%BE%E0%A4%81%E0%A4%B8%E0%A5%81%E0%A4%B0%E0%A5%80%E0%A4%95%E0%A5%8B_%E0%A4%A7%E0%A5%81%E0%A4%A8_Basuri.ogg","desc":"Original acoustic bansuri · edited 7-minute listening version · CC0; source 7:53"},"bansuri10":{"title":"Organic Bansuri · 10 min","duration":600,"url":"./media/HeartClear_Organic_Bansuri_10min_192k.mp3","urlLow":"./media/HeartClear_Organic_Bansuri_10min_96k.m4a","creator":"Learnerktm","license":"CC0 1.0","sourcePage":"https://commons.wikimedia.org/wiki/File:%E0%A4%AC%E0%A4%BE%E0%A4%81%E0%A4%B8%E0%A5%81%E0%A4%B0%E0%A5%80%E0%A4%95%E0%A5%8B_%E0%A4%A7%E0%A5%81%E0%A4%A8_Basuri.ogg","desc":"Original acoustic bansuri · edited 10-minute listening version · CC0; source 7:53"},"bansuri15":{"title":"Organic Bansuri · 15 min","duration":900,"url":"./media/HeartClear_Organic_Bansuri_15min_192k.mp3","urlLow":"./media/HeartClear_Organic_Bansuri_15min_96k.m4a","creator":"Learnerktm","license":"CC0 1.0","sourcePage":"https://commons.wikimedia.org/wiki/File:%E0%A4%AC%E0%A4%BE%E0%A4%81%E0%A4%B8%E0%A5%81%E0%A4%B0%E0%A5%80%E0%A4%95%E0%A5%8B_%E0%A4%A7%E0%A5%81%E0%A4%A8_Basuri.ogg","desc":"Original acoustic bansuri · edited 15-minute listening version · CC0; source 7:53"},"forestRambouillet":{"title":"Rambouillet Forest","duration":153,"url":"https://bigsoundbank.com/UPLOAD/mp3/0136.mp3","desc":"2:33 · French forest birds and breeze · CC0","sourcePage":"https://bigsoundbank.com/rambouillet-forest-s0136.html","creator":"Joseph SARDIN / BigSoundBank","license":"CC0 1.0"},"forestFour":{"title":"Forest · Birds & Wind","duration":226,"url":"https://bigsoundbank.com/UPLOAD/mp3/2749.mp3","desc":"3:46 · birds, wind and woodland ambience · CC0","sourcePage":"https://bigsoundbank.com/forest-4-s2749.html","creator":"Joseph SARDIN / BigSoundBank","license":"CC0 1.0"},"dudukApril":{"title":"Duduk · April Improvisation","duration":177,"url":"https://upload.wikimedia.org/wikipedia/commons/transcoded/c/cc/SERGO.TEL_-_April_-_duduk-improvisation2.ogg/SERGO.TEL_-_April_-_duduk-improvisation2.ogg.mp3","originalUrl":"https://upload.wikimedia.org/wikipedia/commons/c/cc/SERGO.TEL_-_April_-_duduk-improvisation2.ogg","sourcePage":"https://commons.wikimedia.org/wiki/File:SERGO.TEL_-_April_-_duduk-improvisation2.ogg","creator":"SERGO.TEL","license":"CC BY 3.0","desc":"2:57 · genuine duduk instrumental · original work by SERGO.TEL; not the Echoes video"},"dudukFolk":{"title":"Armenian Duduk · Folk","duration":83,"url":"https://upload.wikimedia.org/wikipedia/commons/transcoded/7/7c/Sound_of_Armenian_Duduk.ogg/Sound_of_Armenian_Duduk.ogg.mp3","originalUrl":"https://upload.wikimedia.org/wikipedia/commons/7/7c/Sound_of_Armenian_Duduk.ogg","sourcePage":"https://commons.wikimedia.org/wiki/File:Sound_of_Armenian_Duduk.ogg","creator":"I. Mazia (Wikimedia Commons)","license":"CC BY-SA 4.0","desc":"1:23 · Armenian folk duduk · separate performance, not the Echoes video"}};
+const soundLabTracks={"allahuAkmal":{"title":"Allahu Hu · Breath Reflection — Akmal","duration":1472.484,"url":"./media/voice/Allahu_Hu_Breath_Reflection_Akmal.m4a","desc":"24:32 · Akmal · Devotional listening"},"organicBansuri":{"title":"Natural Bansuri · Nepal","duration":474,"url":"./media/sources/HeartClear_Nepal_Bansuri_Learnerktm_CC0.ogg","audioFallbackUrl":"https://upload.wikimedia.org/wikipedia/commons/transcoded/5/50/%E0%A4%AC%E0%A4%BE%E0%A4%81%E0%A4%B8%E0%A5%81%E0%A4%B0%E0%A5%80%E0%A4%95%E0%A5%8B_%E0%A4%A7%E0%A5%81%E0%A4%A8_Basuri.ogg/%E0%A4%AC%E0%A4%BE%E0%A4%81%E0%A4%B8%E0%A5%81%E0%A4%B0%E0%A5%80%E0%A4%95%E0%A5%8B_%E0%A4%A7%E0%A5%81%E0%A4%A8_Basuri.ogg.mp3","originalUrl":"https://upload.wikimedia.org/wikipedia/commons/5/50/%E0%A4%AC%E0%A4%BE%E0%A4%81%E0%A4%B8%E0%A5%81%E0%A4%B0%E0%A5%80%E0%A4%95%E0%A5%8B_%E0%A4%A7%E0%A5%81%E0%A4%A8_Basuri.ogg","sourcePage":"https://commons.wikimedia.org/wiki/File:%E0%A4%AC%E0%A4%BE%E0%A4%81%E0%A4%B8%E0%A5%81%E0%A4%B0%E0%A5%80%E0%A4%95%E0%A5%8B_%E0%A4%A7%E0%A5%81%E0%A4%A8_Basuri.ogg","creator":"Learnerktm","license":"CC0 1.0","desc":"7:54 · community bansuri performance (Nepal, 2014) · CC0"},"horizon":{"title":"Horizon","duration":420,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/1e7ed74c-05be-4554-af16-152684e0bad5.mp3","desc":"7 min · slow ambient field"},"mantra":{"title":"Mantra Bed","duration":480,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/24c10e62-fbde-483b-bb36-5646c5715d2d.mp3","desc":"8 min · steady chant background"},"deep":{"title":"Deep Stillness","duration":1020,"url":"https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/e13e7587-23c0-408a-9f0c-b75177ce8fbe.mp3","desc":"17 min · long quiet ambient"},"nature":{"title":"Nature Weave","duration":180,"url":"","desc":"3 min · birds, streams, ocean, wind and fire"},"birds":{"title":"Birdsong","duration":245,"url":"./media/cc0-nature/birds_original.mp3","desc":"4:05 · morning birds · CC0","originalUrl":"https://bigsoundbank.com/UPLOAD/mp3/0999.mp3","urlLow":"./media/cc0-nature/birds_96k.m4a","sourcePage":"https://bigsoundbank.com/UPLOAD/mp3/0999.mp3","creator":"BigSoundBank / Joseph SARDIN","license":"CC0 1.0 (free and royalty-free source)"},"fire":{"title":"Fire Crackling","duration":60,"url":"./media/cc0-nature/fire_original.mp3","desc":"1:00 · natural fireplace · CC0","originalUrl":"https://bigsoundbank.com/UPLOAD/mp3/0031.mp3","urlLow":"./media/cc0-nature/fire_96k.m4a","sourcePage":"https://bigsoundbank.com/UPLOAD/mp3/0031.mp3","creator":"BigSoundBank / Joseph SARDIN","license":"CC0 1.0 (free and royalty-free source)"},"rain":{"title":"Rain","duration":78,"url":"./media/cc0-nature/rain_original.mp3","desc":"1:18 · natural rainfall · CC0","originalUrl":"https://bigsoundbank.com/UPLOAD/mp3/1290.mp3","urlLow":"./media/cc0-nature/rain_96k.m4a","sourcePage":"https://bigsoundbank.com/UPLOAD/mp3/1290.mp3","creator":"BigSoundBank / Joseph SARDIN","license":"CC0 1.0 (free and royalty-free source)"},"ocean":{"title":"Ocean","duration":167,"url":"./media/cc0-nature/ocean_original.mp3","desc":"2:47 · ocean waves · CC0","originalUrl":"https://bigsoundbank.com/UPLOAD/mp3/0698.mp3","urlLow":"./media/cc0-nature/ocean_96k.m4a","sourcePage":"https://bigsoundbank.com/UPLOAD/mp3/0698.mp3","creator":"BigSoundBank / Joseph SARDIN","license":"CC0 1.0 (free and royalty-free source)"},"storm":{"title":"Storm","duration":158,"url":"./media/cc0-nature/storm_original.mp3","desc":"2:38 · rain and thunder · CC0","originalUrl":"https://bigsoundbank.com/UPLOAD/mp3/0740.mp3","urlLow":"./media/cc0-nature/storm_96k.m4a","sourcePage":"https://bigsoundbank.com/UPLOAD/mp3/0740.mp3","creator":"BigSoundBank / Joseph SARDIN","license":"CC0 1.0 (free and royalty-free source)"},"thunder":{"title":"Distant Thunder","duration":42,"url":"./media/cc0-nature/thunder_original.mp3","desc":"0:42 · distant thunder · CC0","originalUrl":"https://bigsoundbank.com/UPLOAD/mp3/3181.mp3","urlLow":"./media/cc0-nature/thunder_96k.m4a","sourcePage":"https://bigsoundbank.com/UPLOAD/mp3/3181.mp3","creator":"BigSoundBank / Joseph SARDIN","license":"CC0 1.0 (free and royalty-free source)"},"stillness2":{"title":"Deep Sleep Stillness","duration":120,"url":"./media/HeartClear_DeepSleep_Stillness_2min_PREVIEW.mp3","desc":"2 min · gentle closing music"},"foreststream":{"title":"Forest Stream","duration":300,"url":"./media/cc0-nature/foreststream_original.mp3","desc":"5:00 · forest stream · CC0","originalUrl":"https://bigsoundbank.com/UPLOAD/mp3/2713.mp3","urlLow":"./media/cc0-nature/foreststream_96k.m4a","sourcePage":"https://bigsoundbank.com/UPLOAD/mp3/2713.mp3","creator":"BigSoundBank / Joseph SARDIN","license":"CC0 1.0 (free and royalty-free source)"},"treewind":{"title":"Wind in a Tree","duration":115,"url":"./media/cc0-nature/treewind_original.mp3","desc":"1:55 · wind in a tree · CC0","originalUrl":"https://bigsoundbank.com/UPLOAD/mp3/0659.mp3","urlLow":"./media/cc0-nature/treewind_96k.m4a","sourcePage":"https://bigsoundbank.com/UPLOAD/mp3/0659.mp3","creator":"BigSoundBank / Joseph SARDIN","license":"CC0 1.0 (free and royalty-free source)"},"windfield":{"title":"Wind in a Field","duration":204,"url":"./media/cc0-nature/windfield_original.mp3","desc":"3:24 · field wind · CC0","originalUrl":"https://bigsoundbank.com/UPLOAD/mp3/1097.mp3","urlLow":"./media/cc0-nature/windfield_96k.m4a","sourcePage":"https://bigsoundbank.com/UPLOAD/mp3/1097.mp3","creator":"BigSoundBank / Joseph SARDIN","license":"CC0 1.0 (free and royalty-free source)"},"nightforest":{"title":"Forest After Rain","duration":29,"url":"./media/cc0-nature/nightforest_original.mp3","desc":"0:29 · night forest ambience · CC0","originalUrl":"https://bigsoundbank.com/UPLOAD/mp3/0555.mp3","urlLow":"./media/cc0-nature/nightforest_96k.m4a","sourcePage":"https://bigsoundbank.com/UPLOAD/mp3/0555.mp3","creator":"BigSoundBank / Joseph SARDIN","license":"CC0 1.0 (free and royalty-free source)"},"countryside":{"title":"Countryside","duration":112,"url":"./media/cc0-nature/countryside_original.mp3","desc":"1:52 · birds, wind and insects · CC0","originalUrl":"https://bigsoundbank.com/UPLOAD/mp3/0097.mp3","urlLow":"./media/cc0-nature/countryside_96k.m4a","sourcePage":"https://bigsoundbank.com/UPLOAD/mp3/0097.mp3","creator":"BigSoundBank / Joseph SARDIN","license":"CC0 1.0 (free and royalty-free source)"},"frogswater":{"title":"Frogs & Waterfall","duration":149,"url":"./media/cc0-nature/frogswater_original.mp3","desc":"2:29 · frogs and distant waterfall · CC0","originalUrl":"https://bigsoundbank.com/UPLOAD/mp3/0998.mp3","urlLow":"./media/cc0-nature/frogswater_96k.m4a","sourcePage":"https://bigsoundbank.com/UPLOAD/mp3/0998.mp3","creator":"BigSoundBank / Joseph SARDIN","license":"CC0 1.0 (free and royalty-free source)"},"bansuri7":{"title":"Organic Bansuri · 7 min","duration":420,"url":"./media/HeartClear_Organic_Bansuri_7min_192k.mp3","urlLow":"./media/HeartClear_Organic_Bansuri_7min_96k.m4a","creator":"Learnerktm","license":"CC0 1.0","sourcePage":"https://commons.wikimedia.org/wiki/File:%E0%A4%AC%E0%A4%BE%E0%A4%81%E0%A4%B8%E0%A5%81%E0%A4%B0%E0%A5%80%E0%A4%95%E0%A5%8B_%E0%A4%A7%E0%A5%81%E0%A4%A8_Basuri.ogg","desc":"Original acoustic bansuri · edited 7-minute listening version · CC0; source 7:53"},"bansuri10":{"title":"Organic Bansuri · 10 min","duration":600,"url":"./media/HeartClear_Organic_Bansuri_10min_192k.mp3","urlLow":"./media/HeartClear_Organic_Bansuri_10min_96k.m4a","creator":"Learnerktm","license":"CC0 1.0","sourcePage":"https://commons.wikimedia.org/wiki/File:%E0%A4%AC%E0%A4%BE%E0%A4%81%E0%A4%B8%E0%A5%81%E0%A4%B0%E0%A5%80%E0%A4%95%E0%A5%8B_%E0%A4%A7%E0%A5%81%E0%A4%A8_Basuri.ogg","desc":"Original acoustic bansuri · edited 10-minute listening version · CC0; source 7:53"},"bansuri15":{"title":"Organic Bansuri · 15 min","duration":900,"url":"./media/HeartClear_Organic_Bansuri_15min_192k.mp3","urlLow":"./media/HeartClear_Organic_Bansuri_15min_96k.m4a","creator":"Learnerktm","license":"CC0 1.0","sourcePage":"https://commons.wikimedia.org/wiki/File:%E0%A4%AC%E0%A4%BE%E0%A4%81%E0%A4%B8%E0%A5%81%E0%A4%B0%E0%A5%80%E0%A4%95%E0%A5%8B_%E0%A4%A7%E0%A5%81%E0%A4%A8_Basuri.ogg","desc":"Original acoustic bansuri · edited 15-minute listening version · CC0; source 7:53"},"forestRambouillet":{"title":"Rambouillet Forest","duration":153,"url":"https://bigsoundbank.com/UPLOAD/mp3/0136.mp3","desc":"2:33 · French forest birds and breeze · CC0","sourcePage":"https://bigsoundbank.com/rambouillet-forest-s0136.html","creator":"Joseph SARDIN / BigSoundBank","license":"CC0 1.0"},"forestFour":{"title":"Forest · Birds & Wind","duration":226,"url":"https://bigsoundbank.com/UPLOAD/mp3/2749.mp3","desc":"3:46 · birds, wind and woodland ambience · CC0","sourcePage":"https://bigsoundbank.com/forest-4-s2749.html","creator":"Joseph SARDIN / BigSoundBank","license":"CC0 1.0"},"dudukApril":{"title":"Duduk · April Improvisation","duration":177,"url":"https://upload.wikimedia.org/wikipedia/commons/transcoded/c/cc/SERGO.TEL_-_April_-_duduk-improvisation2.ogg/SERGO.TEL_-_April_-_duduk-improvisation2.ogg.mp3","originalUrl":"https://upload.wikimedia.org/wikipedia/commons/c/cc/SERGO.TEL_-_April_-_duduk-improvisation2.ogg","sourcePage":"https://commons.wikimedia.org/wiki/File:SERGO.TEL_-_April_-_duduk-improvisation2.ogg","creator":"SERGO.TEL","license":"CC BY 3.0","desc":"2:57 · genuine duduk instrumental · original work by SERGO.TEL; not the Echoes video"},"dudukFolk":{"title":"Armenian Duduk · Folk","duration":83,"url":"https://upload.wikimedia.org/wikipedia/commons/transcoded/7/7c/Sound_of_Armenian_Duduk.ogg/Sound_of_Armenian_Duduk.ogg.mp3","originalUrl":"https://upload.wikimedia.org/wikipedia/commons/7/7c/Sound_of_Armenian_Duduk.ogg","sourcePage":"https://commons.wikimedia.org/wiki/File:Sound_of_Armenian_Duduk.ogg","creator":"I. Mazia (Wikimedia Commons)","license":"CC BY-SA 4.0","desc":"1:23 · Armenian folk duduk · separate performance, not the Echoes video"}};
 let currentSoundKey='horizon';
 const soundLabAudio=document.getElementById('soundLabAudio');
 const soundLabSeek=document.getElementById('soundLabSeek');
@@ -6540,34 +6636,68 @@ bookSeek.addEventListener('input',()=>{
 window.addEventListener('pagehide',saveBookBookmark);
 document.addEventListener('visibilitychange',()=>{if(document.hidden)saveBookBookmark()});
 
+function hcReadingBookCard(book,lang){
+  const cover=book.cover?'<img src="'+book.cover+'" alt="'+book.title+' original cover" width="104" height="156" loading="lazy" decoding="async">':'';
+  const review=book.review?'<small style="display:block;margin-top:6px">Reading review · proofreading pending</small>':'';
+  return '<div class="hc-human-reading-entry" lang="'+lang+'">'+cover+
+    '<div class="hc-human-reading-copy">'+
+    '<div class="kicker">'+book.label+'</div>'+
+    '<h3>'+book.title+'</h3>'+
+    '<p>'+book.details+'</p>'+
+    '<a href="'+book.href+'" class="hc-human-reading-link">'+(lang==='ta'?'புத்தகத்தை வாசிக்க ›':lang==='si'?'පොත කියවන්න ›':'Read book ›')+'</a>'+review+
+    '</div></div>';
+}
+function hcReadingBookShelf(language){
+  const back='<button class="collection-back" type="button" onclick="openCollection(\'readingLanguages\')">‹ Reading languages</button>';
+  const items={
+    en:[
+      {label:'BOOK ONE · ENGLISH',title:'Shadows of Truth — A Memoir of Mind vs Body',details:'Complete memoir text · English edition',cover:'./books/shadows-of-truth-cover.jpg',href:'./books/shadows-of-truth-reader.html?lang=en'},
+      {label:'BOOK TWO · ENGLISH',title:'HUMAN — WHEN YOU ARE ALONE',details:'27 chapters · English Reader 1.5',cover:'./books/human-cover.svg',href:'./books/human-when-you-are-alone.html',review:true}
+    ],
+    ta:[
+      {label:'BOOK ONE · தமிழ்',title:'உண்மையின் நிழல்கள்',details:'மனம் vs உடல் · முழு தமிழ் வாசிப்பு · 60 அத்தியாயங்கள்',cover:'./books/shadows-of-truth-cover.jpg',href:'./books/shadows-of-truth-reader.html?lang=ta'},
+      {label:'BOOK TWO · புதிய தமிழ் பதிப்பு',title:'மனிதன் — நீ தனியாக இருக்கும்போது',details:'27 அத்தியாயங்கள் · தமிழ் வாசிப்பு',cover:'./books/human-cover.svg',href:'./books/human-when-you-are-alone-tamil.html',review:true}
+    ],
+    si:[
+      {label:'BOOK ONE · සිංහල',title:'Shadows of Truth · සිංහල',details:'Complete Sinhala reader · 61 chapters',cover:'./books/shadows-of-truth-cover.jpg',href:'./books/shadows-of-truth-sinhala.html'}
+    ]
+  };
+  return back+'<div class="hc-reading-book-list">'+items[language].map(x=>hcReadingBookCard(x,language)).join('')+'</div>';
+}
+function hcLanguageShelf(type){
+ const isAudio=type==='audioLanguages';
+ const name=isAudio?'Audiobooks':'Reading Books';
+ const options=isAudio?[
+  {code:'EN',label:'English Audiobooks',detail:'Listen to your English recordings',kind:'english'},
+  {code:'த',label:'Tamil Audiobooks',detail:'Listen to your Tamil recordings',kind:'tamil'}
+ ]:[
+  {code:'EN',label:'English',detail:'2 books',kind:'reading-en'},
+  {code:'த',label:'தமிழ்',detail:'2 books',kind:'reading-ta'},
+  {code:'සි',label:'සිංහල',detail:'1 book',kind:'reading-si'}
+ ];
+ return '<div class="hc-reading-languages">'+options.map(x=>'<button class="hub-card" type="button" onclick="openCollection(\''+x.kind+'\')"><span class="hub-icon">'+x.code+'</span><span><b>'+x.label+'</b><small>'+x.detail+'</small></span><span class="hub-arrow">›</span></button>').join('')+'</div>';
+}
 function openCollection(kind){
-  const data={
-    english:{
-      kicker:'Audiobooks',
-      title:'English Audiobooks',
-      description:'Long-form English listening for reflection, learning and quiet time.',
-      empty:'Add your first English audiobook here.'
-    },
-    tamil:{
-      kicker:'தமிழ் · Audiobooks',
-      title:'Tamil Audiobooks',
-      description:'A dedicated Tamil listening shelf for your own or properly licensed recordings.',
-      empty:'Add your first Tamil audiobook here.'
-    },
-    books:{
-      kicker:'Reading',
-      title:'Available Reading',
-      description:'Book excerpts already included with HeartClear.',
-      empty:'Additional licensed reading will appear here.'
-    }
-  }[kind]||{};
-  document.getElementById('collectionKicker').textContent=data.kicker||'Library';
-  document.getElementById('collectionTitle').textContent=data.title||'Library';
-  document.getElementById('collectionDescription').textContent=data.description||'';
+  const cfg={
+    audioLanguages:['Listening','Audiobooks','Choose your listening language.'],
+    readingLanguages:['Library','Reading Books','Choose a reading language.'],
+    english:['English · Audio','English Audiobooks','Recorded audio · Shadows of Truth'],
+    tamil:['தமிழ் · Audio','Tamil Audiobooks','Recorded audio · Shadows of Truth'],
+    'reading-en':['Reading','English Books','Book One and Book Two'],
+    'reading-ta':['வாசிப்பு','தமிழ் புத்தகங்கள்','முதல் புத்தகம் · இரண்டாம் புத்தகம்'],
+    'reading-si':['Reading','සිංහල පොත්','Shadows of Truth · Sinhala edition']
+  };
+  if(kind==='books')kind='readingLanguages';
+  const conf=cfg[kind]||cfg.readingLanguages;
+  document.getElementById('collectionKicker').textContent=conf[0];
+  document.getElementById('collectionTitle').textContent=conf[1];
+  document.getElementById('collectionDescription').textContent=conf[2];
   const list=document.getElementById('collectionList');
-  if(kind==='english') list.innerHTML=renderBookShelf('en');
-  else if(kind==='tamil') list.innerHTML=renderBookShelf('ta');
-  else list.innerHTML=`<div class="hc-reading-existing"><div class="kicker">AVAILABLE NOW</div><h3>Shadows of Truth · Reading excerpts</h3><p>Read the existing English and Tamil text inside HeartClear. Additional licensed books can be added when available.</p><div class="hc-reading-choices"><button onclick="openBookReader('en')">Read English</button><button onclick="openBookReader('ta')">Read Tamil</button></div></div>`;
+  if(kind==='audioLanguages'||kind==='readingLanguages')list.innerHTML=hcLanguageShelf(kind);
+  else if(kind==='english')list.innerHTML='<button class="collection-back" onclick="openCollection(\'audioLanguages\')">‹ Audiobooks</button>'+renderBookShelf('en');
+  else if(kind==='tamil')list.innerHTML='<button class="collection-back" onclick="openCollection(\'audioLanguages\')">‹ Audiobooks</button>'+renderBookShelf('ta');
+  else if(kind.startsWith('reading-'))list.innerHTML=hcReadingBookShelf(kind.slice(8));
+  else list.innerHTML=hcLanguageShelf('readingLanguages');
   show('collection');
 }
 
@@ -6587,15 +6717,15 @@ function hcDriveCard(item){
   btn.style.textAlign='left';
   const ico=document.createElement('span');ico.className='soundlab-icon';ico.textContent='▶';
   const body=document.createElement('span');
-  const name=document.createElement('b');name.textContent=item.key==='hinduOm'?'Mantra Bed · Long Listening':item.key==='generalDuduk'?'Duduk · April Improvisation':item.name;
-  const meta=document.createElement('small');meta.textContent=item.key==='hinduOm'?'Audio · 1 hour or 3 hours · Original OM video preserved':item.key==='generalDuduk'?'2:57 · instrumental MP3 · CC BY · different recording':item.type;
+  const name=document.createElement('b');name.textContent=item.key==='hinduOm'?'OM Chanting & Singing Bowls · 3:33:33':item.key==='generalDuduk'?'Duduk · April Improvisation':item.name;
+  const meta=document.createElement('small');meta.textContent=item.key==='hinduOm'?'Full recording · in-app playback · MP4 with audio':item.key==='generalDuduk'?'2:57 · instrumental MP3 · CC BY · different recording':item.type;
   body.append(name,meta);
   const arrow=document.createElement('span');arrow.className='soundlab-duration';arrow.textContent='Play';
   btn.append(ico,body,arrow);
   if(item.key==='hinduOm'){
     ico.textContent='♫';
     arrow.textContent='Listen ›';
-    btn.setAttribute('aria-label','Play Mantra Bed extended listening for one or three hours');
+    btn.setAttribute('aria-label','Play original OM Chanting and Singing Bowls, 3 hours 33 minutes, inside HeartClear');
     btn.addEventListener('click',()=>{if(typeof window.hcOpenOmVoice==='function')window.hcOpenOmVoice();else openSacred('hindu')});
   }else if(item.key==='generalDuduk'){
     ico.textContent='♫';arrow.textContent='▶';
@@ -7507,6 +7637,10 @@ async function playNextSoundLab(userInitiated=false,direction=1){
 }
 async function hcQuickPlaySound(key){
   const item=soundLabTracks[key];
+  // The self-hosted, unedited original OGG is preferred when the browser supports it.
+  if(key==='organicBansuri' && item && !document.createElement('audio').canPlayType('audio/ogg; codecs="vorbis"')){
+    item.url=item.audioFallbackUrl||item.url;
+  }
   if(!item)return;
   // Quick Play always plays the selected title: never jump to birds or another track.
   // Respect Auto Next on Home too. A one-tap play does not silently disable the playlist.
@@ -7523,11 +7657,19 @@ async function hcQuickPlaySound(key){
   }
   hcMiniPinnedKey='soundlab';
   renderGlobalMini();
+  if(key==='organicBansuri'){
+    const status=document.getElementById('hcSacredPlaybackStatus');
+    if(status && !status.textContent.includes('could not'))status.textContent=soundLabAudio.paused?'Paused':'Playing in HeartClear · use the mini-player to seek or pause.';
+  }
 }
 function hcQuickPlaybackError(title){
   soundLabPlayRequested=false;
   const label=document.getElementById('hcQuickAudioStatus');
   if(label)label.textContent=title+' could not play. Check your connection or choose another sound.';
+  if(currentSoundKey==='organicBansuri'){
+    const status=document.getElementById('hcSacredPlaybackStatus');
+    if(status)status.textContent='Original Bansuri could not play on this device. Check your connection or try the 7-minute edition in Sounds.';
+  }
 }
 function openSoundTrack(key,stayInSounds=false){
   if(currentSoundKey==='personal'&&key!=='personal'){
@@ -9435,10 +9577,14 @@ document.addEventListener('visibilitychange',async()=>{
 });
 
 let heartclearReloading=false;
+let heartclearUpdateNoticeShown=false;
+// A first-time service worker claiming this page is not an app update.
+let hcHadSWController=Boolean(navigator.serviceWorker?.controller);
 
 function showUpdateBanner(){
+  if(heartclearUpdateNoticeShown || heartclearReloading)return;
   const b=document.getElementById('updateBanner');
-  if(b)b.classList.add('show');
+  if(b){heartclearUpdateNoticeShown=true;b.classList.add('show')}
 }
 
 function reloadHeartClear(){
@@ -9449,15 +9595,18 @@ function reloadHeartClear(){
 
 if('serviceWorker' in navigator){
   navigator.serviceWorker.addEventListener('controllerchange',()=>{
-    if(!heartclearReloading)showUpdateBanner();
+    const wasControlled=hcHadSWController;
+    hcHadSWController=Boolean(navigator.serviceWorker.controller);
+    // No false refresh notice on first install/first claim.
+    if(wasControlled && hcHadSWController && !heartclearReloading)showUpdateBanner();
   });
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=180');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=286');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
-      if(reg.waiting)showUpdateBanner();
+      if(reg.waiting && navigator.serviceWorker.controller)showUpdateBanner();
       reg.addEventListener('updatefound',()=>{
         const worker=reg.installing;
         if(!worker)return;
@@ -9474,27 +9623,85 @@ if('serviceWorker' in navigator){
 // No automatic install modal on load or resume. Open it from Settings only.
 const heartclearAutoInstallPrompt=false;
 </script>
-<script src="./hc-explorer.js?v=126"></script>
+<script src="./hc-explorer.js?v=284"></script>
 <script src="./hc-inline-audio.js?v=156"></script>
-<script src="./hc-home-one-tap-v139.js?v=145"></script>
+<script src="./hc-home-one-tap-v139.js?v=284"></script>
 <script src="./hc-family-kitchen-v144.js?v=154"></script>
-<script src="./hc-monthly-kitchen-v145.js?v=165"></script>
+<script src="./hc-monthly-kitchen-v145.js?v=202"></script>
 <script src="./hc-kitchen-teaching-v149.js?v=150"></script>
-<script src="./hc-sounds-direct-v149.js?v=152"></script>
-<script src="./hc-quran-home-v153.js?v=168"></script>
+<script src="./hc-sounds-direct-v149.js?v=264"></script>
+<script src="./hc-quran-home-v153.js?v=263"></script>
 
-<link rel="stylesheet" href="./hc-explore.css?v=154">
+<link rel="stylesheet" href="./hc-explore.css?v=212">
 <script src="./hc-explore-core.js?v=161"></script>
-<script src="./hc-explore-ui.js?v=161"></script>
+<script src="./hc-mind-catalog.js?v=190"></script>
+<script src="./hc-mind-game.js?v=190"></script>
+<script src="./hc-mind-broader-v207.js?v=212"></script>
+<script src="./hc-explore-ui.js?v=280"></script>
 <script src="./hc-health-talk-v156.js?v=160"></script>
-<script src="./hc-home-routine-v155.js?v=155"></script>
-<script src="./hc-genesis-v156.js?v=168"></script>
-<script src="./hc-hindu-scriptures-v162.js?v=170"></script>
-<script src="./hc-gita-original-audio-v163.js?v=172"></script>
+<script src="./hc-home-routine-v155.js?v=284"></script>
+<script src="./hc-genesis-v156.js?v=188"></script>
+<script src="./hc-hindu-scriptures-v162.js?v=262"></script>
+<script>
+/* Load the deep source catalog only when the user opens Hindu traditions.
+   This prevents parsing another optional library during first Home paint. */
+(function(){
+  const map=document.getElementById('hcHinduTraditions');
+  if(!map)return;
+  let started=false;
+  function load(){
+    if(started)return;
+    started=true;
+    const script=document.createElement('script');
+    script.src='./hc-vedic-library-v215.js?v=226';
+    script.async=true;
+    script.onerror=function(){
+      started=false;
+      const notice=document.createElement('p');
+      notice.textContent='The source library is temporarily unavailable. Close and reopen this section to retry.';
+      map.append(notice);
+    };
+    document.body.append(script);
+  }
+  map.addEventListener('toggle',function(){if(map.open)load()});
+  if(map.open)load();
+})();
+</script>
+<script src="./hc-gita-original-audio-v163.js?v=261"></script>
 
-<script src="./hc-kitchen-compact-v163.js?v=167"></script>
-<script src="./hc-playback-one-tap-v174.js?v=178"></script>
+<script src="./hc-kitchen-world-v205.js?v=206"></script>
+<script src="./hc-kitchen-world-v207.js?v=210"></script>
+<script src="./hc-kitchen-compact-v163.js?v=240"></script>
+<script src="./hc-kitchen-worldwide-v207.js?v=222"></script>
+<script src="./hc-playback-one-tap-v174.js?v=284"></script>
 <script src="./hc-accounts-preview-v176.js?v=177"></script>
+<script src="./hc-mini-transport-v185.js?v=187"></script>
+<script src="./hc-human-daily-path-v192.js?v=196"></script>
+<script src="./hc-infinity-depth-v258.js?v=265"></script>
+<script src="./hc-infinity-journey-v211.js?v=265"></script>
+<link rel="stylesheet" href="./hc-bubble-v207.css?v=236">
+<script src="./hc-bubble-v207.js?v=242"></script>
+<script src="./hc-mantra-one-place-v216.js?v=251"></script>
+<link rel="stylesheet" href="./hc-flow-v220.css?v=269">
+<script src="./hc-flow-v220.js?v=285"></script>
+<script src="./hc-meditation-navigation-v237.js?v=237"></script>
+<script src="./hc-kitchen-language-v234.js?v=234"></script>
+<link rel="stylesheet" href="./hc-cinema-v239.css?v=270">
+<script src="./hc-cinema-v239.js?v=284"></script>
+<link rel="stylesheet" href="./hc-content-stability-v243.css?v=251">
+<link rel="stylesheet" href="./hc-global-language-v245.css?v=245">
+<script src="./hc-global-language-v245.js?v=263"></script>
+<link rel="stylesheet" href="./hc-reels-minimal-v248.css?v=284">
+<script src="./hc-om-mini-v252.js?v=252"></script>
+<link rel="stylesheet" href="./hc-listening-hub-v254.css?v=258">
+<script src="./hc-listening-hub-v254.js?v=280"></script>
+<script src="./hc-home-layout-v256.js?v=257"></script>
+<script src="./hc-home-core-paths-v259.js?v=268"></script>
+<link rel="stylesheet" href="./hc-unified-visual-v259.css?v=267">
+<link rel="stylesheet" href="./hc-home-visible-v268.css?v=277">
+<script src="./hc-home-visible-v268.js?v=285"></script>
+
+<link rel="stylesheet" href="./hc-design-unified-v279.css?v=284" onload="document.documentElement.classList.remove('hc-booting')" onerror="document.documentElement.classList.remove('hc-booting')">
 </body>
 </html>
 

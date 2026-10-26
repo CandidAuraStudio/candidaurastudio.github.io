@@ -1,4 +1,4 @@
-name: HeartClear v178 Playback Regression
+name: HeartClear Playback Regression
 on:
   push:
     branches: [main]
@@ -7,6 +7,7 @@ on:
       - 'human-practice-prototype/tests/hc-playback-v178-smoke.cjs'
       - 'human-practice-prototype/index.html'
       - 'human-practice-prototype/hc-playback-one-tap-v174.js'
+      - 'human-practice-prototype/hc-om-mini-v252.js'
       - 'human-practice-prototype/sw.js'
   workflow_dispatch:
 permissions:

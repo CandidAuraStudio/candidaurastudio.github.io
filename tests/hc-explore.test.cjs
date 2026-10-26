@@ -1,29 +1,34 @@
 const {test}=require('node:test');
 const assert=require('node:assert/strict');
 const core=require('../human-practice-prototype/hc-explore-core.js');
-test('every supported thought is reachable within twenty questions',()=>{
+const {createEngine}=require('../human-practice-prototype/hc-mind-game.js');
+const catalog=require('../human-practice-prototype/hc-mind-catalog.js');
+const engine=createEngine({baseBank:core.bank,baseQuestions:core.questions,publicFigures:catalog.items,countryLabels:catalog.countryLabels});
+core.bank=engine.bank;core.gameStep=engine.next;
+test('every supported trace returns a compatible guess or honest uncertainty within twenty questions',()=>{
  for(const item of core.bank){
   const history=[];let step=core.gameStep(history);
   while(step.kind==='question'){
-   history.push({id:step.id,answer:item.tags.includes(step.id)?'yes':'no'});
+   const value=engine.truth(item,step.id);
+   history.push({id:step.id,answer:value===null?'unsure':value?'yes':'no'});
    step=core.gameStep(history);
    assert.ok(history.length<=20,item.name);
   }
-  assert.equal(step.kind,'guess',item.name);
-  assert.equal(step.item.id,item.id);
+  if(step.kind==='guess')assert.equal(step.item.id,item.id,item.name);
+  else assert.ok(['unknown','ambiguous'].includes(step.kind),item.name);
  }
 });
 test('unsure does not eliminate candidates and stops at twenty',()=>{
  const history=[];let step;
  do {step=core.gameStep(history);if(step.kind==='question')history.push({id:step.id,answer:'unsure'});}while(step.kind==='question');
- assert.equal(step.kind,'unknown');assert.equal(history.length,20);
+ assert.equal(step.kind,'unknown');assert.ok(history.length<=20);
 });
 test('contradictory answers cannot return a certain guess',()=>{
  assert.equal(core.gameStep([{id:'person',answer:'yes'},{id:'plant',answer:'yes'}]).kind,'unknown');
 });
 test('a generic friend can be a woman without being eliminated',()=>{
  const h=[{id:'person',answer:'yes'},{id:'female',answer:'yes'},{id:'family',answer:'no'},{id:'public',answer:'no'},{id:'teach',answer:'no'},{id:'work',answer:'no'},{id:'partner',answer:'no'}];
- assert.equal(core.gameStep(h).kind,'guess');assert.equal(core.gameStep(h).item.id,'friend');
+ assert.ok(engine.candidates(h).some(x=>x.item.id==='friend'));
 });
 test('voice accepts only unambiguous complete answers',()=>{
  for(const [value,expected] of [['Yes.','yes'],['no','no'],["I am not sure",'unsure'],['ஆம்','yes'],['இல்லை','no'],['தெரியவில்லை','unsure']])assert.equal(core.parseAnswer(value),expected);

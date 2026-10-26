@@ -1,0 +1,226 @@
+/* HeartClear v220 — one coherent, readable, full-app experience.
+   Keep real content and audio controls. No blurred UI or continuous motion. */
+:root{--hc220-bg:#0a1015;--hc220-panel:#17232b;--hc220-line:#6d7d84;--hc220-text:#f8f9f8}
+body.hc-flow-enabled{
+  --ink:#f8fafb;--muted:#d6dfe2;
+  color:var(--hc220-text)!important;background:#0a1015!important;
+  overflow-x:hidden;overscroll-behavior-x:none
+}
+body.hc-flow-enabled::before,body.hc-flow-enabled::after{display:none!important}
+body.hc-flow-enabled .app{max-width:610px;width:100%;padding:calc(10px + env(safe-area-inset-top)) 16px calc(160px + env(safe-area-inset-bottom));overflow:visible}
+body.hc-flow-enabled .screen.active{min-width:0;max-width:100%;justify-content:flex-start}
+body.hc-flow-enabled .screen.active:not(#home):not(#hcReels){padding-top:0;gap:14px;scroll-margin-top:14px}
+body.hc-flow-enabled :is(h1,h2,h3,h4){letter-spacing:-.035em;line-height:1.18;overflow-wrap:anywhere}
+body.hc-flow-enabled .screen.active:not(#hcReels) :is(h1,h2){font-size:clamp(31px,7.5vw,44px)!important;margin-bottom:14px}
+body.hc-flow-enabled .screen.active:not(#hcReels) h3{font-size:clamp(24px,6.1vw,31px)!important}
+body.hc-flow-enabled .screen.active:not(#hcReels) p{font-size:clamp(18px,4.4vw,22px)!important;line-height:1.65!important;color:#e0e7e8}
+body.hc-flow-enabled .screen.active:not(#hcReels) :is(.kicker,.eyebrow,.library-label){font-size:14px!important;letter-spacing:.045em!important;line-height:1.5;color:#e2e8e8}
+body.hc-flow-enabled .screen.active:not(#hcReels) :is(small,.hub-note,.setting-row small,.choice small,.human-card small,.sacred-card small,.hub-card small){font-size:clamp(16px,3.8vw,20px)!important;line-height:1.5!important;color:#d4dfe2}
+body.hc-flow-enabled .screen.active:not(#hcReels) :is(button,summary,select,input:not([type=checkbox]):not([type=range]),textarea,a.collection-back){
+  touch-action:manipulation;min-height:52px;font-size:clamp(18px,4.1vw,22px);
+}
+body.hc-flow-enabled .screen.active:not(#hcReels) :is(button,summary,select,input,textarea):focus-visible,
+body.hc-flow-enabled #hcFlowDock button:focus-visible,
+body.hc-flow-enabled #hcFlowTop button:focus-visible,
+body.hc-flow-enabled #hcFlowExplore button:focus-visible{outline:3px solid #fff6b7!important;outline-offset:3px!important}
+body.hc-flow-enabled .screen.active:not(#hcReels) :is(.glass,.choice,.hub-card,.human-card,.sacred-card,.fear-card,.practice-card,.hc-mix-card,.hc-personal,.hcqs-verse,.hc-settings-clean,.hc-settings-section){
+  backdrop-filter:none!important;-webkit-backdrop-filter:none!important;box-shadow:none!important;
+  background:#16232c!important;border:1.5px solid #4e6774!important;color:#f8fafa!important;
+}
+body.hc-flow-enabled .screen.active:not(#hcReels) .glass{width:100%;padding:clamp(18px,4.7vw,28px)!important;border-radius:32px!important}
+body.hc-flow-enabled :is(.glass,.choice,.hub-card,.human-card,.sacred-card,.hcqs-verse){max-width:100%}
+body.hc-flow-enabled .screen.active:not(#hcReels) :is(.hub-grid,.human-grid,.sacred-grid,.library-list,.collection-list,.hc-sound-track-list){grid-template-columns:minmax(0,1fr)!important;min-width:0}
+body.hc-flow-enabled .screen.active:not(#hcReels) :is(.hub-card,.human-card,.sacred-card,.fear-card,.choice.practice-card,.hc-sound-row,.hc-simple-audio-list button,.hc-sounds-hub-card){
+  padding:clamp(18px,5.2vw,28px)!important;min-height:110px!important;border-radius:30px!important;
+  width:100%;text-align:left;gap:13px;white-space:normal;
+}
+body.hc-flow-enabled .screen.active:not(#hcReels) :is(.human-card,.sacred-card,.hub-card) b{font-size:clamp(26px,6.3vw,36px)!important;line-height:1.2}
+body.hc-flow-enabled .screen.active:not(#hcReels) :is(.human-card,.sacred-card,.hub-card) .human-symbol,
+body.hc-flow-enabled .screen.active:not(#hcReels) .sacred-symbol{font-size:clamp(45px,12vw,73px)!important;line-height:1.2}
+body.hc-flow-enabled .screen.active:not(#hcReels) :is(.choice,.practice-card,.hc-sound-track-list button) b{font-size:clamp(21px,5.2vw,28px)!important}
+body.hc-flow-enabled .screen.active:not(#hcReels) :is(select,input:not([type=range]):not([type=checkbox]),textarea){width:100%;max-width:100%;min-height:64px!important;border-radius:19px!important;padding:12px 15px!important;background:#f9faf7!important;color:#13222b!important;border:2px solid #bdc9d0!important;font-size:22px!important}
+body.hc-flow-enabled .screen.active:not(#hcReels) input[type=range]{min-height:34px;accent-color:#fff}
+body.hc-flow-enabled .screen.active:not(#hcReels) button:not(.switch){border-radius:19px}
+body.hc-flow-enabled .screen.active:not(#hcReels) :is(.hcqs-meaning,.hcqs-editorial,.hcqs-ta,.hcqs-en,.hc-gen-text){font-size:clamp(21px,5.2vw,27px)!important;line-height:1.85!important}
+body.hc-flow-enabled #hcQuranStudy .hcqs-arabic{font-size:clamp(34px,8.7vw,46px)!important;line-height:2.2!important}
+body.hc-flow-enabled #hcQuranStudy .hcqs-verse{padding:23px!important;scroll-margin-top:100px}
+body.hc-flow-enabled #hcQuranStudy .hcqs-picker{grid-template-columns:1fr!important}
+body.hc-flow-enabled :is(#hcQuranStudy,#hcLivingQuran,#hcFatiha,#bookReader,#bookAudio) :is(button,select){min-height:56px!important;font-size:19px!important}
+body.hc-flow-enabled #bookReader .reader-page{max-height:none!important;overflow:visible;white-space:pre-wrap}
+body.hc-flow-enabled :is(#soundLab,#soundHub) .hc-sound-filters{display:flex;overflow-x:auto;flex-wrap:nowrap;scroll-snap-type:x proximity;padding-bottom:12px;gap:10px}
+body.hc-flow-enabled :is(#soundLab,#soundHub) .hc-sound-filters button{flex:0 0 auto;scroll-snap-align:start;padding:12px 18px}
+body.hc-flow-enabled :is(#settings,#history,#downloads) :is(.setting-row,.hc-settings-toggle,.hc-settings-section>summary){min-height:74px;border-bottom:1px solid #556874;padding:15px 6px;gap:15px}
+body.hc-flow-enabled #settings .hc-settings-section>summary{font-size:23px!important;font-weight:700}
+body.hc-flow-enabled .screen.active :is(.hc-practice-group,.hc-sounds-list-head,.hub-hero,.human-hero,.hc-sounds-header){min-width:0}
+body.hc-flow-enabled #hcBubbleHome{max-width:520px;margin:0 auto}
+body.hc-flow-enabled #hcBubbleHome h1{font-size:clamp(37px,9vw,48px)!important;margin-bottom:20px}
+body.hc-flow-enabled #hcBubbleCard{min-height:clamp(390px,54vh,570px);margin:18px 0 15px;border-radius:45px}
+body.hc-flow-enabled #hcBubbleCard .hcb-title{font-size:clamp(34px,9.5vw,52px)}
+body.hc-flow-enabled #hcBubbleCard .hcb-description{font-size:clamp(20px,5vw,25px);line-height:1.38}
+body.hc-flow-enabled #hcBubbleCard .hcb-action{font-size:22px;min-height:66px}
+body.hc-flow-enabled #hcBubbleSearch{min-height:75px;font-size:21px}
+body.hc-flow-enabled #hcBubbleSwitch{min-height:64px;font-size:19px}
+body.hc-flow-enabled #hcBubbleReturn,body.hc-flow-enabled #hcBubbleClassic{display:none!important}
+body.hc-flow-enabled #appTopBar{display:none!important}
+body.hc-flow-enabled #bottomNav{display:none!important}
+/* Page header, a single navigation system on ALL sections */
+#hcFlowTop{display:none;align-items:center;justify-content:space-between;gap:12px;min-height:68px;width:100%;margin:0 0 16px;padding:6px 0}
+body.hc-flow-enabled .screen.active:not(#home):not(#hcReels) > #hcFlowTop,
+body.hc-flow-enabled #home.active.hc-bubble-detail > #hcFlowTop{display:flex!important}
+#hcFlowTop button{min-height:58px!important;min-width:82px;border:1.5px solid #83939c;border-radius:20px;background:#1d303a;color:#fff;font:700 19px system-ui;padding:12px 15px}
+#hcFlowTop .hc-flow-name{flex:1;text-align:center;font-size:clamp(20px,5vw,26px);font-weight:750;color:#fff;min-width:0;overflow-wrap:anywhere}
+body.hc-flow-enabled #home.hc-bubble-detail[data-hcb-detail="recipes"] > #hcFlowTop,
+body.hc-flow-enabled #home.hc-bubble-detail[data-hcb-detail="bible"] > #hcFlowTop{display:flex!important}
+body.hc-flow-enabled #home.hc-bubble-detail[data-hcb-detail="recipes"] > :not(#hcHomeKitchenQuickV155):not(#hcFlowTop),
+body.hc-flow-enabled #home.hc-bubble-detail[data-hcb-detail="bible"] > :not(#hcGenesisCard):not(#hcFlowTop){display:none!important}
+body.hc-flow-enabled #home.hc-bubble-detail[data-hcb-detail="recipes"] #hcHomeKitchenQuickV155{display:block!important}
+body.hc-flow-enabled #home.hc-bubble-detail[data-hcb-detail="recipes"] #hcHomeKitchenQuickV155 > :is(.hcr-small,strong,.hcr-sub,.hcr-food-actions,#hcrDosaSteps){display:none!important}
+body.hc-flow-enabled #home.hc-bubble-detail[data-hcb-detail="recipes"] #hcKitchenAskV163{border:0;padding:0}
+body.hc-flow-enabled #home.hc-bubble-detail[data-hcb-detail="recipes"] #hcKitchenAskV163 > label{font-size:clamp(24px,5.8vw,30px)!important;margin-bottom:18px}
+body.hc-flow-enabled #home.hc-bubble-detail[data-hcb-detail="recipes"] #hcKitchenSearchResults button{margin:8px 0;font-size:21px!important;min-height:68px}
+body.hc-flow-enabled #home.hc-bubble-detail[data-hcb-detail="recipes"] #hcKitchenAskReply{font-size:clamp(20px,5.2vw,26px)!important;line-height:1.8!important;background:#15232d;padding:18px;border:1px solid #6a7a83;border-radius:26px}
+body.hc-flow-enabled #home.hc-bubble-detail[data-hcb-detail="bible"] #hcGenesisCard{padding:20px!important;max-height:none!important}
+body.hc-flow-enabled #home.hc-bubble-detail[data-hcb-detail="bible"] #hcGenReading{max-height:none!important;overflow:visible}
+body.hc-flow-enabled #home.hc-bubble-detail[data-hcb-detail="bible"] #hcGenReadText{font-size:clamp(22px,5.4vw,28px)!important;line-height:1.9!important;max-height:none!important}
+body.hc-flow-enabled #home.hc-bubble-mode > :not(#hcBubbleHome){display:none!important}
+/* Vertical pages for options, not for written scriptures */
+.hc-flow-stage{position:relative;display:flex!important;flex-direction:column!important;gap:0}
+.hc-flow-stage > .hc-flow-choice{display:none!important}
+.hc-flow-stage > .hc-flow-choice.hc-flow-selected{display:flex!important;flex-direction:column;align-items:center;justify-content:center;text-align:center!important;min-height:clamp(310px,55vh,490px)!important;border-radius:40px!important;padding:30px 24px!important;animation:none!important;transform:none!important}
+.hc-flow-stage > .hc-flow-choice.hc-flow-selected :is(b,strong){font-size:clamp(29px,7vw,40px)!important;text-align:center}
+.hc-flow-stage > .hc-flow-choice.hc-flow-selected :is(small,p){font-size:clamp(19px,4.6vw,24px)!important;text-align:center}
+.hc-flow-stage > .hc-flow-choice.hc-flow-selected .hub-icon{font-size:52px!important}
+.hc-flow-pager{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:14px 0 27px}
+.hc-flow-pager>button{min-width:65px;min-height:60px;border:1.5px solid #a3b0b6;border-radius:19px;background:#22343d;color:white;font-size:30px;font-weight:700}
+.hc-flow-pager>span{font-size:19px;font-weight:650;color:#fff;text-align:center}
+#hcFlowDock{position:fixed;bottom:calc(11px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:98;width:min(97vw,560px);padding:8px;display:none;grid-template-columns:repeat(6,minmax(0,1fr));gap:3px;background:#121112;border:1.5px solid #607580;border-radius:27px;box-shadow:0 8px 30px #0009}
+body.hc-flow-enabled #hcFlowDock{display:grid}
+#hcFlowDock button{min-width:0;min-height:58px;border:0;border-radius:18px;background:transparent;color:#e3ecee;font:700 11px system-ui;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
+#hcFlowDock button span:first-child{font-size:22px;line-height:1}
+#hcFlowDock button[aria-current="page"]{background:#f3f6f5;color:#0c1b23}
+body.hc-flow-enabled:has(#hcReels.active) #hcFlowDock{display:none}
+body.hc-flow-enabled:has(#hcReels.active) #hcFlowTop{display:none}
+body.hc-flow-enabled .global-mini.show{bottom:calc(94px + env(safe-area-inset-bottom))!important;z-index:101}
+body.hc-flow-enabled .global-mini:not(.show){pointer-events:none}
+body.hc-flow-enabled #hcMiniLibrary{bottom:calc(95px + env(safe-area-inset-bottom))!important;max-height:62vh;overflow-y:auto}
+body.hc-flow-enabled #hcBubbleSearchPanel{z-index:1000}
+body.hc-flow-enabled :is(.screen,.glass,.hc-flow-stage) *{min-width:0;overflow-wrap:break-word}
+body.hc-flow-enabled .screen.active :is(button,input,textarea,select){max-width:100%}
+@media(max-width:365px){
+ #hcFlowDock button{min-height:60px;font-size:15px}
+ #hcFlowTop button{min-width:68px;font-size:17px;padding:9px}
+ body.hc-flow-enabled .app{padding-inline:12px}
+}
+@media(prefers-reduced-motion:reduce){
+ body.hc-flow-enabled *,body.hc-flow-enabled *::before,body.hc-flow-enabled *::after{
+  animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important
+ }
+}
+
+/* Full-screen experience picker and focused practice cards */
+#hcFlowExplore[hidden],#hcFlowMixerDetails[hidden],#hcFlowSoundExtras[hidden]{display:none!important}
+#hcFlowExplore{position:fixed;inset:0;z-index:1001;background:#091218;color:#fff;overflow-y:auto;padding:calc(20px + env(safe-area-inset-top)) 17px calc(30px + env(safe-area-inset-bottom));overscroll-behavior:contain}
+.hc-flow-explore-inner{max-width:520px;margin:0 auto}
+#hcFlowExplore header{display:flex;justify-content:space-between;align-items:center;gap:15px}
+#hcFlowExplore header strong{font-size:26px}
+#hcFlowExplore button{cursor:pointer;color:#fff;border:1.5px solid #93a6ae;background:#243640;border-radius:20px;min-height:58px;font:700 20px system-ui}
+#hcFlowExploreClose{width:60px;font-size:30px!important}
+.hc-flow-explore-card{margin:24px 0 16px;min-height:clamp(390px,56vh,570px);padding:32px 24px;border:1.5px solid #78909b;border-radius:42px;background:radial-gradient(circle at 50% 16%,#2a444e,#162630 65%,#112027);display:flex;flex-direction:column;align-items:center;justify-content:space-around;text-align:center;touch-action:pan-y}
+.hc-flow-explore-orb{display:block;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle at 34% 28%,#fff,#9cbbc0 40%,#27414d 85%);box-shadow:0 0 30px #bfd6d633}
+#hcFlowExploreTitle{font-size:clamp(34px,9vw,50px);margin:8px 0;color:#fff}
+#hcFlowExploreDesc{font-size:clamp(20px,4.6vw,25px);line-height:1.4;color:#e9eef0}
+#hcFlowExploreOpen{width:min(100%,320px);min-height:70px!important;background:#fff!important;color:#152530!important;border-color:#fff!important;border-radius:999px!important;font-size:23px!important}
+.hc-flow-explore-pager{display:grid;grid-template-columns:68px 1fr 68px;align-items:center;gap:12px}
+.hc-flow-explore-pager button{min-height:64px!important;font-size:30px!important}
+.hc-flow-explore-pager span{text-align:center;font-size:20px;font-weight:750}
+.hc-flow-explore-help{text-align:center;font-size:17px;color:#d3e0e3}
+body.hc-flow-modal-open{overflow:hidden}
+#hcFlowPracticeDeck{display:flex;flex-direction:column;gap:8px;width:100%;margin:10px 0 20px}
+#hcFlowPracticeChoice{display:flex;flex-direction:column;align-items:center;justify-content:space-around;text-align:center;width:100%;min-height:clamp(360px,52vh,540px);padding:30px 22px!important;border-radius:40px!important;background:radial-gradient(circle at 52% 6%,#344b57,#172630 65%,#142027)!important;border:1.5px solid #84959d!important;color:white!important;gap:12px}
+#hcFlowPracticeChoice .hc-flow-practice-mark{width:100px;height:100px;display:grid;place-items:center;background:radial-gradient(circle at 32% 25%,#f5f8f8,#a1bcc4 35%,#334d58 80%);color:#162631;border-radius:50%;font-size:62px}
+#hcFlowPracticeChoice strong{font-size:clamp(29px,7vw,40px)!important;line-height:1.25}
+#hcFlowPracticeChoice #hcFlowPracticeDescription{font-size:clamp(19px,5vw,24px)!important;color:#e0eaeb}
+#hcFlowPracticeChoice em{background:#fff;color:#10222c;border-radius:999px;min-height:60px;min-width:220px;display:grid;place-items:center;padding:12px 18px;font-style:normal;font-size:21px;font-weight:750}
+/* v237: original practice choices and Quiet Timer are restored. */
+body.hc-flow-enabled #practices.active > .library-intro .category-tabs{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:10px;padding-bottom:12px}
+body.hc-flow-enabled #practices.active > .library-intro .category-tabs button{flex:0 0 auto;min-height:54px;font-size:17px;padding:11px 17px}
+body.hc-flow-enabled #practices.active #hcFlowPracticeDeck .hc-flow-pager{display:flex}
+body.hc-flow-enabled #hcFlowSoundExtras,
+body.hc-flow-enabled #hcFlowMixerDetails{padding:12px 16px;margin:15px 0;border:1.5px solid #5c7885;border-radius:23px;background:#14232d}
+body.hc-flow-enabled #hcFlowSoundExtras>summary,
+body.hc-flow-enabled #hcFlowMixerDetails>summary{min-height:62px;cursor:pointer;color:#fff;font-size:21px;font-weight:750;display:flex;align-items:center}
+body.hc-flow-enabled :is(#hcFlowSoundExtras,#hcFlowMixerDetails)[open]{padding-bottom:23px}
+body.hc-flow-enabled #soundLab .hc-mix-card{background:#192e38!important;padding:18px!important;border-radius:25px!important}
+body.hc-flow-enabled .hc-flow-stage + .hc-flow-pager[hidden]{display:none!important}
+body.hc-flow-enabled #hcFlowTop + :is(.glass,.hub-hero,.human-hero,.hc-sounds-header){margin-top:0}
+body.hc-flow-enabled #hcFlowDock button{overflow:hidden}
+
+/* Keep reader font-size controls functional; enlarge the initial base text. */
+body.hc-flow-enabled #bookReader .reader-page{font-size:22px;line-height:1.9!important;white-space:pre-wrap}
+body.hc-flow-enabled #hcBubbleCard{touch-action:none!important}
+body.hc-flow-enabled #home.hc-bubble-mode{scroll-margin-top:0}
+
+/* Inherited Home modules are opened as one focused section, never a long legacy Home. */
+body.hc-flow-enabled #home.hc-bubble-detail[data-hcb-detail="feature"] > :not(#hcFlowTop):not(.hc-flow-feature-path):not(.hc-flow-feature-target){display:none!important}
+body.hc-flow-enabled #home.hc-bubble-detail[data-hcb-detail="feature"] .hc-flow-feature-path > :not(.hc-flow-feature-path):not(.hc-flow-feature-target){display:none!important}
+body.hc-flow-enabled #home.hc-bubble-detail[data-hcb-detail="feature"] .hc-flow-feature-path{display:block!important;overflow:visible!important;width:100%}
+body.hc-flow-enabled #home.hc-bubble-detail[data-hcb-detail="feature"] .hc-flow-feature-target{display:block!important;min-height:50vh!important;width:100%;margin:8px auto 20px!important;padding:clamp(18px,5vw,29px)!important;border-radius:31px!important;background:#162832!important;border:1.5px solid #70858e!important;max-height:none!important;overflow:visible!important}
+body.hc-flow-enabled #home.hc-bubble-detail[data-hcb-detail="feature"] .hc-flow-feature-target :is(h2,h3,strong){font-size:clamp(24px,6vw,32px)!important;line-height:1.3}
+body.hc-flow-enabled #home.hc-bubble-detail[data-hcb-detail="feature"] .hc-flow-feature-target :is(p,li,small,label){font-size:clamp(18px,4.6vw,24px)!important;line-height:1.7}
+body.hc-flow-enabled #home.hc-bubble-detail[data-hcb-detail="feature"] .hc-flow-feature-target :is(button,summary,select,input){min-height:56px;font-size:19px!important;border-radius:18px}
+body.hc-flow-enabled #hcHeritageReader :is(h2,h3,.hc-heritage-header strong){font-size:clamp(27px,7vw,37px)!important}
+body.hc-flow-enabled #hcHeritageReader :is(p,li,.hc-heritage-main,article){font-size:clamp(19px,4.7vw,25px)!important;line-height:1.75}
+body.hc-flow-enabled #hcHeritageReader :is(button,select){min-height:52px;font-size:18px!important}
+body.hc-flow-enabled #hcExploreDialog{width:min(calc(100vw - 20px),600px)!important;max-height:calc(100dvh - 24px)!important;box-sizing:border-box;border-radius:27px!important;background:#13232c!important;color:#fff!important;border:2px solid #718790!important;padding:clamp(16px,4vw,28px)!important}
+body.hc-flow-enabled #hcExploreDialog :is(h2,h3){font-size:clamp(27px,6.5vw,34px)!important}
+body.hc-flow-enabled #hcExploreDialog :is(p,small,span,label){font-size:clamp(18px,4.6vw,22px)!important;line-height:1.55}
+body.hc-flow-enabled #hcExploreDialog :is(button,input,select,textarea){font-size:20px!important;min-height:52px!important}
+body.hc-flow-enabled #hcExploreDialog button{border-radius:17px!important}
+
+/* Home Search recovery: keep the search surface above every non-native overlay. */
+body.hc-flow-enabled #hcBubbleSearchPanel:not([hidden]),body.hc-search-open #hcBubbleSearchPanel:not([hidden]){position:fixed!important;inset:0!important;display:block!important;z-index:2147483000!important;pointer-events:auto!important;overflow-y:auto!important;overscroll-behavior:contain!important;visibility:visible!important;opacity:1!important}
+body.hc-search-open #hcFlowDock,body.hc-search-open #hcFlowExplore{pointer-events:none}
+body.hc-search-open #hcBubbleSearchPanel button,body.hc-search-open #hcBubbleSearchPanel input{pointer-events:auto!important}
+
+/* v236: the Home launcher and its dialog must remain clickable above Home decoration. */
+body.hc-flow-enabled #home.active.hc-bubble-mode #hcBubbleHome{position:relative;z-index:2;pointer-events:auto}
+body.hc-flow-enabled #home.active.hc-bubble-mode #hcBubbleHome button{pointer-events:auto}
+body.hc-flow-enabled #hcBubbleSearchPanel:not([hidden]){z-index:2147483000!important}
+body.hc-flow-enabled #hcBubbleCard{touch-action:pan-y!important}
+body.hc-flow-enabled #hcBubbleHome .hcb-brand{display:flex;align-items:center;gap:12px;margin:6px 0 18px}
+body.hc-flow-enabled #hcBubbleHome .hcb-brand h1{margin:0!important}
+body.hc-flow-enabled #hcBubbleHome .hcb-logo{display:grid;place-items:center;flex:none;width:59px;height:59px;border:1.5px solid #fff;background:#050505;border-radius:17px;font-size:51px;line-height:1;font-weight:400;color:#fff}
+@media(max-width:390px){body.hc-flow-enabled #hcBubbleHome .hcb-logo{width:48px;height:48px;font-size:43px}}
+
+/* v237: full catalogue and native guided player controls without hiding features. */
+body.hc-flow-enabled #practices.active .hc-practice-group[hidden],
+body.hc-flow-enabled #practices.active .practice-card.is-hidden{display:none!important}
+body.hc-flow-enabled #practices.active .hc-practice-group{display:block;margin-bottom:14px}
+body.hc-flow-enabled #practices.active .library-list{display:grid;grid-template-columns:1fr;gap:12px}
+body.hc-flow-enabled #practices.active .practice-card{display:grid;grid-template-columns:46px minmax(0,1fr) auto;align-items:center;gap:12px;width:100%;min-height:92px;padding:15px;border-radius:22px!important;text-align:left}
+body.hc-flow-enabled #practices.active .practice-card .duration{font-size:15px!important;white-space:nowrap}
+body.hc-flow-enabled #player #hcGuidedNavigation{display:grid;gap:11px;width:100%;padding:14px 0 6px;border-top:1px solid #6a7b83}
+#hcGuidedNavigation .hc-guided-head{display:flex;justify-content:space-between;gap:10px;align-items:center;color:#fff}
+#hcGuidedNavigation .hc-guided-head strong{font-size:19px}
+#hcGuidedNavigation #hcGuidedProgress{font-size:17px;white-space:nowrap;font-variant-numeric:tabular-nums;color:#f1f2f2}
+#hcGuidedNavigation .hc-guided-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+body.hc-flow-enabled #hcGuidedNavigation button{background:#233540!important;color:#fff!important;border:1.5px solid #81919a!important;border-radius:16px!important;min-height:60px!important;padding:10px!important;font-size:17px!important;font-weight:700;cursor:pointer}
+#hcGuidedNavigation .hc-guided-list button{display:flex;flex-direction:column;align-items:flex-start;text-align:left;justify-content:center;gap:3px}
+#hcGuidedNavigation .hc-guided-list b{font-size:17px!important;line-height:1.22}
+#hcGuidedNavigation .hc-guided-list small{font-size:15px!important;color:inherit!important}
+body.hc-flow-enabled #hcGuidedNavigation button[aria-pressed="true"]{background:#f6f7f7!important;color:#10232c!important;border-color:white!important}
+#hcGuidedNavigation .hc-guided-switch{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+#hcGuidedNavigation .hc-guided-extras{display:flex;flex-wrap:wrap;gap:8px}
+body.hc-flow-enabled #hcGuidedNavigation .hc-guided-extras button{flex:1 1 125px;min-height:51px!important;font-size:14px!important}
+body.hc-flow-enabled #player .player-artwork{max-height:210px!important;margin-top:10px!important}
+body.hc-flow-enabled #player .player-orb{width:100px;height:100px;margin:10px auto 8px}
+body.hc-flow-enabled #player .clock{font-size:38px!important}
+body.hc-flow-enabled #player #seek{min-height:40px!important}
+body.hc-flow-enabled #player .progress-meta{font-size:17px!important;color:#f5f6f6}
+
+/* v238: keep meditation selections stationary so mobile taps never chase a floating card. */
+body.hc-flow-enabled #practices.active .practice-card,
+body.hc-flow-enabled #practices.active .practice-card .practice-art,
+body.hc-flow-enabled #practices.active .practice-card .practice-art::after{
+  animation:none!important;transition:none!important;transform:none!important;
+}
