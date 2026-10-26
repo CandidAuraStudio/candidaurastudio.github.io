@@ -295,12 +295,12 @@ launcher.innerHTML='<span><strong>Human Knowledge · மனித அறிவ�
 care.insertAdjacentElement('beforebegin',launcher);
 const style=document.createElement('style');style.id='hcHeritageLauncherCssV189';
 style.textContent=[
- '#home #hcDeepHeritageV185{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 0;min-height:55px;padding:11px 13px;background:#0b202c;color:#f1f6f7;border:1px solid #4e6874;border-radius:12px;text-align:left;font:inherit;cursor:pointer}',
+ '#home #hcDeepHeritageV185{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 0;min-height:55px;padding:11px 13px;background:#1d1d1d;color:#f6f6f4;border:1px solid #515151;border-radius:12px;text-align:left;font:inherit;cursor:pointer}',
  '#home #hcDeepHeritageV185 strong{display:block;font-size:14px;line-height:1.5;font-weight:750}',
- '#home #hcDeepHeritageV185 small{display:block;font-size:11px;color:#bdd0d7;margin-top:3px;line-height:1.4}',
+ '#home #hcDeepHeritageV185 small{display:block;font-size:11px;color:#c7c6c3;margin-top:3px;line-height:1.4}',
  '#home #hcDeepHeritageV185>span:last-child{font-size:19px}',
  '#home #hcDeepHeritageV185:focus-visible{outline:2px solid #fff;outline-offset:3px}'
 ].join('\n');document.head.append(style);
 const reader=document.createElement('script');reader.id='hcHeritageReaderScriptV189';
-reader.src='./hc-heritage-reader-v189.js?v=230';reader.async=true;document.body.append(reader);
+reader.src='./hc-heritage-reader-v189.js?v=284';reader.async=true;document.body.append(reader);
 })();
