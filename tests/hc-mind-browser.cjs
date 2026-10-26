@@ -8,8 +8,12 @@ const assert=require('node:assert/strict');const path=require('node:path');
   const errors=[];page.on('pageerror',e=>errors.push(e.stack||e.message));
   // Preserve the original evidence-engine interaction suite, separate from the
   // later broader-207 enhancement. The enhancement has its own assertions below.
-  await page.route('**/hc-mind-broader-v207.js*',r=>r.abort());
-  await page.route('**/*',r=>r.request().url().startsWith('http://127.0.0.1:8765/')?r.continue():r.abort());
+  // One interceptor avoids a catch-all rule bypassing the specific route.
+  await page.route('**/*',r=>{
+    const url=r.request().url();
+    if(url.includes('/hc-mind-broader-v207.js'))return r.abort();
+    return url.startsWith('http://127.0.0.1:8765/')?r.continue():r.abort();
+  });
   await page.addInitScript(()=>{window.__voices=[];window.SpeechRecognition=class{constructor(){window.__voices.push(this)}start(){this.saved=this.onresult}abort(){this.aborted=true}};});
   await page.goto('http://127.0.0.1:8765/human-practice-prototype/',{waitUntil:'domcontentloaded'});
   assert.equal(await page.evaluate(()=>HCExploreCore.gameVersion),'evidence-1');
