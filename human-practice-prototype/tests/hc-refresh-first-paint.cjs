@@ -18,7 +18,7 @@ assert.ok(firstHead>=0&&splash>firstHead&&loader<splash+1000&&finalStyle>splash,
  'Splash must precede late styles and older content');
 assert.match(html,/hc-design-unified-v279\.css\?v=284" onload="document\.documentElement\.classList\.remove\('hc-booting'\)"/);
 assert.match(html,/onerror="document\.documentElement\.classList\.remove\('hc-booting'\)"/);
-assert.match(html,/navigator\.serviceWorker\.register\('\.\/sw\.js\?v=285'\)/);
+assert.match(html,/navigator\.serviceWorker\.register\('\.\/sw\.js\?v=286'\)/);
 assert.match(html,/hc-home-visible-v268\.js\?v=285/);
 assert.match(sw,/const APP_CACHE='heartclear-v286'/);
 assert.match(sw,/const MEDIA_CACHE='heartclear-media-v1'/);
