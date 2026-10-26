@@ -54,7 +54,7 @@ function ensureKnowledge(){
   };
   if($('hcEverydayCareV182')){check();return}
   const script=document.createElement('script');
-  script.src='./hc-daily-care-v182.js?v=230';
+  script.src='./hc-daily-care-v182.js?v=284';
   script.async=true;
   script.onload=check;
   script.onerror=()=>resolve(false);

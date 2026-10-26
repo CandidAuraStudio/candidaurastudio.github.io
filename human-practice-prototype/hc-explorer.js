@@ -60,7 +60,7 @@
   }
   function mount(){
     if(byId('hcExplorer'))return;
-    const css=document.createElement('link');css.rel='stylesheet';css.href='./hc-explorer.css?v=126';document.head.appendChild(css);
+    const css=document.createElement('link');css.rel='stylesheet';css.href='./hc-explorer.css?v=284';document.head.appendChild(css);
     const homeButton=document.createElement('button');
     homeButton.type='button';homeButton.className='choice hcxe-entry';
     homeButton.innerHTML='<b>Explore · Interactive journeys</b><small>Step through Al-Fatiha, HUMAN, and awareness · personal notes</small>';
