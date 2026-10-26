@@ -3825,7 +3825,7 @@ window.setTimeout(function(){
         </div>
       </details>
     </div>
-    <div class="app-version">HeartClear · HC v285</div>
+    <div class="app-version">HeartClear · HC v286</div>
   </div>
 </section>
 
@@ -5816,7 +5816,10 @@ function openFearTrack(key){
   document.getElementById('fearTotal').textContent=fmt(t.duration);
   document.getElementById('fearVolume').value=15;
   document.getElementById('fearVolumeLabel').textContent='15%';
-  document.querySelectorAll('#fearBeforeRating button,#fearAfterRating button').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('#fearBeforeRating button,#fearAfterRating button').forEach(b=>{
+    b.classList.remove('active');
+    b.setAttribute('aria-pressed','false');
+  });
 
   const status=document.getElementById('fearAudioStatus');
   if(status)status.textContent='Ready to listen · set a comfortable volume and press Play.';
@@ -5907,6 +5910,12 @@ function setFearMediaSession(){
 }
 
 function finishFearPractice(){
+  const heardSeconds=Math.max(0,Number(fearAudio.currentTime)||0);
+  if(heardSeconds<1){
+    const status=document.getElementById('fearAudioStatus');
+    if(status)status.textContent='Press Play and listen before saving your session.';
+    return;
+  }
   fearPlayRequested=false;fearAudio.pause();
   const t=fearTracks[currentFearKey]||fearTracks.ocean;
   const stats=getFearStats();
@@ -5924,7 +5933,7 @@ function finishFearPractice(){
     practice:t.title,
     title:'Fear',
     category:'Fear',
-    listenedSeconds:Math.round(fearAudio.currentTime||0),
+    listenedSeconds:Math.round(heardSeconds),
     targetSeconds:t.duration,
     completed:true,
     endedAt:Date.now(),
@@ -9594,7 +9603,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=285');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=286');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting && navigator.serviceWorker.controller)showUpdateBanner();
@@ -9690,7 +9699,7 @@ const heartclearAutoInstallPrompt=false;
 <script src="./hc-home-core-paths-v259.js?v=268"></script>
 <link rel="stylesheet" href="./hc-unified-visual-v259.css?v=267">
 <link rel="stylesheet" href="./hc-home-visible-v268.css?v=277">
-<script src="./hc-home-visible-v268.js?v=285"></script>
+<script src="./hc-home-visible-v268.js?v=286"></script>
 
 <link rel="stylesheet" href="./hc-design-unified-v279.css?v=284" onload="document.documentElement.classList.remove('hc-booting')" onerror="document.documentElement.classList.remove('hc-booting')">
 </body>
