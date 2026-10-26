@@ -1,4 +1,4 @@
-/* HeartClear v287: background blur preference, without touching player or saved progress.
+/* HeartClear v288: background blur preference, without touching player or saved progress.
    Run: node human-practice-prototype/tests/hc-settings-blur-toggle.cjs */
 'use strict';
 const assert=require('node:assert/strict');
@@ -11,7 +11,7 @@ assert.match(html,/role="switch" aria-checked="true" aria-label="Toggle backgrou
 assert.match(html,/body\.hc-no-blur \*,body\.hc-no-blur \*::before,body\.hc-no-blur \*::after/);
 assert.match(html,/backdrop-filter:none!important/);
 assert.match(html,/hcApplyBlurPreference\(\);\s*updateOfflineStorageText\(\)/,'Restores preference when settings render');
-assert.match(html,/sw\.js\?v=287/,'Preserve service-worker wiring for release-manager integration');
+assert.match(html,/sw\.js\?v=288/,'Preserve service-worker wiring for release-manager integration');
 const from=html.indexOf('function hcApplyBlurPreference(){');
 const to=html.indexOf('async function toggleWakeLock(){',from);
 assert(from>0&&to>from,'Blur behavior must be kept as one isolated function block');
