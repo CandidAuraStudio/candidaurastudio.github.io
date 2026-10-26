@@ -545,6 +545,9 @@ body{overscroll-behavior-y:none}
 .practice-card.is-hidden{display:none!important}
 
 .settings-list{display:grid;gap:10px;margin-top:18px}
+/* Optional readability/performance preference: keep normal contrast, only suppress backdrop blur. */
+body.hc-no-blur *,body.hc-no-blur *::before,body.hc-no-blur *::after{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+body.hc-no-blur::before{filter:none!important}
 .setting-row{
   display:flex;align-items:center;justify-content:space-between;gap:14px;
   padding:15px 16px;border-radius:18px;border:1px solid rgba(198,225,236,.08);
@@ -3753,6 +3756,10 @@ window.setTimeout(function(){
       <div class="setting-row">
         <div><strong>Reduce motion</strong><small>Fewer animations</small></div>
         <button class="switch" id="reduceMotionSwitch" onclick="toggleReduceMotion()" aria-label="Toggle reduced motion"></button>
+      </div>
+      <div class="setting-row">
+        <div><strong>Background blur</strong><small>Turn off glass and backdrop blur while keeping images and text clear</small></div>
+        <button type="button" class="switch" id="hcBlurSwitch" role="switch" aria-checked="true" aria-label="Toggle background blur" onclick="hcToggleBlurEffects()"></button>
       </div>
       <div class="setting-row">
         <div><strong>Downloads</strong><small id="offlineStorageText">Saved for offline use</small></div>
@@ -8336,6 +8343,7 @@ function renderSettings(){
   const reduced=document.body.classList.contains('reduce-motion');
   const sw=document.getElementById('reduceMotionSwitch'); if(sw)sw.classList.toggle('on',reduced);
   const ww=document.getElementById('wakeLockSwitch'); if(ww)ww.classList.toggle('on',wakeLockEnabled);
+  hcApplyBlurPreference();
   updateOfflineStorageText();
 }
 
@@ -8344,6 +8352,21 @@ function toggleReduceMotion(){
   const on=document.body.classList.contains('reduce-motion');
   try{localStorage.setItem('clearWithinReducedMotion',on?'1':'0')}catch(e){}
   renderSettings();
+}
+
+/* Compatible with the early HeartClear blur preference from PR #2; no change to media or saved progress. */
+function hcApplyBlurPreference(){
+  let enabled=!document.body.classList.contains('hc-no-blur');
+  try{const stored=localStorage.getItem('heartclearBlur');if(stored!==null)enabled=stored!=='0'}catch(_){}
+  document.body.classList.toggle('hc-no-blur',!enabled);
+  const control=document.getElementById('hcBlurSwitch');
+  if(control){control.classList.toggle('on',enabled);control.setAttribute('aria-checked',String(enabled))}
+}
+function hcToggleBlurEffects(){
+  const enabled=document.body.classList.contains('hc-no-blur');
+  document.body.classList.toggle('hc-no-blur',!enabled);
+  try{localStorage.setItem('heartclearBlur',enabled?'1':'0')}catch(_){}
+  hcApplyBlurPreference();
 }
 
 async function toggleWakeLock(){
