@@ -1,5 +1,14 @@
 name: HeartClear Sourced Mind Game Checks
 on:
+  pull_request:
+    paths:
+      - '.github/workflows/heartclear-mind-qa.yml'
+      - 'human-practice-prototype/hc-mind-*'
+      - 'human-practice-prototype/hc-explore-ui.js'
+      - 'human-practice-prototype/index.html'
+      - 'human-practice-prototype/sw.js'
+      - 'tests/hc-mind-*'
+      - 'tests/hc-explore.test.cjs'
   push:
     branches: [main, feature/hc-mind-evidence]
     paths:
