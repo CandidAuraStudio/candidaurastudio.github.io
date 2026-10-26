@@ -3840,7 +3840,7 @@ window.setTimeout(function(){
         </div>
       </details>
     </div>
-    <div class="app-version">HeartClear · HC v287</div>
+    <div class="app-version">HeartClear · HC v288</div>
   </div>
 </section>
 
@@ -9738,7 +9738,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=287');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=288');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting && navigator.serviceWorker.controller)showUpdateBanner();
@@ -9834,7 +9834,7 @@ const heartclearAutoInstallPrompt=false;
 <script src="./hc-home-core-paths-v259.js?v=287"></script>
 <link rel="stylesheet" href="./hc-unified-visual-v259.css?v=267">
 <link rel="stylesheet" href="./hc-home-visible-v268.css?v=277">
-<script src="./hc-home-visible-v268.js?v=287"></script>
+<script src="./hc-home-visible-v268.js?v=288"></script>
 
 <link rel="stylesheet" href="./hc-design-unified-v279.css?v=284" onload="document.documentElement.classList.remove('hc-booting')" onerror="document.documentElement.classList.remove('hc-booting')">
 </body>
