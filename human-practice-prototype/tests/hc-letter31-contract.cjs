@@ -13,6 +13,7 @@ const context={window:{}};
 vm.runInNewContext(dataFile,context,{timeout:1000});
 const letter=context.window.HC_ALI_LETTER31_AR;
 assert.equal(letter.lang,'ar');
+assert.equal(letter.source,'https://github.com/libarabia/nahj-albalagha/blob/main/abdu/ch006.md','Arabic edition link must resolve to upstream main branch');
 assert(letter.text.length>12500,'Letter must not be abridged or only an extract');
 for(const anchor of [
 'من الوالد الفان','ووجدتك بعضي','أحي قلبك','اجعل نفسك ميزانا',
@@ -25,6 +26,9 @@ const html=read('human-knowledge/ali-letter-31.html');
 assert(html.includes('ali-letter-31-arabic.js'),'Local Arabic source must be readable');
 assert(html.includes('sectionEnglish'),'English source panel must exist');
 assert(html.includes('sectionNotes'),'Blank independent note panel must exist');
+assert(html.includes("event.key==='ArrowRight'") && html.includes("event.key==='ArrowLeft'"),'Reader tabs need keyboard navigation');
+assert(html.includes('control.tabIndex=active?0:-1'),'Only the selected tab belongs in the normal tab order');
+assert(!html.includes('window.scrollTo(0,0)'),'Switching Letter 31 tabs must not forcibly reset scroll');
 assert(html.includes('Sayyid Ali Reza'),'English translation attribution required');
 assert(html.includes('al-islam.org/nahjul-balagha'),'Complete English source must be linked');
 assert(html.includes('not a surviving manuscript'),'Historical attribution must remain explicit');
