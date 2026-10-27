@@ -79,15 +79,29 @@ footer{color:#aaa;font-size:.77rem;margin:40px 0 10px}
 (function(){
 'use strict';
 var pages={tabArabic:'sectionArabic',tabEnglish:'sectionEnglish',tabNotes:'sectionNotes'};
-Object.keys(pages).forEach(function(id){
+var tabs=Object.keys(pages);
+function selectTab(id,moveFocus){
+ tabs.forEach(function(other){
+  var active=other===id,control=document.getElementById(other);
+  control.setAttribute('aria-selected',String(active));
+  control.tabIndex=active?0:-1;
+  document.getElementById(pages[other]).hidden=!active;
+ });
+ if(moveFocus)document.getElementById(id).focus();
+}
+tabs.forEach(function(id,index){
  var control=document.getElementById(id);
- control.addEventListener('click',function(){
-  Object.keys(pages).forEach(function(other){
-   var active=other===id;
-   document.getElementById(other).setAttribute('aria-selected',String(active));
-   document.getElementById(pages[other]).hidden=!active;
-  });
-  window.scrollTo(0,0);
+ control.tabIndex=id==='tabArabic'?0:-1;
+ control.addEventListener('click',function(){selectTab(id,false)});
+ control.addEventListener('keydown',function(event){
+  var next=index;
+  if(event.key==='ArrowRight')next=(index+1)%tabs.length;
+  else if(event.key==='ArrowLeft')next=(index+tabs.length-1)%tabs.length;
+  else if(event.key==='Home')next=0;
+  else if(event.key==='End')next=tabs.length-1;
+  else return;
+  event.preventDefault();
+  selectTab(tabs[next],true);
  });
 });
 var data=window.HC_ALI_LETTER31_AR;
