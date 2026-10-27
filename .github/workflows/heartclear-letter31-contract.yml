@@ -1,0 +1,27 @@
+name: HeartClear Letter 31 Source Contract
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/heartclear-letter31-contract.yml'
+      - 'human-practice-prototype/human-knowledge/ali-letter-31-arabic.js'
+      - 'human-practice-prototype/human-knowledge/ali-letter-31.html'
+      - 'human-practice-prototype/hc-heritage-reader-v189.js'
+      - 'human-practice-prototype/tests/hc-letter31-contract.cjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  letter31-source-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify preserved Arabic, provenance and accessible reader structure
+        run: node human-practice-prototype/tests/hc-letter31-contract.cjs
