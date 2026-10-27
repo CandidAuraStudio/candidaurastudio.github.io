@@ -15,6 +15,8 @@ const letter=context.window.HC_ALI_LETTER31_AR;
 assert.equal(letter.lang,'ar');
 assert.equal(letter.source,'https://github.com/libarabia/nahj-albalagha/blob/main/abdu/ch006.md','Arabic edition link must resolve to upstream main branch');
 assert(letter.text.length>12500,'Letter must not be abridged or only an extract');
+const arabicWords=(letter.text.match(/\p{Script=Arabic}+/gu)||[]).filter(token=>!/^\p{Decimal_Number}+$/u.test(token));
+assert.equal(arabicWords.length,2488,'Preserved Arabic Letter 31 must retain all 2,488 original-edition words; review source before updating this count');
 for(const anchor of [
 'من الوالد الفان','ووجدتك بعضي','أحي قلبك','اجعل نفسك ميزانا',
 'ولا تكن عبد غيرك','وإياك ومشاورة النساء','وأكرم عشيرتك','والسلام'
