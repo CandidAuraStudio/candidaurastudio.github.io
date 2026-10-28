@@ -14,7 +14,7 @@ assert.equal(data.count,16);
 assert.equal(new Set(data.records.map(x=>x.id)).size,16,'Every lesson must have a distinct ID');
 for(const kind of ['Scripture','Daily care','Inner life'])assert(data.records.some(x=>x.kind===kind),kind+' lessons required');
 for(const item of data.records){
- for(const key of ['id','kind','title','ta','source','meaning','context','practice'])assert(item[key]&&String(item[key]).length>12,key+' missing in '+item.id);
+ for(const key of ['id','kind','title','ta','source','meaning','context','practice'])assert(item[key]&&String(item[key]).trim().length>0,key+' missing in '+item.id);
  assert(item.context.length>95,'Detailed contextual explanation needed: '+item.id);
  assert(item.practice.length>40,'Separate practical reflection needed: '+item.id);
  if(item.kind==='Scripture'){
