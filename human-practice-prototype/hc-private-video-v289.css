@@ -1,0 +1,23 @@
+/* HeartClear private on-device video controls: additive, no existing player overrides. */
+.hc-private-home-card{display:flex;align-items:center;gap:10px;width:100%;margin:8px 0 10px;padding:10px 12px;border:1px solid rgba(227,203,153,.32);border-radius:14px;background:rgba(24,26,28,.89);color:#fff;text-align:left;cursor:pointer;font:inherit}
+.hc-private-home-icon{display:grid;place-items:center;width:33px;height:33px;flex:0 0 33px;border-radius:50%;background:#f1ece0;color:#1b1b1b;font-size:13px}
+.hc-private-home-words{display:grid;gap:3px;min-width:0;flex:1}
+.hc-private-home-words strong{font-size:13px}
+.hc-private-home-words small{font-size:11px;color:#c5ccd0}
+.hc-private-status{flex-shrink:0;font-size:11px;color:#e9cd91}
+#hcPrivateMeditationGroup .hc-private-status{margin-left:5px}
+.hc-private-overlay[hidden],.hc-private-mini[hidden]{display:none}
+.hc-private-overlay{position:fixed;inset:0;z-index:1005;background:rgba(0,0,0,.91);display:flex;align-items:center;justify-content:center;padding:16px;overflow:auto}
+.hc-private-panel{width:min(100%,700px);max-height:95dvh;overflow:auto;border:1px solid rgba(227,203,153,.26);border-radius:18px;background:#121416;color:#fff;padding:14px}
+.hc-private-heading{display:flex;justify-content:space-between;align-items:start;gap:8px;margin-bottom:12px}
+.hc-private-eyebrow{font-size:10px;letter-spacing:.11em;color:#d5bc88}
+.hc-private-title{margin:5px 0 0;font-size:19px;color:#fff}
+#hcPrivateVideo{display:block;width:100%;max-height:58dvh;background:#000;border-radius:9px}
+.hc-private-message{font-size:12px;line-height:1.45;color:#cdd5d9;margin:11px 0}
+.hc-private-actions{display:flex;flex-wrap:wrap;gap:8px}
+.hc-private-action{border:1px solid #555d60;border-radius:9px;background:#22282c;color:#fff;font:inherit;font-size:12px;padding:10px 12px;cursor:pointer}
+.hc-private-mini{position:fixed;bottom:calc(82px + env(safe-area-inset-bottom,0px));left:12px;right:12px;z-index:1003;display:flex;gap:8px;align-items:center;padding:10px 12px;border:1px solid rgba(227,203,153,.35);border-radius:15px;background:#16191b;color:#fff;box-shadow:0 6px 18px rgba(0,0,0,.4)}
+.hc-private-mini button{border:0;border-radius:8px;background:#30373a;color:#fff;font:inherit;padding:8px 10px;cursor:pointer}
+.hc-private-mini .hc-private-mini-title{flex:1;min-width:0;text-align:left;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;background:transparent;font-size:12px}
+.hc-private-mini-play{min-width:36px}
+@media(max-width:380px){#hcPrivateMeditationGroup .hc-private-status{display:none}.hc-private-action{font-size:11px;padding:9px}}
