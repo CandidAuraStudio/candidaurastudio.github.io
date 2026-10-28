@@ -3138,6 +3138,12 @@ window.setTimeout(function(){
       <span><b>Reading Books</b><small>English · தமிழ் · සිංහල</small></span>
       <span class="hub-arrow">›</span>
     </button>
+    <!-- Historical wisdom is a separate shelf, never Book Three. -->
+    <a class="hub-card" href="./human-knowledge/ali-letter-31.html" aria-label="Read A Letter to a Son, A Letter for Every Human from Stories and Letters" style="color:inherit;text-decoration:none">
+      <span class="hub-icon" aria-hidden="true">✉</span>
+      <span><b>Stories &amp; Letters</b><small>Imam Ali · Letter 31 · preserved Arabic and credited English edition</small></span>
+      <span class="hub-arrow" aria-hidden="true">›</span>
+    </a>
   </div>
 
   <button class="btn secondary" onclick="openSoundLab()">Nature sounds</button>
@@ -6729,7 +6735,17 @@ function hcReadingBookShelf(language){
       {label:'BOOK ONE · සිංහල',title:'Shadows of Truth · සිංහල',details:'Complete Sinhala reader · 61 chapters',cover:'./books/shadows-of-truth-cover.jpg',href:'./books/shadows-of-truth-sinhala.html'}
     ]
   };
-  return back+'<div class="hc-reading-book-list">'+items[language].map(x=>hcReadingBookCard(x,language)).join('')+'</div>';
+  // Letter 31 is a historic source under Reading Books, not a third
+  // HeartClear-authored book. Reuse the single Human Knowledge reader.
+  const letter=language==='en'
+    ?'<div class="hc-human-reading-entry" lang="en"><div class="hc-human-reading-copy">'+
+      '<div class="kicker">HISTORICAL LETTER · NAHJ AL-BALAGHA</div>'+
+      '<h3>A Letter to a Son — A Letter for Every Human</h3>'+
+      '<p>Letter 31, traditionally attributed to Imam Ali · complete transmitted Arabic, linked published English edition, and private reflection.</p>'+
+      '<a class="hc-human-reading-link" href="./human-knowledge/ali-letter-31.html">Read the letter ›</a>'+
+      '</div></div>'
+    :'';
+  return back+'<div class="hc-reading-book-list">'+items[language].map(x=>hcReadingBookCard(x,language)).join('')+letter+'</div>';
 }
 function hcLanguageShelf(type){
  const isAudio=type==='audioLanguages';
@@ -6738,7 +6754,7 @@ function hcLanguageShelf(type){
   {code:'EN',label:'English Audiobooks',detail:'Listen to your English recordings',kind:'english'},
   {code:'த',label:'Tamil Audiobooks',detail:'Listen to your Tamil recordings',kind:'tamil'}
  ]:[
-  {code:'EN',label:'English',detail:'2 books',kind:'reading-en'},
+  {code:'EN',label:'English',detail:'2 books · 1 historical letter',kind:'reading-en'},
   {code:'த',label:'தமிழ்',detail:'2 books',kind:'reading-ta'},
   {code:'සි',label:'සිංහල',detail:'1 book',kind:'reading-si'}
  ];
