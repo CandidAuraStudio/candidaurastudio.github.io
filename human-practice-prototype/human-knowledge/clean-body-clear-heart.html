@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0d0d0d">
+<meta name="color-scheme" content="dark">
+<title>Clean Body · Clear Heart — HeartClear Human Knowledge</title>
+<meta name="description" content="In-app source-based study: hygiene, Qur’an, Bible, Bhagavad Gita, and clearly separate HeartClear explanations.">
+<style>
+:root{color-scheme:dark;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:#0d0d0d;color:#f5f4f0;font-size:16px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;line-height:1.6}
+header,main,footer{max-width:850px;margin:auto;padding:16px clamp(16px,4vw,29px)}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:1px solid #383838}
+a{color:inherit;text-decoration:none}header a{border:1px solid #686868;border-radius:10px;padding:8px 12px;font-size:.84rem}
+.logo{font-size:.86rem;font-weight:700}.logo span{font-size:1.65em;vertical-align:middle}
+.kicker{font-size:.72rem;letter-spacing:.11em;text-transform:uppercase;color:#dcc99f;font-weight:700}
+h1{font-size:clamp(1.7rem,5vw,2.7rem);line-height:1.18;letter-spacing:-.03em;margin:7px 0}
+h2{font-size:1.22rem;line-height:1.3}p{margin:11px 0}
+.muted{color:#d1d0ca;font-size:.91rem}
+.card{padding:17px;border:1px solid #535353;background:#191919;border-radius:16px;margin:17px 0}
+.feature{background:#22201c;border-color:#79705e}
+.feature h2{margin:6px 0;font-size:clamp(1.2rem,3.5vw,1.55rem)}
+.feature p{margin:9px 0}
+.controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px}
+button,select,input{font:inherit;background:#252525;color:#fff;border:1px solid #717171;border-radius:10px;min-height:44px;padding:9px 12px}
+button{cursor:pointer}button.primary{background:#f1eee8;color:#101010;border-color:#f1eee8;font-weight:650}
+button[aria-pressed=true]{border-color:#cfb878;color:#f2dca6}
+button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid white;outline-offset:3px}
+.filters{display:grid;grid-template-columns:minmax(0,1fr) minmax(120px,195px);gap:9px}
+input,select{min-width:0;width:100%}
+#lessons{display:grid;gap:10px;margin:15px 0 30px}
+.lesson{width:100%;display:flex;justify-content:space-between;align-items:center;text-align:left;gap:12px;background:#1b1b1b;padding:13px 15px}
+.lesson strong,.lesson small{display:block}.lesson strong{font-size:.96rem}.lesson small{font-size:.78rem;color:#c1bfb9;margin-top:4px}
+.label{font-size:.7rem;color:#e2c993;font-weight:700}
+#reader[hidden]{display:none}#reader{scroll-margin-top:16px}
+.original{white-space:pre-wrap;overflow-wrap:anywhere;background:#0e0e0e;border-radius:12px;border:1px solid #606060;padding:17px;font-size:1.25rem;line-height:2.05}
+.original[lang=ar]{direction:rtl;text-align:right;font-family:"Noto Naskh Arabic","Amiri",serif;font-size:1.5rem}
+.original[lang=sa]{font-family:"Noto Sans Devanagari",serif}
+.original[lang=en]{font-size:1rem;line-height:1.9}
+.source{border-left:3px solid #cbb78a;padding-left:12px;color:#ded8cd;font-size:.85rem;margin:16px 0}
+.note{background:#27231e;border:1px solid #746750;border-radius:12px;padding:12px}
+section h3{font-size:.93rem;margin:17px 0 6px}
+section h3+p{margin-top:0}
+footer{color:#b9b9b3;font-size:.76rem;border-top:1px solid #404040;padding-bottom:35px}
+@media(max-width:410px){.filters{grid-template-columns:1fr}.controls>*{flex:1}.logo{font-size:.75rem}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header><a href="../" id="backLink" aria-label="Back to HeartClear">← HeartClear</a><div class="logo"><span aria-hidden="true">∞</span> HEARTCLEAR</div></header>
+<main>
+<p class="kicker">Human Knowledge · Original sources</p>
+<h1>Clean Body · Clear Heart</h1>
+<p class="muted">A growing, carefully checked library of practical cleanliness and inner reflection. Qur’an, Bible and Bhagavad Gita passages remain in their own traditions, with original words separated from HeartClear's explanation.</p>
+<section class="card feature" aria-label="Rotating discovery preview">
+  <div class="kicker" id="featureKind">DISCOVER</div>
+  <h2 id="featureTitle">Loading lessons…</h2>
+  <p class="muted" id="featureSummary">Only your current preview changes. An open lesson never changes while you read.</p>
+  <div class="controls">
+    <button type="button" class="primary" id="featureRead">Read this lesson</button>
+    <button type="button" id="featureNext">Next insight</button>
+    <button type="button" id="featureAuto" aria-pressed="true">Auto: On</button>
+  </div>
+  <p class="muted" id="featureStatus" aria-live="polite"></p>
+</section>
+<section aria-label="Lesson library">
+  <h2>Explore all lessons <span id="lessonCount"></span></h2>
+  <div class="filters">
+    <input type="search" id="search" placeholder="Search hands, shower, heart, verse…" aria-label="Search lessons">
+    <select id="filter" aria-label="Filter by lesson type"><option value="all">All subjects</option><option value="Scripture">Scripture</option><option value="Daily care">Body & daily care</option><option value="Inner life">Inner life</option></select>
+  </div>
+  <div id="lessons"></div>
+</section>
+<section id="reader" class="card" hidden aria-labelledby="readerTitle">
+  <div class="kicker" id="readerKind"></div>
+  <h2 id="readerTitle"></h2>
+  <div class="source" id="readerSource"></div>
+  <div id="originalArea" hidden>
+    <h3>Original scripture · full cited verse</h3>
+    <blockquote class="original" id="readerOriginal"></blockquote>
+  </div>
+  <h3 id="meaningTitle">HeartClear study meaning — not a literal translation</h3>
+  <p id="readerMeaning"></p>
+  <h3>Deeper context and explanation</h3>
+  <p id="readerContext"></p>
+  <div class="note"><strong>Everyday reflection · separate from scripture</strong><p id="readerPractice"></p></div>
+  <div class="controls"><button type="button" id="readerPrev">Previous lesson</button><button type="button" id="readerNext">Next lesson</button><button type="button" id="readerClose">Close lesson</button></div>
+</section>
+</main>
+<footer>HeartClear · Human Knowledge. No outside websites, login, tracking or automatic audio. Bible text: public-domain KJV; Qur’anic Arabic: Tanzil Quran Text CC BY 3.0 (Tanzil Project, 2007–2024); Gita: original Sanskrit. Translations, study summaries and reflections are labelled separately. This starter library is not yet a thousand-lesson corpus.</footer>
+<script>
+(function(){
+'use strict';
+var list=[],order=[],cursor=0,selected=-1,auto=true,timer=null;
+var $=function(id){return document.getElementById(id)};
+var savedKey='hcCleanBodyHeartLastLessonV1';
+function setText(id,value){$(id).textContent=value||''}
+function shuffle(){
+ var a=list.map(function(_,i){return i});
+ for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var n=a[i];a[i]=a[j];a[j]=n}
+ if(order.length&&a.length>1&&a[0]===order[(cursor+order.length-1)%order.length]){var t=a[0];a[0]=a[1];a[1]=t}
+ order=a;cursor=0;
+}
+function preview(manual){
+ if(!list.length)return;
+ if(cursor>=order.length)shuffle();
+ var item=list[order[cursor++]];
+ $('featureKind').textContent=item.kind+' · '+item.source;
+ $('featureTitle').textContent=item.title;
+ $('featureSummary').textContent=item.meaning;
+ $('featureRead').dataset.id=item.id;
+ if(manual)setText('featureStatus','Showing '+(cursor)+' of '+order.length+' before reshuffling. Your open lesson will not change.');
+}
+function showLesson(id){
+ var at=list.findIndex(function(item){return item.id===id});
+ if(at<0)return;
+ selected=at;
+ var item=list[at];
+ setText('readerKind',item.kind);
+ setText('readerTitle',item.title);
+ setText('readerSource',item.source+' · '+(item.original?'Original text preserved below':'Source reference and original HeartClear guidance'));
+ setText('readerMeaning',item.meaning);
+ setText('readerContext',item.context);
+ setText('readerPractice',item.practice);
+ setText('meaningTitle',item.original?'HeartClear study meaning — not a word-for-word translation':'Practical explanation · not scripture');
+ $('originalArea').hidden=!item.original;
+ if(item.original){setText('readerOriginal',item.original);$('readerOriginal').setAttribute('lang',item.language||'en')}
+ $('reader').hidden=false;
+ $('readerPrev').disabled=selected===0;
+ $('readerNext').disabled=selected===list.length-1;
+ try{localStorage.setItem(savedKey,id)}catch(_){}
+ $('reader').scrollIntoView({block:'start',behavior:'smooth'});
+}
+function renderList(){
+ var term=$('search').value.trim().toLowerCase(),kind=$('filter').value;
+ var matches=list.filter(function(item){return (kind==='all'||item.kind===kind)&&(!term||[item.title,item.ta,item.source,item.meaning,item.context].join(' ').toLowerCase().includes(term))});
+ setText('lessonCount','('+matches.length+' of '+list.length+')');
+ $('lessons').replaceChildren();
+ matches.forEach(function(item){
+  var b=document.createElement('button');b.type='button';b.className='lesson';
+  var left=document.createElement('span'),strong=document.createElement('strong'),small=document.createElement('small'),right=document.createElement('span');
+  strong.textContent=item.title;
+  small.textContent=item.source+' · '+item.ta;
+  right.className='label';right.textContent='READ ›';
+  left.append(strong,small);b.append(left,right);
+  b.addEventListener('click',function(){showLesson(item.id)});
+  $('lessons').append(b);
+ });
+ if(!matches.length){var p=document.createElement('p');p.className='muted';p.textContent='No matches. Try a different subject.';$('lessons').append(p)}
+}
+function applyAuto(){
+ $('featureAuto').setAttribute('aria-pressed',String(auto));
+ $('featureAuto').textContent=auto?'Auto: On':'Auto: Paused';
+ if(timer)clearInterval(timer);
+ timer=auto?setInterval(function(){if(!document.hidden)preview(false)},30000):null;
+}
+$('featureNext').addEventListener('click',function(){preview(true)});
+$('featureRead').addEventListener('click',function(){showLesson(this.dataset.id)});
+$('featureAuto').addEventListener('click',function(){auto=!auto;applyAuto();setText('featureStatus',auto?'Preview rotates every 30 seconds.':'Preview paused. Use Next insight.')});
+$('readerPrev').addEventListener('click',function(){if(selected>0)showLesson(list[selected-1].id)});
+$('readerNext').addEventListener('click',function(){if(selected<list.length-1)showLesson(list[selected+1].id)});
+$('readerClose').addEventListener('click',function(){$('reader').hidden=true;$('lessonCount').scrollIntoView({block:'nearest'})});
+$('search').addEventListener('input',renderList);
+$('filter').addEventListener('change',renderList);
+$('backLink').addEventListener('click',function(e){if(history.length>1&&document.referrer&&new URL(document.referrer).origin===location.origin){e.preventDefault();history.back()}});
+fetch('./clean-body-clear-heart-data.json',{cache:'no-store'}).then(function(res){if(!res.ok)throw Error('Missing lesson data');return res.json()}).then(function(data){
+ if(!data||!Array.isArray(data.records)||data.records.length<10)throw Error('Incomplete study library');
+ list=data.records;
+ shuffle();preview(false);renderList();applyAuto();
+ var previous='';try{previous=localStorage.getItem(savedKey)||''}catch(_){}
+ if(previous&&list.some(function(x){return x.id===previous}))setText('featureStatus','Your last lesson is saved on this device. Choose it again from the list.');
+}).catch(function(){
+ $('featureRead').disabled=true;$('featureNext').disabled=true;$('featureAuto').disabled=true;
+ setText('featureTitle','Lessons could not load');
+ setText('featureSummary','Reconnect once to load this in-app knowledge library. Previously saved books and audio are unaffected.');
+});
+})();
+</script>
+</body>
+</html>
