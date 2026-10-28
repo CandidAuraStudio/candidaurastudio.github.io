@@ -84,7 +84,7 @@ function itemButton(item){
  const title=document.createElement('strong');title.textContent=item.name;
  const desc=document.createElement('small');desc.textContent=item.detail;
  info.append(title,desc);
- const action=document.createElement('span');action.className='hcl-record-action';action.textContent=item.kind==='local-audio'?(window.hcLocalListeningAudio?.has(item.key)?(window.hcLocalListeningAudio.playing(item.key)?'Pause':'Play'):window.hcLocalListeningAudio?.isLoading()?'Loading…':'Add MP3/WAV'):['book','bible','hindu-library','gita','practice'].includes(item.kind)?'Open':'Play';
+ const action=document.createElement('span');action.className='hcl-record-action';action.textContent=item.kind==='local-audio'?(window.hcLocalListeningAudio?.has(item.key)?(window.hcLocalListeningAudio.playing(item.key)?'Pause':'Play'):window.hcLocalListeningAudio?.isLoading()?'Loading…':'Add audio'):['book','bible','hindu-library','gita','practice'].includes(item.kind)?'Open':'Play';
  b.append(icon,info,action);b.setAttribute('aria-label',(
  item.kind==='local-audio'?(window.hcLocalListeningAudio?.has(item.key)?'Play private audio ':'Add private MP3/WAV for '):
  ['book','bible','hindu-library','gita','practice'].includes(item.kind)?'Open ':'Play '
@@ -117,7 +117,7 @@ document.addEventListener('hc-local-listening-audio-changed',()=>{
     const key=id.slice(6),native=window.hcLocalListeningAudio;
     const action=button.querySelector('.hcl-record-action');
     if(!action)return;
-    action.textContent=native?.has(key)?(native.playing(key)?'Pause':'Play'):native?.isLoading()?'Loading…':'Add MP3/WAV';
+    action.textContent=native?.has(key)?(native.playing(key)?'Pause':'Play'):native?.isLoading()?'Loading…':'Add audio';
     button.setAttribute('aria-label',(native?.has(key)?(native.playing(key)?'Pause private audio ':'Play private audio '):'Add private MP3/WAV for ')+(button.querySelector('strong')?.textContent||'recording'));
     const detail=button.querySelector('.hcl-record-info small');
     if(detail)detail.textContent=detail.textContent.replace(/(?:add private MP3\/WAV once|private MP3\/WAV ready)$/,(native?.has(key)?'private MP3/WAV ready':'add private MP3/WAV once'));
