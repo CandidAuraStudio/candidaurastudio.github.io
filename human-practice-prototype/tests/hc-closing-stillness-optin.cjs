@@ -12,7 +12,7 @@ assert.match(html,/id="hcClosingAutoplaySwitch" role="switch" aria-checked="fals
 assert.match(html,/id="hcClosingAudio"[^>]+src="\.\/media\/HeartClear_DeepSleep_Stillness_2min_PREVIEW\.mp3"/);
 assert.match(html,/id="hcClosingSoundStatus" role="status" aria-live="polite"/);
 assert.match(html,/sw\.js\?v=288/);
-assert.match(html,/HeartClear · HC v288/);
+assert.match(html,/HeartClear · HC v289/);
 const completeStart=html.indexOf('function completeSession(completed=false){');
 const completeEnd=html.indexOf('function friendlyDuration(',completeStart);
 assert(completeStart>0&&completeEnd>completeStart);
