@@ -44,3 +44,18 @@ The separate `--release` mode rejects unapproved public distribution, source sub
 - This handoff file.
 
 **No main-branch modification, public publication, public video player, media deletion, filename replacement, paid service, or audio processing occurred in this feature PR.**
+
+## Release audit — 28 October 2026
+
+**Decision: source intake verified; public playback and distribution remain blocked.**
+
+- The creator's [published Terms of Service](https://breathewithsandy.com/terms-of-service/) (last updated 19 October 2026) describe access as **personal, non-commercial**, prohibit unauthorized copying, streaming outside the service or public redistribution, and state that the service is intended for adults. Those terms are not a grant of permission to HeartClear.
+- No written authorization or appropriately licensed original media source is on file. Copying video into Drive does not create rehosting rights. Do not expose the Drive IDs as direct public playback URLs.
+- The original videos are labelled as including guided breath-holding / intensive breathwork. A qualified safety and age-appropriateness review is not recorded. Do not enable these sessions for unreviewed public audiences.
+- Android/installed-PWA video playback, offline caching, persistence and mini-player behavior were **not** tested for these videos, because public playback was not authorized.
+- Both intake JSONs now explicitly record missing license evidence, incomplete safety/device reviews, and `playable: false` / `source_media_url: null`. The source creator field for `videoplayback (9).mp4` is qualified as user-attributed, not independently established by the filename.
+- A separate PR-only workflow `.github/workflows/heartclear-sandy-intake-gate.yml` runs `tests/hc-deep-hold-media-gate.cjs` and prints the blocked release status. The `verified-intake-not-release` GitHub Actions job **passed** at commit `13f85f4455ddfae91f3a982c87a722cfb14e6431`. This test proves the intake metadata and holds, **not** media licensing, age safety or playback.
+- At this audit the branch is **14 main commits behind**; GitHub reports no file conflicts, but final integration and full release regression review still require a future coordinated release.
+- No media bytes, copyrighted video/audio, playback URLs, or unsafe guided practice were added to public GitHub Pages. No `main` files, books, voices, offline media or saved progress were modified.
+
+**Next release action only after authorization:** independently verify distribution rights covering both named works and soundtrack, and obtain written safety/age clearance. If that is achieved, plan a separate licensed integration and device-validated release; do not simply flip the two JSON booleans.
