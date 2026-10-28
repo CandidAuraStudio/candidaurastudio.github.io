@@ -16,14 +16,14 @@
   "redistribution_permission_verified": false,
   "reviewed_for_release": false,
   "note": "Exact original found under Drive > Meditation (trailing space), not the empty HeartClear — Breathwork (10 New Uploads) subfolder. Kept nonplayable for public release until rights and safety review. Do not replace or process original background audio.",
-  "source_creator_reference": "Breathe With Sandy (shown in user's video screenshot)",
-  "source_title_reference": "(Resilience) Psychedelic Breathwork — 5 Rounds of Guided Rhythmic Breathing (screenshot reference)",
-  "source_expected_size_display": "44.95 MB (Android screenshot; exact bytes unverified)",
+  "source_creator_reference": "Attributed by the user to Breathe With Sandy; creator attribution not independently confirmed from original filename",
+  "source_title_reference": "videoplayback (9).mp4 — exact original source title unverified",
+  "source_expected_size_display": "44.95 MB (user screenshot; exact bytes separately verified)",
   "verified_duration_seconds": 1031.058866,
   "verified_sha256": "755969e2218fc511590bf37afdecec39a024a0124c08e5a9aff19fc9b46545b1",
   "audio_derivative_created": false,
   "audio_conversion_requirement": "Retain original soundtrack, music and environmental/background sound; no noise cancellation, dynamic processing or voice replacement. Any MP3 export requires source permission and separate verification.",
-  "rights_status": "publisher redistribution permission not confirmed",
+  "rights_status": "Public rehosting/redistribution not authorized; explicit written permission is needed",
   "source_size_bytes": 44947258,
   "uploaded_to_drive_utc": "2026-10-25T17:50:50.394Z",
   "verified_duration_display": "17:11",
@@ -40,5 +40,11 @@
       "unchanged": true
     }
   },
-  "source_verified": true
+  "source_verified": true,
+  "redistribution_authorization_evidence_url": null,
+  "safety_review_completed": false,
+  "device_review_completed": false,
+  "rights_review_reference": "Breathe With Sandy public Terms of Service, updated 2026-10-19; personal non-commercial license, no public redistribution without separate permission",
+  "rights_review_url": "https://breathewithsandy.com/terms-of-service/",
+  "license_explicitly_permits_public_heartclear_distribution": false
 }
