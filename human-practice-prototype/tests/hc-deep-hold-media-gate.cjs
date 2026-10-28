@@ -30,6 +30,17 @@ for(const [id,e,item] of entries){
  assert.equal(item.original_video_unchanged,true);
  assert.equal(item.no_noise_reduction,true);
  assert.equal(item.no_voice_filtering,true);
+ // The review branch is an inventory only, not an authorization to publish video.
+ // Any later approval must include evidence and intentionally revise this contract.
+ assert.equal(item.playable,false,id+' must not be publicly playable');
+ assert.equal(item.source_media_url,null,id+' must not expose a public media URL');
+ assert.equal(item.redistribution_permission_verified,false,id+' has no redistribution license');
+ assert.equal(item.license_explicitly_permits_public_heartclear_distribution,false,id+' has no explicit HeartClear permission');
+ assert.equal(item.redistribution_authorization_evidence_url,null,id+' has no documentary authorization');
+ assert.equal(item.reviewed_for_release,false,id+' has not passed release review');
+ assert.equal(item.safety_review_completed,false,id+' safety review is still outstanding');
+ assert.equal(item.device_review_completed,false,id+' device review is still outstanding');
+ assert.equal(item.rights_review_url,'https://breathewithsandy.com/terms-of-service/');
  assert.notEqual(item.source_drive_file_id,'1AJCfNPgTdq2cOc4rtjFcAh0ixnyKMm_C','Never substitute the unrelated two-hour Islamic Dhikr');
  if(item.playable){
   assert.equal(item.redistribution_permission_verified,true,'Publishing requires creator rights');
@@ -37,9 +48,13 @@ for(const [id,e,item] of entries){
  }
 }
 const [mode='--contract',selected,file]=process.argv.slice(2);
-assert.ok(['--contract','--inspect','--release'].includes(mode),'Unsupported mode');
+assert.ok(['--contract','--inspect','--release','--status'].includes(mode),'Unsupported mode');
 if(mode==='--contract'){
- console.log('PASS: both source records verified and exact-original playback/publication gates intact.');
+ console.log('PASS: both original source records are consistent and public playback remains blocked.');
+}else if(mode==='--status'){
+ for(const [id,,item] of entries){
+  console.log('HOLD '+id+': verified private source; rights, safety and device approval missing; not publicly playable.');
+ }
 }else{
  assert.ok(expected[selected],'Unknown video ID');
  assert.ok(file&&fs.existsSync(file)&&fs.statSync(file).isFile(),'Exact source MP4 not found');
