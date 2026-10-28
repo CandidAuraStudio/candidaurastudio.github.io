@@ -1,8 +1,11 @@
-name: HeartClear All Listening Play labels
+name: HeartClear Native Audio Listening
 on:
   pull_request:
     paths:
       - 'human-practice-prototype/hc-listening-hub-v254.js'
+      - 'human-practice-prototype/hc-listening-local-audio-v290.js'
+      - 'human-practice-prototype/index.html'
+      - 'human-practice-prototype/sw.js'
       - 'human-practice-prototype/tests/hc-listening-play-label-contract.cjs'
       - '.github/workflows/hc-listening-play-label.yml'
   workflow_dispatch:
