@@ -316,5 +316,8 @@
     }catch(e){notice('Device storage not available. You can still choose a video for this session.');}
     updateButtons();
   }
+  // The Listening > Meditation rows call this same on-device player; no second media implementation.
+  window.hcPrivatePlayTrack=playTrack;
+  window.hcPrivateVideoReady=id=>urls.has(id);
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
