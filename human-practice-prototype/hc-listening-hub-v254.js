@@ -48,7 +48,7 @@ function list(){
   if(item.key==='islamHuAkmal'||item.key==='generalDuduk')return;
   const category=item.section==='islamic'?'islamic':item.section==='hindu'?'hindu':item.section==='meditation'?'breathing':'nature';
   if(category==='breathing'&&!item.key.startsWith('hclBreath'))return;
-  const meta=item.key==='hinduOm'?'3:33:33 · original video; audio stream unavailable':(item.type||'Original video')+' · video';
+  const meta=item.key==='hinduOm'?'3:33:33 · Google Drive player · no native audio':String(item.type||'Original recording').replace(/\s*·\s*(?:original )?video\b/gi,'')+' · Google Drive player';
   add(record('drive-'+item.key,item.name,meta,category,'drive',item.key));
  });
  if(typeof hcMiniBrowseItems==='function')hcMiniBrowseItems().forEach(item=>{
@@ -80,7 +80,7 @@ function itemButton(item){
  const title=document.createElement('strong');title.textContent=item.name;
  const desc=document.createElement('small');desc.textContent=item.detail;
  info.append(title,desc);
- const action=document.createElement('span');action.className='hcl-record-action';action.textContent=item.kind==='drive'?'Video':['book','bible','hindu-library','gita','practice'].includes(item.kind)?'Open':'Play';
+ const action=document.createElement('span');action.className='hcl-record-action';action.textContent=item.kind==='drive'?'Play':['book','bible','hindu-library','gita','practice'].includes(item.kind)?'Open':'Play';
  b.append(icon,info,action);b.setAttribute('aria-label',(['drive','book','bible','hindu-library','gita','practice'].includes(item.kind)?'Open ':'Play ')+item.name);
  b.addEventListener('click',()=>play(item));return b;
 }
@@ -120,7 +120,7 @@ function play(item){
    fn(item.key,'hcListening');
    const drive=$('hcOneTapDrive');
    if(drive&&!drive.hidden&&drive.classList.contains('hc-ot-collapsed'))$('hcOtMinimize')?.click();
-   say('Player opened · tap Play inside the video if your browser blocks autoplay.');
+   say('Recording opened · Google Drive may require a separate Play tap if autoplay is blocked.');
   }else if(item.kind==='hindu-library'){
    if(typeof openSacred!=='function')throw Error('Hindu library unavailable');
    openSacred('hindu');
