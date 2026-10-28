@@ -1,0 +1,20 @@
+name: HeartClear private meditation video contract
+on:
+  pull_request:
+    paths:
+      - 'human-practice-prototype/hc-private-video-v289.*'
+      - 'human-practice-prototype/index.html'
+      - 'human-practice-prototype/sw.js'
+      - 'human-practice-prototype/hc-home-visible-v268.js'
+      - 'human-practice-prototype/tests/hc-private-video-contract.cjs'
+      - '.github/workflows/hc-private-video-contract.yml'
+  workflow_dispatch:
+jobs:
+  private-video-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: node human-practice-prototype/tests/hc-private-video-contract.cjs
