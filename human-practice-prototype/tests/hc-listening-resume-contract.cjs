@@ -16,10 +16,11 @@ assert(sw.includes("const APP_CACHE='heartclear-v289'"),'App shell cache must ma
 assert(sw.includes("const MEDIA_CACHE='heartclear-media-v1'"),'Downloaded media cache must not be replaced');
 assert(html.includes('<script src="./hc-listening-resume-v252.js?v=289"></script>'),'Resume script must load');
 assert(sw.includes("'./hc-listening-resume-v252.js?v=289'"),'Resume script must be available in offline shell');
-assert(html.indexOf('hc-home-visible-v268.js?v=288')>=0,'New main home module must be retained');
+assert(html.indexOf('hc-home-visible-v268.js?v=289')>=0,'New main home module must be retained');
 assert(html.indexOf('hc-listening-hub-v254.js?v=280')>=0,'New main listening hub must be retained');
 assert(html.indexOf('hc-flow-v220.js?v=285')>=0,'Latest bottom navigation must be retained');
-assert(html.lastIndexOf('hc-listening-resume-v252.js?v=289')>html.lastIndexOf('hc-home-visible-v268.js?v=288'),'Resume must register after current navigation and home scripts');
+assert(read('hc-home-visible-v268.js').includes('HeartClear · HC v289'),'Dynamic Settings label must match shell version');
+assert(html.lastIndexOf('hc-listening-resume-v252.js?v=289')>html.lastIndexOf('hc-home-visible-v268.js?v=289'),'Resume must register after current navigation and home scripts');
 assert(script.includes("const KEY='heartclearLastListeningV1'"),'Do not alter saved-progress key');
 assert(script.includes('event.stopImmediatePropagation()'),'Headphones return should avoid competing old navigation');
 const storage=new Map(),listeners={};
@@ -29,7 +30,7 @@ const dock={
  setAttribute(key,value){this.attrs[key]=value},
  addEventListener(type,handler){this.handlers[type]=handler}
 };
-const audio={currentTime:0,duration:1698,getAttribute(key){return key==='src'?'original-source':''}};
+const audio={currentTime:0,duration:1698,play(){playCount++;return Promise.resolve()},getAttribute(key){return key==='src'?'original-source':''}};
 const context={
  Date,Number,Math,Set,Object,JSON,
  localStorage:{getItem:key=>storage.get(key)||null,setItem:(key,val)=>storage.set(key,val)},
