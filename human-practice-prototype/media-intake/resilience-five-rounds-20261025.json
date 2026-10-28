@@ -35,5 +35,13 @@
   "audio_derivative_created": false,
   "redistribution_permission_verified": false,
   "reviewed_for_release": false,
-  "note": "Original MP4 located and inspected without processing. Duration 26:29, not 30+ minutes. Keep private/nonplayable in public HeartClear until creator rights, content/safety, and release checks are completed."
+  "note": "Original MP4 located and inspected without processing. Duration 26:29, not 30+ minutes. Keep private/nonplayable in public HeartClear until creator rights, content/safety, and release checks are completed.",
+  "source_media_url": null,
+  "redistribution_authorization_evidence_url": null,
+  "safety_review_completed": false,
+  "device_review_completed": false,
+  "rights_review_reference": "Breathe With Sandy public Terms of Service, updated 2026-10-19; personal non-commercial license, no public redistribution without separate permission",
+  "rights_review_url": "https://breathewithsandy.com/terms-of-service/",
+  "rights_status": "Public rehosting/redistribution not authorized; explicit written permission is needed",
+  "license_explicitly_permits_public_heartclear_distribution": false
 }
