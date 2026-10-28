@@ -249,3 +249,7 @@ body.hc-cinema #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail)
  :is(.hc-simple-start,#hcHomeRoutineV155,#hcHomeKitchenQuickV155) :is(button,input,select){
   max-width:100%;
 }
+
+/* HeartClear: make the fifth bottom action unambiguously Reels (not Search). */
+body.hc-cinema #hcFlowDock #hcCinemaReels{grid-template-rows:27px 12px!important;align-content:center!important;row-gap:3px!important;padding:4px 0!important}
+body.hc-cinema #hcFlowDock #hcCinemaReels::after{content:'Reels';display:block;font:600 10px/1.1 system-ui!important;letter-spacing:.01em;color:currentColor!important}

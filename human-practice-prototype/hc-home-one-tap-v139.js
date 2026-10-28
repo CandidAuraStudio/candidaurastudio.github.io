@@ -76,6 +76,9 @@ window.hcHomePlayGuided=function(key){
    else hcStartExistingGuidedSession(key);
    show('home');
   }
+  // The explicit Begin tap should keep the chosen track accessible even if
+  // browser autoplay rejects play(): preserve the paused track in the mini.
+  if(typeof audio!=='undefined'&&audio.getAttribute('src'))rememberActiveMedia('meditation');
   hcMiniPinnedKey='meditation';renderGlobalMini();updateDaily();
  }catch(e){const status=document.getElementById('hcQuickAudioStatus');if(status)status.textContent='Audio unavailable. Check your connection.'}
 };

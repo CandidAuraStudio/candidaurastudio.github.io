@@ -61,40 +61,40 @@ el.append(quick);
 const bottomBack=quick.querySelector('#hcHeritageBottomBack'),bottomList=quick.querySelector('#hcHeritageBottomList'),bottomTop=quick.querySelector('#hcHeritageBottomTop');
 const css=document.createElement('style');css.id='hcHeritageReaderCssV189';
 css.textContent=[
-'#hcHeritageReader.screen{display:none;flex:1;justify-content:flex-start;align-items:stretch;min-width:0;width:100%;padding:0 0 calc(120px + env(safe-area-inset-bottom,0px));color:#eef4f6}',
+'#hcHeritageReader.screen{display:none;flex:1;justify-content:flex-start;align-items:stretch;min-width:0;width:100%;padding:0 0 calc(120px + env(safe-area-inset-bottom,0px));color:#f6f6f4}',
 '#hcHeritageReader.screen.active{display:flex}',
 '#hcHeritageReader *{box-sizing:border-box;min-width:0}',
 '#hcHeritageReader button{font:inherit;color:inherit;cursor:pointer}',
-'#hcHeritageReader .hc-heritage-header{position:sticky;top:0;z-index:6;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;align-items:center;min-height:65px;padding:8px 0;background:#07141e;border-bottom:1px solid #506777}',
-'#hcHeritageReader .hc-heritage-header button{min-height:43px;padding:9px 11px;background:#152b37;border:1px solid #748b96;border-radius:8px;font-size:12px}',
+'#hcHeritageReader .hc-heritage-header{position:sticky;top:0;z-index:6;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;align-items:center;min-height:65px;padding:8px 0;background:#101010;border-bottom:1px solid #4c4c4c}',
+'#hcHeritageReader .hc-heritage-header button{min-height:43px;padding:9px 11px;background:#252525;border:1px solid #5e5e5e;border-radius:8px;font-size:12px}',
 '#hcHeritageReader .hc-heritage-tools{display:flex;gap:5px;align-items:center}',
 '#hcHeritageReader .hc-heritage-tools button{font-size:11px;padding:7px 8px}',
 '#hcHeritageReader .hc-heritage-header strong{font-size:13px;line-height:1.5;display:block;overflow-wrap:anywhere}',
-'#hcHeritageReader .hc-heritage-header small{font-size:10px;color:#b9ccd5;line-height:1.4;display:block}',
+'#hcHeritageReader .hc-heritage-header small{font-size:10px;color:#c6c6c4;line-height:1.4;display:block}',
 '#hcHeritageReader #hcHeritageMain{padding:16px 0;flex:1}',
-'#hcHeritageReader .hc-heritage-kicker{font-size:11px;letter-spacing:.08em;color:#c5d5dc;font-weight:700}',
+'#hcHeritageReader .hc-heritage-kicker{font-size:11px;letter-spacing:.08em;color:#c5c4c2;font-weight:700}',
 '#hcHeritageReader h1{font-size:clamp(23px,6vw,30px);line-height:1.3;margin:7px 0 13px;overflow-wrap:anywhere}',
 '#hcHeritageReader h2{font-size:16px;margin:21px 0 8px;line-height:1.45;overflow-wrap:anywhere}',
-'#hcHeritageReader p{font-size:14px;line-height:1.82;color:#d8e5e9;margin:8px 0 16px;overflow-wrap:anywhere}',
+'#hcHeritageReader p{font-size:14px;line-height:1.82;color:#dfdeda;margin:8px 0 16px;overflow-wrap:anywhere}',
 '#hcHeritageReader .hc-heritage-list{display:grid;gap:8px;margin:14px 0}',
-'#hcHeritageReader .hc-heritage-tile{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 12px;min-height:63px;text-align:left;border:1px solid #4e6875;background:#102734;border-radius:11px}',
+'#hcHeritageReader .hc-heritage-tile{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 12px;min-height:63px;text-align:left;border:1px solid #4a4a4a;background:#202020;border-radius:11px}',
 '#hcHeritageReader .hc-heritage-tile strong{display:block;font-size:14px;line-height:1.5}',
-'#hcHeritageReader .hc-heritage-tile small{display:block;font-size:11px;color:#bed0d7;line-height:1.6;margin-top:5px}',
-'#hcHeritageReader .hc-heritage-tile .chev{font-size:19px;color:#c0d0d9}',
-'#hcHeritageReader .hc-heritage-when{font-size:11px;color:#bdd0d8;line-height:1.5;display:block;margin-bottom:3px}',
-'#hcHeritageReader .hc-heritage-note{border:1px solid #536e7d;background:#152d39;border-radius:9px;padding:13px;margin:13px 0}',
-'#hcHeritageReader .hc-heritage-note p{margin:7px 0;color:#f1f4f5}',
+'#hcHeritageReader .hc-heritage-tile small{display:block;font-size:11px;color:#c7c5c2;line-height:1.6;margin-top:5px}',
+'#hcHeritageReader .hc-heritage-tile .chev{font-size:19px;color:#bcbab6}',
+'#hcHeritageReader .hc-heritage-when{font-size:11px;color:#bcbab6;line-height:1.5;display:block;margin-bottom:3px}',
+'#hcHeritageReader .hc-heritage-note{border:1px solid #5d5d5d;background:#242424;border-radius:9px;padding:13px;margin:13px 0}',
+'#hcHeritageReader .hc-heritage-note p{margin:7px 0;color:#f6f6f4}',
 '#hcHeritageReader .hc-heritage-sources{display:flex;gap:7px;flex-wrap:wrap;margin:9px 0 19px}',
-'#hcHeritageReader a.hc-heritage-source{color:#f2f7f8;border:1px solid #819ba6;border-radius:8px;text-decoration:none;display:inline-flex;align-items:center;min-height:40px;padding:9px 10px;font-size:12px;line-height:1.45}',
+'#hcHeritageReader a.hc-heritage-source{color:#f6f6f4;border:1px solid #777;border-radius:8px;text-decoration:none;display:inline-flex;align-items:center;min-height:40px;padding:9px 10px;font-size:12px;line-height:1.45}',
 '#hcHeritageReader #hcHeritageFooter{display:flex;gap:8px;margin:0 0 24px}',
-'#hcHeritageReader #hcHeritageFooter button{flex:1;background:#203743;border:1px solid #718995;border-radius:9px;min-height:44px;font-size:12px;padding:9px}',
+'#hcHeritageReader #hcHeritageFooter button{flex:1;background:#282828;border:1px solid #6a6a6a;border-radius:9px;min-height:44px;font-size:12px;padding:9px}',
 '#hcHeritageReader #hcHeritageFooter button:disabled{opacity:.36;cursor:default}',
 '#hcHeritageReader :is(button,a):focus-visible{outline:2px solid #fff;outline-offset:2px}',
 '@media(max-width:370px){#hcHeritageReader .hc-heritage-header{gap:5px}#hcHeritageReader .hc-heritage-header button{font-size:11px;padding:8px}}'
 ].join('\n');
 css.textContent+=`
 /* Keep header controls on their own row so Tamil titles have the full width. */
-#hcHeritageReader .hc-heritage-header{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;grid-template-areas:"back tools" "heading heading";gap:8px 10px!important;min-height:0!important;max-width:100%;padding:10px 2px 12px;background:#07141e}
+#hcHeritageReader .hc-heritage-header{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;grid-template-areas:"back tools" "heading heading";gap:8px 10px!important;min-height:0!important;max-width:100%;padding:10px 2px 12px;background:#101010}
 #hcHeritageReader #hcHeritageBack{grid-area:back;justify-self:start;white-space:nowrap}
 #hcHeritageReader .hc-heritage-header>div:nth-child(2){grid-area:heading;min-width:0;width:100%}
 #hcHeritageReader .hc-heritage-tools{grid-area:tools;justify-self:end;flex-wrap:nowrap;gap:7px;min-width:max-content}
@@ -107,12 +107,39 @@ body.hc-flow-enabled #hcHeritageReader.active>#hcFlowTop{display:none!important}
 #hcHeritageReader #hcHeritageMain{min-width:0;width:100%;padding-bottom:30px}
 #hcHeritageReader #hcHeritageMain :is(h1,h2,p,.hc-heritage-tile strong,.hc-heritage-tile small){word-break:normal;hyphens:none}
 #hcHeritageReader #hcHeritageFooter{margin-bottom:42px}
-#hcHeritageReader .hc-heritage-quicknav{position:fixed;z-index:99;bottom:calc(101px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);width:min(96vw,540px);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;padding:7px;background:#0d1c26;border:1.5px solid #78909e;border-radius:22px;box-shadow:0 8px 24px #000a}
+#hcHeritageReader .hc-heritage-quicknav{position:fixed;z-index:99;bottom:calc(101px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);width:min(96vw,540px);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;padding:7px;background:#151515;border:1.5px solid #565656;border-radius:22px;box-shadow:0 8px 24px #000a}
 #hcHeritageReader:not(.active) .hc-heritage-quicknav{display:none!important}
-#hcHeritageReader .hc-heritage-quicknav button,body.hc-flow-enabled #hcHeritageReader .hc-heritage-quicknav button{min-height:52px!important;min-width:0;border:0;border-radius:16px!important;background:#1b3441;color:#f7faf9;font-size:clamp(15px,3.7vw,18px)!important;font-weight:700;line-height:1.3;padding:7px 4px!important;white-space:nowrap}
-#hcHeritageReader .hc-heritage-quicknav button:active{background:#395467}
+#hcHeritageReader .hc-heritage-quicknav button,body.hc-flow-enabled #hcHeritageReader .hc-heritage-quicknav button{min-height:52px!important;min-width:0;border:0;border-radius:16px!important;background:#292929;color:#f4f4f3;font-size:clamp(15px,3.7vw,18px)!important;font-weight:700;line-height:1.3;padding:7px 4px!important;white-space:nowrap}
+#hcHeritageReader .hc-heritage-quicknav button:active{background:#393939}
 body.hc-flow-enabled:has(.global-mini.show) #hcHeritageReader .hc-heritage-quicknav{bottom:calc(176px + env(safe-area-inset-bottom,0px))}
 @media(max-width:365px){#hcHeritageReader .hc-heritage-quicknav{bottom:calc(95px + env(safe-area-inset-bottom,0px))}#hcHeritageReader .hc-heritage-header{gap:6px!important}}
+
+/* v284: one Human Knowledge heading with native charcoal surfaces */
+body.hc-cinema #hcHeritageReader.active > #hcCinemaHero{display:none!important}
+#hcHeritageReader[data-hc-heritage-level="index"] .hc-heritage-header{
+ grid-template-areas:"back tools"!important;
+ grid-template-columns:minmax(0,1fr) auto!important;
+ min-height:0!important;align-items:center!important;padding:6px 0 11px!important;
+}
+#hcHeritageReader[data-hc-heritage-level="index"] .hc-heritage-header>div:nth-child(2),
+#hcHeritageReader[data-hc-heritage-level="index"] .hc-heritage-quicknav,
+#hcHeritageReader[data-hc-heritage-level="index"] .hc-heritage-kicker{display:none!important}
+#hcHeritageReader .hc-heritage-header{background:#101010!important;border-bottom:1px solid #424242!important}
+#hcHeritageReader .hc-heritage-tile,
+#hcHeritageReader .hc-heritage-note,
+#hcHeritageReader .hc-heritage-header button{
+ box-shadow:none!important;backdrop-filter:none!important;
+}
+#hcHeritageReader #hcHeritageMain{padding-top:12px!important}
+#hcHeritageReader #hcHeritageMain h1{font-size:clamp(22px,5.8vw,28px)!important;line-height:1.25!important}
+#hcHeritageReader .hc-heritage-tile{min-height:66px!important;padding:12px 13px!important;border-radius:13px!important}
+#hcHeritageReader .hc-heritage-tile strong{font-size:clamp(14px,3.8vw,16px)!important}
+#hcHeritageReader .hc-heritage-quicknav{box-shadow:none!important}
+#hcHeritageReader .hc-heritage-quicknav button:focus-visible{outline:2px solid #fff!important}
+@media(max-width:390px){
+ #hcHeritageReader .hc-heritage-header button{min-height:44px!important;font-size:14px!important}
+ #hcHeritageReader .hc-heritage-quicknav button{font-size:13px!important}
+}
 `;
 document.head.append(css);
 function activeScreen(){return document.querySelector('.screen.active')?.id||'home'}
@@ -154,6 +181,7 @@ window.addEventListener('popstate',evt=>{
  else if(el.classList.contains('active'))hideReader();
 });
 function render(){
+  el.setAttribute('data-hc-heritage-level',route.level);
  const group=route.topic,chapter=rows(group),subject=topicLabel(group);
  head.textContent=route.level==='index'?tr('Knowledge Library','அறிவுக் களஞ்சியம்'):subject;
  el.setAttribute('lang',lang);
@@ -168,7 +196,7 @@ function render(){
  all.hidden=route.level==='index';
  footer.innerHTML='';
  if(route.level==='index'){
-  main.innerHTML='<span class="hc-heritage-kicker">HEARTCLEAR · READ</span><h1>'+tr('Human knowledge, across time','மனித அறிவு · காலங்களின் வழியே')+'</h1>'+
+  main.innerHTML='<span class="hc-heritage-kicker">HEARTCLEAR · READ</span><h1>'+tr('Human Knowledge','மனித அறிவு')+'</h1>'+
   '<p>'+tr('Explore Qur’an, Bible, Vedas and traditions in their own contexts, alongside everyday knowledge.','குர்ஆன், பைபிள், வேதம், பிற மரபுகள் மற்றும் அன்றாட அறிவை அவற்றின் சொந்தச் சூழலில் அறியலாம்.')+'</p>'+
   '<div class="hc-heritage-list">'+topics.map(t=>'<button type="button" class="hc-heritage-tile" data-topic="'+t[0]+'"><span><strong>'+E(tr(t[1],t[2]))+'</strong><small>'+rows(t[0]).length+' '+tr('articles','கட்டுரைகள்')+'</small></span><span class="chev" aria-hidden="true">›</span></button>').join('')+'</div>'+
   '<p>'+tr('Medical science uses clinical sources. History is shown only where documented.','மருத்துவ அறிவியலுக்கு மருத்துவ ஆதாரங்கள். வரலாற்றுக்கு ஆவண ஆதாரம் உள்ள இடங்கள் மட்டுமே.')+'</p>';

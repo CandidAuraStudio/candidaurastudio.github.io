@@ -93,10 +93,10 @@ body.hc-flow-enabled #home.hc-bubble-mode > :not(#hcBubbleHome){display:none!imp
 .hc-flow-pager{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:14px 0 27px}
 .hc-flow-pager>button{min-width:65px;min-height:60px;border:1.5px solid #a3b0b6;border-radius:19px;background:#22343d;color:white;font-size:30px;font-weight:700}
 .hc-flow-pager>span{font-size:19px;font-weight:650;color:#fff;text-align:center}
-#hcFlowDock{position:fixed;bottom:calc(11px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:98;width:min(97vw,560px);padding:8px;display:none;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;background:#0e1921;border:1.5px solid #607580;border-radius:27px;box-shadow:0 8px 30px #0009}
+#hcFlowDock{position:fixed;bottom:calc(11px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:98;width:min(97vw,560px);padding:8px;display:none;grid-template-columns:repeat(6,minmax(0,1fr));gap:3px;background:#121112;border:1.5px solid #607580;border-radius:27px;box-shadow:0 8px 30px #0009}
 body.hc-flow-enabled #hcFlowDock{display:grid}
-#hcFlowDock button{min-width:0;min-height:66px;border:0;border-radius:20px;background:transparent;color:#e3ecee;font:700 17px system-ui;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
-#hcFlowDock button span:first-child{font-size:25px;line-height:1}
+#hcFlowDock button{min-width:0;min-height:58px;border:0;border-radius:18px;background:transparent;color:#e3ecee;font:700 11px system-ui;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
+#hcFlowDock button span:first-child{font-size:22px;line-height:1}
 #hcFlowDock button[aria-current="page"]{background:#f3f6f5;color:#0c1b23}
 body.hc-flow-enabled:has(#hcReels.active) #hcFlowDock{display:none}
 body.hc-flow-enabled:has(#hcReels.active) #hcFlowTop{display:none}

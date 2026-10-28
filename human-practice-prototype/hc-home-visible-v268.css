@@ -1,0 +1,269 @@
+/* HeartClear v268 — preferred warm black / white / restrained gold.
+   The user-facing Home must be immediately readable at phone widths.
+   Media controls retain their original listeners, sources and saved progress. */
+body.hc-cinema:not([data-hc-cinema-scene="reels"]) #hcCinemaBackdrop{
+ background:#090909!important;
+}
+body.hc-flow-enabled.hc-cinema{background:#080808!important;color:#f6f6f5!important}
+body.hc-cinema .screen.active:not(#hcReels) :is(
+ .glass,.choice,.hub-card,.human-card,.sacred-card,.fear-card,.practice-card,
+ .hc-mix-card,.hc-settings-clean,.hc-settings-section,.hcqs-verse,
+ .hc-home-section,.hc-recommended-card,.hc-secondary-resume){
+ background:#171718!important;border-color:#57524c!important;
+ box-shadow:none!important;backdrop-filter:none!important
+}
+body.hc-cinema :is(#home,#practices,#soundLab,#hcListening,#sacred,#library,#settings).active{
+ color:#f7f7f6!important
+}
+body.hc-flow-enabled.hc-cinema #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail){
+ display:flex!important;flex-direction:column!important;justify-content:flex-start!important;
+ min-width:0!important;gap:0!important
+}
+body.hc-cinema #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail) #hcHomeBrandBar{
+ display:flex!important;order:0!important;min-height:51px!important;
+ margin:3px 0 6px!important;align-items:center!important
+}
+body.hc-cinema #home.active #hcHomeInfinity{
+ color:#fff!important;width:49px!important;height:49px!important
+}
+body.hc-cinema #home.active #hcHomeBrandBar #hcAppLanguageHome{
+ background:#151515!important;border:1px solid #68625b!important
+}
+body.hc-cinema #home.active #hcHomeBrandBar #hcAppLanguageHome button{
+ min-width:60px!important;min-height:40px!important;font-size:12px!important;
+ background:#1c1c1d!important;color:#f1f1f1!important
+}
+body.hc-cinema #home.active #hcHomeBrandBar #hcAppLanguageHome button[aria-pressed="true"]{
+ background:white!important;color:#090909!important
+}
+body.hc-cinema #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail)>.hc-home-greeting-row{
+ order:1!important;display:flex!important;align-items:center!important;
+ margin:0 0 9px!important;padding:5px 3px!important;min-width:0!important
+}
+body.hc-cinema #home.active .home-greeting{
+ color:#fff!important;font-size:clamp(25px,6.7vw,32px)!important;
+ font-weight:740!important;line-height:1.17!important;
+ white-space:normal!important;word-break:normal!important
+}
+body.hc-cinema #home.active .hc-daily-family{
+ color:#d1d1d0!important;font-size:13px!important;line-height:1.35!important
+}
+body.hc-cinema #home.active #hcHomeInstallBtn{
+ color:#f4f4f4!important;background:#181818!important;border:1px solid #555!important;
+ font-size:11px!important;min-width:0!important;max-width:120px!important;
+ min-height:44px!important;padding:7px 10px!important;white-space:nowrap!important
+}
+/* Exactly one visible time-aware meditation entry followed by scripture access. */
+body.hc-cinema #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail) #hcCorePathsClassic{
+ order:2!important;display:grid!important;width:100%!important;min-width:0!important;
+ gap:9px!important;padding:0!important;margin:0 0 11px!important;
+ border:0!important;background:transparent!important;box-shadow:none!important
+}
+body.hc-cinema #home.active #hcCorePathsClassic>.hc-path-hero{
+ display:grid!important;gap:6px!important;padding:12px 13px!important;margin:0!important;
+ border:1px solid #666059!important;border-radius:17px!important;background:#191919!important
+}
+body.hc-cinema #home.active #hcCorePathsClassic .hc-path-head{
+ color:#f0f0ee!important;font-size:12px!important;line-height:1.3!important
+}
+body.hc-cinema #home.active #hcCorePathsClassic .hc-path-day{
+ color:#d8b987!important;font-size:12px!important
+}
+body.hc-cinema #home.active #hcCorePathsClassic .hc-path-period{
+ color:#fff!important;font-size:20px!important;line-height:1.22!important;
+ margin:1px 0 2px!important;letter-spacing:normal!important
+}
+body.hc-cinema #home.active #hcCorePathsClassic .hc-path-begin{
+ min-height:47px!important;width:100%!important;
+ padding:10px 13px!important;background:#fff!important;
+ color:#121212!important;border:1px solid #fff!important;border-radius:12px!important;
+ font-size:14px!important;font-weight:750!important;line-height:1.2!important;
+ word-break:normal!important;white-space:nowrap!important
+}
+body.hc-cinema #home.active #hcCorePathsClassic .hc-path-faith{
+ display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
+ gap:7px!important;min-width:0!important
+}
+body.hc-cinema #home.active #hcCorePathsClassic .hc-path-faith button{
+ display:flex!important;justify-content:center!important;align-items:center!important;
+ box-sizing:border-box!important;width:100%!important;min-width:0!important;
+ min-height:56px!important;padding:9px 5px!important;
+ text-align:center!important;border-radius:13px!important;
+ background:#171717!important;color:#fff!important;border:1px solid #585858!important;
+ overflow-wrap:normal!important;word-break:normal!important;white-space:normal!important
+}
+body.hc-cinema #home.active #hcCorePathsClassic .hc-path-faith button strong{
+ font:700 clamp(11px,3.25vw,14px)/1.26 system-ui!important;
+ word-break:normal!important;overflow-wrap:normal!important;white-space:normal!important;
+ color:#fff!important
+}
+body.hc-cinema #home.active #hcCorePathsClassic .hc-path-faith button>span:last-child{
+ display:none!important
+}
+body.hc-cinema #home.active #hcHomeMorePaths268{
+ display:block!important;margin:1px 0 0!important;padding:0!important;
+ border:0!important;background:transparent!important;order:99!important
+}
+body.hc-cinema #home.active #hcHomeMorePaths268>summary{
+ cursor:pointer!important;min-height:44px!important;font-size:13px!important;
+ padding:10px 12px!important;color:#dfd6ca!important;background:#171717!important;
+ border:1px solid #514b44!important;border-radius:12px!important
+}
+body.hc-cinema #home.active #hcHomeMorePaths268 .hc-path-main{
+ display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important;margin-top:9px!important
+}
+body.hc-cinema #home.active #hcHomeMorePaths268 .hc-path-main button{
+ min-height:52px!important;background:#191919!important;border:1px solid #504b45!important;
+ padding:8px!important;border-radius:12px!important
+}
+body.hc-cinema #home.active #hcHomeMorePaths268 .hc-path-main button strong{
+ font-size:13px!important;line-height:1.35!important
+}
+/* All three actual scripture players are prominent, not hidden behind an extra page. */
+body.hc-cinema #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail)>#hcQuranFirst{
+ order:3!important;display:block!important
+}
+body.hc-cinema #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail)>#hcGenesisCard{
+ order:4!important;display:block!important
+}
+body.hc-cinema #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail)>#hcHinduHome{
+ order:5!important;display:flex!important
+}
+body.hc-cinema #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail)>#hcHinduHomeStatus{
+ order:6!important
+}
+body.hc-cinema #home.active #hcQuranFirst,
+body.hc-cinema #home.active #hcGenesisCard,
+body.hc-cinema #home.active #hcHinduHome{
+ width:100%!important;max-width:100%!important;min-width:0!important;
+ box-sizing:border-box!important;background:#161616!important;color:#f8f8f8!important;
+ border:1px solid #5d5852!important;border-radius:17px!important;
+ box-shadow:none!important;backdrop-filter:none!important;margin:7px 0!important;
+ padding:12px!important
+}
+body.hc-cinema #home.active #hcHinduHome .hc-hindu-info{
+ min-width:0!important;flex:1 1 100%!important;line-height:1.3!important
+}
+body.hc-cinema #home.active #hcHinduHome .hc-hindu-info b{
+ color:#fff!important;font-size:16px!important;line-height:1.3!important;
+ word-break:normal!important
+}
+body.hc-cinema #home.active #hcHinduHome .hc-hindu-info small{
+ color:#d2cbc1!important;font-size:12px!important
+}
+body.hc-cinema #home.active #hcHinduHome :is(button,select){
+ color:#fff!important;background:#222!important;border:1px solid #68605a!important;
+ min-height:44px!important;font-size:13px!important;border-radius:11px!important
+}
+body.hc-cinema #home.active #hcHinduHome button.hc-hindu-play{
+ background:#fff!important;color:#141414!important;border-color:#fff!important;
+ font-size:18px!important
+}
+body.hc-cinema #home.active #hcHinduHome .hc-gita-language-chips{
+ display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:4px!important
+}
+body.hc-cinema #home.active #hcHinduHome .hc-gita-language-chips button{
+ min-width:0!important;padding:6px 2px!important;font-size:clamp(10px,2.6vw,12px)!important;
+ line-height:1.2!important;white-space:normal!important;word-break:normal!important
+}
+body.hc-cinema #home.active #hcCorePathsClassic~.hc-simple-start{
+ order:10!important;margin-top:11px!important;background:#161616!important;border:1px solid #514b45!important
+}
+body.hc-cinema #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail)>:not(
+ #hcHomeBrandBar,.hc-home-greeting-row,#hcCorePathsClassic,#hcQuranFirst,
+ #hcGenesisCard,#hcHinduHome,#hcHinduHomeStatus,.hc-simple-start){
+ order:15
+}
+body.hc-cinema #home.active #hcQuranFirst :is(button,summary),
+body.hc-cinema #home.active #hcGenesisCard :is(button,summary){
+ overflow-wrap:normal!important;word-break:normal!important;hyphens:none!important
+}
+/* The newest global stylesheet's 14px controls must not shrink the main Play. */
+body.hc-cinema #home.active :is(#hcqPlay,#hcGenPlay){
+ background:#fff!important;color:#111!important;border:1px solid #fff!important;
+ min-width:0!important;min-height:48px!important;font-size:15px!important;
+ white-space:nowrap!important;word-break:keep-all!important
+}
+body.hc-cinema #home.active :is(#hcqRead,#hcGenRead){
+ background:#232323!important;color:#fff!important;border:1px solid #69615b!important
+}
+body.hc-cinema #home.active :is(#hcqMeta,#hcGenChapterMeta){
+ color:#cececc!important;font-size:12px!important;line-height:1.45!important
+}
+/* Keep ambient black consistent away from Home, without overriding accessibility reader sizing. */
+body.hc-cinema .screen.active:not(#hcReels):not(#hcListening)
+ :is(.hc-sound-row,.hc-sounds-hub-card,.hc-drive-card,.hc-sacred-quick){
+ background:#19191a!important;border-color:#58514b!important;color:#f6f6f6!important
+}
+body.hc-cinema #settings :is(.hc-settings-section,.setting-row,.hc-settings-toggle){
+ background:#19191a!important;border-color:#59534d!important
+}
+body.hc-cinema #hcFlowExplore{
+ background:#0d0d0e!important
+}
+body.hc-cinema #hcFlowExplore .hc-flow-explore-card{
+ background:#181819!important;border-color:#71675c!important
+}
+@media(max-width:355px){
+ body.hc-cinema #home.active #hcCorePathsClassic .hc-path-faith{gap:4px!important}
+ body.hc-cinema #home.active #hcCorePathsClassic .hc-path-faith button{padding:8px 2px!important}
+ body.hc-cinema #home.active #hcHinduHome .hc-gita-language-chips{gap:3px!important}
+}
+@media(prefers-reduced-motion:reduce){
+ body.hc-cinema #home.active #hcCorePathsClassic *{transition:none!important;animation:none!important}
+}
+
+/* HC minimal Home design, original buttons and media intact. */
+body.hc-cinema #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail) #hcHomeBrandBar{
+ flex-wrap:wrap!important;column-gap:8px!important;row-gap:6px!important;
+}
+body.hc-cinema #home.active #hcHomeInfinity{width:41px!important;height:41px!important;flex:none!important}
+body.hc-cinema #home.active #hcHomeWordmarkDesign{
+ font:750 clamp(14px,4vw,18px)/1.2 system-ui,sans-serif!important;
+ letter-spacing:-.025em!important;color:#fff!important;white-space:nowrap!important
+}
+body.hc-cinema #home.active #hcHomeBrandBar #hcAppLanguageHome{
+ max-width:100%!important;flex-shrink:1!important;margin-left:auto!important
+}
+body.hc-cinema #home.active #hcHomeIntroDesign{
+ margin:3px 0 0!important;font:450 13px/1.45 system-ui,sans-serif!important;color:#d3d3d1!important
+}
+body.hc-cinema #home.active #hcCorePathsClassic>.hc-path-hero{
+ padding:16px 15px!important;gap:8px!important;
+ border-color:#575656!important;background:#202020!important;border-radius:18px!important
+}
+body.hc-cinema #home.active #hcCorePathsClassic .hc-path-subtitle{
+ color:#d0d0cf!important;font:450 12px/1.4 system-ui,sans-serif!important
+}
+body.hc-cinema #home.active #hcCorePathsClassic>.hc-home-worlds{
+ display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ gap:9px!important;width:100%!important;min-width:0!important;margin:2px 0 3px!important
+}
+body.hc-cinema #home.active #hcCorePathsClassic .hc-home-worlds>.hc-world-card{
+ display:flex!important;flex-direction:column!important;align-items:flex-start!important;
+ justify-content:space-between!important;gap:14px!important;
+ width:100%!important;min-height:97px!important;margin:0!important;padding:14px!important;
+ border:1px solid #454545!important;border-radius:16px!important;
+ background:#202020!important;color:#fff!important;box-shadow:none!important;
+ text-align:left!important;cursor:pointer!important;overflow:hidden!important;white-space:normal!important
+}
+body.hc-cinema #home.active #hcCorePathsClassic .hc-home-worlds>.hc-world-card svg{
+ display:block!important;width:26px!important;height:26px!important;flex:none!important;color:#f7f7f7!important
+}
+body.hc-cinema #home.active #hcCorePathsClassic .hc-home-worlds>.hc-world-card strong{
+ font:700 14px/1.25 system-ui,sans-serif!important;color:#f8f8f8!important;
+ word-break:normal!important;overflow-wrap:normal!important
+}
+body.hc-cinema #home.active #hcCorePathsClassic .hc-home-worlds>.hc-world-card:focus-visible{
+ outline:3px solid #fff!important;outline-offset:2px!important
+}
+@media(max-width:365px){
+ body.hc-cinema #home.active #hcCorePathsClassic .hc-home-worlds>.hc-world-card{
+  min-height:89px!important;padding:11px!important
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ body.hc-cinema #home.active #hcCorePathsClassic .hc-home-worlds *{
+  animation:none!important;transition:none!important
+ }
+}

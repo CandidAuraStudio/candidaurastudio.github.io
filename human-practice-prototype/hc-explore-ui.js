@@ -57,16 +57,16 @@
     html+='<h2 id="hcxTitle" tabindex="-1">I need another clue.</h2><p>'+escape(step.message)+'</p>'+
      '<details><summary>Some possible matches</summary><ul>'+(step.items||[]).map(item=>'<li>'+escape(item.name)+'</li>').join('')+'</ul><p>These are possibilities, not identified answers.</p></details><button class="hcx-primary" data-action="restart">Start again</button>';
    }else if(step.kind==='unknown'){
-    html+='<h2 id="hcxTitle" tabindex="-1">I do not know yet.</h2><p>'+escape(step.message)+'</p><button class="hcx-primary" data-action="restart">Start again</button>';
+    html+='<h2 id="hcxTitle" tabindex="-1">I do not know yet.</h2><p>'+escape(step.message)+'</p>'+(mode==='game'&&step.reviewId?'<p class="hcx-meta"><strong>Review this answer:</strong> '+escape(questionText(step.reviewId))+'</p>':'')+'<button class="hcx-primary" data-action="restart">Start again</button>';
    }else{
     html+='<div class="hcx-warning"><h2 id="hcxTitle" tabindex="-1">'+escape(step.title)+'</h2><p>'+escape(step.message)+'</p></div>'+
      '<details><summary>Your answers</summary><div class="hcx-summary">'+escape(summary())+'</div></details>'+
      '<div class="hcx-tools"><button data-action="copy">Copy symptom notes</button><button data-action="restart">Start again</button></div><div class="hcx-status" id="hcxVoiceStatus" role="status" aria-live="polite"></div>';
    }
    if(mode==='game'&&history.some(h=>!/^(identity:|reject:)/.test(h.id))){
-    html+='<details class="hcx-answer-review"><summary>Review or correct answers</summary><div class="hcx-review-list">'+
+    html+='<details class="hcx-answer-review"'+(step?.reviewId?' open':'')+'><summary>Review or correct answers</summary><div class="hcx-review-list">'+
      history.map((h,i)=>({h,i})).filter(({h})=>!/^(identity:|reject:)/.test(h.id))
-      .map(({h,i})=>'<label><span>'+escape(questionText(h.id))+'</span><select data-review-index="'+i+'">'+
+      .map(({h,i})=>'<label><span>'+(h.id===step?.reviewId?'<strong>Suggested correction · </strong>':'')+escape(questionText(h.id))+'</span><select data-review-index="'+i+'">'+
        Object.entries(labels).map(([key,label])=>'<option value="'+key+'"'+(h.answer===key?' selected':'')+'>'+label+'</option>').join('')+
       '</select></label>').join('')+'</div></details>';
    }
@@ -152,7 +152,9 @@
    if(target.matches('select')){language=target.value;stopVoice();const panel=dialog.querySelector('#hcxVoicePanel');if(panel)panel.hidden=true;status('Voice language changed. Tap Speak when ready.');}
   });
  dialog.addEventListener('cancel',event=>{event.preventDefault();close();});
- dialog.addEventListener('close',()=>{if(dialog.innerHTML)reset();});
+ // A close event is dispatched asynchronously. If a new Explore session has
+ // already been opened, do not let its old close event wipe the new questions.
+ dialog.addEventListener('close',()=>{if(!dialog.open&&dialog.innerHTML)reset();});
  trigger.addEventListener('click',()=>{reset();render();dialog.showModal();dialog.querySelector('#hcxTitle')?.focus();});
  document.addEventListener('visibilitychange',()=>{if(document.hidden){stopVoice();const panel=dialog.querySelector('#hcxVoicePanel');if(panel)panel.hidden=true;status('Microphone stopped. Tap Speak when ready.');}});
  window.addEventListener('pagehide',()=>{if(dialog.open)close();else reset();});

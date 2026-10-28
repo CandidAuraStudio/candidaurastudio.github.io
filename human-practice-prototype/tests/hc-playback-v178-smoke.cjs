@@ -34,6 +34,43 @@ const assert=require('node:assert/strict');
   assert.equal(await page.evaluate(()=>document.getElementById('humanSoundAudio').paused),false,'Practice navigation cannot stop audio');
   await page.evaluate(()=>show('library'));
   assert.equal(await page.evaluate(()=>document.getElementById('humanSoundAudio').paused),false,'Library navigation cannot stop audio');
+
+  // UNIFIED HEADPHONES QA: bottom headset always opens complete listening,
+  // even when audio is playing or a sacred recording was previously open.
+  await page.locator('#hcFlowDockListen').click();
+  assert.equal(await page.locator('#hcListening.active').count(),1,'Headphones must open All Listening, not active media screen');
+  assert.ok(await page.locator('#hclTabs [data-category="islamic"]').count(),'Islamic tab exists');
+  await page.locator('#hclTabs [data-category="islamic"]').click();
+  assert.ok(await page.locator('#hcListening [data-record="adhkar"]').count(),'Morning Adhkar listed');
+  assert.ok(await page.locator('#hcListening [data-record="allahu"]').count(),'Allahu Hu listed');
+  await page.locator('#hclTabs [data-category="hindu"]').click();
+  assert.ok(await page.locator('#hcListening [data-record="drive-hinduOm"]').count(),'Original OM listed');
+  assert.ok(await page.locator('#hcListening [data-record="mantra"]').count(),'Hindu mantra listed');
+  await page.locator('#hclTabs [data-category="breathing"]').click();
+  assert.ok(await page.locator('#hcListening [data-record="drive-hclBreath0"]').count(),'Uploaded breathwork listed');
+  await page.locator('#hclTabs [data-category="books"]').click();
+  assert.ok(await page.locator('#hcListening [data-record="book-en"]').count(),'Audiobooks listed');
+  assert.equal(await page.locator('#hcOneTapDrive').isVisible(),false,'Browsing must not open Drive popup');
+  await page.evaluate(()=>show('sacredDetail'));
+  await page.locator('#hcFlowDockListen').click();
+  assert.equal(await page.locator('#hcListening.active').count(),1,'Headphones from Islamic/Hindu detail must open unified listening');
+  assert.equal(await page.locator('#hclTabs [data-category="all"]').getAttribute('aria-pressed'),'true','Re-entering Listening resets All');
+  assert.equal(await page.locator('#hclSearch').inputValue(),'','Re-entering Listening clears search');
+  assert.equal(await page.evaluate(()=>document.getElementById('humanSoundAudio').paused),false,'Opening audio library must preserve already-playing media');
+
+  // Regression: changing categories/search must not stick after leaving and returning.
+  await page.locator('#hclTabs [data-category="books"]').click();
+  await page.locator('#hclSearch').fill('Shadows');
+  await page.evaluate(()=>show('home'));
+  await page.locator('#hcFlowDockListen').click();
+  assert.equal(await page.locator('#hclTabs [data-category="all"]').getAttribute('aria-pressed'),'true','Listening return selects All');
+  assert.equal(await page.locator('#hclSearch').inputValue(),'','Listening return clears stale search');
+  assert.ok(await page.locator('#hcListening [data-record="guided-wake"]').count(),'All Listening shows meditation again');
+  assert.ok(await page.locator('#hcListening [data-record="book-en"]').count(),'All Listening still includes audiobooks');
+  assert.equal(await page.locator('#hclStatus').innerText(),'','Old Selected recording status must not look like an active filter');
+  assert.equal(await page.evaluate(()=>document.getElementById('humanSoundAudio').paused),false,'Reset does not pause audio');
+  console.log('PASS: headphones always show one full Islamic/Hindu/meditation/breathwork/books library without interrupting audio');
+
   console.log('PASS: Human Practice continues through Home, Practice, Library with visible mini-player');
   await page.evaluate(()=>show('humanSession'));
   await page.locator('#humanSession .hc-minimize-audio').click();
@@ -54,17 +91,34 @@ const assert=require('node:assert/strict');
   await page.locator('#hcOtClose').click();
   console.log('PASS: Drive preview keeps its iframe on page change and supports compact/expanded view');
 
-  // v251: verify the exact Sacred Sound controls users tap on narrow Android screens.
+  // v252: the exact OM buttons use a one-tap native audio dock, not a Drive iframe.
+  // A local silent WAV mimics an accessible Drive audio response; live Google Drive
+  // streaming still requires an Android/device check.
+  const n=8000*6,wav=Buffer.alloc(44+n*2);
+  wav.write('RIFF',0);wav.writeUInt32LE(36+n*2,4);wav.write('WAVE',8);
+  wav.write('fmt ',12);wav.writeUInt32LE(16,16);wav.writeUInt16LE(1,20);
+  wav.writeUInt16LE(1,22);wav.writeUInt32LE(8000,24);
+  wav.writeUInt32LE(16000,28);wav.writeUInt16LE(2,32);wav.writeUInt16LE(16,34);
+  wav.write('data',36);wav.writeUInt32LE(n*2,40);
+  await page.route(url=>url.href.startsWith('https://drive.usercontent.google.com/download?'),route=>route.fulfill({status:200,contentType:'audio/wav',body:wav}));
   await page.evaluate(()=>show('sacred'));
   await page.locator('#hcSacredInstantV149 [data-play="om"]').click();
-  await page.waitForFunction(()=>!document.getElementById('hcOneTapDrive').hidden);
-  assert.match(await page.locator('#hcOtFrame').getAttribute('src'),/11ogtK6FopRz-g8o-gHLY6-TV4fTJ5GjN/,'Sacred Sound quick OM tap must open the original video');
-  await page.locator('#hcOtClose').click();
+  await page.waitForFunction(()=>document.getElementById('hcOmMiniV252')?.dataset.mode==='playing',{timeout:10000});
+  assert.equal(await page.locator('#hcOmMiniV252').isVisible(),true,'OM waveform mini-player is open');
+  assert.equal(await page.locator('#hcOneTapDrive').isVisible(),false,'Original Drive popup must stay closed');
+  assert.equal(await page.locator('#hcOmMiniV252 .hcom-wave i').count(),22,'Wave indicator exists');
+  await page.locator('#hcomToggle').click();
+  assert.equal(await page.locator('#hcOmMiniV252').getAttribute('data-mode'),'paused','Pause works');
+  await page.locator('#hcomToggle').click();
+  await page.waitForFunction(()=>document.getElementById('hcOmMiniV252')?.dataset.mode==='playing');
+  await page.evaluate(()=>show('home'));
+  assert.equal(await page.locator('#hcOmMiniV252').isVisible(),true,'OM mini survives Home navigation');
   await page.evaluate(()=>openSacred('hindu'));
   await page.locator('#hcSacredDriveCards .hc-drive-card').first().click();
-  await page.waitForFunction(()=>!document.getElementById('hcOneTapDrive').hidden);
-  assert.match(await page.locator('#hcOtFrame').getAttribute('src'),/11ogtK6FopRz-g8o-gHLY6-TV4fTJ5GjN/,'Hindu OM listing must use the same player without recursion');
-  await page.locator('#hcOtClose').click();
+  assert.equal(await page.locator('#hcOmMiniV252').isVisible(),true,'Hindu OM listing uses same mini');
+  assert.equal(await page.locator('#hcOneTapDrive').isVisible(),false,'No duplicate Drive preview');
+  await page.locator('#hcomClose').click();
+  assert.equal(await page.locator('#hcOmMiniV252').isVisible(),false,'Close stops mini');
   const bansuri=page.locator('#hcHinduBansuriQuick');
   assert.equal(await bansuri.isVisible(),true,'Original Bansuri play card must be visible');
   const measured=await bansuri.evaluate(x=>({width:x.getBoundingClientRect().width,
@@ -73,7 +127,7 @@ const assert=require('node:assert/strict');
   await bansuri.click();
   await page.waitForFunction(()=>soundLabAudio.getAttribute('src')?.includes('HeartClear_Nepal_Bansuri_Learnerktm_CC0.ogg'));
   assert.ok(await page.locator('#hcHinduBansuriQuick').getAttribute('data-inline-audio'),'Bansuri must report play state');
-  console.log('PASS: both OM entrances, original Bansuri tap and mobile Sacred buttons');
+  console.log('PASS: both OM one-tap entrances, mini transport, original Bansuri, Sacred tap targets');
 
   // Write the stored state at document startup. The old document's real
   // pagehide handler would correctly supersede an artificial value set before reload.

@@ -66,7 +66,7 @@ css.textContent=[
  '#hcInfinityJourney .hci-tile strong{display:block;font-size:19px;margin-bottom:4px}',
  '#hcInfinityJourney .hci-tile small{display:block;font-size:13px}',
  '#hcInfinityJourney .hci-results{display:grid;gap:9px;margin:13px 0}',
- '#hcInfinityJourney .hci-paper{border:1px solid #4a6571;background:#0e2632;border-radius:21px;padding:18px 16px;animation:hciArrive .18s ease-out}',
+ '#hcInfinityJourney .hci-paper{border:1px solid #4a6571;background:#0e2632;border-radius:21px;padding:18px 16px;animation:hciArrive .18s ease-out;scroll-margin-top:76px}',
  '#hcInfinityJourney .hci-paper .hci-note{border-left:3px solid #dceaf0;padding:5px 0 5px 13px;margin:12px 0;background:transparent}',
  '#hcInfinityJourney .hci-paper .hci-note strong{display:block;font-size:14px;margin:0 0 4px}',
  '#hcInfinityJourney .hci-ref{display:block;max-width:100%;padding:9px 0;color:#d8f1ff;text-decoration:underline;font-size:15px;overflow-wrap:anywhere}',
@@ -77,6 +77,15 @@ css.textContent=[
  '#hcInfinityJourney .hci-progress{display:flex;justify-content:center;gap:8px;margin:13px 0 17px}',
  '#hcInfinityJourney .hci-dot{width:10px;height:10px;border-radius:50%;border:1px solid #a8c1ca;background:transparent}',
  '#hcInfinityJourney .hci-dot.active{background:white}',
+ 'body[data-hc-cinema-route="hcInfinityJourney"] #hcCinemaHero{display:none!important}',
+ '#hcInfinityJourney .hci-hero{padding:15px 17px;margin:0 0 9px}',
+ '#hcInfinityJourney .hci-hero h1{font-size:clamp(25px,5.3vw,31px);margin:8px 0}',
+ '#hcInfinityJourney .hci-hero p{font-size:17px;line-height:1.5;margin:8px 0}',
+ '#hcInfinityJourney button.hci-dot{width:40px;height:36px;padding:0;position:relative;border:0;background:transparent;border-radius:18px;cursor:pointer}',
+ '#hcInfinityJourney button.hci-dot::after{content:"";position:absolute;left:15px;top:13px;width:10px;height:10px;border:1px solid #a8c1ca;border-radius:50%;background:transparent}',
+ '#hcInfinityJourney button.hci-dot.active::after{background:white}',
+ '#hcInfinityJourney .hci-paper p{max-width:66ch}',
+ '#hcInfinityJourney .hci-paper .hci-kicker + h2{margin-bottom:16px}',
  '#hcInfinityJourney .hci-swipehint{font-size:12px;color:#b8cad2;text-align:center;margin:12px 0}',
  '#hcInfinityJourney details.hci-paper>summary{font-size:18px;min-height:42px;font-weight:700;cursor:pointer}',
  '#hcInfinityJourney .hci-tag{font-size:12px;letter-spacing:.04em;font-weight:700;color:#d7e5eb}',
@@ -143,6 +152,20 @@ function activeNav(){
  nav.querySelectorAll('.nav-item').forEach(b=>b.classList.toggle('active',b.dataset.nav==='hcInfinityJourney'));
 }
 function focusStage(){const stage=byId('hciStage');try{stage.focus({preventScroll:true})}catch(_){}try{window.scrollTo(0,0)}catch(_){}}
+function focusReading(){
+ // In-lesson navigation must keep readers at the article, not jump to the page banner.
+ requestAnimationFrame(()=>{
+  const panel=byId('hciReadingPanel');if(!panel)return;
+  const header=reader.querySelector('.hci-header');
+  const offset=(header?.getBoundingClientRect().height||0)+12;
+  const top=window.scrollY+panel.getBoundingClientRect().top-offset;
+  window.scrollTo({top:Math.max(0,top),left:0,behavior:'instant'});
+ });
+}
+function changeStep(value){
+ if(!id||value<0||value>2)return;
+ step=value;render();focusReading();
+}
 function open(topic){
  if(typeof show==='function')show('hcInfinityJourney');
  else{document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));reader.classList.add('active')}
@@ -158,20 +181,20 @@ function remember(x){
 function choose(x){
  if(!get(x))return;
  if(id)stack.push({id,step});
- id=x;step=0;remember(x);render();focusStage();
+ id=x;step=0;remember(x);render();focusReading();
 }
 function next(){
  if(!id)return;
- if(step<2){step++;render();focusStage();return}
+ if(step<2){changeStep(step+1);return}
  const current=get(id);
  if(current?.related?.length)choose(current.related[0]);
  else open();
 }
 function back(){
  if(!id){goHome();return}
- if(step>0){step--;render();focusStage();return}
+ if(step>0){changeStep(step-1);return}
  const p=stack.pop();
- if(p){id=p.id;step=p.step;render();focusStage()}
+ if(p){id=p.id;step=p.step;render();focusReading()}
  else{id=null;render();focusStage()}
 }
 function route(name){
@@ -262,11 +285,20 @@ function render(){
   heading.innerHTML='<div class="hci-row"><span class="hci-tag">'+esc(item.cat)+' · '+(step+1)+'/3</span><select class="hci-select" id="hciLang" aria-label="Language"><option value="en">English</option><option value="ta">தமிழ்</option></select></div><h1>'+esc(L([item.en,item.ta]))+'</h1><p>'+esc(L(item.question))+'</p>';
   stage.append(heading);
   const chooseLanguage=heading.querySelector('select');chooseLanguage.value=language;
-  chooseLanguage.addEventListener('change',evt=>{language=evt.target.value==='ta'?'ta':'en';prefs.language=language;save(SETTINGS,prefs);render()});
+  chooseLanguage.addEventListener('change',evt=>{language=evt.target.value==='ta'?'ta':'en';prefs.language=language;save(SETTINGS,prefs);render();focusReading()});
   const dots=document.createElement('div');dots.className='hci-progress';dots.setAttribute('aria-label','Lesson progress');
-  for(let x=0;x<3;x++){const dot=document.createElement('span');dot.className='hci-dot'+(x===step?' active':'');dots.append(dot)}stage.append(dots);
+  for(let x=0;x<3;x++){
+   const dot=document.createElement('button');dot.type='button';dot.className='hci-dot'+(x===step?' active':'');
+   dot.setAttribute('aria-label',T(sections[x],taSections[x])+' · '+(x+1)+'/3');
+   dot.setAttribute('aria-current',String(x===step?'step':'false'));
+   dot.addEventListener('click',()=>changeStep(x));dots.append(dot);
+  }stage.append(dots);
   const paper=document.createElement('article');paper.className='hci-paper';paper.id='hciReadingPanel';
   paper.innerHTML='<span class="hci-kicker">'+esc(T(sections[step],taSections[step]))+'</span><h2>'+esc(step===0?T('How it works','எப்படிச் செயல்படுகிறது'):step===1?T('What can it mean?','இதன் அர்த்தம் என்ன?'):T('Bring it into life','வாழ்வில் பயன்படுத்தலாம்'))+'</h2><p>'+esc(L(step===0?item.explain:step===1?item.reflect:item.practice))+'</p>';
+  const additional=window.HCInfinityDepth?.[item.id]?.[language]?.[step]||'';
+  additional.split(/\n\s*\n/).filter(Boolean).forEach(paragraph=>{
+   const text=document.createElement('p');text.textContent=paragraph.trim();paper.append(text);
+  });
   if(step===1){
    const note=document.createElement('div');note.className='hci-note';
    note.innerHTML='<strong>'+esc(T('Reading with care','தெளிவாக வாசிப்போம்'))+'</strong><p>'+esc(T('Scripture references are not science experiments. Personal reflections are not presented as quotations or proven medical facts.','வேத வசனங்கள் அறிவியல் சோதனைகள் அல்ல. தனிச் சிந்தனைகளை மூல மேற்கோளாகவோ மருத்துவ உண்மையாகவோ காட்டுவதில்லை.'))+'</p>';
@@ -305,7 +337,7 @@ function render(){
   const bar=document.createElement('div');bar.className='hci-subactions';
   bar.append(mk(T('Back','பின்னால்'),'hci-option',back),mk(T(saved.favourites.includes(id)?'Saved ★':'Save topic ☆',saved.favourites.includes(id)?'சேமிக்கப்பட்டது ★':'தலைப்பைச் சேமி ☆'),'hci-option',()=>{
    if(saved.favourites.includes(id))saved.favourites=saved.favourites.filter(x=>x!==id);else saved.favourites=[id,...saved.favourites].slice(0,25);
-   persist();render()
+   persist();render();focusReading()
   }));
   stage.append(bar);
   const swipe=document.createElement('p');swipe.className='hci-swipehint';swipe.textContent=T('Swipe left for Next, right for Back · Scroll vertically to read','இடப்பக்கம் அடுத்து, வலப்பக்கம் பின்னால் · வாசிக்க மேல்கீழ் நகர்த்தவும்');stage.append(swipe);

@@ -78,12 +78,12 @@ document.head.appendChild(style);
 const edit=document.createElement('button');edit.type='button';edit.id='hcMixEditV149';edit.className='hc-mix-edit';
 edit.setAttribute('aria-controls','hcMixLayers');
 let editing=false;
-function setEditing(v){editing=!!v;mix.classList.toggle('hc-mix-expanded',editing);edit.setAttribute('aria-expanded',String(editing));edit.textContent=editing?'Done · show selected layers':'＋ Add or change sounds';}
+function setEditing(v){editing=!!v;mix.classList.toggle('hc-mix-expanded',editing);edit.setAttribute('aria-expanded',String(editing));edit.textContent=editing?'Show selected only':'＋ Show all 6 sounds';}
 edit.addEventListener('click',()=>setEditing(!editing));
 mix.insertBefore(edit,layers);
-setEditing(false);
+setEditing(true); // Show all six source choices immediately; still play at most three.
 const mixHeading=mix.querySelector('.hc-mix-heading p');
-if(mixHeading)mixHeading.textContent='Up to 3 sounds · separate volume';
+if(mixHeading)mixHeading.textContent='Choose up to 3 of 6 sounds · separate volume';
 const oldMixStatus=document.getElementById('hcMixStatus');
 if(oldMixStatus&&oldMixStatus.textContent.includes('Choose 1'))oldMixStatus.textContent='Select sounds, then Start mix.';
 // Make Sacred Listening visibly clickable, and open play buttons inline (not another screen).
