@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/heartclear-sandy-intake-gate.yml'
+      - 'human-practice-prototype/media-intake/DEEP_HOLD_INTAKE_20261025.md'
       - 'human-practice-prototype/media-intake/deep-hold-20261025.json'
       - 'human-practice-prototype/media-intake/resilience-five-rounds-20261025.json'
       - 'human-practice-prototype/tests/hc-deep-hold-media-gate.cjs'
