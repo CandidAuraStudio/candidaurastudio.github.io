@@ -1,0 +1,31 @@
+name: HeartClear v284 Scoped Contracts
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'human-practice-prototype/index.html'
+      - 'human-practice-prototype/hc-playback-one-tap-v174.js'
+      - 'human-practice-prototype/hc-reels-minimal-v248.css'
+      - 'human-practice-prototype/hc-listening-hub-v254.js'
+      - 'human-practice-prototype/sw.js'
+      - 'human-practice-prototype/tests/hc-drive-minimize-v282.cjs'
+      - 'human-practice-prototype/tests/hc-reels-wide-one-swipe-v282.cjs'
+      - 'human-practice-prototype/tests/hc-listening-scripture-access.cjs'
+      - '.github/workflows/hc-v284-scoped-contracts.yml'
+  workflow_dispatch:
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Drive minimization and paused Resume
+        run: node human-practice-prototype/tests/hc-drive-minimize-v282.cjs
+      - name: Reels one-swipe existing-source integrity
+        run: node human-practice-prototype/tests/hc-reels-wide-one-swipe-v282.cjs
+      - name: Existing Bible and Gita routes
+        run: node human-practice-prototype/tests/hc-listening-scripture-access.cjs
+      - name: PWA and first-paint contract
+        run: node human-practice-prototype/tests/hc-refresh-first-paint.cjs

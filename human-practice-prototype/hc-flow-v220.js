@@ -16,9 +16,9 @@ const dock=document.createElement('nav');dock.id='hcFlowDock';dock.setAttribute(
 // All six final bottom destinations exist from the start. Search stays in Home.
 dock.innerHTML='<button id="hcFlowDockHome" type="button"><span aria-hidden="true">∞</span>Home</button>'+
  '<button id="hcFlowDockListen" type="button"><span aria-hidden="true">♫</span>Listen</button>'+
+ '<button id="hcCinemaReels" type="button" aria-label="Reels"><span aria-hidden="true">▣</span>Reels</button>'+
  '<button id="hcCinemaExplore" type="button"><span aria-hidden="true">◇</span>Explore</button>'+
  '<button id="hcCinemaLibrary" type="button"><span aria-hidden="true">▤</span>Library</button>'+
- '<button id="hcCinemaReels" type="button" aria-label="Reels"><span aria-hidden="true">▣</span>Reels</button>'+
  '<button id="hcCinemaSettings" type="button"><span aria-hidden="true">☷</span>Settings</button>';
 document.body.append(dock);
 const experiences=[
@@ -54,7 +54,7 @@ function ensureKnowledge(){
   };
   if($('hcEverydayCareV182')){check();return}
   const script=document.createElement('script');
-  script.src='./hc-daily-care-v182.js?v=230';
+  script.src='./hc-daily-care-v182.js?v=284';
   script.async=true;
   script.onload=check;
   script.onerror=()=>resolve(false);

@@ -1,0 +1,24 @@
+/* HeartClear practice visual fallback, source checks. Run with node. */
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
+const source=fs.readFileSync(path.resolve(__dirname,'../index.html'),'utf8');
+assert.equal((source.match(/id="hcPracticeVisualFallback"/g)||[]).length,1);
+assert.match(source,/id="hcPracticeVisualFallback"[^>]*role="status" aria-live="polite" hidden/);
+assert.match(source,/\.hc-practice-visual-note\[hidden\]\{display:none!important\}/);
+const start=source.indexOf('function hcSetPracticeVisualFallback(message){');
+const end=source.indexOf('async function togglePlay(){',start);
+assert(start>0&&end>start);
+const feature=source.slice(start,end);
+new vm.Script(feature);
+assert.match(feature,/addEventListener\('error',/);
+assert.match(feature,/addEventListener\('playing',/);
+assert.match(feature,/Video unavailable\. Guided audio continues\./);
+assert.equal((feature.match(/pv\.play\(\)\.catch\(\(\)=>hcSetPracticeVisualFallback/g)||[]).length,2);
+assert(!feature.includes('audio.pause()'),'Video fallback must not interrupt voice audio');
+const prep=source.slice(source.indexOf('function preparePlayer(){'),source.indexOf('function loadResumePoint(){'));
+assert.match(prep,/hcSetPracticeVisualFallback\(''\)/,'Reset notice when another practice opens');
+assert.match(source,/audio\.src=chosenUrl; \/\/ Retain the same original recording/);
+assert.match(source,/HeartClear · HC v288/);
+assert.match(source,/sw\.js\?v=288/);
+console.log('PASS: visual errors are announced; original guided audio, video URLs, and current app version preserved');
