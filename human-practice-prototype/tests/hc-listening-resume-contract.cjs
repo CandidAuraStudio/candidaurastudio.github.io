@@ -24,6 +24,14 @@ assert(html.lastIndexOf('hc-listening-resume-v252.js?v=289')>html.lastIndexOf('h
 assert(script.includes("const KEY='heartclearLastListeningV1'"),'Do not alter saved-progress key');
 assert(script.includes('event.stopImmediatePropagation()'),'Headphones return should avoid competing old navigation');
 const storage=new Map(),listeners={};
+class MockNativeAudio{
+ constructor(src=''){this.src=src;this.currentTime=0;this.duration=7205.198367;this.paused=true;}
+ getAttribute(name){return name==='src'?this.src:''}
+}
+const longAudio=new MockNativeAudio();
+let playingMedia=null,openedLong=0,restoredLong=0;
+const soundLabTracks={islamDhir120:{url:'./media/voice/HeartClear_Islamic_Dhikr_Extended_120min_audio.m4a',duration:7205.198367}};
+
 let openCount=0,playCount=0,seekCount=0;
 const dock={
  attrs:{},handlers:{},
@@ -34,12 +42,20 @@ const audio={currentTime:0,duration:1698,play(){playCount++;return Promise.resol
 const context={
  Date,Number,Math,Set,Object,JSON,
  localStorage:{getItem:key=>storage.get(key)||null,setItem:(key,val)=>storage.set(key,val)},
- document:{getElementById:id=>id==='hcFlowDockListen'?dock:id==='adhkarAudio'?audio:null,
+ document:{getElementById:id=>id==='hcFlowDockListen'?dock:id==='adhkarAudio'?audio:id==='soundLabAudio'?longAudio:null,
  addEventListener(type,handler){listeners[type]=handler}},
- window:{openAdhkar(){openCount++},addEventListener(){}},
- getActiveMediaState(){return null},
+ window:{openAdhkar(){openCount++},
+   openSoundTrack(key){openedLong++;longAudio.currentTime=0;longAudio.src=soundLabTracks[key].url},
+   addEventListener(){}},
+ HTMLMediaElement:MockNativeAudio,
+ soundLabTracks,
+ getActiveMediaState(){return playingMedia},
  hcGetAdhkarPosition(){return 0},
- hcSeekRestored(el,time){assert.equal(el,audio);assert.equal(time,82.5);seekCount++},
+ hcSeekRestored(el,time){
+   if(el===audio){assert.equal(time,82.5);seekCount++}
+   else if(el===longAudio){assert.equal(time,3600);longAudio.currentTime=time;restoredLong++}
+   else throw Error('Unknown audio element for restored seek');
+ },
  renderGlobalMini(){},
  hcMiniPinnedKey:null,
 };
@@ -57,4 +73,25 @@ assert.equal(seekCount,1,'Reopened session must seek to saved timestamp');
 assert.equal(prevented,1,'Old dock navigation must not override resume');
 assert.equal(stopped,1,'Old dock handler must not run after resume');
 assert.equal(playCount,0,'Headphone resume must remain paused');
-console.log('PASS: resumed headphones at saved position without autoplay; v289/offline/version/main preservation contracts intact');
+
+assert(script.includes("if(p<1||"),'A zero-second preload/reset must not erase an unfinished bookmark');
+assert(script.includes("const originalOpenSoundTrack=window.openSoundTrack"),'Original Sounds player must be reused');
+assert(script.includes("el.getAttribute('src')===track.url"),'Resume must not seek into a different recording');
+storage.set('heartclearLastListeningV1',JSON.stringify({
+ kind:'soundlab',title:'Islamic Dhikr · Extended Playlist',track:'islamDhir120',time:3600,at:Date.now()
+}));
+context.window.openSoundTrack('islamDhir120');
+assert.equal(openedLong,1,'Open the existing original track once');
+assert.equal(restoredLong,1,'A two-hour track must seek to 60:00 before user presses Play');
+assert.equal(longAudio.currentTime,3600,'Reopened native audio must not restart at 0:00');
+assert.equal(playCount,0,'Opening saved audio must not autoplay');
+longAudio.currentTime=0; // Android may temporarily report 0 during source reload.
+playingMedia={key:'soundlab',el:longAudio,title:'Islamic Dhikr · Extended Playlist'};
+listeners.play({target:longAudio}); // media play event fired before metadata/seek.
+assert.equal(JSON.parse(storage.get('heartclearLastListeningV1')).time,3600,
+ 'A 0:00 play event must not overwrite 60:00 with zero');
+listeners.pause({target:longAudio});
+assert.equal(JSON.parse(storage.get('heartclearLastListeningV1')).time,3600,
+ 'An OS-induced pause at zero must not erase saved progress');
+console.log('PASS: resumed headphones at saved position; native 2-hour sound retains bookmark on reset; no autoplay; v289/offline/main preservation contracts intact');
+
