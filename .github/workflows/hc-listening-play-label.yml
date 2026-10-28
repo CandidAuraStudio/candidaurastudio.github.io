@@ -1,0 +1,17 @@
+name: HeartClear All Listening Play labels
+on:
+  pull_request:
+    paths:
+      - 'human-practice-prototype/hc-listening-hub-v254.js'
+      - 'human-practice-prototype/tests/hc-listening-play-label-contract.cjs'
+      - '.github/workflows/hc-listening-play-label.yml'
+  workflow_dispatch:
+jobs:
+  listening-play-label-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node human-practice-prototype/tests/hc-listening-play-label-contract.cjs
