@@ -5576,9 +5576,12 @@ function hcMiniBrowseItems(){
   }
   HC_DRIVE_COLLECTIONS.forEach(item=>{
     if(item.key==='islamHuAkmal'||item.key==='generalDuduk')return;
-    list.push({name:item.name,detail:'Drive preview · not native autoplay',
+    const available=!!window.hcLocalListeningAudio?.has(item.key);
+    // Headphones mini-library is native audio only. Archived Drive videos stay
+    // accessible in their original dedicated source sections, not from here.
+    list.push({name:item.name,detail:available?'Private MP3/WAV · ready':'Add your MP3/WAV once',
       category:item.section==='general'?'raga':item.section==='meditation'?'practice':'sacred',
-      key:item.key,kind:'drive'});
+      key:item.key,kind:'local-audio'});
   });
   return list;
 }
@@ -5595,7 +5598,7 @@ function hcRenderMiniLibrary(){
     const text=document.createElement('span');const title=document.createElement('b');title.textContent=item.name;
     const meta=document.createElement('small');meta.textContent=item.detail;
     text.append(title,meta);
-    const icon=document.createElement('span');icon.textContent=item.kind==='drive'?'↗':'▶';
+    const icon=document.createElement('span');icon.textContent=item.kind==='local-audio'&&!window.hcLocalListeningAudio?.has(item.key)?'+':'▶';
     btn.append(text,icon);
     btn.addEventListener('click',()=>{
       hcCloseMiniLibrary();
@@ -5606,7 +5609,7 @@ function hcRenderMiniLibrary(){
         hcMiniPinnedKey='soundlab';renderGlobalMini();
       }else if(item.kind==='gita')window.hcGitaHomeToggle?.(1);
       else if(item.kind==='practice')item.el.click();
-      else openHcDriveMedia(item.key);
+      else if(item.kind==='local-audio')window.hcLocalListeningAudio?.chooseOrPlay(item.key);
     });
     root.appendChild(btn);
   });
