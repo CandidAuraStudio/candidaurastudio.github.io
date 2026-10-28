@@ -48,8 +48,12 @@ function list(){
   if(item.key==='islamHuAkmal'||item.key==='generalDuduk')return;
   const category=item.section==='islamic'?'islamic':item.section==='hindu'?'hindu':item.section==='meditation'?'breathing':'nature';
   if(category==='breathing'&&!item.key.startsWith('hclBreath'))return;
-  const meta=item.key==='hinduOm'?'3:33:33 · Google Drive player · no native audio':String(item.type||'Original recording').replace(/\s*·\s*(?:original )?video\b/gi,'')+' · Google Drive player';
-  add(record('drive-'+item.key,item.name,meta,category,'drive',item.key));
+  // Audio-only Listening: never present a Drive MP4 preview as native audio.
+  const local=window.hcLocalListeningAudio;
+  const saved=!!local?.has(item.key);
+  const info=String(item.type||'Original recording').replace(/\s*·\s*(?:original )?video\b/gi,'');
+  const meta=info+' · '+(saved?'private MP3/WAV ready':'add private MP3/WAV once');
+  add(record('local-'+item.key,item.name,meta,category,'local-audio',item.key));
  });
  if(typeof hcMiniBrowseItems==='function')hcMiniBrowseItems().forEach(item=>{
   if(item.category==='quran')add(record('quran-'+item.key,item.name,item.detail,'quran','audio',item.key));
@@ -80,8 +84,11 @@ function itemButton(item){
  const title=document.createElement('strong');title.textContent=item.name;
  const desc=document.createElement('small');desc.textContent=item.detail;
  info.append(title,desc);
- const action=document.createElement('span');action.className='hcl-record-action';action.textContent=item.kind==='drive'?'Play':['book','bible','hindu-library','gita','practice'].includes(item.kind)?'Open':'Play';
- b.append(icon,info,action);b.setAttribute('aria-label',(['drive','book','bible','hindu-library','gita','practice'].includes(item.kind)?'Open ':'Play ')+item.name);
+ const action=document.createElement('span');action.className='hcl-record-action';action.textContent=item.kind==='local-audio'?(window.hcLocalListeningAudio?.has(item.key)?(window.hcLocalListeningAudio.playing(item.key)?'Pause':'Play'):window.hcLocalListeningAudio?.isLoading()?'Loading…':'Add audio'):['book','bible','hindu-library','gita','practice'].includes(item.kind)?'Open':'Play';
+ b.append(icon,info,action);b.setAttribute('aria-label',(
+ item.kind==='local-audio'?(window.hcLocalListeningAudio?.has(item.key)?'Play private audio ':'Add private MP3/WAV for '):
+ ['book','bible','hindu-library','gita','practice'].includes(item.kind)?'Open ':'Play '
+)+item.name);
  b.addEventListener('click',()=>play(item));return b;
 }
 function section(cat,items,limit=0){
@@ -101,6 +108,22 @@ function render(){
  else results.append(section(current,all.filter(x=>x.category===current)));
 }
 function say(text){status.textContent=text;status.hidden=!text}
+window.hcListeningSay=say;
+document.addEventListener('hc-local-listening-audio-changed',()=>{
+  // Update only row actions; never reset the scroll position or active filter.
+  results.querySelectorAll('[data-record]').forEach(button=>{
+    const id=button.dataset.record||'';
+    if(!id.startsWith('local-'))return;
+    const key=id.slice(6),native=window.hcLocalListeningAudio;
+    const action=button.querySelector('.hcl-record-action');
+    if(!action)return;
+    action.textContent=native?.has(key)?(native.playing(key)?'Pause':'Play'):native?.isLoading()?'Loading…':'Add audio';
+    button.setAttribute('aria-label',(native?.has(key)?(native.playing(key)?'Pause private audio ':'Play private audio '):'Add private MP3/WAV for ')+(button.querySelector('strong')?.textContent||'recording'));
+    const detail=button.querySelector('.hcl-record-info small');
+    if(detail)detail.textContent=detail.textContent.replace(/(?:add private MP3\/WAV once|private MP3\/WAV ready)$/,(native?.has(key)?'private MP3/WAV ready':'add private MP3/WAV once'));
+  });
+});
+
 function play(item){
  try{
   if(item.kind==='audio'){
@@ -110,17 +133,10 @@ function play(item){
   }else if(item.kind==='adhkar'){
    const p=hcInlineToggleAdhkar();if(p?.catch)p.catch(()=>say('Unable to play Morning Adhkar.'));
    say('Morning Adhkar selected · pause from the mini-player.');
-  }else if(item.kind==='drive'){
-   // Keep the headphones page active BEFORE opening the floating Drive player.
-   // Previously, show('hcListening') ran AFTER opening and immediately minimized
-   // the new iframe, making the Play tap appear to do nothing on mobile.
-   if(!$('hcListening').classList.contains('active'))window.show('hcListening');
-   const fn=window.hcOpenDriveDock||window.openHcDriveMedia;
-   if(typeof fn!=='function')throw Error('Video player unavailable');
-   fn(item.key,'hcListening');
-   const drive=$('hcOneTapDrive');
-   if(drive&&!drive.hidden&&drive.classList.contains('hc-ot-collapsed'))$('hcOtMinimize')?.click();
-   say('Recording opened · Google Drive may require a separate Play tap if autoplay is blocked.');
+  }else if(item.kind==='local-audio'){
+   if(typeof window.hcLocalListeningAudio?.chooseOrPlay!=='function')
+      throw Error('Native private audio is unavailable');
+   window.hcLocalListeningAudio.chooseOrPlay(item.key);
   }else if(item.kind==='hindu-library'){
    if(typeof openSacred!=='function')throw Error('Hindu library unavailable');
    openSacred('hindu');

@@ -1,17 +1,32 @@
-name: HeartClear All Listening Play labels
+name: HeartClear Native Audio Listening
 on:
   pull_request:
     paths:
       - 'human-practice-prototype/hc-listening-hub-v254.js'
+      - 'human-practice-prototype/hc-listening-local-audio-v290.js'
+      - 'human-practice-prototype/index.html'
+      - 'human-practice-prototype/sw.js'
       - 'human-practice-prototype/tests/hc-listening-play-label-contract.cjs'
+      - 'human-practice-prototype/tests/hc-listening-native-audio-browser.cjs'
       - '.github/workflows/hc-listening-play-label.yml'
   workflow_dispatch:
 jobs:
   listening-play-label-contract:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
       - run: node human-practice-prototype/tests/hc-listening-play-label-contract.cjs
+      - name: Install headless Chromium for mobile/desktop playback tests
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Exercise native audio import and resume in Chromium
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8765 --directory . >/tmp/hc-local-audio-server.log 2>&1 &
+          node human-practice-prototype/tests/hc-listening-native-audio-browser.cjs
