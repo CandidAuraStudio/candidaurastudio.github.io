@@ -118,10 +118,10 @@ document.addEventListener('hc-local-listening-audio-changed',()=>{
     const action=button.querySelector('.hcl-record-action');
     if(!action)return;
     action.textContent=native?.has(key)?(native.playing(key)?'Pause':'Play'):native?.isLoading()?'Loading…':'Add MP3/WAV';
-    button.setAttribute('aria-label',(native?.has(key)?'Play private audio ':'Add private MP3/WAV for ')+button.querySelector('strong')?.textContent);
+    button.setAttribute('aria-label',(native?.has(key)?(native.playing(key)?'Pause private audio ':'Play private audio '):'Add private MP3/WAV for ')+(button.querySelector('strong')?.textContent||'recording'));
+    const detail=button.querySelector('.hcl-record-info small');
+    if(detail)detail.textContent=detail.textContent.replace(/(?:add private MP3\/WAV once|private MP3\/WAV ready)$/,(native?.has(key)?'private MP3/WAV ready':'add private MP3/WAV once'));
   });
-  // Refresh row descriptions after the owner's file has been saved.
-  render();
 });
 
 function play(item){
