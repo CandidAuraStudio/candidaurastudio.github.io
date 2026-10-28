@@ -36,6 +36,8 @@ if(typeof HC_DRIVE_COLLECTIONS!=='undefined')breath.forEach(([name,type,id],i)=>
 const record=(id,name,detail,category,kind,key,ref=null)=>({id,name,detail,category,kind,key,ref});
 function list(){
  const all=[];const add=x=>{if(!all.some(y=>y.id===x.id))all.push(x)};
+ add(record('private-deep-hold','Deep Hold · Akmal special','17:11 · your private recording','meditation','private','deep-hold'));
+ add(record('private-resilience','Resilience · 5 Rounds','26:29 · your private recording','meditation','private','resilience'));
  guided.forEach(([key,name,detail])=>add(record('guided-'+key,name,detail,'meditation','audio','hcl-'+key)));
  add(record('hindu-library','Hindu Scriptures · Gita and Vedas','Read original teachings · English / Tamil','hindu','hindu-library','hindu'));
  add(record('bible-genesis','Bible · Genesis','Read and listen · English / Tamil','bible','bible','genesis'));
@@ -48,7 +50,7 @@ function list(){
   if(item.key==='islamHuAkmal'||item.key==='generalDuduk')return;
   const category=item.section==='islamic'?'islamic':item.section==='hindu'?'hindu':item.section==='meditation'?'breathing':'nature';
   if(category==='breathing'&&!item.key.startsWith('hclBreath'))return;
-  const meta=item.key==='hinduOm'?'3:33:33 · original video; audio stream unavailable':(item.type||'Original video')+' · video';
+  const meta=item.key==='hinduOm'?'3:33:33 · Drive player · no native audio stream':String(item.type||'Original recording').replace(/\s*·\s*(?:original )?video\b/gi,'')+' · Drive player';
   add(record('drive-'+item.key,item.name,meta,category,'drive',item.key));
  });
  if(typeof hcMiniBrowseItems==='function')hcMiniBrowseItems().forEach(item=>{
@@ -80,8 +82,8 @@ function itemButton(item){
  const title=document.createElement('strong');title.textContent=item.name;
  const desc=document.createElement('small');desc.textContent=item.detail;
  info.append(title,desc);
- const action=document.createElement('span');action.className='hcl-record-action';action.textContent=item.kind==='drive'?'Video':['book','bible','hindu-library','gita','practice'].includes(item.kind)?'Open':'Play';
- b.append(icon,info,action);b.setAttribute('aria-label',(['drive','book','bible','hindu-library','gita','practice'].includes(item.kind)?'Open ':'Play ')+item.name);
+ const action=document.createElement('span');action.className='hcl-record-action';action.textContent=item.kind==='private'&&!window.hcPrivateVideoReady?.(item.key)?'Add once':item.kind==='drive'?'Play':['book','bible','hindu-library','gita','practice'].includes(item.kind)?'Open':'Play';
+ b.append(icon,info,action);b.setAttribute('aria-label',(item.kind==='private'?'Play private recording ':['drive','book','bible','hindu-library','gita','practice'].includes(item.kind)?'Open ':'Play ')+item.name);
  b.addEventListener('click',()=>play(item));return b;
 }
 function section(cat,items,limit=0){
@@ -107,6 +109,10 @@ function play(item){
    if(typeof hcQuickPlaySound!=='function')throw Error('Audio player missing');
    const p=hcQuickPlaySound(item.key);if(p?.catch)p.catch(()=>say('Unable to play this audio. Check your connection.'));
    say('Selected · '+item.name);
+  }else if(item.kind==='private'){
+   if(typeof window.hcPrivatePlayTrack!=='function')throw Error('Private video player unavailable');
+   window.hcPrivatePlayTrack(item.key);
+   say('Private recording selected · your first play lets you choose the saved file on this device.');
   }else if(item.kind==='adhkar'){
    const p=hcInlineToggleAdhkar();if(p?.catch)p.catch(()=>say('Unable to play Morning Adhkar.'));
    say('Morning Adhkar selected · pause from the mini-player.');
@@ -120,7 +126,7 @@ function play(item){
    fn(item.key,'hcListening');
    const drive=$('hcOneTapDrive');
    if(drive&&!drive.hidden&&drive.classList.contains('hc-ot-collapsed'))$('hcOtMinimize')?.click();
-   say('Player opened · tap Play inside the video if your browser blocks autoplay.');
+   say('Recording opened · some Google Drive previews may require one extra Play tap.');
   }else if(item.kind==='hindu-library'){
    if(typeof openSacred!=='function')throw Error('Hindu library unavailable');
    openSacred('hindu');
