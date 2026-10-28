@@ -16,7 +16,7 @@ assert.match(source,/hc-ot-resume/);
 assert.match(source,/heartclearDriveLastOpenV1/);
 assert.match(html,/hc-playback-one-tap-v174\.js\?v=284/);
 assert.match(html,/register\('\.\/sw\.js\?v=288'\)/);
-assert.match(sw,/const APP_CACHE='heartclear-v288'/);
+assert.match(sw,/const APP_CACHE='heartclear-v289'/);
 assert.match(sw,/const MEDIA_CACHE='heartclear-media-v1'/);
 assert.match(sw,/hc-playback-one-tap-v174\.js\?v=284/);
 const memory=new Map();
