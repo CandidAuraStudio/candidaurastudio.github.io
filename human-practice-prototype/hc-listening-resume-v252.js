@@ -29,12 +29,13 @@ if(typeof originalOpenAdhkar==='function'){
   };
 }
 
-function currentSnapshot(allowZero=false){
+function currentSnapshot(){
   const s=typeof getActiveMediaState==='function'?getActiveMediaState():null;
   if(!s||!supported.has(s.key)||!s.el?.getAttribute('src'))return null;
   const p=tnum(s.el.currentTime);
   const d=Number(s.el.duration);
-  if((p<1&&!allowZero)||(Number.isFinite(d)&&d>2&&p>=d-2))return null;
+  // A reset/preload event at 0:00 must never erase an earlier half-played bookmark.
+  if(p<1||(Number.isFinite(d)&&d>2&&p>=d-2))return null;
   const out={kind:s.key,time:p,title:s.title||'Listening',at:Date.now()};
   if(s.key==='soundlab')out.track=typeof currentSoundKey==='string'?currentSoundKey:'';
   if(s.key==='book'){
@@ -62,14 +63,39 @@ function currentSnapshot(allowZero=false){
   }
   return out;
 }
-function capture(force=false,allowZero=false){
+function capture(force=false){
   if(!force&&Date.now()-lastWriteAt<4000)return;
-  const s=currentSnapshot(allowZero);
+  const s=currentSnapshot();
   if(!s)return;
   lastWriteAt=Date.now();
   put(KEY,s);
   updateDockLabel();
 }
+// Returning to an already-started native sound must seek BEFORE its Play
+// control is used. Opening a track in the Sounds list currently removes its
+// source and reloads it at 0:00; the original audio file itself is unchanged.
+// This includes the 2h dhikr ONLY when its approved M4A exists locally.
+const originalOpenSoundTrack=window.openSoundTrack;
+if(typeof originalOpenSoundTrack==='function'){
+  window.openSoundTrack=function(key){
+    const saved=read(KEY);
+    const legacy=read('heartclearLastSoundV1');
+    const validSaved=saved?.kind==='soundlab'&&saved.track===key&&
+      saved.at>Date.now()-180*86400000?tnum(saved.time):0;
+    const validLegacy=legacy?.key===key?tnum(legacy.position):0;
+    const position=Math.max(validSaved,validLegacy);
+    const result=originalOpenSoundTrack.apply(this,arguments);
+    const el=byId('soundLabAudio');
+    const track=typeof soundLabTracks!=='undefined'?soundLabTracks[key]:null;
+    const duration=tnum(track?.duration);
+    if(position>5&&(!duration||position<duration-4)&&el&&
+      track?.url&&el.getAttribute('src')===track.url&&typeof hcSeekRestored==='function'){
+      hcSeekRestored(el,position,typeof syncSoundLab==='function'?syncSoundLab:null);
+    }
+    return result;
+  };
+}
+
 function getSaved(){
   const s=read(KEY);
   if(s&&supported.has(s.kind)&&Number.isFinite(Number(s.time))&&
@@ -156,7 +182,7 @@ for(const type of ['play','pause','seeked','timeupdate']){
     if(!(event.target instanceof HTMLMediaElement))return;
     const current=typeof getActiveMediaState==='function'?getActiveMediaState():null;
     if(current?.el!==event.target)return;
-    capture(type!=='timeupdate',type==='play');
+    capture(type!=='timeupdate');
     if(current.key==='adhkar'&&(type==='pause'||type==='play')){
       if(typeof hcRememberAdhkarPosition==='function'&&type==='pause')hcRememberAdhkarPosition();
       if(typeof setAdhkarMediaSession==='function')setAdhkarMediaSession();
