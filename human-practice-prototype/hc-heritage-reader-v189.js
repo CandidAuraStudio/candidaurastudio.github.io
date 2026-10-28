@@ -78,6 +78,7 @@ css.textContent=[
 '#hcHeritageReader p{font-size:14px;line-height:1.82;color:#dfdeda;margin:8px 0 16px;overflow-wrap:anywhere}',
 '#hcHeritageReader .hc-heritage-list{display:grid;gap:8px;margin:14px 0}',
 '#hcHeritageReader .hc-heritage-tile{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 12px;min-height:63px;text-align:left;border:1px solid #4a4a4a;background:#202020;border-radius:11px}',
+'#hcHeritageReader a.hc-heritage-tile{text-decoration:none;color:inherit}',
 '#hcHeritageReader .hc-heritage-tile strong{display:block;font-size:14px;line-height:1.5}',
 '#hcHeritageReader .hc-heritage-tile small{display:block;font-size:11px;color:#c7c5c2;line-height:1.6;margin-top:5px}',
 '#hcHeritageReader .hc-heritage-tile .chev{font-size:19px;color:#bcbab6}',
@@ -198,7 +199,7 @@ function render(){
  if(route.level==='index'){
   main.innerHTML='<span class="hc-heritage-kicker">HEARTCLEAR · READ</span><h1>'+tr('Human Knowledge','மனித அறிவு')+'</h1>'+
   '<p>'+tr('Explore Qur’an, Bible, Vedas and traditions in their own contexts, alongside everyday knowledge.','குர்ஆன், பைபிள், வேதம், பிற மரபுகள் மற்றும் அன்றாட அறிவை அவற்றின் சொந்தச் சூழலில் அறியலாம்.')+'</p>'+
-  '<div class="hc-heritage-list">'+topics.map(t=>'<button type="button" class="hc-heritage-tile" data-topic="'+t[0]+'"><span><strong>'+E(tr(t[1],t[2]))+'</strong><small>'+rows(t[0]).length+' '+tr('articles','கட்டுரைகள்')+'</small></span><span class="chev" aria-hidden="true">›</span></button>').join('')+'</div>'+
+  '<div class="hc-heritage-list"><a class="hc-heritage-tile" href="./human-knowledge/clean-body-clear-heart.html" aria-label="Read Clean Body Clear Heart lessons inside HeartClear"><span><strong>'+tr('Clean Body · Clear Heart','உடலும் மனமும் · தூய்மை')+'</strong><small>'+tr('Rotating study · original verses · detailed explanation · 16 lessons','சுழலும் அறிவு · மூல வசனங்கள் · 16 பாடங்கள்')+'</small></span><span class="chev" aria-hidden="true">›</span></a>'+topics.map(t=>'<button type="button" class="hc-heritage-tile" data-topic="'+t[0]+'"><span><strong>'+E(tr(t[1],t[2]))+'</strong><small>'+rows(t[0]).length+' '+tr('articles','கட்டுரைகள்')+'</small></span><span class="chev" aria-hidden="true">›</span></button>').join('')+'</div>'+
   '<p>'+tr('Medical science uses clinical sources. History is shown only where documented.','மருத்துவ அறிவியலுக்கு மருத்துவ ஆதாரங்கள். வரலாற்றுக்கு ஆவண ஆதாரம் உள்ள இடங்கள் மட்டுமே.')+'</p>';
  }else if(route.level==='topic'){
   if(!chapter.length){navigate('index');return}
