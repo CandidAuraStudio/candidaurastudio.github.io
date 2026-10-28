@@ -108,7 +108,7 @@
    // Keep one authoritative, visible version. The older secondary v269 stamp
    // conflicted with the v192 label and actual offline build number.
    const label=settings.querySelector('.app-version');
-   if(label)label.textContent='HeartClear · HC v288';
+   if(label)label.textContent='HeartClear · HC v289';
    const stamp=document.createElement('span');
    stamp.id='hcHomeVersion268';stamp.hidden=true;settings.append(stamp);
  }else{
