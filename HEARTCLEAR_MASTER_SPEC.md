@@ -19,6 +19,12 @@ This document records user-approved direction and coordination rules. It does NO
 8. **Be accurate:** a committed source change is not proof the GitHub Pages site has published it or that playback works on Android. Describe separately: requested, implemented in source, published, manually tested, and not yet supported.
 9. **Protect the user's creative method:** template designs may inspire appearance, but do not import a third party's meditation/practices as replacements. Do not add paid dependencies, accounts or services without approval.
 
+## Owner clarification — 29 October 2026: restore uploaded recordings
+
+The owner confirms that they have permission and supporting documentation to use their uploaded videos and music, and explicitly requests restoration of their existing Drive playback. Do not remove or disable these recordings or force a new local upload without their permission. Prefer a saved native MP3/WAV when present; otherwise preserve the original, visibly labelled Drive player and source identifier. Do not claim that a Drive MP4 is native audio or promise native background/resume controls for its iframe.
+
+This latest instruction supersedes PR #70's blanket blocking of the original Drive recordings. PR #70 must be reconciled before release so it cannot silently disable them again. Keep its unrelated recovery fixes and the separate search/recipe work subject to their existing review and release gates. Do not publish failing work.
+
 ## 2. Locked user-approved experience
 
 ### Branding, palette, fonts

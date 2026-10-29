@@ -11,7 +11,7 @@ assert.match(html,/role="switch" aria-checked="true" aria-label="Toggle backgrou
 assert.match(html,/body\.hc-no-blur \*,body\.hc-no-blur \*::before,body\.hc-no-blur \*::after/);
 assert.match(html,/backdrop-filter:none!important/);
 assert.match(html,/hcApplyBlurPreference\(\);\s*updateOfflineStorageText\(\)/,'Restores preference when settings render');
-assert.match(html,/sw\.js\?v=290/,'Preserve service-worker wiring for release-manager integration');
+assert.match(html,/sw\.js\?v=292/,'Preserve service-worker wiring for release-manager integration');
 const from=html.indexOf('function hcApplyBlurPreference(){');
 const to=html.indexOf('async function toggleWakeLock(){',from);
 assert(from>0&&to>from,'Blur behavior must be kept as one isolated function block');

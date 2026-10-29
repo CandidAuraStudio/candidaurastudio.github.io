@@ -1,5 +1,5 @@
 /* HeartClear v254: the headphones button always opens All Listening.
-   Keep the original recordings; never pretend a Drive MP4 is native audio. */
+   Keep original Drive playback available; prefer saved native audio when present. */
 (function(){
 'use strict';
 if(document.getElementById('hcListening'))return;
@@ -48,11 +48,11 @@ function list(){
   if(item.key==='islamHuAkmal'||item.key==='generalDuduk')return;
   const category=item.section==='islamic'?'islamic':item.section==='hindu'?'hindu':item.section==='meditation'?'breathing':'nature';
   if(category==='breathing'&&!item.key.startsWith('hclBreath'))return;
-  // Audio-only Listening: never present a Drive MP4 preview as native audio.
+  // Owner-authorized restoration: retain the original Drive source when no local audio is saved.
   const local=window.hcLocalListeningAudio;
   const saved=!!local?.has(item.key);
   const info=String(item.type||'Original recording').replace(/\s*·\s*(?:original )?video\b/gi,'');
-  const meta=info+' · '+(saved?'private MP3/WAV ready':'add private MP3/WAV once');
+  const meta=info+' · '+(saved?'private MP3/WAV ready':'original Drive recording');
   add(record('local-'+item.key,item.name,meta,category,'local-audio',item.key));
  });
  if(typeof hcMiniBrowseItems==='function')hcMiniBrowseItems().forEach(item=>{
@@ -84,9 +84,9 @@ function itemButton(item){
  const title=document.createElement('strong');title.textContent=item.name;
  const desc=document.createElement('small');desc.textContent=item.detail;
  info.append(title,desc);
- const action=document.createElement('span');action.className='hcl-record-action';action.textContent=item.kind==='local-audio'?(window.hcLocalListeningAudio?.has(item.key)?(window.hcLocalListeningAudio.playing(item.key)?'Pause':'Play'):window.hcLocalListeningAudio?.isLoading()?'Loading…':'Add audio'):['book','bible','hindu-library','gita','practice'].includes(item.kind)?'Open':'Play';
+ const action=document.createElement('span');action.className='hcl-record-action';action.textContent=item.kind==='local-audio'?(window.hcLocalListeningAudio?.has(item.key)?(window.hcLocalListeningAudio.playing(item.key)?'Pause':'Play'):'Play'):['book','bible','hindu-library','gita','practice'].includes(item.kind)?'Open':'Play';
  b.append(icon,info,action);b.setAttribute('aria-label',(
- item.kind==='local-audio'?(window.hcLocalListeningAudio?.has(item.key)?'Play private audio ':'Add private MP3/WAV for '):
+ item.kind==='local-audio'?(window.hcLocalListeningAudio?.has(item.key)?'Play private audio ':'Play original Drive recording '):
  ['book','bible','hindu-library','gita','practice'].includes(item.kind)?'Open ':'Play '
 )+item.name);
  b.addEventListener('click',()=>play(item));return b;
@@ -117,10 +117,10 @@ document.addEventListener('hc-local-listening-audio-changed',()=>{
     const key=id.slice(6),native=window.hcLocalListeningAudio;
     const action=button.querySelector('.hcl-record-action');
     if(!action)return;
-    action.textContent=native?.has(key)?(native.playing(key)?'Pause':'Play'):native?.isLoading()?'Loading…':'Add audio';
-    button.setAttribute('aria-label',(native?.has(key)?(native.playing(key)?'Pause private audio ':'Play private audio '):'Add private MP3/WAV for ')+(button.querySelector('strong')?.textContent||'recording'));
+    action.textContent=native?.has(key)?(native.playing(key)?'Pause':'Play'):'Play';
+    button.setAttribute('aria-label',(native?.has(key)?(native.playing(key)?'Pause private audio ':'Play private audio '):'Play original Drive recording ')+(button.querySelector('strong')?.textContent||'recording'));
     const detail=button.querySelector('.hcl-record-info small');
-    if(detail)detail.textContent=detail.textContent.replace(/(?:add private MP3\/WAV once|private MP3\/WAV ready)$/,(native?.has(key)?'private MP3/WAV ready':'add private MP3/WAV once'));
+    if(detail)detail.textContent=detail.textContent.replace(/(?:original Drive recording|private MP3\/WAV ready)$/,(native?.has(key)?'private MP3/WAV ready':'original Drive recording'));
   });
 });
 
@@ -134,9 +134,13 @@ function play(item){
    const p=hcInlineToggleAdhkar();if(p?.catch)p.catch(()=>say('Unable to play Morning Adhkar.'));
    say('Morning Adhkar selected · pause from the mini-player.');
   }else if(item.kind==='local-audio'){
-   if(typeof window.hcLocalListeningAudio?.chooseOrPlay!=='function')
-      throw Error('Native private audio is unavailable');
-   window.hcLocalListeningAudio.chooseOrPlay(item.key);
+   if(window.hcLocalListeningAudio?.has(item.key)){
+    window.hcLocalListeningAudio.chooseOrPlay(item.key);
+   }else{
+    if(typeof window.hcOpenDriveDock!=='function')throw Error('Original Drive player is unavailable');
+    window.hcOpenDriveDock(item.key,'hcListening');
+    say('Original Drive recording · '+item.name+' · use the visible Drive controls.');
+   }
   }else if(item.kind==='hindu-library'){
    if(typeof openSacred!=='function')throw Error('Hindu library unavailable');
    openSacred('hindu');

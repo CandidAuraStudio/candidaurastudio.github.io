@@ -19,6 +19,6 @@ assert(!feature.includes('audio.pause()'),'Video fallback must not interrupt voi
 const prep=source.slice(source.indexOf('function preparePlayer(){'),source.indexOf('function loadResumePoint(){'));
 assert.match(prep,/hcSetPracticeVisualFallback\(''\)/,'Reset notice when another practice opens');
 assert.match(source,/audio\.src=chosenUrl; \/\/ Retain the same original recording/);
-assert.match(source,/HeartClear · HC v290/);
-assert.match(source,/sw\.js\?v=290/);
+assert.match(source,/HeartClear · HC v292/);
+assert.match(source,/sw\.js\?v=292/);
 console.log('PASS: visual errors are announced; original guided audio, video URLs, and current app version preserved');

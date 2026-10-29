@@ -8,6 +8,8 @@ on:
       - 'human-practice-prototype/sw.js'
       - 'human-practice-prototype/tests/hc-listening-play-label-contract.cjs'
       - 'human-practice-prototype/tests/hc-listening-native-audio-browser.cjs'
+      - 'human-practice-prototype/tests/hc-drive-listening-routing.cjs'
+      - 'human-practice-prototype/tests/hc-drive-listening-restore.cjs'
       - '.github/workflows/hc-listening-play-label.yml'
   workflow_dispatch:
 jobs:
@@ -20,6 +22,7 @@ jobs:
         with:
           node-version: '22'
       - run: node human-practice-prototype/tests/hc-listening-play-label-contract.cjs
+      - run: node human-practice-prototype/tests/hc-drive-listening-routing.cjs
       - name: Install headless Chromium for mobile/desktop playback tests
         run: |
           npm install --no-save playwright
@@ -29,4 +32,5 @@ jobs:
         run: |
           set -euo pipefail
           python3 -m http.server 8765 --directory . >/tmp/hc-local-audio-server.log 2>&1 &
+          node human-practice-prototype/tests/hc-drive-listening-restore.cjs
           node human-practice-prototype/tests/hc-listening-native-audio-browser.cjs

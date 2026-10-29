@@ -33,11 +33,12 @@ function silentWav(seconds=12){
    await page.locator('#hclTabs button[data-category="islamic"]').click();
    const row=page.locator('#hclResults [data-record="local-islamSufiDrum"]');
    await row.waitFor();
-   assert.equal(await row.locator('.hcl-record-action').innerText(),'Add audio');
+   assert.equal(await row.locator('.hcl-record-action').innerText(),'Play');
    assert.equal(await page.locator('#hcOneTapDrive').isVisible(),false);
 
    const pickerEvent=page.waitForEvent('filechooser');
-   await row.click();
+   // Explicit local import stays available; ordinary row taps restore Drive.
+   await page.evaluate(()=>window.hcLocalListeningAudio.chooseOrPlay('islamSufiDrum'));
    const picker=await pickerEvent;
    await picker.setFiles({name:'sample.wav',mimeType:'audio/wav',buffer:silentWav()});
    await page.waitForFunction(()=>window.hcLocalListeningAudio.has('islamSufiDrum'));

@@ -1,4 +1,4 @@
-/* HeartClear v290 native Listening regression: no video popup or false Play label.
+/* Owner-authorized Drive fallback plus retained private native audio.
    Checks actual click-to-select then native audio playback with mocked browser primitives. */
 'use strict';
 const assert=require('node:assert/strict');
@@ -16,10 +16,11 @@ assert.doesNotThrow(()=>new vm.Script(hub));
 assert.doesNotThrow(()=>new vm.Script(local));
 assert.match(hub,/kind==='local-audio'/);
 assert.match(hub,/hcLocalListeningAudio\.chooseOrPlay\(item\.key\)/);
-assert.match(hub,/Add audio/);
+assert.match(hub,/original Drive recording/);
+assert.doesNotMatch(hub,/Add audio/);
 assert.doesNotMatch(hub,/item\.kind==='drive'/);
-assert.doesNotMatch(hub,/fn\(item\.key,'hcListening'\)/);
-assert.doesNotMatch(hub,/openHcDriveMedia\(item\.key/);
+assert.match(hub,/hcOpenDriveDock\(item\.key,'hcListening'\)/);
+assert.match(hub,/hcLocalListeningAudio\?\.has\(item\.key\)/);
 assert.match(local,/hcQuickPlaySound\(nativeKey\)/);
 assert.match(local,/indexedDB\.open\(DB_NAME,1\)/);
 assert.match(local,/URL\.createObjectURL\(blob\)/);
@@ -28,15 +29,15 @@ assert.match(local,/soundLabAudio\.addEventListener\('timeupdate'/);
 assert.doesNotMatch(local,/https?:\/\/|drive\.google|<iframe|window\.open\(/);
 assert.doesNotMatch(local,/localStorage\.clear\(|caches\.delete\(/);
 assert.match(html,/const HC_DRIVE_COLLECTIONS=/,'Original video identifiers remain in source archive');
-assert.match(html,/kind:'local-audio'/,'Mini audio browser must use local audio, not Drive iframe');
-assert.doesNotMatch(html,/else openHcDriveMedia\(item\.key\);/,'Mini listening must never open Drive video');
-assert.match(html,/hc-listening-local-audio-v290\.js\?v=290/);
-assert.match(html,/hc-listening-hub-v254\.js\?v=290/);
-assert.match(html,/register\('\.\/sw\.js\?v=290'\)/);
-assert.match(sw,/const APP_CACHE='heartclear-v290'/);
+assert.match(html,/kind:'local-audio'/,'Mini library must retain saved local audio support');
+assert.match(html,/hcOpenDriveDock\?\.\(item\.key\)/,'Mini library must preserve original Drive playback');
+assert.match(html,/hc-listening-local-audio-v290\.js\?v=292/);
+assert.match(html,/hc-listening-hub-v254\.js\?v=292/);
+assert.match(html,/register\('\.\/sw\.js\?v=292'\)/);
+assert.match(sw,/const APP_CACHE='heartclear-v292'/);
 assert.match(sw,/const MEDIA_CACHE='heartclear-media-v1'/);
-assert.match(sw,/hc-listening-local-audio-v290\.js\?v=290/);
-assert.match(home,/HeartClear · HC v290/);
+assert.match(sw,/hc-listening-local-audio-v290\.js\?v=292/);
+assert.match(home,/HeartClear · HC v292/);
 
 async function checkClick(){
   const listeners={};
