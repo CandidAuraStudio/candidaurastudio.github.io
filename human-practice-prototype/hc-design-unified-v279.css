@@ -331,3 +331,28 @@ body.hc-cinema #library .hc-library-offline-link{
 body.hc-cinema .screen.active:not(#hcReels) :is(small,.kicker,.eyebrow,.hub-note,.library-label,.setting-row small,.hc-settings-toggle small,.hub-card small){
  color:#d4c8bb!important
 }
+
+/* v291 home-first and player palette: apply without relying on cinema mode. */
+:root{color-scheme:dark}
+body #player,
+body #practices,
+body #hcListening,
+body #soundLabPlayer,
+body #bookAudio{background:#0e0c0b!important;color:#f8f5f0!important}
+body #player :is(.glass,.choice,.practice-card,.player-card,.player-panel,.practice-visual,.practice-visual-wrap),
+body #practices :is(.glass,.choice,.practice-card),
+body #hcListening :is(.glass,.choice,.hcl-record),
+body #bookAudio :is(.glass,.choice){
+ background-color:#1b1714!important;border-color:#604a39!important;color:#f8f5f0!important
+}
+body #player :is(button,.choice,.practice-card),
+body #practices :is(button,.choice,.practice-card){
+ border-color:#76604c!important;
+}
+body #player :is(button:not(.primary):not(.active),.choice),
+body #practices :is(button:not(.primary):not(.active),.choice){
+ background-color:#29211b!important;color:#f8f5f0!important
+}
+body #player :is(.primary,.active),
+body #practices :is(.primary,.active){background-color:#e0bc83!important;color:#20170f!important}
+body .hc-return-notice{background:#29211b!important;border-color:#604a39!important;color:#f8f5f0!important}
