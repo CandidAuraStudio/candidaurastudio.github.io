@@ -9902,7 +9902,7 @@ const noVideoIds=['introVideo','practiceVisual','adhkarVisual','hcIslamPrivateVi
 function disableVideo(){
  for(const id of noVideoIds){
   const v=document.getElementById(id);
-  if(!v)return;
+  if(!v)continue;
   try{v.pause();v.removeAttribute('src');v.removeAttribute('autoplay');v.removeAttribute('poster');v.load()}catch(e){}
   v.hidden=true;v.style.display='none';
  }
