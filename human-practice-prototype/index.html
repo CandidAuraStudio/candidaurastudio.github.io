@@ -9841,6 +9841,53 @@ const heartclearAutoInstallPrompt=false;
 <script src="./hc-home-visible-v268.js?v=290"></script>
 
 <link rel="stylesheet" href="./hc-design-unified-v279.css?v=284" onload="document.documentElement.classList.remove('hc-booting')" onerror="document.documentElement.classList.remove('hc-booting')">
+
+<script>
+/* v291 guided audio continuity: preserve position; recover transient stalls only
+   while the listener has requested playback. Never restart on an intentional pause. */
+(function(){
+'use strict';
+const el=document.getElementById('audio'),status=document.getElementById('playerNote');
+if(!el||!status)return;
+let wanted=false,tries=0,retry=null,lastPos=0,lastAdvance=Date.now(),recovering=false;
+function guided(){return typeof playbackPhase!=='undefined'&&playbackPhase==='meditation'&&typeof chosenUrl==='string'&&!!chosenUrl&&el.currentSrc.endsWith(chosenUrl.split('/').pop())}
+function save(){if(guided()&&el.currentTime>20&&typeof rememberLastSession==='function')rememberLastSession(el.currentTime)}
+function cancel(){if(retry!==null){clearTimeout(retry);retry=null}}
+function schedule(){
+ if(!wanted||!guided()||retry!==null||recovering)return;
+ if(tries>=3){status.textContent='Audio interrupted. Position saved. Tap Play to resume.';return}
+ retry=setTimeout(async()=>{
+  retry=null;if(!wanted||!guided()||recovering||!el.paused&&el.readyState>=3)return;
+  recovering=true;tries++;const pos=el.currentTime||0;save();
+  status.textContent='Reconnecting audio · attempt '+tries+' of 3…';
+  try{
+   if(tries>1){
+    el.load();
+    if(el.readyState<1)await new Promise(resolve=>{
+     el.addEventListener('loadedmetadata',resolve,{once:true});
+     setTimeout(resolve,3000);
+    });
+    if(pos>0&&Number.isFinite(el.duration))el.currentTime=Math.min(pos,el.duration-.2);
+   }
+   if(wanted)await el.play();
+   if(!wanted){el.pause();return}
+   status.textContent='Meditation resumed.';lastAdvance=Date.now();
+  }catch(e){status.textContent='Audio interrupted. Position saved; tap Play to resume.'}
+  finally{recovering=false}
+ },2500+tries*2000);
+}
+el.addEventListener('play',()=>{if(guided()){wanted=true;cancel();lastAdvance=Date.now()}});
+el.addEventListener('playing',()=>{if(guided()){wanted=true;tries=0;cancel();lastAdvance=Date.now()}});
+el.addEventListener('pause',()=>{save();if(!recovering){wanted=false;cancel()}});
+el.addEventListener('waiting',schedule);
+el.addEventListener('stalled',schedule);
+el.addEventListener('error',schedule);
+el.addEventListener('timeupdate',()=>{if(guided()&&el.currentTime>lastPos+.2){lastPos=el.currentTime;lastAdvance=Date.now()}});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)save();else if(wanted&&guided()&&el.readyState<3)schedule()});
+setInterval(()=>{if(wanted&&guided()&&!el.paused&&!el.seeking&&!document.hidden&&Date.now()-lastAdvance>15000)schedule()},5000);
+window.addEventListener('pagehide',save);
+})();
+</script>
 </body>
 </html>
 
