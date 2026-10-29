@@ -8084,10 +8084,10 @@ function setAdhkarMode(mode){
 /* Original guided audio is preserved exactly; short quiet timers never truncate narration. */
 function hcStartExistingGuidedSession(key){
  switch(key){
-  case 'wake': return choosePractice(600,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/f4d262f6-56fe-40e3-84ea-930c11fe7c54.mp3','Deep Wake Up','Morning · guided breath','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/7fd8e8ee-cc5a-49c3-940b-6b4330a42c5e.mp4','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/d10879c1-d600-400c-999e-3237ec672b86.mp4');
-  case 'noon': return choosePractice(2400,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/b7f691a0-16a1-4449-b143-38e7b3be74df.mp3','Noon Reset','Noon · guided breath','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/a71c8fd6-be58-4262-83ef-1469597b1630.mp4','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/40c72fc3-df5b-4dc9-a518-2ba3ab7f4ac3.mp4');
-  case 'evening': return choosePractice(3600,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/93c0e1fe-0e8b-4e7e-9277-47edf8dd0b63.mp3','Evening Release','Evening · guided breath','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/12095b12-f0ae-4859-9b9b-cf28c8224987.mp4','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/c1a8df3c-dabd-4b96-ac42-92f57d3f1ce1.mp4');
-  case 'sleep': return choosePractice(3600,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/74f43c24-d734-4ace-b1d0-f1c3263cb299.mp3','Deep Sleep','Night · nose only','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/e4717cb6-dae0-4bce-a4c3-f1ccab0fb9bf.mp4','https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/c8bffc30-9905-4e18-8321-e6ecbb597947.mp4');
+  case 'wake': return choosePractice(600,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/f4d262f6-56fe-40e3-84ea-930c11fe7c54.mp3','Deep Wake Up','Morning · guided breath',,'','');
+  case 'noon': return choosePractice(2400,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/b7f691a0-16a1-4449-b143-38e7b3be74df.mp3','Noon Reset','Noon · guided breath',,'','');
+  case 'evening': return choosePractice(3600,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/93c0e1fe-0e8b-4e7e-9277-47edf8dd0b63.mp3','Evening Release','Evening · guided breath',,'','');
+  case 'sleep': return choosePractice(3600,'https://d2ol7oe51mr4n9.cloudfront.net/user_3IG4Dqurc9uVifJQecwifzNzNg3/74f43c24-d734-4ace-b1d0-f1c3263cb299.mp3','Deep Sleep','Night · nose only',,'','');
   default:return show('practices');
  }
 }
@@ -9886,6 +9886,52 @@ el.addEventListener('timeupdate',()=>{if(guided()&&el.currentTime>lastPos+.2){la
 document.addEventListener('visibilitychange',()=>{if(document.hidden)save();else if(wanted&&guided()&&el.readyState<3)schedule()});
 setInterval(()=>{if(wanted&&guided()&&!el.paused&&!el.seeking&&!document.hidden&&Date.now()-lastAdvance>15000)schedule()},5000);
 window.addEventListener('pagehide',save);
+})();
+</script>
+
+<script>
+/* v291 audio-only policy: Reels are the sole video surface.
+   No Drive video preview, background practice video, or autoplay video. */
+(function(){
+'use strict';
+const noVideoIds=['introVideo','practiceVisual','adhkarVisual','hcIslamPrivateVideo'];
+function disableVideo(){
+ for(const id of noVideoIds){
+  const v=document.getElementById(id);
+  if(!v)return;
+  try{v.pause();v.removeAttribute('src');v.removeAttribute('autoplay');v.removeAttribute('poster');v.load()}catch(e){}
+  v.hidden=true;v.style.display='none';
+ }
+ for(const id of ['hcDriveVideoFrame','omVideoFrame','hcOtFrame']){
+  const f=document.getElementById(id);
+  if(f){f.removeAttribute('src');f.hidden=true;f.style.display='none'}
+ }
+ const dock=document.getElementById('hcOneTapDrive');
+ if(dock){dock.hidden=true;dock.style.display='none'}
+}
+disableVideo();
+const existing=window.openHcDriveMedia;
+window.openHcDriveMedia=function(key){
+ if(key==='islamHuAkmal'&&typeof hcQuickPlaySound==='function')return hcQuickPlaySound('allahuAkmal');
+ const local=window.hcLocalListeningAudio;
+ if(local&&typeof local.chooseOrPlay==='function')return local.chooseOrPlay(key);
+ const el=document.getElementById('hcQuickAudioStatus')||document.getElementById('soundLabStatus');
+ if(el)el.textContent='Audio not ready. Open Listening to select a local MP3 or WAV.';
+ return false;
+};
+window.hcOpenDriveDock=window.openHcDriveMedia;
+window.openOmVideo=function(){
+ if(typeof window.hcOpenOmVoice==='function')return window.hcOpenOmVoice();
+ if(typeof openSacred==='function')return openSacred('hindu');
+};
+document.addEventListener('play',function(ev){
+ const v=ev.target;
+ if(!(v instanceof HTMLVideoElement))return;
+ // Reels are explicitly permitted; all other video playback is blocked.
+ if(v.closest('#hcReels')||v.id==='hcReelVideo')return;
+ v.pause();v.removeAttribute('autoplay');
+},true);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)disableVideo()});
 })();
 </script>
 </body>
