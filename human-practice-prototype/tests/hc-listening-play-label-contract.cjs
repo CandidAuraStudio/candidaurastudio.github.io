@@ -33,7 +33,7 @@ assert.doesNotMatch(html,/else openHcDriveMedia\(item\.key\);/,'Mini listening m
 assert.match(html,/hc-listening-local-audio-v290\.js\?v=290/);
 assert.match(html,/hc-listening-hub-v254\.js\?v=290/);
 assert.match(html,/register\('\.\/sw\.js\?v=290'\)/);
-assert.match(sw,/const APP_CACHE='heartclear-v290'/);
+assert.match(sw,/const APP_CACHE='heartclear-v291'/);
 assert.match(sw,/const MEDIA_CACHE='heartclear-media-v1'/);
 assert.match(sw,/hc-listening-local-audio-v290\.js\?v=290/);
 assert.match(home,/HeartClear · HC v290/);
