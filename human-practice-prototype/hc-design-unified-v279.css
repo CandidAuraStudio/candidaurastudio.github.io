@@ -269,3 +269,65 @@ body.hc-cinema #home.active #hcHomeKitchenQuickV155 :is(button,select,input){
  body.hc-cinema .screen.active:not(#hcReels) *::after{
   animation:none!important;transition:none!important;scroll-behavior:auto!important}
 }
+/* v291: Coffee/charcoal design consolidation. Pure CSS: do not touch playback,
+   readers, routes, media files, saved positions, or offline user data. */
+:root{
+ --hc-ui-bg:#0e0c0b;--hc-ui-surface:#1b1714;--hc-ui-raised:#29211b;
+ --hc-ui-border:#5d4a3b;--hc-ui-type:#f8f5f0;
+ --hc-ui-secondary:#d4c8bb;--hc-ui-gold:#e0bc83;
+}
+html:has(body.hc-cinema),body.hc-cinema,
+body.hc-flow-enabled.hc-cinema{background:#0e0c0b!important;color:#f8f5f0!important}
+body.hc-cinema #hcCinemaBackdrop{background:#0e0c0b!important}
+body.hc-cinema .screen.active:not(#hcReels) :is(
+ .glass,.choice,.hub-card,.human-card,.sacred-card,.fear-card,.practice-card,
+ .hc-mix-card,.hc-personal,.hc-settings-clean,.hc-settings-section,.hcqs-verse,
+ .hc-home-section,.hc-recommended-card,.hc-secondary-resume,.hc-sound-row,
+ .hc-sounds-hub-card,.hc-drive-card,.hc-sacred-quick){
+ background:#1b1714!important;border-color:#5d4a3b!important;
+ color:#f8f5f0!important;box-shadow:none!important;
+ backdrop-filter:none!important;-webkit-backdrop-filter:none!important
+}
+body.hc-cinema #hcCinemaHero,
+body.hc-cinema #settings > .hc-settings-clean,
+body.hc-cinema #hcExploreDialog{
+ background:#1b1714!important;border-color:#5d4a3b!important;color:#f8f5f0!important
+}
+body.hc-cinema #hcListening button.hcl-record,
+body.hc-cinema #settings :is(.hc-settings-section,.setting-row,.hc-settings-toggle),
+body.hc-cinema #collection .collection-list :is(button,.choice,.collection-item),
+body.hc-cinema #hcFlowExplore #hcFlowExploreGrid button,
+body.hc-cinema :is(#soundHub,#soundLab,#sacred,#history,#downloads,#human,#practices) :is(.hc-sound-row,.hc-drive-card,.hc-sounds-hub-card,.sacred-card){
+ background:#29211b!important;border-color:#604a39!important;color:#f8f5f0!important
+}
+body.hc-cinema #hcListening #hclSearch,
+body.hc-cinema .screen.active:not(#hcReels) :is(input:not([type=checkbox]),textarea,select){
+ background:#29211b!important;border-color:#79604b!important;color:#f8f5f0!important
+}
+body.hc-cinema #hcListening #hclTabs button,
+body.hc-cinema .screen.active:not(#hcReels) :is(.category-tabs,.hc-sound-filters,.hcq-langs,.hcqs-langs) button{
+ background:#29211b!important;border-color:#69523f!important;color:#f8f5f0!important
+}
+body.hc-cinema #hcListening #hclTabs button[aria-pressed="true"],
+body.hc-cinema .screen.active:not(#hcReels) :is(.category-tabs,.hc-sound-filters,.hcq-langs,.hcqs-langs) button[aria-pressed="true"],
+body.hc-cinema #hcFlowDock button[aria-current="page"]{
+ background:#e0bc83!important;color:#20170f!important;border-color:#e0bc83!important
+}
+body.hc-cinema #hcFlowDock,
+body.hc-cinema #globalMini,
+body.hc-cinema .hc-mini-library{
+ background:#1b1714f5!important;border-color:#69523f!important;color:#f8f5f0!important
+}
+body.hc-cinema #hcListening .hcl-record-icon,
+body.hc-cinema #library .hub-icon,
+body.hc-cinema .screen.active:not(#hcReels) :is(.hub-icon,.human-symbol,.sacred-symbol){
+ background:#392c22!important;color:#e0bc83!important;border-color:#69523f!important
+}
+body.hc-cinema #hcCinemaEyebrow,
+body.hc-cinema #hcListening .hcl-record-action,
+body.hc-cinema #library .hc-library-offline-link{
+ color:#e0bc83!important
+}
+body.hc-cinema .screen.active:not(#hcReels) :is(small,.kicker,.eyebrow,.hub-note,.library-label,.setting-row small,.hc-settings-toggle small,.hub-card small){
+ color:#d4c8bb!important
+}
