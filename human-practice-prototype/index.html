@@ -9691,7 +9691,11 @@ renderHeartClearFavourites();
 hcRenderSoundResume();
 renderSettings();
 hcRenderLocalProfile();
-hcRestorePreviousScreen();
+// Start on Home every launch. Keep saved progress and the resume card;
+ // restore the player only after an explicit Continue/Play action.
+ show('home');
+ const returnNotice=document.getElementById('hcReturnNotice');
+ if(returnNotice)returnNotice.hidden=true;
 
 const greetingRefreshTimer=setInterval(setGreeting,60000);
 window.addEventListener('focus',()=>{
