@@ -3840,7 +3840,7 @@ window.setTimeout(function(){
         </div>
       </details>
     </div>
-    <div class="app-version">HeartClear · HC v290</div>
+    <div class="app-version">HeartClear · HC v291</div>
   </div>
 </section>
 
@@ -3874,11 +3874,12 @@ window.setTimeout(function(){
     <div class="completion-time" id="completionPractice">Deep Wake Up</div>
     <div class="hub-note" style="margin:18px 0">
       <b style="display:block;margin-bottom:8px">Continue in stillness</b>
-      <p>After the guided practice, stay in a comfortable position and listen gently. Press Play to start the closing soundtrack.</p>
+      <p>The full guided practice has ended. This optional 2-minute closing preview is ready to play; the 3- and 5-minute versions are awaiting audio approval.</p>
       <audio id="hcClosingAudio" class="heartclear-stillness-audio" controls playsinline preload="metadata" src="./media/HeartClear_DeepSleep_Stillness_2min_PREVIEW.mp3" style="width:100%;margin:10px 0;display:block"></audio>
       <p id="hcClosingSoundStatus" role="status" aria-live="polite" style="font-size:12px;margin:8px 0 0"></p>
+      <button type="button" class="btn secondary" id="hcClosingFinishBtn" onclick="hcFinishClosingSound()" style="margin:5px 0 7px">Skip / Finish closing sound</button>
       <div style="font-size:12px;margin-top:8px"><a href="./media/HeartClear_DeepSleep_Stillness_2min_PREVIEW.mp3" target="_blank" rel="noopener">Open 2-minute MP3 directly</a></div>
-      <div style="font-size:12px;margin-top:8px">Longer previews: <a href="https://drive.google.com/file/d/17WzV9SRm0EHqe4vWSAadEZq27GpEZYNa/view" target="_blank" rel="noopener">3 min</a> · <a href="https://drive.google.com/file/d/1q9ljNUjNyrptWvubnKrz3sNsYqO4CDqy/view" target="_blank" rel="noopener">5 min</a> (open in Drive)</div>
+      <div style="font-size:12px;margin-top:8px">Unapproved longer audio previews (external only): <a href="https://drive.google.com/file/d/17WzV9SRm0EHqe4vWSAadEZq27GpEZYNa/view" target="_blank" rel="noopener">3 min</a> · <a href="https://drive.google.com/file/d/1q9ljNUjNyrptWvubnKrz3sNsYqO4CDqy/view" target="_blank" rel="noopener">5 min</a>. Not yet playable offline or within HeartClear.</div>
     </div>
 
     <div class="reflection-label">What do you notice now? <span style="color:#6f858f">Optional</span></div>
@@ -8446,6 +8447,28 @@ function hcTryAutoplayClosingSound(){
   }
 }
 
+/* Closing audio is separate from guided narration and history. */
+function hcFinishClosingSound(silent=false){
+  const player=document.getElementById('hcClosingAudio');
+  const status=document.getElementById('hcClosingSoundStatus');
+  if(player){
+    if(typeof player.pause==='function')player.pause();
+    try{player.currentTime=0}catch(_){}
+  }
+  if(!silent&&status)status.textContent='Closing sound finished. You can add a reflection or choose Done.';
+}
+const hcClosingMedia=document.getElementById('hcClosingAudio');
+if(hcClosingMedia&&typeof hcClosingMedia.addEventListener==='function'){
+  hcClosingMedia.addEventListener('ended',()=>{
+    const status=document.getElementById('hcClosingSoundStatus');
+    if(status)status.textContent='Closing sound finished. You can add a reflection or choose Done.';
+  });
+  hcClosingMedia.addEventListener('error',()=>{
+    const status=document.getElementById('hcClosingSoundStatus');
+    if(status)status.textContent='Closing audio could not be loaded. You can skip the sound and finish.';
+  });
+}
+
 function toggleReduceMotion(){
   document.body.classList.toggle('reduce-motion');
   const on=document.body.classList.contains('reduce-motion');
@@ -9365,12 +9388,14 @@ function saveReflection(value,el){
 }
 
 function doneCompletion(){
+  hcFinishClosingSound(true);
   audio.currentTime=0;
   sync();
   show('home');
 }
 
 function repeatPractice(){
+  hcFinishClosingSound(true);
   audio.currentTime=0;
   sessionStartedAt=0;
   sessionRecorded=false;
@@ -9741,7 +9766,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=290');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=291');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting && navigator.serviceWorker.controller)showUpdateBanner();
