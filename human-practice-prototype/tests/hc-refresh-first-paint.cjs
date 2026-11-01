@@ -24,6 +24,6 @@ assert.match(sw,/const APP_CACHE='heartclear-v291'/);
 assert.match(sw,/const MEDIA_CACHE='heartclear-media-v1'/);
 assert.match(sw,/hc-design-unified-v279\.css\?v=284/);
 assert.match(sw,/hc-home-visible-v268\.js\?v=290/);
-assert.match(home,/HeartClear · HC v291/);
+assert.match(home,/HeartClear · HC v290/);
 assert.doesNotMatch(html,/hcReelsBottomTabGuard/,'Old nav owner must not reorder Reels after the third tab');
 console.log('PASS: refresh theme gate and offline shell version alignment');
