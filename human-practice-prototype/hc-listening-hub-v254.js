@@ -32,6 +32,7 @@ if(typeof soundLabTracks!=='undefined')guided.forEach(([key,name,detail,url,dura
 if(typeof HC_DRIVE_COLLECTIONS!=='undefined')breath.forEach(([name,type,id],i)=>{
  const key='hclBreath'+i;
  if(!HC_DRIVE_COLLECTIONS.some(x=>x.key===key))HC_DRIVE_COLLECTIONS.push({key,name,type,id,section:'meditation',note:'Original user-uploaded video; no separate native audio stream.'});
+ window.hcLocalListeningAudio?.registerVerifiedStream?.(HC_DRIVE_COLLECTIONS.find(x=>x.key===key));
 });
 const record=(id,name,detail,category,kind,key,ref=null)=>({id,name,detail,category,kind,key,ref});
 function list(){
