@@ -8,6 +8,7 @@ on:
       - 'human-practice-prototype/hc-reels-minimal-v248.css'
       - 'human-practice-prototype/hc-listening-hub-v254.js'
       - 'human-practice-prototype/sw.js'
+      - 'human-practice-prototype/tests/hc-closing-stillness-optin.cjs'
       - 'human-practice-prototype/tests/hc-drive-minimize-v282.cjs'
       - 'human-practice-prototype/tests/hc-reels-wide-one-swipe-v282.cjs'
       - 'human-practice-prototype/tests/hc-listening-scripture-access.cjs'
@@ -21,6 +22,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Closing stillness opt-in and Skip / Finish regression
+        run: node human-practice-prototype/tests/hc-closing-stillness-optin.cjs
       - name: Drive minimization and paused Resume
         run: node human-practice-prototype/tests/hc-drive-minimize-v282.cjs
       - name: Reels one-swipe existing-source integrity
