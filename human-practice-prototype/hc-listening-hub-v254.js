@@ -52,7 +52,7 @@ function list(){
   const local=window.hcLocalListeningAudio;
   const saved=!!local?.has(item.key);
   const info=String(item.type||'Original recording').replace(/\s*·\s*(?:original )?video\b/gi,'');
-  const meta=info+' · '+(saved?'private MP3/WAV ready':'add private MP3/WAV once');
+  const meta=info+' · '+(saved?(local?.sourceKind(item.key)==='hosted'?'native MP3/WAV ready':'private MP3/WAV ready'):'add private MP3/WAV once');
   add(record('local-'+item.key,item.name,meta,category,'local-audio',item.key));
  });
  if(typeof hcMiniBrowseItems==='function')hcMiniBrowseItems().forEach(item=>{
@@ -120,7 +120,7 @@ document.addEventListener('hc-local-listening-audio-changed',()=>{
     action.textContent=native?.has(key)?(native.playing(key)?'Pause':'Play'):native?.isLoading()?'Loading…':'Add audio';
     button.setAttribute('aria-label',(native?.has(key)?(native.playing(key)?'Pause private audio ':'Play private audio '):'Add private MP3/WAV for ')+(button.querySelector('strong')?.textContent||'recording'));
     const detail=button.querySelector('.hcl-record-info small');
-    if(detail)detail.textContent=detail.textContent.replace(/(?:add private MP3\/WAV once|private MP3\/WAV ready)$/,(native?.has(key)?'private MP3/WAV ready':'add private MP3/WAV once'));
+    if(detail)detail.textContent=detail.textContent.replace(/(?:add private MP3\/WAV once|private MP3\/WAV ready|native MP3\/WAV ready)$/,(native?.has(key)?(native.sourceKind(key)==='hosted'?'native MP3/WAV ready':'private MP3/WAV ready'):'add private MP3/WAV once'));
   });
 });
 
