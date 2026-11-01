@@ -124,7 +124,12 @@ self.addEventListener('fetch',event=>{
     }
 
     try{
-      return await fetch(request,{cache:'no-store'});
+      const response=await fetch(request,{cache:'no-store'});
+      // Repair a transient optional-install failure when this local text is read online.
+      if(response.ok && request.url===new URL('./human-knowledge/ali-letter-31-arabic.js',self.registration.scope).href){
+        try{const cache=await caches.open(APP_CACHE);await cache.put(request,response.clone())}catch(_){}
+      }
+      return response;
     }catch(e){
       return (await caches.match(request)) || new Response('',{status:504});
     }

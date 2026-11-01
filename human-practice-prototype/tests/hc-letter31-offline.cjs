@@ -22,9 +22,10 @@ const caches={
  async delete(name){return stores.delete(name)},
  async match(request){for(const name of stores.keys()){const r=await(await this.open(name)).match(request);if(r)return r}}
 };
-let online=true;
+let online=true,failArabic=false;
 async function network(request){
  if(!online)throw Error('Offline');
+ if(failArabic&&url(request).endsWith('/human-knowledge/ali-letter-31-arabic.js'))throw Error('Transient Arabic download failure');
  const file=path.join(root,new URL(url(request)).pathname.replace('/human-practice-prototype/',''));
  try{return new Response(fs.readFileSync(file),{status:200})}catch{return new Response('',{status:404})}
 }
@@ -36,6 +37,7 @@ vm.runInNewContext(fs.readFileSync(path.join(root,'sw.js'),'utf8'),{
 });
 const lifecycle=async name=>{let promise;handlers[name]({waitUntil:p=>{promise=p}});await promise};
 const navigate=async pathname=>{let promise;handlers.fetch({request:{method:'GET',mode:'navigate',url:url(pathname)},respondWith:p=>{promise=p}});return promise};
+const asset=async pathname=>{let promise;handlers.fetch({request:new ScopedRequest(pathname),respondWith:p=>{promise=p}});return promise};
 (async()=>{
  // A release must never clear downloaded media or a sibling app's cache.
  const media=await caches.open('heartclear-media-v1');await media.put('./saved.mp3',new Response('original recording'));
@@ -52,5 +54,16 @@ const navigate=async pathname=>{let promise;handlers.fetch({request:{method:'GET
  assert.equal(await(await media.match('./saved.mp3')).text(),'original recording');
  assert.equal(await(await sibling.match('./saved')).text(),'sibling data');
  assert((await(await navigate('./books/shadows-of-truth-reader.html')).text()).includes('<html'),'Existing offline book still opens');
+ // A failed optional install must be repairable by opening the reader online.
+ stores.delete('heartclear-v292');online=true;failArabic=true;
+ await lifecycle('install');
+ const data='./human-knowledge/ali-letter-31-arabic.js';
+ assert(!(await caches.match(data)),'Reproduce missing Arabic after a transient install failure');
+ failArabic=false;
+ assert.equal((await asset(data)).status,200,'An online retry succeeds');
+ online=false;
+ const repaired=await asset(data);
+ assert.equal(repaired.status,200,'Successful online retry must repair offline Arabic availability');
+ assert((await repaired.text()).includes('HC_ALI_LETTER31_AR'));
  console.log('PASS: Letter 31 offline route and complete data, existing books and saved media preserved');
 })().catch(e=>{console.error(e);process.exitCode=1});

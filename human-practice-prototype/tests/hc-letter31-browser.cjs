@@ -31,6 +31,7 @@ fs.mkdirSync(output,{recursive:true});
   await page.locator('#hcCinemaLibrary').click();
   await page.locator('#library a[href="./human-knowledge/ali-letter-31.html"]').click();
   await checkReader();
+  await page.locator('#arabicLetter p').first().scrollIntoViewIfNeeded();
   await page.screenshot({path:output+'/letter31-arabic-mobile.png',fullPage:false});
   // Arabic retains direction and fits the narrowest review viewport too.
   await page.setViewportSize({width:320,height:720});
@@ -42,6 +43,7 @@ fs.mkdirSync(output,{recursive:true});
   const english=page.locator('#sectionEnglish a');
   assert((await english.getAttribute('href')).startsWith('https://al-islam.org/nahjul-balagha-part-2-letters-and-sayings/letter-31-'));
   assert.equal(await english.getAttribute('target'),'_blank');
+  await page.locator('#sectionEnglish h2').scrollIntoViewIfNeeded();
   await page.screenshot({path:output+'/letter31-english-source-mobile.png',fullPage:false});
   await page.evaluate(()=>localStorage.setItem('clearWithinHistory','{"letter31PreservationProbe":true}'));
   await page.locator('#tabNotes').click();
