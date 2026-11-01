@@ -47,7 +47,7 @@
     if(!audio||audio.rightsStatus!=='verified'||audio.sourceStatus!=='verified'||
        typeof audio.url!=='string')return null;
     const url=audio.url.trim();
-    if(!/^https:\/\/[^/?#\\s]+\/[^\\s?#]+\\.(?:mp3|wav)(?:[?#][^\\s]*)?$/i.test(url))return null;
+    if(!/^https:\/\/[^/?#\s]+\/[^\s?#]+\.(?:mp3|wav)(?:[?#][^\s]*)?$/i.test(url))return null;
     const host=url.slice(8).split('/')[0].toLowerCase();
     if(['drive.google.com','docs.google.com','youtube.com','www.youtube.com','youtu.be'].includes(host))return null;
     return url;
