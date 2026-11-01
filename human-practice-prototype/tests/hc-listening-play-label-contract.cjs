@@ -25,7 +25,10 @@ assert.match(local,/indexedDB\.open\(DB_NAME,1\)/);
 assert.match(local,/URL\.createObjectURL\(blob\)/);
 assert.match(local,/window\.hcLocalListeningAudio=/);
 assert.match(local,/soundLabAudio\.addEventListener\('timeupdate'/);
-assert.doesNotMatch(local,/https?:\/\/|drive\.google|<iframe|window\.open\(/);
+assert.doesNotMatch(local,/<iframe|window\\.open\\(/);
+assert.match(local,/rightsStatus!=='verified'/);
+assert.match(local,/sourceStatus!=='verified'/);
+assert.match(local,/registerVerifiedStream/);
 assert.doesNotMatch(local,/localStorage\.clear\(|caches\.delete\(/);
 assert.match(html,/const HC_DRIVE_COLLECTIONS=/,'Original video identifiers remain in source archive');
 assert.match(html,/kind:'local-audio'/,'Mini audio browser must use local audio, not Drive iframe');
@@ -70,7 +73,18 @@ async function checkClick(){
   const window={indexedDB:null,addEventListener(){},hcListeningSay:()=>{}};
   const context={
     document,window,localStorage,URL:url,Blob,Event,
-    HC_DRIVE_COLLECTIONS:[{key:'islamSufiDrum',name:'Sufi Devotional Music · Frame Drum'}],
+    HC_DRIVE_COLLECTIONS:[
+      {key:'islamSufiDrum',name:'Sufi Devotional Music · Frame Drum'},
+      {key:'approved',name:'Approved native sample',nativeAudio:{
+        url:'https://media.example.test/original.mp3',rightsStatus:'verified',sourceStatus:'verified'
+      }},
+      {key:'notAudited',name:'Not audited',nativeAudio:{
+        url:'https://media.example.test/unverified.wav',rightsStatus:'pending',sourceStatus:'verified'
+      }},
+      {key:'driveMp4',name:'Drive is not native audio',nativeAudio:{
+        url:'https://drive.google.com/media.mp3',rightsStatus:'verified',sourceStatus:'verified'
+      }}
+    ],
     soundLabTracks,soundLabAudio,
     currentSoundKey:'horizon',
     hcDriveActiveKey:null,
@@ -85,7 +99,16 @@ async function checkClick(){
   await new Promise(resolve=>setImmediate(resolve)); // IndexedDB unavailable -> session audio mode.
   const api=window.hcLocalListeningAudio;
   assert.equal(api.isLoading(),false);
+  assert.equal(api.has('approved'),true,'Only audited HTTPS native MP3 is registered');
+  assert.equal(api.sourceKind('approved'),'hosted');
+  assert.equal(soundLabTracks['hcLocalListening-approved'].url,
+               'https://media.example.test/original.mp3');
+  assert.equal(api.has('notAudited'),false,'Missing rights check blocks remote audio');
+  assert.equal(api.has('driveMp4'),false,'Drive URL is not native audio');
   assert.equal(api.has('islamSufiDrum'),false);
+  assert.equal(api.chooseOrPlay('approved'),true,'Approved source opens existing player');
+  assert.equal(played[0],'hcLocalListening-approved');
+  assert.equal(input.pickerClicks||0,0,'Approved audio must not prompt for a file');
   assert.equal(api.chooseOrPlay('islamSufiDrum'),true);
   assert.equal(input.pickerClicks,1,'First tap must request a real user file, not open Drive');
 
@@ -94,10 +117,10 @@ async function checkClick(){
   input.files=[audioFile];
   await listeners.change();
   assert.equal(api.has('islamSufiDrum'),true);
-  assert.equal(played[0],'hcLocalListening-islamSufiDrum','Original sound player is called with actual local audio');
+  assert.equal(played[1],'hcLocalListening-islamSufiDrum','Original sound player is called with actual local audio');
   assert.equal(soundLabTracks['hcLocalListening-islamSufiDrum'].url,'blob:private-audio-only');
   assert.equal(api.chooseOrPlay('islamSufiDrum'),true);
-  assert.equal(played.length,2,'Second tap goes straight to existing player');
+  assert.equal(played.length,3,'Second tap goes straight to existing player');
   assert.equal(input.pickerClicks,1,'Second tap must not re-open file picker');
 }
 checkClick().then(()=>console.log('PASS one-time private MP3 import, next-tap native playback, no Drive video, PWA contracts'))
