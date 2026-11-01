@@ -23,8 +23,8 @@ test('aftercare keeps the original guided source and only offers optional nature
  assert.match(html,/if\(playbackPhase==='handoff'\)\{hcBeginNatureAfterGuidance\(\);return;\}/);
  assert.match(html,/if\(playbackPhase==='nature'\|\|playbackPhase==='handoff'\)/);
  assert.match(html,/#hcAftercareCueBtn\[hidden\],#hcAftercareMinimizeBtn\[hidden\]\{display:none!important\}/);
- assert.match(html,/HeartClear · HC v290/);
- assert.match(html,/sw\.js\?v=290/);
+ assert.match(html,/HeartClear · HC v292/);
+ assert.match(html,/sw\.js\?v=292/);
 });
 function build(){
  const elements=new Map();

@@ -1,5 +1,17 @@
 # HeartClear — Letter 31 historical Arabic source audit
 
+## Recovery recheck — 1 November 2026, draft PR #72
+
+This section supersedes the older PR #53 release gates below where the user's 1 November instructions allow a clearly identified external English source.
+
+- Latest main used: `8cb42e322a08b2c8e50dbf9cf504b9d3363aff09` (v290). Recovery draft #72 was created from that commit. PR #53 remains closed and unmerged.
+- Re-fetched the cited Arabic chapter through the GitHub connector. Last upstream file commit: `7f8a32204e467aa96da2a0b96c0b502de6ca9a63` ([pinned edition](https://github.com/libarabia/nahj-albalagha/blob/7f8a32204e467aa96da2a0b96c0b502de6ca9a63/abdu/ch006.md)). Isolated Letter 31, removed 20 marginal blocks and standalone footnote numerals; compared Arabic words in order without spelling normalization: **2,488/2,488 identical; zero differences**. The exact recovered text SHA-256 is `160ee653ee92acfb16e22cb9fa400ac0fec1dd04701a7cc687b5f39eb9d15192` and is now protected by the contract.
+- This establishes fidelity to that digitized historical edition, not manuscript authenticity or agreement with every recension. Only the historical letter is reproduced; no modern translation or editorial apparatus is copied. No repository-wide license was found upstream; public-domain treatment applies to the historical wording, not arbitrary repository additions.
+- English remains a clearly attributed **external** Al-Islam.org Letter 31 link. The English translation is credited to Sayyid Ali Reza; bibliographic attribution is corroborated by [Hujjat Bookshop's edition listing](https://hujjatbookshop.co.uk/products/nahjul-balagha-vol-1-2-html). [Al-Islam.org's own terms](https://al-islam.org/contact) do not establish HeartClear redistribution permission. No full English translation is embedded, cached, or described as licensed. Internet is required for the external English edition.
+- HeartClear's introductory reflection is explicitly labelled; user notes stay in the existing dedicated `hcKnowledgeAli31PrivateNoteV1` key. Historical Arabic wording is unchanged.
+- Local contract and service-worker harness tests passed. Local browser execution is unavailable because Chromium download produced an invalid archive. GitHub Chromium/mobile and navigation CI must be checked separately; no physical Android or installed-PWA sign-off has occurred.
+- **Release status: BLOCKED, draft only.** Required physical Android/installed-PWA review remains open. No merge or publication, and no working deployed reader link is claimed. Draft audio PR #73 overlaps index.html/sw.js and must be reconciled against latest main before any later release.
+
 **Date:** 2026-10-27  
 **Scope:** PR #53, `human-knowledge/ali-letter-31-arabic.js` only. This is a source-text comparison, **not** a translation review, manuscript authentication, or Android device test.
 

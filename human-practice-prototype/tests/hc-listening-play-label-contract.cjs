@@ -32,11 +32,11 @@ assert.match(html,/kind:'local-audio'/,'Mini audio browser must use local audio,
 assert.doesNotMatch(html,/else openHcDriveMedia\(item\.key\);/,'Mini listening must never open Drive video');
 assert.match(html,/hc-listening-local-audio-v290\.js\?v=290/);
 assert.match(html,/hc-listening-hub-v254\.js\?v=290/);
-assert.match(html,/register\('\.\/sw\.js\?v=290'\)/);
-assert.match(sw,/const APP_CACHE='heartclear-v290'/);
+assert.match(html,/register\('\.\/sw\.js\?v=292'\)/);
+assert.match(sw,/const APP_CACHE='heartclear-v292'/);
 assert.match(sw,/const MEDIA_CACHE='heartclear-media-v1'/);
 assert.match(sw,/hc-listening-local-audio-v290\.js\?v=290/);
-assert.match(home,/HeartClear · HC v290/);
+assert.match(home,/HeartClear · HC v292/);
 
 async function checkClick(){
   const listeners={};

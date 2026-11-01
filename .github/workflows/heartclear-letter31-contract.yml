@@ -1,0 +1,59 @@
+name: HeartClear Letter 31 Source Contract
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/heartclear-letter31-contract.yml'
+      - 'human-practice-prototype/human-knowledge/ali-letter-31-arabic.js'
+      - 'human-practice-prototype/human-knowledge/ali-letter-31.html'
+      - 'human-practice-prototype/hc-heritage-reader-v189.js'
+      - 'human-practice-prototype/hc-deep-heritage-v185.js'
+      - 'human-practice-prototype/hc-daily-care-v182.js'
+      - 'human-practice-prototype/hc-flow-v220.js'
+      - 'human-practice-prototype/index.html'
+      - 'human-practice-prototype/sw.js'
+      - 'human-practice-prototype/tests/hc-letter31-*.cjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  letter31-source-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify preserved Arabic, provenance and accessible reader structure
+        run: node human-practice-prototype/tests/hc-letter31-contract.cjs
+      - name: Verify offline route and preservation of downloaded media
+        run: node human-practice-prototype/tests/hc-letter31-offline.cjs
+
+  letter31-mobile-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright Chromium
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Test mobile reader, all entry points and real offline navigation
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/letter31-server.log 2>&1 &
+          node human-practice-prototype/tests/hc-letter31-browser.cjs
+      - name: Save mobile review screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: letter31-mobile-review
+          path: /tmp/hc-letter31-review/
+          if-no-files-found: ignore
+
