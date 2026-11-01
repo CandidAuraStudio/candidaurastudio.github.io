@@ -35,6 +35,34 @@
   function keyFor(key){return TRACK_PREFIX+key;}
   function isPrivateKey(key){return typeof key==='string'&&key.startsWith(TRACK_PREFIX);}
   function has(key){return sources.has(key);}
+  function sourceKind(key){
+    const source=sources.get(key);
+    return !source?'missing':source.startsWith('blob:')?'private':'hosted';
+  }
+  // Native audio may be registered only when an explicit rights/source audit
+  // accompanies a real HTTPS MP3/WAV URL. This is not a substitute for
+  // independent release review of that audit and the actual media response.
+  function verifiedNativeUrl(item){
+    const audio=item&&item.nativeAudio;
+    if(!audio||audio.rightsStatus!=='verified'||audio.sourceStatus!=='verified'||
+       typeof audio.url!=='string')return null;
+    const url=audio.url.trim();
+    if(!/^https:\/\/[^/?#\\s]+\/[^\\s?#]+\\.(?:mp3|wav)(?:[?#][^\\s]*)?$/i.test(url))return null;
+    const host=url.slice(8).split('/')[0].toLowerCase();
+    if(['drive.google.com','docs.google.com','youtube.com','www.youtube.com','youtu.be'].includes(host))return null;
+    return url;
+  }
+  function registerVerifiedStream(item){
+    if(!item||sources.has(item.key))return false; // Prefer the existing private copy.
+    const url=verifiedNativeUrl(item);
+    if(!url)return false;
+    sources.set(item.key,url);
+    soundLabTracks[keyFor(item.key)]={
+      title:item.name,desc:'Verified native MP3/WAV stream',url,duration:0
+    };
+    changed();
+    return true;
+  }
   function isLoading(){return loading;}
   function playing(key){
     return currentSoundKey===keyFor(key)&&!soundLabAudio.paused;
@@ -69,7 +97,7 @@
         soundLabAudio.removeAttribute('src');
         soundLabAudio.load();
       }
-      URL.revokeObjectURL(previous);
+      if(previous.startsWith('blob:'))URL.revokeObjectURL(previous);
     }
     const url=URL.createObjectURL(blob);
     sources.set(key,url);
@@ -190,7 +218,7 @@
   document.addEventListener('visibilitychange',()=>{if(document.hidden)savePosition(true);});
   window.addEventListener('pagehide',()=>savePosition(true));
 
-  window.hcLocalListeningAudio={chooseOrPlay,has,isLoading,playing};
+  window.hcLocalListeningAudio={chooseOrPlay,has,isLoading,playing,sourceKind};
   (async()=>{
     try{
       db=await openDb();
@@ -204,6 +232,10 @@
     }catch(e){
       // No IndexedDB: one-off audio selection still works during this page session.
     }finally{
+      // Remote sources are allowed only after existing device audio is restored.
+      // Never treat the original Drive MP4 identifiers as native streams.
+      if(typeof HC_DRIVE_COLLECTIONS!=='undefined')
+        HC_DRIVE_COLLECTIONS.forEach(registerVerifiedStream);
       loading=false;
       changed();
     }
