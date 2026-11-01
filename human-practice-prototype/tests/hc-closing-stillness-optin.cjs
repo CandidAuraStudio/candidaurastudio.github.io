@@ -1,4 +1,4 @@
-/* HeartClear: after-practice two-minute closing audio is opt-in (v288).
+/* HeartClear: opt-in closing audio and Skip/Finish regression (v291).
    Run: node human-practice-prototype/tests/hc-closing-stillness-optin.cjs */
 'use strict';
 const assert=require('node:assert/strict');
@@ -11,8 +11,12 @@ assert.equal((html.match(/id="hcClosingAudio"/g)||[]).length,1);
 assert.match(html,/id="hcClosingAutoplaySwitch" role="switch" aria-checked="false"/);
 assert.match(html,/id="hcClosingAudio"[^>]+src="\.\/media\/HeartClear_DeepSleep_Stillness_2min_PREVIEW\.mp3"/);
 assert.match(html,/id="hcClosingSoundStatus" role="status" aria-live="polite"/);
-assert.match(html,/sw\.js\?v=290/);
-assert.match(html,/HeartClear · HC v290/);
+assert.match(html,/id="hcClosingFinishBtn" onclick="hcFinishClosingSound\(\)"/);
+assert.match(html,/3- and 5-minute versions are awaiting audio approval/);
+assert.match(html,/function doneCompletion\(\)\{\s*hcFinishClosingSound\(true\)/);
+assert.match(html,/function repeatPractice\(\)\{\s*hcFinishClosingSound\(true\)/);
+assert.match(html,/sw\.js\?v=291/);
+assert.match(html,/HeartClear · HC v291/);
 const completeStart=html.indexOf('function completeSession(completed=false){');
 const completeEnd=html.indexOf('function friendlyDuration(',completeStart);
 assert(completeStart>0&&completeEnd>completeStart);
@@ -24,7 +28,7 @@ const fragment=html.slice(begin,end);
 async function verify(){
  const data=new Map(),updates=[];
  let played=0;
- const player={currentTime:18,play(){played++;return Promise.resolve()}};
+ const player={currentTime:18,paused:0,pause(){this.paused++},play(){played++;return Promise.resolve()}};
  const switcher={setAttribute:(k,v)=>updates.push([k,v]),classList:{toggle(){}}};
  const status={textContent:''};
  const objects={hcClosingAudio:player,hcClosingAutoplaySwitch:switcher,hcClosingSoundStatus:status};
@@ -47,5 +51,12 @@ async function verify(){
  assert.equal(data.get('heartclearClosingAutoplay'),'0');
  vm.runInContext('hcTryAutoplayClosingSound()',context);
  assert.equal(played,1,'Playback stays opt-in');
+ player.currentTime=48;
+ vm.runInContext('hcFinishClosingSound()',context);
+ assert.equal(player.paused,1,'Skip must pause the closing preview');
+ assert.equal(player.currentTime,0,'Skip must reset preview without altering guided playback');
+ assert.match(status.textContent,/Closing sound finished/);
+ vm.runInContext('hcFinishClosingSound(true)',context);
+ assert.equal(player.paused,2,'Done/Repeat must also stop the soundtrack');
 }
-verify().then(()=>console.log('PASS: Opt-in aftercare sound gating, storage, accessibility, and original MP3')).catch(e=>{console.error(e);process.exitCode=1});
+verify().then(()=>console.log('PASS: opt-in closing sound, skip/finish cleanup, completion navigation, and original MP3')).catch(e=>{console.error(e);process.exitCode=1});
