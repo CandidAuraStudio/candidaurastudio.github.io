@@ -25,7 +25,7 @@ assert.match(local,/indexedDB\.open\(DB_NAME,1\)/);
 assert.match(local,/URL\.createObjectURL\(blob\)/);
 assert.match(local,/window\.hcLocalListeningAudio=/);
 assert.match(local,/soundLabAudio\.addEventListener\('timeupdate'/);
-assert.doesNotMatch(local,/<iframe|window\\.open\\(/);
+assert.doesNotMatch(local,/<iframe|window\.open\(/);
 assert.match(local,/rightsStatus!=='verified'/);
 assert.match(local,/sourceStatus!=='verified'/);
 assert.match(local,/registerVerifiedStream/);
