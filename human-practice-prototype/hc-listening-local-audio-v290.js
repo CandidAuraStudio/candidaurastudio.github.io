@@ -218,7 +218,7 @@
   document.addEventListener('visibilitychange',()=>{if(document.hidden)savePosition(true);});
   window.addEventListener('pagehide',()=>savePosition(true));
 
-  window.hcLocalListeningAudio={chooseOrPlay,has,isLoading,playing,sourceKind};
+  window.hcLocalListeningAudio={chooseOrPlay,has,isLoading,playing,sourceKind,registerVerifiedStream};
   (async()=>{
     try{
       db=await openDb();
