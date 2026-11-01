@@ -30,7 +30,7 @@ assert.match(css,/#hcReels\.active #hcReelSwipeLeft/);
 assert.match(css,/width:30%!important/);
 assert.match(css,/@media\(prefers-reduced-motion:reduce\)/);
 assert.match(css,/hcReelSoftArrival/);
-assert.match(sw,/const APP_CACHE='heartclear-v290'/);
+assert.match(sw,/const APP_CACHE='heartclear-v291'/);
 assert.match(sw,/const MEDIA_CACHE='heartclear-media-v1'/);
 assert.match(sw,/hc-reels-minimal-v248\.css\?v=284/);
 assert.match(home,/HeartClear · HC v290/);
