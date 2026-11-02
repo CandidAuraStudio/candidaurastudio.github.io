@@ -1,6 +1,7 @@
-/* Headless mobile browser acceptance: import local WAV once, play in existing
- * Sound Lab player, mini survives Home, bookmark and IndexedDB survive reload.
- * Generated silent WAV only; no third-party media, Drive access or uploads. */
+/* HeartClear v293: real-browser native playback of pre-existing saved audio.
+ * Unavailable recordings must not show a false Play button or demand upload.
+ * Test uses a silent WAV generated within a disposable test browser only.
+ */
 'use strict';
 const assert=require('node:assert/strict');
 const {chromium}=require('playwright');
@@ -21,67 +22,72 @@ function silentWav(seconds=12){
  const browser=await chromium.launch({headless:true,args:['--no-sandbox','--autoplay-policy=no-user-gesture-required']});
  try{
   for(const width of [393,1280]){
-   const context=await browser.newContext({
-    viewport:{width,height:860},serviceWorkers:'block',reducedMotion:'reduce'
-   });
+   const context=await browser.newContext({viewport:{width,height:860},serviceWorkers:'block',reducedMotion:'reduce'});
    const page=await context.newPage();
    page.setDefaultTimeout(15000);
+   let filePickers=0;
+   page.on('filechooser',()=>filePickers++);
    await page.goto('http://127.0.0.1:8765/human-practice-prototype/',{waitUntil:'domcontentloaded',timeout:35000});
    await page.waitForSelector('#hcListening',{state:'attached'});
    await page.waitForFunction(()=>window.hcLocalListeningAudio&&!window.hcLocalListeningAudio.isLoading());
    await page.evaluate(()=>show('hcListening'));
    await page.locator('#hclTabs button[data-category="islamic"]').click();
-   const row=page.locator('#hclResults [data-record="local-islamSufiDrum"]');
-   await row.waitFor();
-   assert.equal(await row.locator('.hcl-record-action').innerText(),'Add audio');
-   assert.equal(await page.locator('#hcOneTapDrive').isVisible(),false);
+   const id='local-islamSufiDrum';
+   assert.equal(await page.locator('#hclResults [data-record="'+id+'"]').count(),0,'Unavailable audio must be hidden');
+   assert.equal(await page.locator('#hclResults').getByText('Add audio',{exact:true}).count(),0);
+   assert.equal(filePickers,0);
 
-   const pickerEvent=page.waitForEvent('filechooser');
-   await row.click();
-   const picker=await pickerEvent;
-   await picker.setFiles({name:'sample.wav',mimeType:'audio/wav',buffer:silentWav()});
-   await page.waitForFunction(()=>window.hcLocalListeningAudio.has('islamSufiDrum'));
-   await page.waitForFunction(()=>document.querySelector('#hclResults [data-record="local-islamSufiDrum"] .hcl-record-action')?.textContent==='Pause');
-   const first=await page.evaluate(()=>{
-     const a=document.getElementById('soundLabAudio');
-     return {source:a.getAttribute('src'),playing:!a.paused,active:getActiveMediaState()?.key};
-   });
-   assert.match(first.source,/^blob:/);
-   assert.equal(first.playing,true);
-   assert.equal(first.active,'soundlab');
-   assert.equal(await page.locator('#hcOneTapDrive').isVisible(),false,'No Drive iframe popup when importing audio');
-   await page.evaluate(()=>show('home'));
-   assert.equal(await page.locator('#globalMini').evaluate(el=>el.classList.contains('show')),true,'Existing mini player must stay visible on Home');
-
-   await page.evaluate(()=>{
-     const a=document.getElementById('soundLabAudio');
-     a.currentTime=6;
-     a.dispatchEvent(new Event('timeupdate'));
-     a.pause();
-   });
-   await page.waitForFunction(()=>Number(localStorage.getItem('heartclearLocalListeningPositionV1:islamSufiDrum'))>=5);
-   await page.waitForFunction(async()=>{
+   const bytes=Array.from(silentWav());
+   await page.evaluate(async bytes=>{
      const db=await new Promise((resolve,reject)=>{
-       const req=indexedDB.open('heartclear-local-listening-audio-v1');
-       req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);
+       const req=indexedDB.open('heartclear-local-listening-audio-v1',1);
+       req.onupgradeneeded=()=>req.result.createObjectStore('audio');
+       req.onsuccess=()=>resolve(req.result);
+       req.onerror=()=>reject(req.error);
      });
-     return await new Promise(resolve=>{
-       const req=db.transaction('audio','readonly').objectStore('audio').get('islamSufiDrum');
-       req.onsuccess=()=>{const ok=req.result?.blob instanceof Blob;db.close();resolve(ok)};
-       req.onerror=()=>{db.close();resolve(false)};
+     await new Promise((resolve,reject)=>{
+       const tx=db.transaction('audio','readwrite');
+       tx.objectStore('audio').put({blob:new Blob([new Uint8Array(bytes)],{type:'audio/wav'}),name:'sample.wav'},'islamSufiDrum');
+       tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);
      });
-   });
+     db.close();
+   },bytes);
+
    await page.reload({waitUntil:'domcontentloaded'});
    await page.waitForFunction(()=>window.hcLocalListeningAudio&&!window.hcLocalListeningAudio.isLoading()&&window.hcLocalListeningAudio.has('islamSufiDrum'));
    await page.evaluate(()=>show('hcListening'));
    await page.locator('#hclTabs button[data-category="islamic"]').click();
-   const ready=page.locator('#hclResults [data-record="local-islamSufiDrum"]');
-   assert.equal(await ready.locator('.hcl-record-action').innerText(),'Play','Saved file must be ready after reload');
-   await ready.click();
+   const row=page.locator('#hclResults [data-record="'+id+'"]');
+   await row.waitFor();
+   assert.equal(await row.locator('.hcl-record-action').innerText(),'Play');
+   await row.click();
+   await page.waitForFunction(()=>!document.getElementById('soundLabAudio')?.paused);
+   const state=await page.evaluate(()=>{
+     const a=document.getElementById('soundLabAudio');
+     return {source:a.getAttribute('src'),playing:!a.paused,active:getActiveMediaState()?.key};
+   });
+   assert.match(state.source,/^blob:/);
+   assert.equal(state.playing,true);
+   assert.equal(state.active,'soundlab');
+   assert.equal(filePickers,0,'No file picker ever opened');
+
+   await page.evaluate(()=>show('home'));
+   assert.equal(await page.locator('#globalMini').evaluate(el=>el.classList.contains('show')),true);
+
+   await page.evaluate(()=>{
+     const a=document.getElementById('soundLabAudio');
+     a.currentTime=6;a.dispatchEvent(new Event('timeupdate'));a.pause();
+   });
+   await page.waitForFunction(()=>Number(localStorage.getItem('heartclearLocalListeningPositionV1:islamSufiDrum'))>=5);
+   await page.reload({waitUntil:'domcontentloaded'});
+   await page.waitForFunction(()=>window.hcLocalListeningAudio?.has('islamSufiDrum'));
+   await page.evaluate(()=>show('hcListening'));
+   await page.locator('#hclTabs button[data-category="islamic"]').click();
+   await page.locator('#hclResults [data-record="'+id+'"]').click();
    await page.waitForFunction(()=>document.getElementById('soundLabAudio')?.currentTime>=5);
-   assert.equal(await page.locator('#hcOneTapDrive').isVisible(),false,'Reloaded private audio must not open Drive');
-   console.log('PASS native Listening MP3/WAV import, Play, mini, saved resume at viewport '+width);
+   assert.equal(filePickers,0);
+   console.log('PASS unavailable recordings hidden; saved WAV native Play, mini, bookmark and reload at '+width);
    await context.close();
   }
  }finally{await browser.close()}
-})().catch(err=>{console.error(err);process.exitCode=1;});
+})().catch(error=>{console.error(error);process.exitCode=1;});
