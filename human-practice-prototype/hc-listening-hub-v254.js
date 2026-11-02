@@ -51,8 +51,9 @@ function list(){
   // Audio-only Listening: never present a Drive MP4 preview as native audio.
   const local=window.hcLocalListeningAudio;
   const saved=!!local?.has(item.key);
+  if(!saved)return; // No unplayable tiles, missing-audio prompts or upload actions.
   const info=String(item.type||'Original recording').replace(/\s*·\s*(?:original )?video\b/gi,'');
-  const meta=info+' · '+(saved?'private MP3/WAV ready':'add private MP3/WAV once');
+  const meta=info+' · saved native audio';
   add(record('local-'+item.key,item.name,meta,category,'local-audio',item.key));
  });
  if(typeof hcMiniBrowseItems==='function')hcMiniBrowseItems().forEach(item=>{
@@ -84,9 +85,9 @@ function itemButton(item){
  const title=document.createElement('strong');title.textContent=item.name;
  const desc=document.createElement('small');desc.textContent=item.detail;
  info.append(title,desc);
- const action=document.createElement('span');action.className='hcl-record-action';action.textContent=item.kind==='local-audio'?(window.hcLocalListeningAudio?.has(item.key)?(window.hcLocalListeningAudio.playing(item.key)?'Pause':'Play'):window.hcLocalListeningAudio?.isLoading()?'Loading…':'Add audio'):['book','bible','hindu-library','gita','practice'].includes(item.kind)?'Open':'Play';
+ const action=document.createElement('span');action.className='hcl-record-action';action.textContent=item.kind==='local-audio'?(window.hcLocalListeningAudio?.playing(item.key)?'Pause':'Play'):['book','bible','hindu-library','gita','practice'].includes(item.kind)?'Open':'Play';
  b.append(icon,info,action);b.setAttribute('aria-label',(
- item.kind==='local-audio'?(window.hcLocalListeningAudio?.has(item.key)?'Play private audio ':'Add private MP3/WAV for '):
+ item.kind==='local-audio'?'Play saved native audio ':
  ['book','bible','hindu-library','gita','practice'].includes(item.kind)?'Open ':'Play '
 )+item.name);
  b.addEventListener('click',()=>play(item));return b;
@@ -110,18 +111,12 @@ function render(){
 function say(text){status.textContent=text;status.hidden=!text}
 window.hcListeningSay=say;
 document.addEventListener('hc-local-listening-audio-changed',()=>{
-  // Update only row actions; never reset the scroll position or active filter.
-  results.querySelectorAll('[data-record]').forEach(button=>{
-    const id=button.dataset.record||'';
-    if(!id.startsWith('local-'))return;
-    const key=id.slice(6),native=window.hcLocalListeningAudio;
-    const action=button.querySelector('.hcl-record-action');
-    if(!action)return;
-    action.textContent=native?.has(key)?(native.playing(key)?'Pause':'Play'):native?.isLoading()?'Loading…':'Add audio';
-    button.setAttribute('aria-label',(native?.has(key)?(native.playing(key)?'Pause private audio ':'Play private audio '):'Add private MP3/WAV for ')+(button.querySelector('strong')?.textContent||'recording'));
-    const detail=button.querySelector('.hcl-record-info small');
-    if(detail)detail.textContent=detail.textContent.replace(/(?:add private MP3\/WAV once|private MP3\/WAV ready)$/,(native?.has(key)?'private MP3/WAV ready':'add private MP3/WAV once'));
-  });
+  // Restore all privately saved rows after asynchronous IndexedDB loading.
+  // Keep the selected category and the reader's position during playback updates.
+  const oldScroll=window.scrollY;
+  render();
+  if($('hcListening').classList.contains('active'))window.scrollTo(0,oldScroll);
+
 });
 
 function play(item){
