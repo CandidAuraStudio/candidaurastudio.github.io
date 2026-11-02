@@ -36,5 +36,5 @@ assert.match(html,/register\('\.\/sw\.js\?v=294'\)/);
 assert.match(sw,/const APP_CACHE='heartclear-v294'/);
 assert.match(sw,/const MEDIA_CACHE='heartclear-media-v1'/);
 assert.match(sw,/hc-listening-local-audio-v290\.js\?v=293/);
-assert.match(home,/HeartClear · HC v294/);
+assert.match(html,/HeartClear · HC v294/);
 console.log('PASS unavailable Listening tiles hidden, no audio picker, saved audio retained, PWA cache aligned');
