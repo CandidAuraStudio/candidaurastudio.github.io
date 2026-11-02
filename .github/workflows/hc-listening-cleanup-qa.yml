@@ -1,0 +1,41 @@
+name: HeartClear Listening Cleanup QA
+on:
+  push:
+    branches:
+      - main
+      - fix/hc-hide-missing-listening-audio-20261102
+    paths:
+      - 'human-practice-prototype/index.html'
+      - 'human-practice-prototype/sw.js'
+      - 'human-practice-prototype/hc-listening-hub-v254.js'
+      - 'human-practice-prototype/hc-listening-local-audio-v290.js'
+      - 'human-practice-prototype/tests/hc-listening-*'
+      - '.github/workflows/hc-listening-cleanup-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  listening-cleanup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check JavaScript parsing and preserved Listening behavior
+        run: |
+          find human-practice-prototype -type f -name '*.js' -print0 | xargs -0 -n1 node --check
+          node human-practice-prototype/tests/hc-listening-play-label-contract.cjs
+          node human-practice-prototype/tests/hc-refresh-first-paint.cjs
+          node human-practice-prototype/tests/hc-listening-scripture-access.cjs
+      - name: Install Chromium for existing Sound Lab player test
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Verify hidden unavailable rows and resumed device-saved WAV
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/hc-listening-cleanup-server.log 2>&1 &
+          node human-practice-prototype/tests/hc-listening-native-audio-browser.cjs
