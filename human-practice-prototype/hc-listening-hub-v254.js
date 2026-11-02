@@ -104,6 +104,15 @@ function section(cat,items,limit=0){
 }
 function render(){
  const q=search.value.trim().toLocaleLowerCase();results.replaceChildren();const all=list();
+ // Hide empty categories too: do not advertise recordings that cannot play.
+ tabs.querySelectorAll('button[data-category]').forEach(button=>{
+  const cat=button.dataset.category;
+  button.hidden=cat!=='all'&&!all.some(item=>item.category===cat);
+ });
+ if(current!=='all'&&!all.some(item=>item.category===current)){
+  current='all';
+  tabs.querySelectorAll('button').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.category==='all')));
+ }
  if(q){results.append(section('search',all.filter(item=>(item.name+' '+item.detail+' '+item.category).toLowerCase().includes(q))));return}
  if(current==='all'){['meditation','breathing','islamic','hindu','bible','quran','nature','books','buddhist'].forEach(cat=>results.append(section(cat,all.filter(x=>x.category===cat),3)))}
  else results.append(section(current,all.filter(x=>x.category===current)));
