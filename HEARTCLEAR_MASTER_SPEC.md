@@ -7,15 +7,24 @@
 
 This document records user-approved direction and coordination rules. It does NOT certify that every feature is currently implemented or working. Always inspect the **latest main branch** and any active PRs before work.
 
+## Owner workflow override — 2 November 2026
+
+**PR-manager gate retired at the owner's explicit request.** The owner no longer wants work stalled pending a PR, manual release-manager review, or physical Android sign-off for routine fixes. When the owner asks to fix, remove, upload or publish an application change, make the smallest verified improvement directly to the application; use a temporary working branch and fast-forward the latest `main` after automated checks, without opening a PR. No force-push or rewriting history. Verify the resulting GitHub Pages deployment and report separately what was changed, actually deployed and still unavailable.
+
+- Preserve all original books, media, recordings, Drive identifiers, positions, local storage, offline media cache, and HC black-and-white infinity branding. Never fabricate an audio file or imply an unavailable recording plays.
+- **Listening:** Show only recordings with a verified playable audio source. No Add Audio, device-upload prompts or Google Drive video iframe substitutes in All Listening or its mini-library. Existing on-device saved MP3/WAV remains playable. Keep missing original sources archived for eventual authorized conversion and re-upload; owner will identify the originals when ready.
+- Run automated syntax, navigation, browser/mobile-viewport and offline checks before direct publication. Device-only behavior not tested must be described honestly, but it is not a veto on a narrow reversible removal of broken tiles.
+- Historical PR workflow guidance below applies only when the owner explicitly opts into PRs for a future release; this override takes precedence for routine owner-requested changes.
+
 ## 1. Rules for every chatbot/developer
 
-1. **One release manager owns `main`.** Other bots: do not write to or deploy from `main`. Create a uniquely named feature branch from the *latest* main commit and open a PR for review. Never force-push main.
+1. **Owner-approved direct release workflow:** after scoped automated checks, fast-forward the latest `main` without force-push. PR review is optional, not a default blocker. Never overwrite another contributor's newer commits.
 2. **Read before edit:** read this file, the relevant source files, `human-practice-prototype/HEARTCLEAR_RELEASE_AUDIT_2026-10-25.md` if present, and open PRs. Inspect the latest commits and the active file SHA; another bot might have changed them.
 3. **Preserve all originals:** never delete, rename, reset or substitute user books, book covers, audio, voice, meditation sessions, Quran reflections, Gita chapters, video IDs, localStorage/history, or offline media without explicit permission. Keep HeartClear as the app name and black/white infinity logo.
-4. **One feature per branch/PR.** Describe exactly which files changed, what behavior should change, what was left unchanged, tests run, and limitations. Never silently combine an unrelated layout overhaul with a player bug fix.
+4. **One focused change per release.** Describe files changed, behavior, preservation evidence, automated tests, deployment and limitations. Never bundle an unrelated redesign with a player fix.
 5. **No duplicated fixes:** do not add another global CSS `!important` overlay, navigation guard, monkeypatch or new media player if the existing module can be corrected. Look for rules/scripts that undo the change later in load order.
-6. **Before merging:** update/rebase onto the newest main, resolve conflicts by integrating BOTH sets of changes, run contract/smoke/mobile checks, review screenshots and versions. Do not merge while conflicts exist.
-7. **Deploy ONE coordinated build:** sync `index.html` script URLs, `sw.js` precache URLs, service-worker registration, offline shell cache version and Settings version label. Keep the separate offline-media cache untouched. Check installed-PWA updating versus a fresh browser visit.
+6. **Before publishing:** compare against newest main and fast-forward only when clean. Run automated contract, syntax, browser and mobile-viewport checks; avoid publishing known broken builds.
+7. **Deploy ONE coordinated build:** sync `index.html` script URLs, `sw.js` precache URLs, service-worker registration, offline shell cache version and Settings version label. Keep the separate offline-media cache untouched. Check actual Pages deployment.
 8. **Be accurate:** a committed source change is not proof the GitHub Pages site has published it or that playback works on Android. Describe separately: requested, implemented in source, published, manually tested, and not yet supported.
 9. **Protect the user's creative method:** template designs may inspire appearance, but do not import a third party's meditation/practices as replacements. Do not add paid dependencies, accounts or services without approval.
 
@@ -80,7 +89,7 @@ This document records user-approved direction and coordination rules. It does NO
 - [ ] Synchronize script versions in HTML, service worker precache, registration and Settings version.
 - [ ] Run `node tests/hc-release-contract.cjs` if available; review older smoke tests for outdated assertions.
 - [ ] Test on a narrow Android screen, refresh after service-worker update; check mini-player, reels, all three scripture players, offline/return behavior.
-- [ ] Only after those checks, report **merged**, **published**, and **device-tested** as distinct states.
+- [ ] Only after automated checks and deployment, report **committed**, **published**, and **device-tested** as separate states; do not claim device testing without evidence.
 
 ## 5. Message for any parallel chatbot
 
