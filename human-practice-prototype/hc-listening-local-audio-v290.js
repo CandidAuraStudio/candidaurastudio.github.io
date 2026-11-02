@@ -1,6 +1,6 @@
 /* HeartClear v290 — All Listening private native audio.
- * No Google Drive video previews in Listening. MP3/WAV are picked on-device,
- * stored in IndexedDB when available, and played by the EXISTING Sound Lab
+ * Only already-saved, authorized native MP3/WAV play in Listening.
+ * Never prompt to upload a missing recording. Existing IndexedDB files use the EXISTING Sound Lab
  * HTMLAudioElement + universal mini-player (no second player or server upload).
  * Original HC_DRIVE_COLLECTIONS identifiers and dedicated archive stay intact.
  */
@@ -13,14 +13,7 @@
   const sources=new Map();
   let db=null;
   let loading=true;
-  let pending=null;
   let lastSavedAt=0;
-  const input=document.createElement('input');
-  input.type='file';
-  input.accept='.mp3,.wav,audio/mpeg,audio/wav,audio/x-wav,audio/wave';
-  input.hidden=true;
-  input.setAttribute('aria-label','Choose a private MP3 or WAV recording');
-  document.body.appendChild(input);
 
   function say(message){
     if(typeof window.hcListeningSay==='function')window.hcListeningSay(message);
@@ -102,16 +95,6 @@
       request.onerror=()=>reject(request.error);
     });
   }
-  function save(key,file){
-    return new Promise((resolve,reject)=>{
-      if(!db)return reject(new Error('Storage unavailable'));
-      const tx=db.transaction(STORE,'readwrite');
-      tx.objectStore(STORE).put({blob:file,name:file.name},key);
-      tx.oncomplete=()=>resolve();
-      tx.onerror=()=>reject(tx.error||new Error('Could not save privately'));
-      tx.onabort=()=>reject(tx.error||new Error('Could not save privately'));
-    });
-  }
   function play(key){
     if(!sources.has(key)||!soundLabTracks[keyFor(key)])return false;
     if(hcDriveActiveKey)hcStopDriveVideo(true); // Close stale Drive iframe once.
@@ -142,43 +125,12 @@
   }
   function chooseOrPlay(key){
     if(!itemFor(key))return false;
-    if(loading){
-      say('Restoring your saved audio on this device. Tap again when ready.');
-      return false;
-    }
-    if(has(key))return play(key);
-    pending=key;
-    say('Choose your MP3 or WAV once. It stays on this device; no video opens.');
-    input.click(); // Synchronous from the real row click: browser file-picker gesture.
-    return true;
+    if(loading){say('Restoring saved recordings.');return false;}
+    // No file-picker or upload prompt: hide unavailable recordings until a verified
+    // authorized native source is integrated in a separate scoped release.
+    if(!has(key)){say('This recording is not available as audio yet.');return false;}
+    return play(key);
   }
-
-  input.addEventListener('change',async()=>{
-    const key=pending;
-    const file=input.files&&input.files[0];
-    pending=null;
-    input.value='';
-    if(!key||!file)return;
-    if(!/\.(mp3|wav)$/i.test(file.name)){
-      say('Please select a .mp3 or .wav audio file, not a video.');
-      return;
-    }
-    if(!register(key,file)){
-      say('This recording is not in the listening catalogue.');
-      return;
-    }
-    try{localStorage.removeItem(positionKey(key));}catch(e){} // New file only.
-    // This originates from a user file-selection action; playback may still be gated by Android.
-    play(key);
-    say('Audio selected. Saving privately to this device…');
-    try{
-      await save(key,file);
-      say('Saved here. Next time, one tap plays this MP3/WAV from your Listening page.');
-    }catch(e){
-      say('Playing now, but storage was unavailable. Re-select the file next visit.');
-    }
-    changed();
-  });
   soundLabAudio.addEventListener('timeupdate',()=>savePosition());
   soundLabAudio.addEventListener('pause',()=>{savePosition(true);changed();});
   soundLabAudio.addEventListener('play',changed);
