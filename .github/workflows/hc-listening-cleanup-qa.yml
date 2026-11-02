@@ -10,6 +10,7 @@ on:
       - 'human-practice-prototype/hc-listening-hub-v254.js'
       - 'human-practice-prototype/hc-listening-local-audio-v290.js'
       - 'human-practice-prototype/tests/hc-listening-*'
+      - 'human-practice-prototype/tests/hc-playback-v178-smoke.cjs'
       - '.github/workflows/hc-listening-cleanup-qa.yml'
   workflow_dispatch:
 
@@ -39,6 +40,7 @@ jobs:
         run: |
           python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/hc-listening-cleanup-server.log 2>&1 &
           node human-practice-prototype/tests/hc-listening-native-audio-browser.cjs
+          node human-practice-prototype/tests/hc-playback-v178-smoke.cjs
           node human-practice-prototype/tests/heartclear-all-screens.cjs
           node human-practice-prototype/tests/heartclear-cinema-v239.cjs
           node human-practice-prototype/tests/mini-transport.cjs
