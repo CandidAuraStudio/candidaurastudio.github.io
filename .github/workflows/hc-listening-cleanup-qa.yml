@@ -39,3 +39,7 @@ jobs:
         run: |
           python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/hc-listening-cleanup-server.log 2>&1 &
           node human-practice-prototype/tests/hc-listening-native-audio-browser.cjs
+          node human-practice-prototype/tests/heartclear-all-screens.cjs
+          node human-practice-prototype/tests/heartclear-cinema-v239.cjs
+          node human-practice-prototype/tests/mini-transport.cjs
+          node human-practice-prototype/tests/resume-genesis-quran.cjs
