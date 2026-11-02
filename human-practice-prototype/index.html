@@ -5576,10 +5576,10 @@ function hcMiniBrowseItems(){
   }
   HC_DRIVE_COLLECTIONS.forEach(item=>{
     if(item.key==='islamHuAkmal'||item.key==='generalDuduk')return;
-    const available=!!window.hcLocalListeningAudio?.has(item.key);
-    // Headphones mini-library is native audio only. Archived Drive videos stay
-    // accessible in their original dedicated source sections, not from here.
-    list.push({name:item.name,detail:available?'Private MP3/WAV · ready':'Add your MP3/WAV once',
+    // Suppress sources with no authorized playable native audio; retain original
+    // Drive video IDs and saved audio/progress in their respective archives.
+    if(!window.hcLocalListeningAudio?.has(item.key))return;
+    list.push({name:item.name,detail:'Saved native audio · ready',
       category:item.section==='general'?'raga':item.section==='meditation'?'practice':'sacred',
       key:item.key,kind:'local-audio'});
   });
@@ -5598,7 +5598,7 @@ function hcRenderMiniLibrary(){
     const text=document.createElement('span');const title=document.createElement('b');title.textContent=item.name;
     const meta=document.createElement('small');meta.textContent=item.detail;
     text.append(title,meta);
-    const icon=document.createElement('span');icon.textContent=item.kind==='local-audio'&&!window.hcLocalListeningAudio?.has(item.key)?'+':'▶';
+    const icon=document.createElement('span');icon.textContent='▶';
     btn.append(text,icon);
     btn.addEventListener('click',()=>{
       hcCloseMiniLibrary();
@@ -9741,7 +9741,7 @@ if('serviceWorker' in navigator){
 
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js?v=290');
+      const reg=await navigator.serviceWorker.register('./sw.js?v=293');
       // Check for a newer worker when the app is opened or resumed.
       reg.update().catch(()=>{});
       if(reg.waiting && navigator.serviceWorker.controller)showUpdateBanner();
@@ -9832,13 +9832,13 @@ const heartclearAutoInstallPrompt=false;
 <link rel="stylesheet" href="./hc-reels-minimal-v248.css?v=284">
 <script src="./hc-om-mini-v252.js?v=252"></script>
 <link rel="stylesheet" href="./hc-listening-hub-v254.css?v=258">
-<script src="./hc-listening-local-audio-v290.js?v=290"></script>
-<script src="./hc-listening-hub-v254.js?v=290"></script>
+<script src="./hc-listening-local-audio-v290.js?v=293"></script>
+<script src="./hc-listening-hub-v254.js?v=293"></script>
 <script src="./hc-home-layout-v256.js?v=257"></script>
 <script src="./hc-home-core-paths-v259.js?v=287"></script>
 <link rel="stylesheet" href="./hc-unified-visual-v259.css?v=267">
 <link rel="stylesheet" href="./hc-home-visible-v268.css?v=277">
-<script src="./hc-home-visible-v268.js?v=290"></script>
+<script src="./hc-home-visible-v268.js?v=293"></script>
 
 <link rel="stylesheet" href="./hc-design-unified-v279.css?v=284" onload="document.documentElement.classList.remove('hc-booting')" onerror="document.documentElement.classList.remove('hc-booting')">
 </body>
