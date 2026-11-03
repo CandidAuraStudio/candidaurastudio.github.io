@@ -1,0 +1,26 @@
+/* HC v296: Book Two reflection card for Human Knowledge (source contract). */
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),assert=require('node:assert/strict');
+const root=path.resolve(__dirname,'..'),read=p=>fs.readFileSync(path.join(root,p),'utf8');
+const reader=read('hc-heritage-reader-v189.js'),book=read('books/human-when-you-are-alone.html');
+const home=read('hc-home-routine-v155.js'),daily=read('hc-daily-care-v182.js'),deep=read('hc-deep-heritage-v185.js'),sw=read('sw.js'),html=read('index.html');
+for(const [name,content] of [['reader',reader],['home',home],['daily',daily],['deep',deep],['sw',sw]])new vm.Script(content,{filename:name});
+assert.match(reader,/hair:\{chapter:26/);
+assert.match(reader,/food:\{chapter:24/);
+assert.match(reader,/humanBookReflection\(group\)/);
+assert.match(reader,/attachHumanBookNote\(group,selected.id\)/);
+assert.match(reader,/hc:human-book-note:v1:/);
+assert.match(reader,/maxlength="600"/);
+assert.match(reader,/human-when-you-are-alone\.html/);
+assert.match(book,/Chapter 24: When Unity Has Not Entered the Kitchen/);
+assert.match(book,/Chapter 26: Preserve the Principle, Not the Century/);
+assert.match(home,/hc-daily-care-v182\.js\?v=296/);
+assert.match(daily,/hc-deep-heritage-v185\.js\?v=296/);
+assert.match(deep,/hc-heritage-reader-v189\.js\?v=296/);
+assert.match(html,/hc-home-routine-v155\.js\?v=296/);
+assert.match(html,/sw\.js\?v=296/);
+assert.match(html,/HeartClear · HC v296/);
+assert.match(sw,/heartclear-v296/);
+assert.match(sw,/heartclear-media-v1/);
+assert.doesNotMatch(reader,/localStorage\.clear\(/);
+console.log('PASS HC v296 book reflection, knowledge loader and preservation contracts');
