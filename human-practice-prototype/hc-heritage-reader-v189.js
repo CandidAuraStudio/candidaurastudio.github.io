@@ -141,6 +141,21 @@ body.hc-cinema #hcHeritageReader.active > #hcCinemaHero{display:none!important}
  #hcHeritageReader .hc-heritage-quicknav button{font-size:13px!important}
 }
 `;
+css.textContent+=`
+/* HC v296: one compact human question under the existing article content. */
+#hcHeritageReader .hc-human-book-reflection{margin:18px 0 23px;padding:16px 14px;border:1px solid #79674b;border-radius:16px;background:#191715;color:#f5f1e8}
+#hcHeritageReader .hc-human-book-label{display:block;font-size:10px;letter-spacing:.08em;line-height:1.5;color:#edc68b}
+#hcHeritageReader .hc-human-book-insight{font-size:13px;line-height:1.65;color:#dbd7ce;margin:10px 0}
+#hcHeritageReader .hc-human-book-question{font-size:17px;font-weight:650;line-height:1.55;color:#fff;margin:8px 0 12px}
+#hcHeritageReader .hc-human-book-hint,#hcHeritageReader .hc-human-book-notes{border-top:1px solid #514638;padding:8px 0;margin:6px 0}
+#hcHeritageReader .hc-human-book-reflection summary{cursor:pointer;color:#efce9b;font-size:13px;min-height:36px;padding:8px 0}
+#hcHeritageReader .hc-human-book-reflection details p{font-size:13px;line-height:1.55;margin:3px 0 8px;color:#d9d5cf}
+#hcHeritageReader .hc-human-book-notes label{display:block;font-size:12px;color:#e5dfd3;margin:7px 0}
+#hcHeritageReader .hc-human-book-notes textarea{display:block;width:100%;max-width:100%;min-height:90px;resize:vertical;background:#101010;color:#f8f8f5;border:1px solid #787066;border-radius:10px;padding:11px;font:inherit;font-size:14px;line-height:1.5}
+#hcHeritageReader .hc-human-book-reflection small{display:block;font-size:11px;line-height:1.55;color:#b7b2aa;margin:7px 0}
+#hcHeritageReader .hc-human-book-read{display:inline-flex;align-items:center;justify-content:center;max-width:100%;min-height:44px;margin:13px 0 3px;padding:9px 12px;background:#d8b47e;border-radius:10px;color:#18120b;font-weight:750;font-size:13px;text-decoration:none;overflow-wrap:anywhere}
+#hcHeritageReader .hc-human-book-reflection :is(summary,textarea,a):focus-visible{outline:2px solid #fff4d9;outline-offset:3px}
+`;
 document.head.append(css);
 function activeScreen(){return document.querySelector('.screen.active')?.id||'home'}
 function showReader(){
@@ -180,6 +195,56 @@ window.addEventListener('popstate',evt=>{
  if(evt.state?.hcHeritage189&&evt.state.sessionNumber===sessionNumber){route={level:evt.state.level||'index',topic:evt.state.topic||null,item:evt.state.item||null};showReader();render();try{window.scrollTo(0,0)}catch(_){}}
  else if(el.classList.contains('active'))hideReader();
 });
+
+/* Reader-only prompts inspired by chapters in HUMAN — WHEN YOU ARE ALONE.
+   This is new editorial reflection, not a quotation or medical guidance. */
+const humanBookThemes={
+ hair:{chapter:26,title:'Preserve the Principle, Not the Century',
+  insight:['A family practice carries more than a method. Look for the care and memory beneath it.','குடும்ப வழக்கம் என்பது செய்முறை மட்டும் அல்ல. அதற்குப் பின்னுள்ள அக்கறையையும் நினைவையும் கவனியுங்கள்.'],
+  question:['If this family practice disappeared, what wisdom would you want to keep?','இந்தக் குடும்ப வழக்கம் மறைந்தால், அதிலிருந்து எந்த அறிவை நீங்கள் காப்பாற்ற விரும்புவீர்கள்?'],
+  hint:['Ask an elder why they did it before deciding whether to repeat it.','அதை ஏன் செய்தார்கள் என்று ஒரு பெரியவரிடம் கேட்டு, பிறகு தொடர வேண்டுமா எனச் சிந்தியுங்கள்.']},
+ food:{chapter:24,title:'When Unity Has Not Entered the Kitchen',
+  insight:['A kitchen tells a story about who gives care and who carries the work.','ஒரு சமையலறை யார் அக்கறை காட்டுகிறார்கள், யார் வேலைச் சுமையை ஏற்கிறார்கள் என்பதைக் காட்டுகிறது.'],
+  question:['Who does the quiet work that makes your household function?','உங்கள் வீடு இயங்க அமைதியாக உழைப்பவர் யார்?'],
+  hint:['Notice one everyday task you could share without being asked.','யாரும் கேட்காமல் நீங்கள் பகிர்ந்து செய்யக்கூடிய ஒரு சிறிய வேலையைக் கவனியுங்கள்.']},
+ teeth:{chapter:26,title:'Preserve the Principle, Not the Century',
+  insight:['Tools change with time. The deeper question is what they were meant to protect.','காலத்துடன் கருவிகள் மாறும். அவை எதைப் பாதுகாக்க உருவானவை என்பதே ஆழமான கேள்வி.'],
+  question:['How can I respect an old custom without assuming every old method is safe?','பழைய எல்லா முறைகளும் பாதுகாப்பானவை என்று எண்ணாமல் ஒரு மரபை எப்படி மதிக்கலாம்?'],
+  hint:['Preserve useful care, and check practical claims against reliable evidence.','பயனுள்ள அக்கறையைப் பாதுகாத்து, நடைமுறைக் கூற்றுகளை நம்பகமான ஆதாரத்துடன் ஒப்பிடுங்கள்.']},
+ water:{chapter:20,title:'The Body Before the System',
+  insight:['Before debating a system, notice what everyday care makes possible.','ஒரு முறையை விவாதிப்பதற்கு முன், அன்றாட அக்கறையின் பயனைக் கவனியுங்கள்.'],
+  question:['Do my daily habits show the same care I speak about?','நான் பேசும் அக்கறை என் அன்றாடப் பழக்கங்களிலும் தெரிகிறதா?'],
+  hint:['Choose one simple, safe habit rather than a grand promise.','பெரிய வாக்குறுதிக்குப் பதிலாக ஒரு எளிய பாதுகாப்பான பழக்கத்தைத் தேர்ந்தெடுங்கள்.']},
+ whole:{chapter:20,title:'The Body Before the System',
+  insight:['Knowing something about the body is a beginning. How we care for it is the next question.','உடலைப் பற்றி அறிதல் ஒரு தொடக்கம். அதை எப்படிப் பராமரிக்கிறோம் என்பதே அடுத்த கேள்வி.'],
+  question:['What is one kind thing I can practise toward my body today?','இன்று என் உடலுக்காக நான் செய்யக்கூடிய ஒரு அக்கறையான செயல் என்ன?'],
+  hint:['Think of rest, cleanliness, comfort or asking for help when needed.','ஓய்வு, சுத்தம், வசதி அல்லது தேவைப்பட்டால் உதவி கேட்பதை நினையுங்கள்.']},
+ ayurveda:{chapter:26,title:'Preserve the Principle, Not the Century',
+  insight:['A tradition can hold human experience while individual claims still need evidence.','ஒரு மரபில் மனித அனுபவம் இருக்கலாம்; அதன் தனித்தனி கூற்றுகளுக்குச் சான்று தேவை.'],
+  question:['What can I honour in a tradition without accepting every claim unquestioningly?','ஒரு மரபின் எல்லாக் கூற்றுகளையும் கேள்வியின்றி ஏற்காமல் எதை மதிக்க முடியும்?'],
+  hint:['Separate a practice’s meaning from evidence for any treatment claim.','ஒரு வழக்கின் பண்பாட்டுப் பொருளையும் சிகிச்சைக் கூற்றுக்கான ஆதாரத்தையும் வேறுபடுத்துங்கள்.']}
+};
+function humanBookReflection(group){
+ const idea=humanBookThemes[group];if(!idea)return '';
+ return '<section class="hc-human-book-reflection" aria-label="'+E(tr('A thought from HUMAN','HUMAN நூலிலிருந்து ஒரு சிந்தனை'))+'">'+
+  '<strong class="hc-human-book-label">'+E(tr('FROM HUMAN · WHEN YOU ARE ALONE','HUMAN · WHEN YOU ARE ALONE நூலிலிருந்து'))+'</strong>'+
+  '<p class="hc-human-book-insight">'+E(tr(...idea.insight))+'</p>'+
+  '<p class="hc-human-book-question">'+E(tr(...idea.question))+'</p>'+
+  '<details class="hc-human-book-hint"><summary>'+E(tr('A small hint','ஒரு சிறிய குறிப்பு'))+'</summary><p>'+E(tr(...idea.hint))+'</p></details>'+
+  '<details class="hc-human-book-notes"><summary>'+E(tr('My private note (optional)','என் தனிப்பட்ட குறிப்பு (விருப்பம்)'))+'</summary>'+
+  '<label for="hcHumanBookNote">'+E(tr('What did this make you notice?','இது உங்களுக்கு எதை உணர்த்தியது?'))+'</label>'+
+  '<textarea id="hcHumanBookNote" maxlength="600" rows="3" placeholder="'+E(tr('One thought is enough.','ஒரு எண்ணம் போதும்.'))+'"></textarea>'+
+  '<small>'+E(tr('Stored in this browser on this device. Not uploaded by this feature.','இந்தச் சாதனத்தின் உலாவியில் மட்டும் சேமிக்கப்படும். இந்த வசதி குறிப்பைப் பதிவேற்றாது.'))+'</small></details>'+
+  '<a class="hc-human-book-read" href="./books/human-when-you-are-alone.html" target="_blank" rel="noopener">'+E(tr('Read HUMAN · Chapter '+idea.chapter,'HUMAN நூலை வாசிக்கவும் · அத்தியாயம் '+idea.chapter))+'</a>'+
+  '<small>'+E(tr('Choose Chapter '+idea.chapter+': '+idea.title+' in the book.','நூலில் அத்தியாயம் '+idea.chapter+'-ஐத் தேர்ந்தெடுக்கவும்: '+idea.title+'.'))+'</small></section>';
+}
+function attachHumanBookNote(group,itemId){
+ const field=main.querySelector('#hcHumanBookNote');if(!field)return;
+ const key='hc:human-book-note:v1:'+encodeURIComponent(group+':'+itemId);
+ try{field.value=localStorage.getItem(key)||''}catch(_){}
+ field.addEventListener('input',()=>{try{localStorage.setItem(key,field.value.slice(0,600))}catch(_){}});
+}
+
 function render(){
   el.setAttribute('data-hc-heritage-level',route.level);
  const group=route.topic,chapter=rows(group),subject=topicLabel(group);
@@ -220,8 +285,10 @@ function render(){
     '<p>'+E(chShort(selected))+'</p><h2>'+(group==='medicine'?tr('How this system works','இந்த மண்டலம் எப்படிச் செயல்படுகிறது'):tr('History and context','வரலாறும் பின்னணியும்'))+'</h2><p>'+E(tr(...selected.details))+'</p>'+
     '<h2>'+(group==='medicine'?tr('Everyday connection','அன்றாடத் தொடர்பு'):tr('Why it matters','ஏன் இது முக்கியம்'))+'</h2><p>'+E(tr(...selected.meaning))+'</p>'+
     '<div class="hc-heritage-note"><strong>'+(group==='medicine'?tr('When to seek care','எப்போது மருத்துவ உதவி தேவை'):tr('Think or apply','சிந்தித்து செயல்படுத்து'))+'</strong><p>'+E(tr(...selected.apply))+'</p></div>'+
+    humanBookReflection(group)+
     '<h2>'+tr('Sources · further reading','ஆதாரம் · மேலதிக வாசிப்பு')+'</h2><div class="hc-heritage-sources">'+(selected.refs?.length?selected.refs.map(href).join(''):'<p>'+tr('Family/practical account; no independent century claim.','குடும்ப/நடைமுறை அறிவு; ஆதாரமின்றி நூற்றாண்டு குறிப்பிடப்படவில்லை.')+'</p>')+'</div>';
   }
+  attachHumanBookNote(group,selected.id);
   footer.innerHTML='<button type="button" id="hcArticlePrev"'+(idx===0?' disabled':'')+'>'+tr('← Previous','← முந்தையது')+'</button><button type="button" id="hcArticleNext"'+(idx===chapter.length-1?' disabled':'')+'>'+tr('Next →','அடுத்து →')+'</button>';
   footer.querySelector('#hcArticlePrev').addEventListener('click',()=>{if(idx>0)navigate('article',group,chapter[idx-1].id)});
   footer.querySelector('#hcArticleNext').addEventListener('click',()=>{if(idx<chapter.length-1)navigate('article',group,chapter[idx+1].id)});
