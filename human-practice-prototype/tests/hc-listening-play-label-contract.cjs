@@ -32,7 +32,7 @@ assert.doesNotMatch(html,/Add your MP3\/WAV once/,'No mini-library upload prompt
 assert.doesNotMatch(html,/else openHcDriveMedia\(item\.key\);/,'No misleading video substitution');
 assert.match(html,/hc-listening-local-audio-v290\.js\?v=293/);
 assert.match(html,/hc-listening-hub-v254\.js\?v=293/);
-assert.match(html,/register\('\.\/sw\.js\?v=294'\)/);
+assert.match(html,/register\('\.\/sw\.js\?v=295'\)/);
 assert.match(sw,/const APP_CACHE='heartclear-v295'/);
 assert.match(sw,/const MEDIA_CACHE='heartclear-media-v1'/);
 assert.match(sw,/hc-listening-local-audio-v290\.js\?v=293/);
