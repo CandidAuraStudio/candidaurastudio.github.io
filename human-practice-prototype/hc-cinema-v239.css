@@ -86,7 +86,7 @@ body.hc-cinema #hcFlowDock button img{width:33px;height:33px;display:block;borde
 body.hc-cinema #hcFlowDock button[aria-current="page"]{
   background:#eee9e4!important;color:#141417!important;
 }
-body.hc-cinema #hcFlowDock button[aria-current="page"] img{filter:invert(1)}
+body.hc-cinema #hcFlowDock button[aria-current="page"] img{filter:none}
 body.hc-cinema #hcFlowDock button:focus-visible,body.hc-cinema #hcFlowTop button:focus-visible{
   outline:3px solid #fff!important;outline-offset:3px!important;
 }

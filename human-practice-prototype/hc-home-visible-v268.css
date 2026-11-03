@@ -24,7 +24,7 @@ body.hc-cinema #home.active:not(.hc-bubble-mode):not(.hc-bubble-detail) #hcHomeB
  margin:3px 0 6px!important;align-items:center!important
 }
 body.hc-cinema #home.active #hcHomeInfinity{
- color:#fff!important;width:49px!important;height:49px!important
+ color:#edc980!important;width:49px!important;height:49px!important
 }
 body.hc-cinema #home.active #hcHomeBrandBar #hcAppLanguageHome{
  background:#151515!important;border:1px solid #68625b!important
@@ -267,3 +267,5 @@ body.hc-cinema #home.active #hcCorePathsClassic .hc-home-worlds>.hc-world-card:f
   animation:none!important;transition:none!important
  }
 }
+
+body.hc-cinema #hcBubbleHome .hcb-logo{color:#edc980!important}

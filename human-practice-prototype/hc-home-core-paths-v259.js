@@ -105,14 +105,10 @@
  const appLanguage=document.getElementById('hcAppLanguageHome');
  if(appLanguage&&!document.getElementById('hcHomeBrandBar')){
   const bar=document.createElement('div');bar.id='hcHomeBrandBar';
-  const symbol=document.createElementNS('http://www.w3.org/2000/svg','svg');
-  symbol.id='hcHomeInfinity';symbol.setAttribute('viewBox','0 0 512 512');
-  symbol.setAttribute('role','img');symbol.setAttribute('aria-label','HeartClear infinity logo');
-  const curve=document.createElementNS('http://www.w3.org/2000/svg','path');
-  curve.setAttribute('d','M128 341.333c106.667 0 149.333-170.666 256-170.666a85.333 85.333 0 0 1 0 170.666c-106.667 0-149.333-170.666-256-170.666a85.333 85.333 0 1 0 0 170.666');
-  curve.setAttribute('fill','none');curve.setAttribute('stroke','currentColor');curve.setAttribute('stroke-width','32');
-  curve.setAttribute('stroke-linecap','round');curve.setAttribute('stroke-linejoin','round');
-  symbol.append(curve);bar.append(symbol);
+  const symbol=document.createElement('img');
+  symbol.id='hcHomeInfinity';symbol.src='./icon.svg?v=295';
+  symbol.alt='HeartClear golden infinity-heart logo';symbol.decoding='async';
+  symbol.width=54;symbol.height=54;bar.append(symbol);
   appLanguage.before(bar);bar.append(appLanguage);
  }
 
@@ -120,12 +116,12 @@
  // original SVG instead of adding another header or replacing its navigation.
  const eyebrow=document.getElementById('hcCinemaEyebrow');
  const existingInfinity=document.getElementById('hcHomeInfinity');
- if(eyebrow&&existingInfinity&&!eyebrow.querySelector('svg')){
+ if(eyebrow&&existingInfinity&&!eyebrow.querySelector('img')){
   const mark=existingInfinity.cloneNode(true);
   mark.removeAttribute('id');
   mark.setAttribute('aria-hidden','true');
   mark.removeAttribute('role');
-  mark.removeAttribute('aria-label');
+  mark.removeAttribute('aria-label');mark.alt='';
   eyebrow.textContent='HeartClear';
   eyebrow.prepend(mark);
   eyebrow.classList.add('hc-matched-wordmark');
@@ -133,7 +129,7 @@
   shared.id='hcScriptureSharedBrandCss';
   shared.textContent=[
    'body.hc-cinema #hcCinemaEyebrow.hc-matched-wordmark{display:flex!important;align-items:center!important;gap:9px!important;min-height:32px!important;text-transform:none!important;letter-spacing:normal!important;color:#fff!important;font:750 16px/1.3 system-ui!important}',
-   'body.hc-cinema #hcCinemaEyebrow.hc-matched-wordmark svg{display:block!important;width:43px!important;height:30px!important;flex:none!important;color:#fff!important}',
+   'body.hc-cinema #hcCinemaEyebrow.hc-matched-wordmark img{display:block!important;width:43px!important;height:30px!important;flex:none!important;color:#fff!important}',
    'body.hc-cinema #hcCinemaHero{background:#191919!important;background-image:none!important;backdrop-filter:none!important;box-shadow:none!important}',
    'body.hc-cinema #hcCinemaHero :is(h1,p){overflow-wrap:normal!important}',
    'body.hc-cinema #hcCinemaTitle{color:#fff!important}',
