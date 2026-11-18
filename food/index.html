@@ -53,6 +53,17 @@ footer{border-color:#555}
   .human-note strong,.human-note p,.human-note summary,header p,.muted,.footer-note{color:#222!important}
 }
 
+
+.install-panel{padding:14px 20px;background:#171717;border-bottom:1px solid #555}
+.install-panel h2{font-size:17px;margin:0 0 10px}
+.install-btn{width:100%;min-height:50px;background:#303030;color:#fff;border:1px solid #d0d0d0;text-align:center;font-size:16px;font-weight:750}
+.install-btn:hover{background:#3b3b3b}
+.install-status{font-size:13px;color:#cacaca;margin-top:8px;line-height:1.6}
+.install-help{background:#1c1c1c;border:1px solid #777;padding:11px 13px;margin-top:12px;font-size:14px;line-height:1.7}
+.install-help p{margin:4px 0 10px}
+.install-help[hidden]{display:none!important}
+@media(max-width:520px){.install-panel{padding:14px 15px}}
+@media print{.install-panel{display:none!important}}
 </style>
   <title>வீட்டு உணவு அட்டவணை</title>
   <link rel="manifest" href="./manifest.webmanifest"/>
@@ -76,6 +87,16 @@ footer{border-color:#555}
         <p><strong>வாழும் நாளிலேயே மனசையும் உடம்பையும் கவனிச்சு, ஒருத்தருக்கொருத்தர் துணையா வாழ்வோம்.</strong></p>
       </details>
     </section>
+<section class="install-panel" aria-label="மனிசம் செயலி இன்ஸ்டால்">
+  <h2>மனிசம் அப்பை போனில் வையுங்க</h2>
+  <button id="install" type="button" class="install-btn">Install App — போனில் இன்ஸ்டால் பண்ணுங்க</button>
+  <div id="install-status" class="install-status" role="status">இந்த link-ல சாப்பாடு பார்க்கலாம். அப்பா வைக்க மேலே அழுத்துங்க.</div>
+  <div id="install-guide" class="install-help" hidden>
+    <p><b>Android Chrome:</b> மேலே ⋮ அழுத்தி <b>Add to Home screen</b> அல்லது <b>Install app</b> என்பதைத் தேர்ந்தெடுங்க. அடுத்து <b>Install</b> அழுத்துங்க.</p>
+    <p><b>iPhone Safari:</b> Share பட்டனைத் திறந்து <b>Add to Home Screen</b> அழுத்துங்க.</p>
+    <p>WhatsApp-ல் திறந்தால், Chrome அல்லது Safari-ல் link-ஐத் திறங்க. ZIP அல்லது Replit தேவையில்லை.</p>
+  </div>
+</section>
     <nav class="tabs" aria-label="பக்கங்கள்">
       <button class="tab active" data-tab="today">இன்று</button>
       <button class="tab" data-tab="weeks">4 வாரம்</button>
@@ -138,7 +159,7 @@ footer{border-color:#555}
       <strong>சின்ன செலவு, நல்ல சாப்பாடு.</strong> மீன் விலை அதிகம்னா முட்டை, பருப்பு, கடலை அல்லது காராமணி வையுங்க. பருவத்துக்கு ஏற்ற காய்கறி வாங்குங்க. ஆழமாகப் பொரிக்க வேண்டியதில்லை.
       <div class="footer-note">இது குடும்ப உணவுக்கான வழிகாட்டி மட்டும். சாப்பாடு மட்டும் நீரிழிவு, புற்றுநோய் போன்ற நோய்களைக் குணமாக்கும் என்று சொல்ல முடியாது. டாக்டர் கொடுத்த சிகிச்சையைத் தொடருங்க.</div>
       <div class="muted tiny">தனி செயலி • கருப்பு / வெள்ளை • தரவு போனிலேயே • 2026–2027</div>
-      <button id="install" class="secondary" hidden>போனில் அப்பைச் சேர்</button>
+
     </footer>
   </div>
   <script>
@@ -315,9 +336,51 @@ async function checkReminders(){
   }catch(e){console.warn('Notification unavailable',e)}
  }
 }
-let deferredInstall;
-window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e;get('install').hidden=false});
-get('install').addEventListener('click',async()=>{if(deferredInstall){await deferredInstall.prompt();deferredInstall=null;get('install').hidden=true}});
+let deferredInstall=null;
+const installBtn=get('install'), installGuide=get('install-guide'), installStatus=get('install-status');
+const alreadyInstalled=()=>window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;
+function showInstallState(){
+  if(alreadyInstalled()){
+    installBtn.textContent='மனிசம் போனில் இருக்கு';
+    installBtn.disabled=true;
+    installGuide.hidden=true;
+    installStatus.textContent='இது போனில் இன்ஸ்டால் ஆயிடுச்சு. இனி Home screen-லிருந்து திறக்கலாம்.';
+  }
+}
+window.addEventListener('beforeinstallprompt',event=>{
+  event.preventDefault();
+  deferredInstall=event;
+  installBtn.textContent='Install App — போனில் இன்ஸ்டால் பண்ணுங்க';
+  installStatus.textContent='Install App அழுத்துங்க; Chrome இன்ஸ்டால் கேட்கும்.';
+});
+window.addEventListener('appinstalled',()=>{
+  deferredInstall=null;showInstallState();
+});
+installBtn.addEventListener('click',async()=>{
+  if(alreadyInstalled()){showInstallState();return}
+  if(deferredInstall){
+    const promptEvent=deferredInstall;
+    deferredInstall=null;
+    try{
+      await promptEvent.prompt();
+      const result=await promptEvent.userChoice;
+      if(result?.outcome==='accepted'){
+        installStatus.textContent='இன்ஸ்டால் தொடங்கியாச்சு. Home screen-ல் பாருங்க.';
+        showInstallState();
+      }else{
+        installGuide.hidden=false;
+        installStatus.textContent='Chrome menu-விலும் Add to Home screen இருக்கலாம்.';
+      }
+    }catch(err){
+      installGuide.hidden=false;
+      installStatus.textContent='Browser-ல் இன்ஸ்டால் கேட்கவில்லை. கீழே உள்ள வழியைப் பாருங்க.';
+    }
+  }else{
+    installGuide.hidden=!installGuide.hidden;
+    installStatus.textContent='Chrome ⋮ → Add to Home screen → Install. இதுவே download/install வழி.';
+  }
+});
+showInstallState();
 document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>nav(b.dataset.tab)));
 get('daypick').addEventListener('change',e=>selected(e.target.value));
 get('prevday').addEventListener('click',()=>selected(offsetDay(activeDate,-1)));
