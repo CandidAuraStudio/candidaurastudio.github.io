@@ -1,6 +1,6 @@
 {
-  "name": "நம்ம வீட்டு சாப்பாடு",
-  "short_name": "நம்ம சாப்பாடு",
+  "name": "மனிசம் — நம்ம வீட்டு சாப்பாடு",
+  "short_name": "மனிசம்",
   "description": "அக்கரைப்பற்று வீட்டுச் சாப்பாடு, நாலு வார அட்டவணை, சமையல், நாட்காட்டி நினைவூட்டல்",
   "lang": "ta",
   "dir": "ltr",
@@ -8,8 +8,8 @@
   "scope": "/food/",
   "start_url": "/food/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#111111",
+  "background_color": "#0c0c0c",
+  "theme_color": "#0c0c0c",
   "icons": [
     {
       "src": "./icon.svg",
