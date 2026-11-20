@@ -11,7 +11,7 @@ This document records user-approved direction and coordination rules. It does NO
 
 **PR-manager gate retired at the owner's explicit request.** The owner no longer wants work stalled pending a PR, manual release-manager review, or physical Android sign-off for routine fixes. When the owner asks to fix, remove, upload or publish an application change, make the smallest verified improvement directly to the application; use a temporary working branch and fast-forward the latest `main` after automated checks, without opening a PR. No force-push or rewriting history. Verify the resulting GitHub Pages deployment and report separately what was changed, actually deployed and still unavailable.
 
-- Preserve all original books, media, recordings, Drive identifiers, positions, local storage, offline media cache, and HC black-and-white infinity branding. Never fabricate an audio file or imply an unavailable recording plays.
+- Preserve all original books, media, recordings, Drive identifiers, positions, local storage, offline media cache, and the owner's golden infinity-heart branding on black (approved 3 November 2026). Do not revert it to the older black-and-white artwork. Never fabricate an audio file or imply an unavailable recording plays.
 - **Listening:** Show only recordings with a verified playable audio source. No Add Audio, device-upload prompts or Google Drive video iframe substitutes in All Listening or its mini-library. Existing on-device saved MP3/WAV remains playable. Keep missing original sources archived for eventual authorized conversion and re-upload; owner will identify the originals when ready.
 - Run automated syntax, navigation, browser/mobile-viewport and offline checks before direct publication. Device-only behavior not tested must be described honestly, but it is not a veto on a narrow reversible removal of broken tiles.
 - Historical PR workflow guidance below applies only when the owner explicitly opts into PRs for a future release; this override takes precedence for routine owner-requested changes.
@@ -20,7 +20,7 @@ This document records user-approved direction and coordination rules. It does NO
 
 1. **Owner-approved direct release workflow:** after scoped automated checks, fast-forward the latest `main` without force-push. PR review is optional, not a default blocker. Never overwrite another contributor's newer commits.
 2. **Read before edit:** read this file, the relevant source files, `human-practice-prototype/HEARTCLEAR_RELEASE_AUDIT_2026-10-25.md` if present, and open PRs. Inspect the latest commits and the active file SHA; another bot might have changed them.
-3. **Preserve all originals:** never delete, rename, reset or substitute user books, book covers, audio, voice, meditation sessions, Quran reflections, Gita chapters, video IDs, localStorage/history, or offline media without explicit permission. Keep HeartClear as the app name and black/white infinity logo.
+3. **Preserve all originals:** never delete, rename, reset or substitute user books, book covers, audio, voice, meditation sessions, Quran reflections, Gita chapters, video IDs, localStorage/history, or offline media without explicit permission. Keep HeartClear as the app name and the owner-approved golden infinity-heart logo on black; retain the infinity-heart shape and original asset sources.
 4. **One focused change per release.** Describe files changed, behavior, preservation evidence, automated tests, deployment and limitations. Never bundle an unrelated redesign with a player fix.
 5. **No duplicated fixes:** do not add another global CSS `!important` overlay, navigation guard, monkeypatch or new media player if the existing module can be corrected. Look for rules/scripts that undo the change later in load order.
 6. **Before publishing:** compare against newest main and fast-forward only when clean. Run automated contract, syntax, browser and mobile-viewport checks; avoid publishing known broken builds.
@@ -31,8 +31,8 @@ This document records user-approved direction and coordination rules. It does NO
 ## 2. Locked user-approved experience
 
 ### Branding, palette, fonts
-- Name: **HeartClear** (HC). Original black-and-white **infinity** logo, not a gold heart or renamed product.
-- Preferred visual system: black / charcoal surfaces, white text, restrained gold only as accent. No dominant dark-blue cards; no distracting blur. Light floating nature imagery only where already approved.
+- Name: **HeartClear** (HC). The owner-approved identity (3 November 2026) is the **gold-gradient infinity-heart on black**, as implemented in `human-practice-prototype/icon.svg` and referenced by the Home branding. It is the same infinity-heart identity, not a replacement with a generic heart. The earlier black-and-white treatment is historical; do not revert the current logo without owner approval.
+- Preferred visual system: black / charcoal surfaces, white text, restrained gold accents **and the approved gold infinity-heart logo**. No dominant dark-blue cards; no distracting blur. Light floating nature imagery only where already approved.
 - Responsive typography: headings readable, secondary text compact, buttons fit their labels on ONE line when practical. Never let “Stop” split into two lines or enlarge every control indiscriminately. Reading text can be larger than UI labels.
 
 ### Bottom navigation — exact order
